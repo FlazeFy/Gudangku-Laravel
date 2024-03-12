@@ -65,16 +65,16 @@
                                 </div>
                                 <div class="modal-body">
                                     <h2>Created At</h2>
-                                    <h6 class="date_holder">{{($in['created_at'])->format('Y-m-d\TH:i:s.\0\0\0\0\0\0\Z')}}</h6>
+                                    <h6 class="date_holder">{{$in['created_at']}}</h6>
                                     <br><h2>Updated At</h2>
                                     @if($in['updated_at'] != null)
-                                        <h6 class="date_holder">{{($in['updated_at'])->format('Y-m-d\TH:i:s.\0\0\0\0\0\0\Z')}}</h6>
+                                        <h6 class="date_holder">{{$in['updated_at']}}</h6>
                                     @else 
                                         <h6>-</h6>
                                     @endif
                                     <br><h2>Deleted At</h2>
                                     @if($in['deleted_at'] != null)
-                                        <h6 class="date_holder">{{($in['deleted_at'])->format('Y-m-d\TH:i:s.\0\0\0\0\0\0\Z')}}</h6>
+                                        <h6 class="date_holder">{{$in['deleted_at']}}</h6>
                                     @else 
                                         <h6>-</h6>
                                     @endif
@@ -87,7 +87,13 @@
                 <td><button class="btn btn-success"><i class="fa-solid fa-bell" style="font-size:var(--textXLG);"></i></button></td>
                 <td><button class="btn btn-warning"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button></td>
                 <td>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_{{$in->id}}"><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i></button>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_{{$in->id}}">
+                        @if($in['deleted_at'] == null)
+                            <i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i>
+                        @else 
+                            <i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i>
+                        @endif
+                    </button>
                     <div class="modal fade" id="modalDelete_{{$in->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -96,9 +102,22 @@
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="/deleteInventory/{{$in['id']}}" method="POST">
+                                    <form action="/<?php 
+                                        if($in['deleted_at'] == null){
+                                            echo "deleteInventory/".$in['id'];
+                                        } else {
+                                            echo "destroyInventory/".$in['id'];
+                                        }
+                                        ?>" method="POST">
                                         @csrf
-                                        <h2>Delete this item "{{$in['inventory_name']}}"?</h2>
+                                        <h2>
+                                            @if($in['deleted_at'] == null)
+                                                Delete
+                                            @else 
+                                                <span class="text-danger">Permentally Delete</span>
+                                            @endif
+                                             this item "{{$in['inventory_name']}}"?
+                                        </h2>
                                         <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
                                     </form>
                                 </div>

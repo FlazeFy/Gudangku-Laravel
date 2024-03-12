@@ -30,12 +30,11 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function hard_delete($id)
     {
-        //
+        InventoryModel::destroy($id);
+
+        return redirect()->back();
     }
 
     /**
