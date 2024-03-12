@@ -1,0 +1,75 @@
+:root {   
+    /* Typography */
+    --textXJumbo : 24px;
+    --textJumbo : 20px;
+    --textXLG : 18px;
+    --textLG : 16px;
+    --textXMD : 14px;
+    --textMD : 13px;
+    --textSM : 12px;
+    --textXSM : 11px;
+
+    /* Rounded */
+    --roundedCircle : 100%;
+    --roundedJumbo : 30px;
+    --roundedXLG : 24px;
+    --roundedLG : 18px;
+    --roundedMD : 14px;
+    --roundedSM : 12px;
+    --roundedMini : 6px;
+
+    /* Spacing */
+    --spaceJumbo : 35px;
+    --spaceXLG : 24px;
+    --spaceLG : 20px;
+    --spaceXMD : 16px;
+    --spaceMD : 12px;
+    --spaceSM : 10px;
+    --spaceXSM : 8px;
+    --spaceXXSM : 6px;
+    --spaceMini : 4px;
+
+    /* Table column min width */
+    --tcolMinXSM : 60px;
+    --tcolMinSM : 120px;
+    --tcolMinMD : 140px;
+    --tcolMinLG : 180px;
+    --tcolMinJumbo : 240px;
+    --tcolMinHuge : 360px;
+
+    /* Color Pallete */
+    --successBG : #00C363;
+    --dangerBG : #DD0022;
+    --warningBG : #FFC352;
+    --infoBG : #009FF9;
+    --infoLightBG : #E7F4FE;
+    --hoverBG : #F2F2F2;
+
+    --primaryColor : #5754ed;
+    --darkColor : #000000;
+    --whiteColor : #FFFFFF;
+    --greyColor : #838181;
+    --shadowColor : #E0E0E0;
+}
+
+input, button {
+    padding: var(--spaceMD) !important;
+    background: transparent !important;
+    color: var(--whiteColor) !important;
+    border-radius: var(--roundedLG) !important;
+    border-width: 1.75px !important;
+}
+
+a, label, h1, h2, h3, h4, h5, h6, p, table {
+    color: var(--whiteColor) !important;
+}
+
+button {
+    -webkit-transition: all 0.4s !important;
+    -o-transition: all 0.4s !important;
+    transition: all 0.4s !important;
+    cursor: pointer;
+}
+button:hover {
+    transform: scale(1.05);
+}
