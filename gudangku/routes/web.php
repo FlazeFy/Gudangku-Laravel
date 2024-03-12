@@ -19,4 +19,6 @@ use App\Http\Controllers\HomeController;
 Route::prefix('/')->group(function () {
     Route::get('/', [HomeController::class, 'index']);
     Route::get('/login', [LoginController::class, 'index']);
+    
+    Route::post('/deleteInventory/{id}', [HomeController::class, 'soft_delete']);
 });

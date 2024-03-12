@@ -21,12 +21,13 @@ class HomeController extends Controller
             ->with('inventory',$inventory);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function soft_delete($id)
     {
-        //
+        InventoryModel::where('id',$id)->update([
+            'deleted_at' => date('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->back();
     }
 
     /**

@@ -45,14 +45,14 @@
     --infoLightBG : #E7F4FE;
     --hoverBG : #F2F2F2;
 
-    --primaryColor : #5754ed;
-    --darkColor : #000000;
+    --primaryColor : #3b82f6;
+    --darkColor : #121725;
     --whiteColor : #FFFFFF;
     --greyColor : #838181;
     --shadowColor : #E0E0E0;
 }
 
-input, button {
+input, button{
     padding: var(--spaceMD) !important;
     background: transparent !important;
     color: var(--whiteColor) !important;
@@ -60,7 +60,7 @@ input, button {
     border-width: 1.75px !important;
 }
 
-a, label, h1, h2, h3, h4, h5, h6, p, table {
+a, label, h1, h2, h3, h4, h5, h6, p, table, .dataTables_info {
     color: var(--whiteColor) !important;
 }
 
@@ -72,4 +72,14 @@ button {
 }
 button:hover {
     transform: scale(1.05);
+}
+
+.modal-content {
+    border-radius: var(--roundedJumbo) !important;
+    background: var(--darkColor);
+    border: 1.75px solid var(--primaryColor);
+    box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
+}
+.modal-content h2 {
+    font-weight: 600;
 }

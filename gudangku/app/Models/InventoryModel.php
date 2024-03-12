@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class InventoryModel extends Model
 {
     use HasFactory;
+    public $incrementing = false;
+    public $timestamps = false;
 
     protected $table = 'inventory';
     protected $primaryKey = 'id';

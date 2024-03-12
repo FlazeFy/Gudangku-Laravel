@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table" id="inventory_tb">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -54,12 +54,68 @@
                         {{$in['inventory_capacity_vol']}}%
                     @endif
                 </td>
-                <td><button class="btn btn-primary"><i class="fa-solid fa-circle-info" style="font-size:var(--textXLG);"></i></button></td>
+                <td>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInfoProps_{{$in->id}}"><i class="fa-solid fa-circle-info" style="font-size:var(--textXLG);"></i></button>
+                    <div class="modal fade" id="modalInfoProps_{{$in->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Properties</h2>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h2>Created At</h2>
+                                    <h6 class="date_holder">{{($in['created_at'])->format('Y-m-d\TH:i:s.\0\0\0\0\0\0\Z')}}</h6>
+                                    <br><h2>Updated At</h2>
+                                    @if($in['updated_at'] != null)
+                                        <h6 class="date_holder">{{($in['updated_at'])->format('Y-m-d\TH:i:s.\0\0\0\0\0\0\Z')}}</h6>
+                                    @else 
+                                        <h6>-</h6>
+                                    @endif
+                                    <br><h2>Deleted At</h2>
+                                    @if($in['deleted_at'] != null)
+                                        <h6 class="date_holder">{{($in['deleted_at'])->format('Y-m-d\TH:i:s.\0\0\0\0\0\0\Z')}}</h6>
+                                    @else 
+                                        <h6>-</h6>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
                 <td><button class="btn btn-primary"><i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i></button></td>
                 <td><button class="btn btn-success"><i class="fa-solid fa-bell" style="font-size:var(--textXLG);"></i></button></td>
                 <td><button class="btn btn-warning"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button></td>
-                <td><button class="btn btn-danger"><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i></button></td>
+                <td>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_{{$in->id}}"><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i></button>
+                    <div class="modal fade" id="modalDelete_{{$in->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Properties</h2>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/deleteInventory/{{$in['id']}}" method="POST">
+                                        @csrf
+                                        <h2>Delete this item "{{$in['inventory_name']}}"?</h2>
+                                        <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
             </tr>
         @endforeach
     </tbody>
 </table>
+
+<script>
+    const date_holder = document.querySelectorAll('.date_holder');
+
+    date_holder.forEach(e => {
+        const date = new Date(e.textContent);
+        e.textContent = getDateToContext(e.textContent, "datetime");
+    });
+</script>
