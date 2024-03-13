@@ -52,7 +52,7 @@
     --shadowColor : #E0E0E0;
 }
 
-input, button{
+input, button, .btn, textarea, select{
     padding: var(--spaceMD) !important;
     background: transparent !important;
     color: var(--whiteColor) !important;
@@ -64,13 +64,13 @@ a, label, h1, h2, h3, h4, h5, h6, p, table, .dataTables_info {
     color: var(--whiteColor) !important;
 }
 
-button {
+button, .btn {
     -webkit-transition: all 0.4s !important;
     -o-transition: all 0.4s !important;
     transition: all 0.4s !important;
     cursor: pointer;
 }
-button:hover {
+button:hover, .btn:hover {
     transform: scale(1.05);
 }
 
@@ -82,4 +82,9 @@ button:hover {
 }
 .modal-content h2 {
     font-weight: 600;
+}
+
+hr {
+    color: var(--whiteColor) !important;
+    margin-top: var(--spaceXLG) !important;
 }

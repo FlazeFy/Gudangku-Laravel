@@ -21,9 +21,14 @@
     <tbody>
         @php($i = 1)
         @foreach($inventory as $in)
-            <tr>
+            <tr <?php if($in['deleted_at'] != null){ echo 'style="background:rgba(221, 0, 33, 0.15);"';} ?>>
                 <th scope="row">{{$i}}</th>
-                <td>{{$in['inventory_name']}}</td>
+                <td>
+                    @if($in['is_favorite'])
+                        <i class="fa-solid fa-bookmark" style="color:var(--primaryColor);" title="Favorite"></i>
+                    @endif
+                    {{$in['inventory_name']}}
+                </td>
                 <td>{{$in['inventory_category']}}</td>
                 <td>
                     @if($in['inventory_desc'] != null)
@@ -48,10 +53,12 @@
                     @endif
                 </td>
                 <td>Rp. {{number_format($in['inventory_price'], 0, ',', '.')}}</td>
-                <td>{{$in['inventory_volume']}} {{$in['inventory_unit']}}</td>
+                <td>{{$in['inventory_vol']}} {{$in['inventory_unit']}}</td>
                 <td>
                     @if($in['inventory_capacity_unit'] == 'percentage')
                         {{$in['inventory_capacity_vol']}}%
+                    @elseif($in['inventory_capacity_unit'] == null)
+                        -
                     @endif
                 </td>
                 <td>
@@ -85,7 +92,42 @@
                 </td>
                 <td><button class="btn btn-primary"><i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i></button></td>
                 <td><button class="btn btn-success"><i class="fa-solid fa-bell" style="font-size:var(--textXLG);"></i></button></td>
-                <td><button class="btn btn-warning"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button></td>
+                <td>
+                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal<?php
+                        if($in['deleted_at'] != null){
+                            echo "Recover"; 
+                        } else {
+                            echo "Edit";
+                        }
+                        ?>_{{$in->id}}">
+                        @if($in['deleted_at'] == null)
+                            <i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i>
+                        @else 
+                            <i class="fa-solid fa-rotate" style="font-size:var(--textXLG);"></i>
+                        @endif
+                    </button>
+                    @if($in['deleted_at'] == null)
+
+                    @else
+                        <div class="modal fade" id="modalRecover_{{$in->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Recover</h2>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/recoverInventory/{{$in['id']}}" method="POST">
+                                            @csrf
+                                            <h2>Recover this item "{{$in['inventory_name']}}"?</h2>
+                                            <button class="btn btn-success mt-4" type="submit">Yes, Recover</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </td>
                 <td>
                     <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_{{$in->id}}">
                         @if($in['deleted_at'] == null)
@@ -98,7 +140,7 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Properties</h2>
+                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                 </div>
                                 <div class="modal-body">

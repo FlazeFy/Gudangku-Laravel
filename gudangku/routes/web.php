@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AddController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,11 @@ Route::prefix('/')->group(function () {
 
     Route::post('/deleteInventory/{id}', [HomeController::class, 'soft_delete']);
     Route::post('/destroyInventory/{id}', [HomeController::class, 'hard_delete']);
+    Route::post('/recoverInventory/{id}', [HomeController::class, 'recover']);
+});
+
+Route::prefix('/add')->group(function () {
+    Route::get('/', [AddController::class, 'index']);
+
+    Route::post('/addInventory', [AddController::class, 'create']);
 });

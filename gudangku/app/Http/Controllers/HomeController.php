@@ -14,6 +14,7 @@ class HomeController extends Controller
     public function index()
     {
         $inventory = InventoryModel::select('*')
+            ->orderBy('is_favorite', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -37,12 +38,13 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function recover($id)
     {
-        //
+        InventoryModel::where('id',$id)->update([
+            'deleted_at' => null
+        ]);
+
+        return redirect()->back();
     }
 
     /**
