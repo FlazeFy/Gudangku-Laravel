@@ -74,6 +74,13 @@ button:hover, .btn:hover {
     transform: scale(1.05);
 }
 
+.error_input {
+    color: var(--dangerBG) !important;
+    font-size: var(--textMD);
+    text-decoration: none;
+    margin-top: var(--spaceSM);
+}
+
 .modal-content {
     border-radius: var(--roundedJumbo) !important;
     background: var(--darkColor);

@@ -18,8 +18,9 @@ use App\Http\Controllers\AddController;
 */
 
 Route::prefix('/')->group(function () {
-    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/login', [LoginController::class, 'index']);
+    Route::post('/login/validate', [LoginController::class, 'login_auth']);
 
     Route::post('/deleteInventory/{id}', [HomeController::class, 'soft_delete']);
     Route::post('/destroyInventory/{id}', [HomeController::class, 'hard_delete']);

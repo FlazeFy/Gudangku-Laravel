@@ -33,6 +33,8 @@ class AddController extends Controller
 
     public function create(Request $request)
     {
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
         InventoryModel::create([
             'id' => Generator::getUUID(), 
             'inventory_name' => $request->inventory_name, 
@@ -50,11 +52,12 @@ class AddController extends Controller
             'is_favorite' => 0, 
             'is_reminder' => 0, 
             'created_at' => date("Y-m-d H:i:s"), 
+            'created_by' => $user_id,
             'updated_at' => null, 
             'deleted_at' => null
         ]);
 
-        return redirect()->route('/');
+        return redirect()->route('home');
     }
 
     /**

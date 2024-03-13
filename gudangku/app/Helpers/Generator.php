@@ -1,5 +1,7 @@
 <?php
 namespace App\Helpers;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class Generator
 {
@@ -16,5 +18,24 @@ class Generator
         $uuid = sprintf('%s-%s-%s-%02x%02x-%s', $time_low, $time_mid, $time_hi_and_version, $clock_seq_hi_and_reserved, $clock_seq_low, $node);
         
         return $uuid;
+    }
+
+    public static function getUserId($role){
+        $token = session()->get("token_key");
+        $accessToken = PersonalAccessToken::findToken($token);
+
+        if ($accessToken) {
+            if($accessToken->tokenable){
+                Auth::login($accessToken->tokenable);
+                $user = Auth::user();
+                
+                $res = $user->id;
+                return $res;
+            } else {
+                return redirect("/")->with('failed_message','This account is no longer exist');
+            }
+        } else {
+            return null;
+        }
     }
 }

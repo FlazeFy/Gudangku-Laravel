@@ -14,51 +14,12 @@ class LoginController extends Controller
         return view('login.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function login_auth(Request $request){
+        $request->session()->put('username_key', $request->username);
+        $request->session()->put('role_key', $request->role);
+        $request->session()->put('token_key', $request->token);
+        $request->session()->put('email_key', $request->email);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('home')->with('recatch_message', 'true');
     }
 }
