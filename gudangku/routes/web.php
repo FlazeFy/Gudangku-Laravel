@@ -37,4 +37,5 @@ Route::prefix('/add')->group(function () {
 
 Route::prefix('/stats')->group(function () {
     Route::get('/', [StatsController::class, 'index']);
+    Route::post('/toogleTotal', [StatsController::class, 'toogle_total']);
 });

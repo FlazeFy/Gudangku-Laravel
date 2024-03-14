@@ -37,13 +37,19 @@
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
             <div class="p-5 d-block mx-auto" style="max-width:1440px;">
                 <h2 class="text-white fw-bold mb-4" style="font-size:36px;">Stats</h2>
-                <a class="btn btn-danger mb-3" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
+                <div class="d-flex justify-content-start">
+                    <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
+                    @include('stats.toogle_total')
+                </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         @include('stats.get_total_inventory_by_category')
                     </div>
-                    <div class="col">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         @include('stats.get_total_inventory_by_room')
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        @include('stats.get_total_inventory_by_fav')
                     </div>
                 </div>
             </div>
