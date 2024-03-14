@@ -17,7 +17,7 @@
     <input hidden name="email" value="" id="email">
     <input hidden name="role" value="" id="role">
     <input hidden name="profile_pic" value="" id="profile_pic">
-    <a onclick="login()" class="btn btn-success">Submit</a>
+    <a onclick="login()" class="btn btn-success border-0" style="background:var(--successBG) !important;"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Submit</a>
 </form>
 
 <script>

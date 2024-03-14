@@ -1,4 +1,4 @@
-<form action="/add/addInventory" method="POST" style="max-width:1080px;">
+<form action="/add/addInventory" method="POST">
     @csrf
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
     <div class="row">
@@ -81,5 +81,5 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-success mt-3 w-100"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
+    <button type="submit" class="btn btn-success mt-3 w-100 border-0" style="background:var(--successBG) !important;"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
 </form>

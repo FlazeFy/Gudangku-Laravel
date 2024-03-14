@@ -25,6 +25,7 @@ Route::prefix('/')->group(function () {
     Route::post('/deleteInventory/{id}', [HomeController::class, 'soft_delete']);
     Route::post('/destroyInventory/{id}', [HomeController::class, 'hard_delete']);
     Route::post('/recoverInventory/{id}', [HomeController::class, 'recover']);
+    Route::post('/favToggleInventory/{id}', [HomeController::class, 'fav_toogle']);
 });
 
 Route::prefix('/add')->group(function () {

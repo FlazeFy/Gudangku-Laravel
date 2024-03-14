@@ -37,7 +37,13 @@
                         -
                     @endif
                 </td>
-                <td>{{$in['inventory_merk']}}</td>
+                <td>
+                    @if($in['inventory_merk'] != null)
+                        {{$in['inventory_merk']}} 
+                    @else 
+                        -
+                    @endif
+                </td>
                 <td>{{$in['inventory_room']}}</td>
                 <td>
                     @if($in['inventory_storage'] != null)
@@ -90,7 +96,20 @@
                         </div>
                     </div>
                 </td>
-                <td><button class="btn btn-primary"><i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i></button></td>
+                <td>
+                    <form action="/favToggleInventory/{{$in['id']}}" method="POST">
+                        @csrf
+                        <input hidden name="is_favorite" value="<?php 
+                            if($in['is_favorite'] == '1'){
+                                echo '0';
+                            } else {
+                                echo '1';
+                            }
+                        ?>"/>
+                        <button class="btn btn-danger" type="submit" <?php if($in['is_favorite'] == '1'){echo'style="background:var(--dangerBG) !important; border:none;"';}?>>
+                        <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i></button>
+                    </form>
+                </td>
                 <td><button class="btn btn-success"><i class="fa-solid fa-bell" style="font-size:var(--textXLG);"></i></button></td>
                 <td>
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal<?php
@@ -168,6 +187,7 @@
                     </div>
                 </td>
             </tr>
+            @php($i++)
         @endforeach
     </tbody>
 </table>

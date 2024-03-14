@@ -81,6 +81,12 @@ button:hover, .btn:hover {
     margin-top: var(--spaceSM);
 }
 
+hr {
+    color: var(--whiteColor) !important;
+    margin-top: var(--spaceXLG) !important;
+}
+
+/* Modal */
 .modal-content {
     border-radius: var(--roundedJumbo) !important;
     background: var(--darkColor);
@@ -91,7 +97,15 @@ button:hover, .btn:hover {
     font-weight: 600;
 }
 
-hr {
-    color: var(--whiteColor) !important;
-    margin-top: var(--spaceXLG) !important;
+/* Datatable */
+.dataTables_wrapper.dt-bootstrap5.no-footer .row:nth-child(3) {
+    margin-top: var(--spaceJumbo);
+}
+.paginate_button .page-link {
+    background: transparent !important;
+    border: 1.5px solid var(--primaryColor) !important;
+    cursor: pointer;
+}
+.paginate_button .page-link:hover {
+    background: var(--primaryColor) !important;
 }

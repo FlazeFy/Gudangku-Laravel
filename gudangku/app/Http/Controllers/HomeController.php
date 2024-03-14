@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\InventoryModel;
 
+use App\Helpers\Generator;
+
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,7 +15,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
         $inventory = InventoryModel::select('*')
+            ->where('created_by',$user_id)
             ->orderBy('is_favorite', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -47,12 +52,13 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function fav_toogle(Request $request, $id)
     {
-        //
+        InventoryModel::where('id',$id)->update([
+            'is_favorite' => $request->is_favorite
+        ]);
+
+        return redirect()->back();
     }
 
     /**

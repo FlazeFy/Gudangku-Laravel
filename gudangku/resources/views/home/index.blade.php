@@ -51,7 +51,8 @@
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div class="p-5">
+            <div class="p-5 d-block mx-auto" style="max-width:1440px;">
+                @include('others.profile')
                 <h2 class="text-white fw-bold mb-4" style="font-size:36px;">My Inventory</h2>
                 <a class="btn btn-primary mb-3" href="/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Inventory</a>
                 @include('home.table')
