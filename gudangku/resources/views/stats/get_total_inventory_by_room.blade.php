@@ -1,0 +1,1 @@
+@include('others.pie_chart', ['data'=>$total_inventory_by_room, 'ctx'=>'total_inventory_by_room'])

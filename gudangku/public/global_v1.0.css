@@ -109,3 +109,7 @@ hr {
 .paginate_button .page-link:hover {
     background: var(--primaryColor) !important;
 }
+.apexcharts-legend-text {
+    color: var(--whiteColor) !important;
+    font-size: var(--textXMD) !important;
+}

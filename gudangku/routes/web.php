@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AddController;
+use App\Http\Controllers\StatsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,8 @@ Route::prefix('/add')->group(function () {
     Route::get('/', [AddController::class, 'index']);
 
     Route::post('/addInventory', [AddController::class, 'create']);
+});
+
+Route::prefix('/stats')->group(function () {
+    Route::get('/', [StatsController::class, 'index']);
 });
