@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AddController;
 use App\Http\Controllers\StatsController;
+use App\Http\Controllers\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +44,8 @@ Route::prefix('/inventory/add')->group(function () {
 Route::prefix('/stats')->group(function () {
     Route::get('/', [StatsController::class, 'index']);
     Route::post('/toogleTotal', [StatsController::class, 'toogle_total']);
+});
+
+Route::prefix('/history')->group(function () {
+    Route::get('/', [HistoryController::class, 'index']);
 });

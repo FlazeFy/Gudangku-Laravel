@@ -106,6 +106,7 @@
                                 echo '1';
                             }
                         ?>"/>
+                        <input hidden name="inventory_name" value="{{$in['inventory_name']}}"/>
                         <button class="btn btn-danger" type="submit" <?php if($in['is_favorite'] == '1'){echo'style="background:var(--dangerBG) !important; border:none;"';}?>>
                         <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i></button>
                     </form>
@@ -138,6 +139,7 @@
                                     <div class="modal-body">
                                         <form action="/inventory/recoverInventory/{{$in['id']}}" method="POST">
                                             @csrf
+                                            <input hidden name="inventory_name" value="{{$in['inventory_name']}}"/>
                                             <h2>Recover this item "{{$in['inventory_name']}}"?</h2>
                                             <button class="btn btn-success mt-4" type="submit">Yes, Recover</button>
                                         </form>
@@ -165,12 +167,13 @@
                                 <div class="modal-body">
                                     <form action="/<?php 
                                         if($in['deleted_at'] == null){
-                                            echo "/inventory/deleteInventory/".$in['id'];
+                                            echo "inventory/deleteInventory/".$in['id'];
                                         } else {
-                                            echo "/inventory/destroyInventory/".$in['id'];
+                                            echo "inventory/destroyInventory/".$in['id'];
                                         }
                                         ?>" method="POST">
                                         @csrf
+                                        <input hidden name="inventory_name" value="{{$in['inventory_name']}}"/>
                                         <h2>
                                             @if($in['deleted_at'] == null)
                                                 Delete
