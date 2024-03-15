@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AddController;
 use App\Http\Controllers\StatsController;
 
@@ -19,17 +20,21 @@ use App\Http\Controllers\StatsController;
 */
 
 Route::prefix('/')->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/', [LandingController::class, 'index'])->name('landing');
     Route::get('/login', [LoginController::class, 'index']);
     Route::post('/login/validate', [LoginController::class, 'login_auth']);
+});
 
+Route::prefix('/inventory')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    
     Route::post('/deleteInventory/{id}', [HomeController::class, 'soft_delete']);
     Route::post('/destroyInventory/{id}', [HomeController::class, 'hard_delete']);
     Route::post('/recoverInventory/{id}', [HomeController::class, 'recover']);
     Route::post('/favToggleInventory/{id}', [HomeController::class, 'fav_toogle']);
 });
 
-Route::prefix('/add')->group(function () {
+Route::prefix('/inventory/add')->group(function () {
     Route::get('/', [AddController::class, 'index']);
 
     Route::post('/addInventory', [AddController::class, 'create']);

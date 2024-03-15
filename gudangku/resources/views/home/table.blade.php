@@ -97,7 +97,7 @@
                     </div>
                 </td>
                 <td>
-                    <form action="/favToggleInventory/{{$in['id']}}" method="POST">
+                    <form action="/inventory/favToggleInventory/{{$in['id']}}" method="POST">
                         @csrf
                         <input hidden name="is_favorite" value="<?php 
                             if($in['is_favorite'] == '1'){
@@ -136,7 +136,7 @@
                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/recoverInventory/{{$in['id']}}" method="POST">
+                                        <form action="/inventory/recoverInventory/{{$in['id']}}" method="POST">
                                             @csrf
                                             <h2>Recover this item "{{$in['inventory_name']}}"?</h2>
                                             <button class="btn btn-success mt-4" type="submit">Yes, Recover</button>
@@ -165,9 +165,9 @@
                                 <div class="modal-body">
                                     <form action="/<?php 
                                         if($in['deleted_at'] == null){
-                                            echo "deleteInventory/".$in['id'];
+                                            echo "/inventory/deleteInventory/".$in['id'];
                                         } else {
-                                            echo "destroyInventory/".$in['id'];
+                                            echo "/inventory/destroyInventory/".$in['id'];
                                         }
                                         ?>" method="POST">
                                         @csrf

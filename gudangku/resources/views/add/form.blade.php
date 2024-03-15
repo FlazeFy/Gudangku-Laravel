@@ -1,4 +1,4 @@
-<form action="/add/addInventory" method="POST">
+<form action="/inventory/add/addInventory" method="POST">
     @csrf
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
     <div class="row">

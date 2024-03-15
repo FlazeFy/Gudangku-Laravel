@@ -86,12 +86,32 @@ hr {
     margin-top: var(--spaceXLG) !important;
 }
 
+.btn-feature {
+    cursor: pointer;
+    text-align: center;
+    font-weight: 600;
+    -webkit-transition: all 0.4s !important;
+    -o-transition: all 0.4s !important;
+    transition: all 0.4s !important;
+    padding: var(--spaceJumbo) !important;
+    border-radius: var(--roundedLG);
+    color: var(--whiteColor);
+    margin-right: var(--spaceLG) !important;
+    border: calc(var(--spaceMini) / 2) solid var(--primaryColor) !important;
+    width: 100%;
+}
+.btn-feature:hover {
+    border: var(--spaceMini) solid var(--primaryColor) !important;
+    transform: scale(1.05);
+    box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
+}
+
 /* Modal */
 .modal-content {
     border-radius: var(--roundedJumbo) !important;
     background: var(--darkColor);
     border: 1.75px solid var(--primaryColor);
-    box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
+    box-shadow: rgba(59, 130, 246, 0.35) 0px 6px 17px;
 }
 .modal-content h2 {
     font-weight: 600;
