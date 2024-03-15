@@ -48,4 +48,6 @@ Route::prefix('/stats')->group(function () {
 
 Route::prefix('/history')->group(function () {
     Route::get('/', [HistoryController::class, 'index']);
+
+    Route::post('/delete/{id}', [HistoryController::class, 'hard_delete']);
 });
