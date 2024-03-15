@@ -32,48 +32,14 @@
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div class="p-5 d-block mx-auto" style="max-width:1440px;">
-                @include('landing.dashboard')
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature" onclick="location.href='/inventory';">
-                            <i class="fa-solid fa-warehouse" style="font-size:100px;"></i>
-                            <h2 class="mt-3" style="font-size:var(--textJumbo);">My Inventory</h2>
-                        </button>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature" onclick="location.href='/stats';">
-                            <i class="fa-solid fa-pie-chart" style="font-size:100px;"></i>
-                            <h2 class="mt-3" style="font-size:var(--textJumbo);">Stats</h2>
-                        </button>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature" onclick="location.href='/history';">
-                            <i class="fa-solid fa-solid fa-clock-rotate-left" style="font-size:100px;"></i>
-                            <h2 class="mt-3" style="font-size:var(--textJumbo);">History</h2>
-                        </button>
-                    </div>
-                </div> 
-                <div class="row mt-4">
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature">
-                            <i class="fa-solid fa-scroll" style="font-size:100px;"></i>
-                            <h2 class="mt-3" style="font-size:var(--textJumbo);">Report</h2>
-                        </button>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature">
-                            <i class="fa-solid fa-trash" style="font-size:100px;"></i>
-                            <h2 class="mt-3" style="font-size:var(--textJumbo);">Trash</h2>
-                        </button>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature" onclick="location.href='/profile';">
-                            <i class="fa-solid fa-solid fa-user" style="font-size:100px;"></i>
-                            <h2 class="mt-3" style="font-size:var(--textJumbo);">My Profile</h2>
-                        </button>
-                    </div>
-                </div> 
+            <div class="p-5 d-block mx-auto" style="max-width:1440px; min-width:720px;">
+                <h2 class="text-white fw-bold mb-4" style="font-size:36px;">My Profile</h2>
+                <div class="d-flex justify-content-start">
+                    <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
+                    <a class="btn btn-danger mb-3 me-2"><i class="fa-solid fa-right-from-bracket" style="font-size:var(--textXLG);"></i> Sign Out</a>
+                    <a class="btn btn-primary mb-3 me-2" href="/forgot"><i class="fa-solid fa-key" style="font-size:var(--textXLG);"></i> Change Password</a>
+                </div>
+                @include('profile.profile')
             </div>
         </div>
     </body>

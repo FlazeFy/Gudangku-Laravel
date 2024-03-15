@@ -8,6 +8,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AddController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,4 +53,8 @@ Route::prefix('/history')->group(function () {
     Route::get('/', [HistoryController::class, 'index']);
 
     Route::post('/delete/{id}', [HistoryController::class, 'hard_delete']);
+});
+
+Route::prefix('/profile')->group(function () {
+    Route::get('/', [ProfileController::class, 'index']);
 });
