@@ -51,19 +51,13 @@
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div class="p-5 d-block mx-auto" style="max-width:1440px;">
+            <div class="p-5 d-block mx-auto" style="width:1440px;;">
                 @include('others.profile')
                 <h2 class="text-white fw-bold mb-4" style="font-size:36px;">My Inventory</h2>
-                <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
-                @include('home.toogle_view')
+                <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
                 <a class="btn btn-primary mb-3 me-2" href="/inventory/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Inventory</a>
                 <a class="btn btn-primary mb-3 me-2" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> Stats</a>
-                @php($selected = session()->get('toogle_view_inventory'))
-                @if($selected == 'table')
-                    @include('home.table')
-                @elseif($selected == 'catalog')
-                    @include('home.catalog')
-                @endif
+                @include('home.catalog.list')
             </div>
         </div>
     </body>

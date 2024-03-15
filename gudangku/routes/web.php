@@ -28,11 +28,13 @@ Route::prefix('/')->group(function () {
 
 Route::prefix('/inventory')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/by/{view}/{context}', [HomeController::class, 'catalog_index']);
     
     Route::post('/deleteInventory/{id}', [HomeController::class, 'soft_delete']);
     Route::post('/destroyInventory/{id}', [HomeController::class, 'hard_delete']);
     Route::post('/recoverInventory/{id}', [HomeController::class, 'recover']);
     Route::post('/favToggleInventory/{id}', [HomeController::class, 'fav_toogle']);
+    Route::post('/toogleView', [HomeController::class, 'toogle_view']);
 });
 
 Route::prefix('/inventory/add')->group(function () {

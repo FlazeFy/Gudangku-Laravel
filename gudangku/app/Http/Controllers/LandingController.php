@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Helpers\Generator;
+
 use App\Models\InventoryModel;
 
 class LandingController extends Controller
@@ -13,26 +15,35 @@ class LandingController extends Controller
      */
     public function index()
     {
-        if(!session()->get('toogle_total_stats')){
-            session()->put('toogle_total_stats', 'item');
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        if($user_id != null){
+            if(!session()->get('toogle_total_stats')){
+                session()->put('toogle_total_stats', 'item');
+            }
+            if(!session()->get('toogle_view_inventory')){
+                session()->put('toogle_view_inventory', 'table');
+            }
+
+            $total_item = InventoryModel::selectRaw('COUNT(1) AS total')
+                ->first();
+
+            $total_fav = InventoryModel::selectRaw('COUNT(1) AS total')
+                ->where('is_favorite','1')
+                ->first();
+
+            $total_low = InventoryModel::selectRaw('COUNT(1) AS total')
+                ->where('inventory_capacity_unit','percentage')
+                ->where('inventory_capacity_vol','<=',30)
+                ->first();
+
+            return view('landing.index')
+                ->with('total_item',$total_item)
+                ->with('total_fav',$total_fav)
+                ->with('total_low',$total_low);
+        } else {
+            return redirect("/login");
         }
-
-        $total_item = InventoryModel::selectRaw('COUNT(1) AS total')
-            ->first();
-
-        $total_fav = InventoryModel::selectRaw('COUNT(1) AS total')
-            ->where('is_favorite','1')
-            ->first();
-
-        $total_low = InventoryModel::selectRaw('COUNT(1) AS total')
-            ->where('inventory_capacity_unit','percentage')
-            ->where('inventory_capacity_vol','<=',30)
-            ->first();
-
-        return view('landing.index')
-            ->with('total_item',$total_item)
-            ->with('total_fav',$total_fav)
-            ->with('total_low',$total_low);
     }
 
     /**

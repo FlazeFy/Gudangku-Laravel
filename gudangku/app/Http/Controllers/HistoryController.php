@@ -16,13 +16,17 @@ class HistoryController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        $history = HistoryModel::select('*')
-            ->where('created_by',$user_id)
-            ->orderby('created_at', 'DESC')
-            ->get();
+        if($user_id != null){
+            $history = HistoryModel::select('*')
+                ->where('created_by',$user_id)
+                ->orderby('created_at', 'DESC')
+                ->get();
 
-        return view('history.index')
-            ->with('history',$history);
+            return view('history.index')
+                ->with('history',$history);
+        } else {
+            return redirect("/login");
+        }
     }
 
     public function hard_delete($id)
