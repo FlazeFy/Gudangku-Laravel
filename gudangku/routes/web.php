@@ -9,6 +9,7 @@ use App\Http\Controllers\AddController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,4 +58,8 @@ Route::prefix('/history')->group(function () {
 
 Route::prefix('/profile')->group(function () {
     Route::get('/', [ProfileController::class, 'index']);
+});
+
+Route::prefix('/calendar')->group(function () {
+    Route::get('/', [CalendarController::class, 'index']);
 });

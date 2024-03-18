@@ -58,6 +58,7 @@
                 @include('home.toogle_view')
                 <a class="btn btn-primary mb-3 me-2" href="/inventory/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Inventory</a>
                 <a class="btn btn-primary mb-3 me-2" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> Stats</a>
+                <a class="btn btn-primary mb-3 me-2" href="/calendar"><i class="fa-solid fa-calendar" style="font-size:var(--textXLG);"></i> Calendar</a>
                 @php($selected = session()->get('toogle_view_inventory'))
                 @if($selected == 'table')
                     @include('home.table')
