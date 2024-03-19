@@ -32,7 +32,7 @@
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div class="p-5 d-block mx-auto" style="max-width:1440px;">
+            <div class="p-5 d-block mx-auto" style="max-width:1080px;">
                 @include('landing.dashboard')
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12">

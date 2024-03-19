@@ -37,10 +37,29 @@ class LandingController extends Controller
                 ->where('inventory_capacity_vol','<=',30)
                 ->first();
 
+            $last_added = InventoryModel::select('inventory_name')
+                ->whereNull('deleted_at')
+                ->orderBy('created_at','DESC')
+                ->first();
+
+            $most_category = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
+                ->whereNull('deleted_at')
+                ->groupBy('inventory_category')
+                ->orderBy('total','DESC')
+                ->first();
+
+            $highest_price = InventoryModel::select('inventory_name', 'inventory_price')
+                ->whereNull('deleted_at')
+                ->orderBy('inventory_price','DESC')
+                ->first();
+
             return view('landing.index')
                 ->with('total_item',$total_item)
                 ->with('total_fav',$total_fav)
-                ->with('total_low',$total_low);
+                ->with('total_low',$total_low)
+                ->with('last_added',$last_added)
+                ->with('most_category',$most_category)
+                ->with('highest_price',$highest_price);
         } else {
             return redirect("/login");
         }

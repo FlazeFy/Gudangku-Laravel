@@ -20,6 +20,7 @@ class CalendarController extends Controller
         if($user_id != null){
             $inventory = InventoryModel::select('inventory_name','inventory_price','created_at')
                 ->where('created_by',$user_id)
+                ->whereNull('deleted_at')
                 ->get();
                 
             return view('calendar.index')
