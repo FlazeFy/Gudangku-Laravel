@@ -21,13 +21,13 @@ class Queries extends Controller
         if($check == null){
             $request->user()->currentAccessToken()->delete();
             return response()->json([
-                'message' => Generator::getMessageTemplate("custom", 'logout success', null)
+                'message' => 'logout success'
             ], Response::HTTP_OK);
         } else {
             // Admin
             $request->user()->currentAccessToken()->delete();
             return response()->json([
-                'message' => Generator::getMessageTemplate("custom", 'logout success', null)
+                'message' => 'logout success'
             ], Response::HTTP_OK);
         }
     }

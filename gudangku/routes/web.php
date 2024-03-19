@@ -58,6 +58,8 @@ Route::prefix('/history')->group(function () {
 
 Route::prefix('/profile')->group(function () {
     Route::get('/', [ProfileController::class, 'index']);
+
+    Route::post('/sign_out', [ProfileController::class, 'sign_out']);
 });
 
 Route::prefix('/calendar')->group(function () {

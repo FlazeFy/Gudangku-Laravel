@@ -36,7 +36,7 @@
                 <h2 class="text-white fw-bold mb-4" style="font-size:36px;">My Profile</h2>
                 <div class="d-flex justify-content-start">
                     <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
-                    <a class="btn btn-danger mb-3 me-2"><i class="fa-solid fa-right-from-bracket" style="font-size:var(--textXLG);"></i> Sign Out</a>
+                    @include('profile.sign_out')
                     <a class="btn btn-primary mb-3 me-2" href="/forgot"><i class="fa-solid fa-key" style="font-size:var(--textXLG);"></i> Change Password</a>
                 </div>
                 @include('profile.profile')
