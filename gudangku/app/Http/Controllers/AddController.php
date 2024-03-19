@@ -10,6 +10,11 @@ use App\Helpers\Audit;
 use App\Models\DictionaryModel;
 use App\Models\InventoryModel;
 
+use App\Jobs\ProcessMailer;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewInventoryMail;
+
+
 class AddController extends Controller
 {
     /**
@@ -40,9 +45,11 @@ class AddController extends Controller
 
     public function create(Request $request)
     {
+        $ctx = 'Create item';
         $user_id = Generator::getUserId(session()->get('role_key'));
+        $email = Generator::getUserEmail($user_id);
 
-        InventoryModel::create([
+        $data = [
             'id' => Generator::getUUID(), 
             'inventory_name' => $request->inventory_name, 
             'inventory_category' => $request->inventory_category, 
@@ -62,9 +69,15 @@ class AddController extends Controller
             'created_by' => $user_id,
             'updated_at' => null, 
             'deleted_at' => null
-        ]);
+        ];
 
-        Audit::createHistory('Create item', $request->inventory_name);
+        InventoryModel::create($data);
+
+        // Send email
+        dispatch(new ProcessMailer($ctx, $data, session()->get('username_key'), $email));
+
+        // History
+        Audit::createHistory($ctx, $request->inventory_name);
 
         return redirect()->route('home');
     }

@@ -3,6 +3,8 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 
+use App\Models\UserModel;
+
 class Generator
 {
     public static function getUUID(){
@@ -37,5 +39,13 @@ class Generator
         } else {
             return null;
         }
+    }
+
+    public static function getUserEmail($user_id){
+        $profile = UserModel::select('email')
+            ->where('id',$user_id)
+            ->first();
+
+        return $profile->email;
     }
 }
