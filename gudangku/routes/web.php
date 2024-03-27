@@ -37,6 +37,7 @@ Route::prefix('/inventory')->group(function () {
     Route::post('/recoverInventory/{id}', [HomeController::class, 'recover']);
     Route::post('/favToggleInventory/{id}', [HomeController::class, 'fav_toogle']);
     Route::post('/toogleView', [HomeController::class, 'toogle_view']);
+    Route::post('/saveAsCsv', [HomeController::class, 'save_as_csv']);
 });
 
 Route::prefix('/inventory/add')->group(function () {
@@ -54,6 +55,7 @@ Route::prefix('/history')->group(function () {
     Route::get('/', [HistoryController::class, 'index']);
 
     Route::post('/delete/{id}', [HistoryController::class, 'hard_delete']);
+    Route::post('/saveAsCsv', [HistoryController::class, 'save_as_csv']);
 });
 
 Route::prefix('/profile')->group(function () {

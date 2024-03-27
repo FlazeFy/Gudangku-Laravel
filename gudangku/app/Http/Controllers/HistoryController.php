@@ -5,7 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Helpers\Generator;
+use App\Helpers\Audit;
+
 use App\Models\HistoryModel;
+
+use App\Exports\HistoryExport;
+
+use Maatwebsite\Excel\Facades\Excel;
 
 class HistoryController extends Controller
 {
@@ -34,5 +40,14 @@ class HistoryController extends Controller
         HistoryModel::destroy($id);
 
         return redirect()->back();
+    }
+
+    public function save_as_csv(){
+        $data = HistoryModel::all();
+        $file_name = date('l, j F Y \a\t H:i:s');
+
+        Audit::createHistory('Print item', 'History');
+
+        return Excel::download(new HistoryExport($data), "$file_name-History Data.xlsx");
     }
 }

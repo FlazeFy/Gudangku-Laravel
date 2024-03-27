@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\AuthApi;
 
 use App\Models\UserModel;
 use App\Models\AdminModel;
-use App\Helpers\Generator;
 use App\Helpers\Validation;
 
 use Illuminate\Http\Request;
@@ -40,7 +39,7 @@ class Commands extends Controller
                 //if (!$user || ($request->password != $user->password)) {
                 return response()->json([
                     'status' => 'failed',
-                    'result' => Generator::getMessageTemplate("custom", 'wrong username or password', null),
+                    'result' => 'wrong username or password',
                     'token' => null,                
                 ], Response::HTTP_UNAUTHORIZED);
             } else {

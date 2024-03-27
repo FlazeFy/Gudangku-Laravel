@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\AuthApi;
 
-use App\Helpers\Generator;
 use App\Models\UserModel;
 use App\Models\AdminModel;
 

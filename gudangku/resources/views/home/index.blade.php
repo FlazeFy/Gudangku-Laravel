@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>GudangKu</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -59,6 +59,10 @@
                 <a class="btn btn-primary mb-3 me-2" href="/inventory/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Inventory</a>
                 <a class="btn btn-primary mb-3 me-2" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> Stats</a>
                 <a class="btn btn-primary mb-3 me-2" href="/calendar"><i class="fa-solid fa-calendar" style="font-size:var(--textXLG);"></i> Calendar</a>
+                <form class="d-inline" action="/inventory/saveAsCsv" method="POST">
+                    @csrf
+                    <button class="btn btn-primary mb-3 me-2" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Save as CSV</button>
+                </form>
                 @php($selected = session()->get('toogle_view_inventory'))
                 @if($selected == 'table')
                     @include('home.table')

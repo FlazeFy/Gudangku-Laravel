@@ -8,7 +8,10 @@ use App\Models\DictionaryModel;
 use App\Helpers\Generator;
 use App\Helpers\Audit;
 
+use App\Exports\InventoryExport;
+
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HomeController extends Controller
 {
@@ -132,6 +135,15 @@ class HomeController extends Controller
         Audit::createHistory('Recover item', $request->inventory_name);
 
         return redirect()->back();
+    }
+
+    public function save_as_csv(){
+        $data = InventoryModel::all();
+        $file_name = date('l, j F Y \a\t H:i:s');
+
+        Audit::createHistory('Print item', 'Inventory');
+
+        return Excel::download(new InventoryExport($data), "$file_name-Inventory Data.xlsx");
     }
 
     public function fav_toogle(Request $request, $id)

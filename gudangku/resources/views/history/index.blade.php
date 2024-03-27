@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>GudangKu</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -36,6 +36,10 @@
                 <h2 class="text-white fw-bold mb-4" style="font-size:36px;">History</h2>
                 <div class="d-flex justify-content-start">
                     <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
+                    <form class="d-inline" action="/history/saveAsCsv" method="POST">
+                        @csrf
+                        <button class="btn btn-primary mb-3 me-2" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Save as CSV</button>
+                    </form>
                 </div>
                 @include('history.list')
             </div>
