@@ -26,6 +26,7 @@ class StatsController extends Controller
             }
 
             $total_inventory_by_cat = InventoryModel::selectRaw("inventory_category as context, $query_total as total")
+                ->where('created_by', $user_id)
                 ->groupby('inventory_category')
                 ->get();
 
@@ -35,10 +36,12 @@ class StatsController extends Controller
                         ELSE 'Normal Item' 
                     END AS context, 
                     $query_total as total")
+                ->where('created_by', $user_id)
                 ->groupby('is_favorite')
                 ->get();
 
             $total_inventory_by_room = InventoryModel::selectRaw("inventory_room as context, $query_total as total")
+                ->where('created_by', $user_id)
                 ->groupby('inventory_room')
                 ->get();
 

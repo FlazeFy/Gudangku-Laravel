@@ -172,7 +172,11 @@ class HomeController extends Controller
                 'is_favorite' => $request->is_favorite
         ]);
 
-        Audit::createHistory('Set to favorite', $request->inventory_name, $user_id);
+        $ctx = 'Set';
+        if($request->is_favorite == 0){
+            $ctx = 'Unset';
+        }
+        Audit::createHistory($ctx.' to favorite', $request->inventory_name, $user_id);
 
         return redirect()->back();
     }
