@@ -29,3 +29,9 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::put('/fav_toggle/{id}', [CommandsInventoryController::class, 'fav_toogle_inventory_by_id']);
     Route::put('/recover/{id}', [CommandsInventoryController::class, 'recover_inventory_by_id']);
 });
+
+Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/total_inventory_by_category', [QueriesStatsController::class, 'get_total_inventory_by_category']);
+    Route::get('/total_inventory_by_favorite', [QueriesStatsController::class, 'get_total_inventory_by_favorite']);
+    Route::get('/total_inventory_by_room', [QueriesStatsController::class, 'get_total_inventory_by_room']);
+});
