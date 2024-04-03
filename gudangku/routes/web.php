@@ -24,11 +24,11 @@ use App\Http\Controllers\CalendarController;
 
 Route::prefix('/')->group(function () {
     Route::get('/', [LandingController::class, 'index'])->name('landing');
-    Route::get('/login', [LoginController::class, 'index']);
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::post('/login/validate', [LoginController::class, 'login_auth']);
 });
 
-Route::prefix('/inventory')->group(function () {
+Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/by/{view}/{context}', [HomeController::class, 'catalog_index']);
     
@@ -40,30 +40,30 @@ Route::prefix('/inventory')->group(function () {
     Route::post('/saveAsCsv', [HomeController::class, 'save_as_csv']);
 });
 
-Route::prefix('/inventory/add')->group(function () {
+Route::prefix('/inventory/add')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [AddController::class, 'index']);
 
     Route::post('/addInventory', [AddController::class, 'create']);
 });
 
-Route::prefix('/stats')->group(function () {
+Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [StatsController::class, 'index']);
     Route::post('/toogleTotal', [StatsController::class, 'toogle_total']);
 });
 
-Route::prefix('/history')->group(function () {
+Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HistoryController::class, 'index']);
 
     Route::post('/delete/{id}', [HistoryController::class, 'hard_delete']);
     Route::post('/saveAsCsv', [HistoryController::class, 'save_as_csv']);
 });
 
-Route::prefix('/profile')->group(function () {
+Route::prefix('/profile')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ProfileController::class, 'index']);
 
     Route::post('/sign_out', [ProfileController::class, 'sign_out']);
 });
 
-Route::prefix('/calendar')->group(function () {
+Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [CalendarController::class, 'index']);
 });

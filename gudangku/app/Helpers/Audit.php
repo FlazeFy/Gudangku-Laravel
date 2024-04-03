@@ -31,9 +31,7 @@ class Audit
         return "Time taken: {$elp} seconds";
     }
 
-    public static function createHistory($type, $ctx){
-        $user_id = Generator::getUserId(session()->get('role_key'));
-        
+    public static function createHistory($type, $ctx, $user_id){        
         HistoryModel::create([
             'id' => Generator::getUUID(), 
             'history_type' => $type, 

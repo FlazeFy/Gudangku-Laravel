@@ -108,51 +108,71 @@ class HomeController extends Controller
 
     public function soft_delete(Request $request, $id)
     {
-        InventoryModel::where('id',$id)->update([
-            'deleted_at' => date('Y-m-d H:i:s')
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        InventoryModel::where('id',$id)
+            ->where('created_by', $user_id)
+            ->update([
+                'deleted_at' => date('Y-m-d H:i:s')
         ]);
 
-        Audit::createHistory('Delete item', $request->inventory_name);
+        Audit::createHistory('Delete item', $request->inventory_name, $user_id);
 
         return redirect()->back();
     }
 
     public function hard_delete(Request $request, $id)
     {
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
         InventoryModel::destroy($id);
 
-        Audit::createHistory('Permentally delete item', $request->inventory_name);
+        Audit::createHistory('Permentally delete item', $request->inventory_name, $user_id);
 
         return redirect()->back();
     }
 
     public function recover(Request $request, $id)
     {
-        InventoryModel::where('id',$id)->update([
-            'deleted_at' => null
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        InventoryModel::where('id',$id)
+            ->where('created_by', $user_id)
+            ->update([
+                'deleted_at' => null
         ]);
 
-        Audit::createHistory('Recover item', $request->inventory_name);
+        Audit::createHistory('Recover item', $request->inventory_name, $user_id);
 
         return redirect()->back();
     }
 
     public function save_as_csv(){
-        $data = InventoryModel::all();
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        $data = InventoryModel::select('*')
+            ->where('created_by', $user_id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
         $file_name = date('l, j F Y \a\t H:i:s');
 
-        Audit::createHistory('Print item', 'Inventory');
+        Audit::createHistory('Print item', 'Inventory', $user_id);
 
         return Excel::download(new InventoryExport($data), "$file_name-Inventory Data.xlsx");
     }
 
     public function fav_toogle(Request $request, $id)
     {
-        InventoryModel::where('id',$id)->update([
-            'is_favorite' => $request->is_favorite
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        InventoryModel::where('id',$id)
+            ->where('created_by', $user_id)
+            ->update([
+                'is_favorite' => $request->is_favorite
         ]);
 
-        Audit::createHistory('Set to favorite', $request->inventory_name);
+        Audit::createHistory('Set to favorite', $request->inventory_name, $user_id);
 
         return redirect()->back();
     }

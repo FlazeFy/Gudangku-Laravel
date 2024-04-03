@@ -77,7 +77,7 @@ class AddController extends Controller
         dispatch(new ProcessMailer($ctx, $data, session()->get('username_key'), $email));
 
         // History
-        Audit::createHistory($ctx, $request->inventory_name);
+        Audit::createHistory($ctx, $request->inventory_name, $user_id);
 
         return redirect()->route('home');
     }

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+// Helpers
 use App\Helpers\Generator;
 use App\Helpers\Audit;
 
+// Models
 use App\Models\HistoryModel;
 
+// Exports
 use App\Exports\HistoryExport;
 
 use Maatwebsite\Excel\Facades\Excel;
@@ -43,10 +46,16 @@ class HistoryController extends Controller
     }
 
     public function save_as_csv(){
-        $data = HistoryModel::all();
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        $data = HistoryModel::select('*')
+            ->where('created_by', $user_id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+            
         $file_name = date('l, j F Y \a\t H:i:s');
 
-        Audit::createHistory('Print item', 'History');
+        Audit::createHistory('Print item', 'History', $user_id);
 
         return Excel::download(new HistoryExport($data), "$file_name-History Data.xlsx");
     }
