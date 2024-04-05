@@ -9,6 +9,9 @@ use App\Http\Controllers\Api\AuthApi\Queries as QueryAuthApi;
 use App\Http\Controllers\Api\InventoryApi\Queries as QueriesInventoryController;
 use App\Http\Controllers\Api\InventoryApi\Commands as CommandsInventoryController;
 
+use App\Http\Controllers\Api\HistoryApi\Queries as QueriesHistoryController;
+use App\Http\Controllers\Api\HistoryApi\Commands as CommandsHistoryController;
+
 use App\Http\Controllers\Api\StatsApi\Queries as QueriesStatsController;
 
 
@@ -34,4 +37,10 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/total_inventory_by_category', [QueriesStatsController::class, 'get_total_inventory_by_category']);
     Route::get('/total_inventory_by_favorite', [QueriesStatsController::class, 'get_total_inventory_by_favorite']);
     Route::get('/total_inventory_by_room', [QueriesStatsController::class, 'get_total_inventory_by_room']);
+});
+
+Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [QueriesHistoryController::class, 'get_all_history']);
+    
+    Route::delete('/destroy/{id}', [CommandsHistoryController::class, 'hard_delete_history_by_id']);
 });

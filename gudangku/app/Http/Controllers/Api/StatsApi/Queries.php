@@ -53,7 +53,7 @@ class Queries extends Controller
                         WHEN is_favorite = 1 THEN 'Favorite' 
                         ELSE 'Normal Item' 
                     END AS context, 
-                    $query_total as total")
+                    COUNT(1) as total")
                 ->where('created_by', $user_id)
                 ->groupby('is_favorite')
                 ->get();
@@ -73,7 +73,7 @@ class Queries extends Controller
             }
         } catch(\Exception $e) {
             return response()->json([
-                'status' => 'error',
+                'status' => $e->getMessage(),
                 'message' => 'something wrong. Please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -84,7 +84,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::selectRaw("inventory_room as context, $query_total as total")
+            $res = InventoryModel::selectRaw("inventory_room as context, COUNT(1) as total")
                 ->where('created_by', $user_id)
                 ->groupby('inventory_room')
                 ->get();
