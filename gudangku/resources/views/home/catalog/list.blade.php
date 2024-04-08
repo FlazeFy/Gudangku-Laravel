@@ -6,7 +6,11 @@
             @if($in['is_favorite'] == '1')
                 <span style="background: var(--dangerBG); top:-15px; left:-20px;" class="p-3 me-1 rounded-circle position-absolute"><i class="fa-solid fa-heart mx-1"></i></span>
             @endif
-            <i class="fa-solid fa-box" style="font-size:90px;"></i>
+            @if($in->inventory_image == null)
+                <i class="fa-solid fa-box" style="font-size:90px;"></i>
+            @else 
+                <img class="img img-fluid" style="border-radius: var(--roundedMD);" src="{{$in->inventory_image}}" title="{{$in->inventory_name}}">
+            @endif
             <h2 class="mt-3" style="font-size:var(--textXLG);">{{$in['inventory_name']}}</h2>
             <div class="mt-3">
                 <span style="background: var(--successBG);" class="py-1 px-2 me-1 rounded">Rp. {{number_format($in['inventory_price'], 0, ',', '.')}}</span>

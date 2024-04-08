@@ -59,6 +59,7 @@ class AddController extends Controller
             'inventory_storage' => $request->inventory_storage, 
             'inventory_rack' => $request->inventory_rack, 
             'inventory_price' => $request->inventory_price, 
+            'inventory_image' => $request->inventory_image, 
             'inventory_unit' => $request->inventory_unit, 
             'inventory_vol' => $request->inventory_vol, 
             'inventory_capacity_unit' => $request->inventory_capacity_unit, 

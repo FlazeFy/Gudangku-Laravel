@@ -4,15 +4,17 @@
     <div class="row">
         <div class="col-lg-6 py-2">
             <label>Name</label>
-            <input type="text" name="inventory_name" class="form-control mt-2"/>
-        </div>
-        <div class="col-lg-6 py-2">
+            <input type="text" name="inventory_name" class="form-control my-2"/>
+
             <label>Category</label>
             <select class="form-select mt-2" name="inventory_category" aria-label="Default select example">
                 @foreach($dct_cat as $dct)
                     <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
                 @endforeach
             </select>
+        </div>
+        <div class="col-lg-6 py-2">
+            @include('add.image_picker')
         </div>
         <div class="col-lg-12 py-2">
             <label>Description</label>

@@ -24,6 +24,28 @@
             <tr <?php if($in['deleted_at'] != null){ echo 'style="background:rgba(221, 0, 33, 0.15);"';} ?>>
                 <th scope="row">{{$i}}</th>
                 <td>
+                    @if($in->inventory_image != null)
+                        <button type="button" class="btn btn-image" data-bs-toggle="modal" data-bs-target="#zoom_image-{{$in->id}}"><img src="{{$in->inventory_image}}" title="{{$in->inventory_name}}"></button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="zoom_image-{{$in->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div>
+                                        <h4 class="modal-title fw-bold" id="staticBackdropLabel">{{$in->inventory_name}}</h4>
+                                        <h5 class="modal-title" id="staticBackdropLabel">{{$in->inventory_category}}</h5>
+                                    </div>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img class="img img-fluid" style="border-radius: var(--roundedMD);" src="{{$in->inventory_image}}" title="{{$in->inventory_name}}">
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    @endif
+
                     @if($in['is_favorite'])
                         <i class="fa-solid fa-bookmark" style="color:var(--primaryColor);" title="Favorite"></i>
                     @endif

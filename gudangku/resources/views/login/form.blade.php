@@ -14,6 +14,7 @@
     <a class="error_input" id="all_msg"></a><br>
 
     <input hidden name="token" value="" id="token">
+    <input hidden name="id" value="" id="id">
     <input hidden name="email" value="" id="email">
     <input hidden name="role" value="" id="role">
     <input hidden name="profile_pic" value="" id="profile_pic">
@@ -55,7 +56,7 @@
                     $('#token').val(response.token)
                     $('#role').val(response.role)
                     $('#email').val(response.result.email)
-                    $('#profile_pic').val(response.result.image_url)
+                    $('#id').val(response.result.id)
                     $('#form-login').submit()
                 } else {
                     $('#username_msg').html("")

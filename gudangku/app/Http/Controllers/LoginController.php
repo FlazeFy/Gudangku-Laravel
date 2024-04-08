@@ -19,6 +19,7 @@ class LoginController extends Controller
         $request->session()->put('role_key', $request->role);
         $request->session()->put('token_key', $request->token);
         $request->session()->put('email_key', $request->email);
+        $request->session()->put('id_key', $request->id);
 
         return redirect()->route('landing');
     }

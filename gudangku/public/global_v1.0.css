@@ -133,3 +133,19 @@ hr {
     color: var(--whiteColor) !important;
     font-size: var(--textXMD) !important;
 }
+
+/* Image */
+.btn-image {
+    padding: 0 !important;
+    border-radius: var(--roundedMD) !important;
+    border: 0 !important;
+    background: var(--primaryColor);
+    cursor: pointer;
+    min-width: 180px;
+    margin-bottom: var(--spaceSM);
+}
+
+.btn-image img {
+    margin: 0;
+    border-radius: var(--roundedMD) !important;
+}
