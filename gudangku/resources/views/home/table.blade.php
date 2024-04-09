@@ -247,7 +247,42 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-warning me-2" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i></button>
+                            <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#modalEditReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;"> 
+                                <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i>
+                            </button>
+                            <div class="modal fade" id="modalEditReminder_{{$in->reminder_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Edit Reminder</h2>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/inventory/editReminder/{{$in['reminder_id']}}" method="POST">
+                                                @csrf
+                                                <label>Description</label>
+                                                <textarea name="reminder_desc" class="form-control mt-2">{{$in['reminder_desc']}}</textarea>
+
+                                                <label>Type</label>
+                                                <select class="form-select mt-2" name="reminder_type" aria-label="Default select example">
+                                                    @foreach($dct_reminder_type as $dct)
+                                                        <option value="{{$dct['dictionary_name']}}" <?php if($in['reminder_type'] == $dct['dictionary_name']){ echo'selected'; } ?>>{{$dct['dictionary_name']}}</option>
+                                                    @endforeach
+                                                </select>
+
+                                                <label>Context</label>
+                                                <select class="form-select mt-2" name="reminder_context" aria-label="Default select example">
+                                                    @foreach($dct_reminder_context as $dct)
+                                                        <option value="{{$dct['dictionary_name']}}" <?php if($in['reminder_context'] == $dct['dictionary_name']){ echo'selected'; } ?>>{{$dct['dictionary_name']}}</option>
+                                                    @endforeach
+                                                </select>
+
+                                                <button class="btn btn-success mt-4" type="submit">Save Changes</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <button class="btn btn-success" data-bs-toggle="modal" onclick="loadDatatableInventoryReminder('<?= $in->reminder_id; ?>')" data-bs-target="#modalCopyReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
                                 <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i>

@@ -31,6 +31,12 @@ class HomeController extends Controller
             ->orderBy('inventory_name','DESC')
             ->get();
 
+        $dct_reminder_type = DictionaryModel::where('dictionary_type', 'reminder_type')
+            ->get();
+
+        $dct_reminder_context = DictionaryModel::where('dictionary_type', 'reminder_context')
+            ->get();
+
         if($user_id != null){
             $selected = session()->get('toogle_view_inventory');
             if($selected == 'table'){
@@ -46,7 +52,9 @@ class HomeController extends Controller
 
                 return view('home.index')
                     ->with('inventory',$inventory)
-                    ->with('inventory_name',$inventory_name);
+                    ->with('inventory_name',$inventory_name)
+                    ->with('dct_reminder_type', $dct_reminder_type)
+                    ->with('dct_reminder_context', $dct_reminder_context);
             } elseif($selected == 'catalog'){
                 $room = DictionaryModel::selectRaw('dictionary_name, COUNT(1) as total')
                     ->leftjoin('inventory','inventory_room','=','dictionary_name')
@@ -73,7 +81,9 @@ class HomeController extends Controller
                     ->with('room',$room)
                     ->with('category',$category)
                     ->with('storage',$storage)
-                    ->with('inventory_name',$inventory_name);
+                    ->with('inventory_name',$inventory_name)
+                    ->with('dct_reminder_type', $dct_reminder_type)
+                    ->with('dct_reminder_context', $dct_reminder_context);
             }
         } else {
             return redirect("/login");
@@ -241,4 +251,23 @@ class HomeController extends Controller
 
         return redirect()->back();
     }
+
+    public function edit_reminder(Request $request, $id)
+    {
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        ReminderModel::where('id',$id)
+            ->where('created_by', $user_id)
+            ->update([
+                'reminder_desc' => $request->reminder_desc,
+                'reminder_type' => $request->reminder_type,
+                'reminder_context' => $request->reminder_context,
+                'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        Audit::createHistory('Updated reminder', $request->reminder_desc, $user_id);
+
+        return redirect()->back();
+    }
+
 }
