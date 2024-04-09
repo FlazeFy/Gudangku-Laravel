@@ -25,10 +25,14 @@ class HomeController extends Controller
         if($user_id != null){
             $selected = session()->get('toogle_view_inventory');
             if($selected == 'table'){
-                $inventory = InventoryModel::select('*')
-                    ->where('created_by',$user_id)
+                $inventory = InventoryModel::select('inventory.id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_room', 
+                    'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 
+                    'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'inventory.created_at', 'inventory.updated_at', 'inventory.deleted_at',
+                    'reminder.id as reminder_id', 'reminder_desc', 'reminder_type', 'reminder_context', 'reminder.created_at as reminder_created_at', 'reminder.updated_at as reminder_updated_at')
+                    ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
+                    ->where('inventory.created_by',$user_id)
                     ->orderBy('is_favorite', 'desc')
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('inventory.created_at', 'desc')
                     ->get();
 
                 return view('home.index')
@@ -88,12 +92,16 @@ class HomeController extends Controller
                     ->orderby('inventory_storage','ASC')
                     ->get();
             }
-
-            $inventory = InventoryModel::select('*')
-                ->where('created_by', $user_id)
+            
+            $inventory = InventoryModel::select('inventory.id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_room', 
+                'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 
+                'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'inventory.created_at', 'inventory.updated_at', 'inventory.deleted_at',
+                'reminder.id as reminder_id', 'reminder_desc', 'reminder_type', 'reminder_context', 'reminder.created_at as reminder_created_at', 'reminder.updated_at as reminder_updated_at')
+                ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
                 ->where("inventory_$view", $context)
+                ->where('inventory.created_by',$user_id)
                 ->orderBy('is_favorite', 'desc')
-                ->orderBy('created_at', 'desc')
+                ->orderBy('inventory.created_at', 'desc')
                 ->get();
 
             return view('home.catalog.index')

@@ -52,12 +52,19 @@
     --shadowColor : #E0E0E0;
 }
 
+.bg-success {
+    background: var(--successBG) !important;
+}
+
 input, button, .btn, textarea, select{
     padding: var(--spaceMD) !important;
-    background: transparent !important;
+    background: transparent;
     color: var(--whiteColor) !important;
     border-radius: var(--roundedLG) !important;
     border-width: 1.75px !important;
+}
+input, textarea, select{
+    background: transparent !important;
 }
 
 a, label, h1, h2, h3, h4, h5, h6, p, table, .dataTables_info {
@@ -148,4 +155,13 @@ hr {
 .btn-image img {
     margin: 0;
     border-radius: var(--roundedMD) !important;
+}
+
+.box-reminder {
+    background-color:rgba(0, 195, 99, 0.2);
+    padding: var(--spaceMD);
+    border-radius: var(--roundedMD);
+}
+.box-reminder {
+    font-size: var(--textMD);
 }

@@ -37,7 +37,7 @@ or
 > php artisan make:controller <NAMA-Controller>Controller --resource
 
 # Make Model
-> php artisan make:model <NAMA-Model>
+> php artisan make:model <NAMA-Model>Model
 
 # Make Seeder
 > php artisan make:seeder <NAMA-TABEL>Seeder

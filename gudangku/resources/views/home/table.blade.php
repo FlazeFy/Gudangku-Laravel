@@ -11,6 +11,7 @@
             <th scope="col">Price</th>
             <th scope="col">Unit</th>
             <th scope="col">Capacity</th>
+
             <th scope="col">Info</th>
             <th scope="col">Favorite</th>
             <th scope="col">Reminder</th>
@@ -22,8 +23,8 @@
         @php($i = 1)
         @foreach($inventory as $in)
             <tr <?php if($in['deleted_at'] != null){ echo 'style="background:rgba(221, 0, 33, 0.15);"';} ?>>
-                <th scope="row">{{$i}}</th>
-                <td>
+                <th scope="row" <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$i}}</th>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
                     @if($in->inventory_image != null)
                         <button type="button" class="btn btn-image" data-bs-toggle="modal" data-bs-target="#zoom_image-{{$in->id}}"><img src="{{$in->inventory_image}}" title="{{$in->inventory_name}}"></button>
 
@@ -51,23 +52,23 @@
                     @endif
                     {{$in['inventory_name']}}
                 </td>
-                <td>{{$in['inventory_category']}}</td>
-                <td>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$in['inventory_category']}}</td>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
                     @if($in['inventory_desc'] != null)
                         {{$in['inventory_desc']}} 
                     @else 
                         -
                     @endif
                 </td>
-                <td>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
                     @if($in['inventory_merk'] != null)
                         {{$in['inventory_merk']}} 
                     @else 
                         -
                     @endif
                 </td>
-                <td>{{$in['inventory_room']}}</td>
-                <td>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$in['inventory_room']}}</td>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
                     @if($in['inventory_storage'] != null)
                         {{$in['inventory_storage']}} 
                     @else 
@@ -80,9 +81,9 @@
                         -
                     @endif
                 </td>
-                <td>Rp. {{number_format($in['inventory_price'], 0, ',', '.')}}</td>
-                <td>{{$in['inventory_vol']}} {{$in['inventory_unit']}}</td>
-                <td>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>Rp. {{number_format($in['inventory_price'], 0, ',', '.')}}</td>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$in['inventory_vol']}} {{$in['inventory_unit']}}</td>
+                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
                     @if($in['inventory_capacity_unit'] == 'percentage')
                         {{$in['inventory_capacity_vol']}}%
                     @elseif($in['inventory_capacity_unit'] == null)
@@ -133,7 +134,7 @@
                         <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i></button>
                     </form>
                 </td>
-                <td><button class="btn btn-success"><i class="fa-solid fa-bell" style="font-size:var(--textXLG);"></i></button></td>
+                <td><button class="btn btn-success <?php if($in->reminder_id){ echo"bg-success border-0"; } ?>"><i class="fa-solid <?php if($in->reminder_id){ echo"fa-bell"; } else { echo"fa-bell-slash"; } ?>" style="font-size:var(--textXLG);"></i></button></td>
                 <td>
                     <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal<?php
                         if($in['deleted_at'] != null){
@@ -212,6 +213,25 @@
                     </div>
                 </td>
             </tr>
+
+            @if($in->reminder_id)
+                <tr style="border-style : hidden!important;">
+                    <td colspan="5">
+                        <div class="box-reminder">
+                            <h5 class="fw-bold mb-0">Reminder | {{ucwords(str_replace("_"," ",$in->reminder_type))}}</h5>
+                            <p>{{$in->reminder_desc}}</p>
+                            <p class="mt-2 mb-0">Time : {{ucwords(str_replace("_"," ",$in->reminder_context))}}</p>
+                            <p class="my-0">Created At : {{date('Y-m-d H:i', strtotime($in->reminder_created_at))}}</p><hr class="my-2">
+                            <button class="btn btn-danger me-2" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-trash" style="font-size:var(--textSM);"></i></button>
+                            <button class="btn btn-warning me-2" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i></button>
+                            <button class="btn btn-success" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="15"></td>
+                </tr>
+            @endif
             @php($i++)
         @endforeach
     </tbody>
