@@ -162,6 +162,6 @@ hr {
     padding: var(--spaceMD);
     border-radius: var(--roundedMD);
 }
-.box-reminder {
+.box-reminder p, .box-reminder h5 {
     font-size: var(--textMD);
 }

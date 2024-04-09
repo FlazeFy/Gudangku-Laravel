@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InventoryModel;
 use App\Models\DictionaryModel;
+use App\Models\ReminderModel;
 
 use App\Helpers\Generator;
 use App\Helpers\Audit;
@@ -192,6 +193,17 @@ class HomeController extends Controller
     public function toogle_view(Request $request)
     {
         $request->session()->put('toogle_view_inventory', $request->toogle_view);
+
+        return redirect()->back();
+    }
+
+    public function hard_delete_reminder(Request $request, $id)
+    {
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        ReminderModel::destroy($id);
+
+        Audit::createHistory('Permentally delete reminder', $request->reminder_desc, $user_id);
 
         return redirect()->back();
     }

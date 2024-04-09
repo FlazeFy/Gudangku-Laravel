@@ -222,7 +222,31 @@
                             <p>{{$in->reminder_desc}}</p>
                             <p class="mt-2 mb-0">Time : {{ucwords(str_replace("_"," ",$in->reminder_context))}}</p>
                             <p class="my-0">Created At : {{date('Y-m-d H:i', strtotime($in->reminder_created_at))}}</p><hr class="my-2">
-                            <button class="btn btn-danger me-2" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-trash" style="font-size:var(--textSM);"></i></button>
+
+                            <button class="btn btn-danger me-2"  data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;"> 
+                                <i class="fa-solid fa-trash" style="font-size:var(--textSM);"></i>
+                            </button>
+                            <div class="modal fade" id="modalDeleteReminder_{{$in->reminder_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/inventory/destroyReminder/{{$in['reminder_id']}}" method="POST">
+                                                @csrf
+                                                <input hidden name="reminder_desc" value="{{$in['reminder_desc']}}"/>
+                                                <h2><span class="text-danger">Permentally Delete</span>
+                                                    this reminder "{{$in['reminder_desc']}}"?
+                                                </h2>
+                                                <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button class="btn btn-warning me-2" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i></button>
                             <button class="btn btn-success" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i></button>
                         </div>
