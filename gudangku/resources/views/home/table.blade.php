@@ -223,7 +223,7 @@
                             <p class="mt-2 mb-0">Time : {{ucwords(str_replace("_"," ",$in->reminder_context))}}</p>
                             <p class="my-0">Created At : {{date('Y-m-d H:i', strtotime($in->reminder_created_at))}}</p><hr class="my-2">
 
-                            <button class="btn btn-danger me-2"  data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;"> 
+                            <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;"> 
                                 <i class="fa-solid fa-trash" style="font-size:var(--textSM);"></i>
                             </button>
                             <div class="modal fade" id="modalDeleteReminder_{{$in->reminder_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -248,7 +248,61 @@
                             </div>
 
                             <button class="btn btn-warning me-2" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i></button>
-                            <button class="btn btn-success" style="padding: var(--spaceMini) var(--spaceSM) !important;"> <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i></button>
+
+                            <button class="btn btn-success" data-bs-toggle="modal" onclick="loadDatatableInventoryReminder('<?= $in->reminder_id; ?>')" data-bs-target="#modalCopyReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
+                                <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i>
+                            </button>
+                            <div class="modal fade" id="modalCopyReminder_{{$in->reminder_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Copy Reminder</h2>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/inventory/copyReminder/{{$in['reminder_id']}}" method="POST">
+                                                @csrf
+                                                @php($tb=0)
+                                                <input hidden value="{{$in->reminder_context}}" name="reminder_context">
+                                                <input hidden value="{{$in->reminder_desc}}" name="reminder_desc">
+                                                <input hidden value="{{$in->reminder_type}}" name="reminder_type">
+                                                <table class="table" id="tb-inventory-name-{{$in->reminder_id}}">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">
+                                                                <span id="checked_all_holder_btn">
+                                                                    <a class="btn btn-primary" onclick="toogleCheck()" style="font-size:var(--textMD); padding: var(--spaceMini) var(--spaceSM) !important;">Check All</a>
+                                                                </span>
+                                                            </th>
+                                                            <th scope="col">Inventory Name</th>
+                                                            <th scope="col">Category</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($inventory_name as $inn)
+                                                            @if($inn->inventory_name != $in->inventory_name)
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input check-inventory" type="checkbox" name="inventory_id[]" value="{{$inn->id}}" id="flexCheckDefault">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>{{$inn['inventory_name']}}</td>
+                                                                    <td>{{$inn['inventory_category']}}</td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                    </tbody>
+                                                </table><br>
+                                                @php($tb++)
+                                                <input hidden name="reminder_desc" value="{{$in['reminder_desc']}}"/>
+                                                <h2>Are you sure to copy this reminder "{{$in['reminder_desc']}}" to inventory <span id="inventory_selected_name"></span>?</h2>
+                                                <button class="btn btn-success mt-4" type="submit">Yes, Copy</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -262,10 +316,42 @@
 </table>
 
 <script>
-    const date_holder = document.querySelectorAll('.date_holder');
+    let toogle_check = 0
+    const date_holder = document.querySelectorAll('.date_holder')
 
     date_holder.forEach(e => {
         const date = new Date(e.textContent);
-        e.textContent = getDateToContext(e.textContent, "datetime");
+        e.textContent = getDateToContext(e.textContent, "datetime")
     });
+
+    function loadDatatableInventoryReminder(id){
+        $(`#tb-inventory-name-${id}`).DataTable({
+            // columnDefs: [
+            //     { targets: 0, orderable: true, searchable: true},
+            //     { targets: 1, orderable: true, searchable: false },
+            //     { targets: '_all', orderable: false, searchable: false}
+            // ],
+        });
+    }
+
+    function toogleCheck(){
+        const checked_all_holder_btn = document.getElementById('checked_all_holder_btn')
+        const inventoryCheck = document.querySelectorAll('.check-inventory')
+        
+        if(toogle_check % 2 != 0){
+            inventoryCheck.forEach(el => {
+                el.checked = false
+            });
+            checked_all_holder_btn.innerHTML = `<a class="btn btn-primary" onclick="toogleCheck()" 
+                style="font-size:var(--textMD); padding: var(--spaceMini) var(--spaceSM) !important;">Check All</a>`
+        } else {
+            inventoryCheck.forEach(el => {
+                el.checked = true
+            });
+            checked_all_holder_btn.innerHTML = `<a class="btn btn-danger" onclick="toogleCheck()" 
+                style="font-size:var(--textMD); padding: var(--spaceMini) var(--spaceSM) !important;">Uncheck All</a>`
+        }
+
+        toogle_check++
+    }
 </script>

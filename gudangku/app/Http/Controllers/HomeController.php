@@ -23,6 +23,14 @@ class HomeController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
+        $inventory_name = InventoryModel::select('inventory.id','inventory_name','inventory_category')
+            ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
+            ->where('inventory.created_by',$user_id)
+            ->whereNull('deleted_at')
+            ->whereNull('reminder.inventory_id')
+            ->orderBy('inventory_name','DESC')
+            ->get();
+
         if($user_id != null){
             $selected = session()->get('toogle_view_inventory');
             if($selected == 'table'){
@@ -37,7 +45,8 @@ class HomeController extends Controller
                     ->get();
 
                 return view('home.index')
-                    ->with('inventory',$inventory);
+                    ->with('inventory',$inventory)
+                    ->with('inventory_name',$inventory_name);
             } elseif($selected == 'catalog'){
                 $room = DictionaryModel::selectRaw('dictionary_name, COUNT(1) as total')
                     ->leftjoin('inventory','inventory_room','=','dictionary_name')
@@ -63,7 +72,8 @@ class HomeController extends Controller
                 return view('home.index')
                     ->with('room',$room)
                     ->with('category',$category)
-                    ->with('storage',$storage);
+                    ->with('storage',$storage)
+                    ->with('inventory_name',$inventory_name);
             }
         } else {
             return redirect("/login");
@@ -204,6 +214,30 @@ class HomeController extends Controller
         ReminderModel::destroy($id);
 
         Audit::createHistory('Permentally delete reminder', $request->reminder_desc, $user_id);
+
+        return redirect()->back();
+    }
+
+    public function copy_reminder(Request $request, $id)
+    {
+        $user_id = Generator::getUserId(session()->get('role_key'));
+
+        $count = count($request->inventory_id);
+
+        for($i = 0; $i < $count; $i++){
+            ReminderModel::create([
+                'id' => Generator::getUUID(), 
+                'inventory_id' => $request->inventory_id[$i], 
+                'reminder_desc' => $request->reminder_desc, 
+                'reminder_type' => $request->reminder_type, 
+                'reminder_context' => $request->reminder_context, 
+                'created_at' => date('Y-m-d H:i:s'), 
+                'created_by' => $user_id, 
+                'updated_at' => null
+            ]);
+        }
+
+        Audit::createHistory('Copy reminder', $request->reminder_desc, $user_id);
 
         return redirect()->back();
     }

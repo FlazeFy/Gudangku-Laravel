@@ -165,3 +165,24 @@ hr {
 .box-reminder p, .box-reminder h5 {
     font-size: var(--textMD);
 }
+
+.form-check-input {
+    border: 1.5px solid var(--primaryColor) !important;
+    cursor: pointer;
+}
+.form-check-input:checked {
+    background: var(--primaryColor) !important;
+}
+
+.form-check-input:checked::after {
+    content: "\2713"; /* Unicode checkmark character */
+    display: block;
+    width: 10px;
+    height: 10px;
+    color: #fff; /* White checkmark color */
+    font-size: var(--textJumbo); /* Adjust size as needed */
+    line-height: 1; /* Center vertically */
+    text-align: center; /* Center horizontally */
+    margin-top: -10px;
+    margin-left: -10px;
+}
