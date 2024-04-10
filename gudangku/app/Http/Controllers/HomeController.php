@@ -23,22 +23,23 @@ class HomeController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        $inventory_name = InventoryModel::select('inventory.id','inventory_name','inventory_category')
-            ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
-            ->where('inventory.created_by',$user_id)
-            ->whereNull('deleted_at')
-            ->whereNull('reminder.inventory_id')
-            ->orderBy('inventory_name','DESC')
-            ->get();
-
-        $dct_reminder_type = DictionaryModel::where('dictionary_type', 'reminder_type')
-            ->get();
-
-        $dct_reminder_context = DictionaryModel::where('dictionary_type', 'reminder_context')
-            ->get();
-
         if($user_id != null){
             $selected = session()->get('toogle_view_inventory');
+
+            $inventory_name = InventoryModel::select('inventory.id','inventory_name','inventory_category')
+                ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
+                ->where('inventory.created_by',$user_id)
+                ->whereNull('deleted_at')
+                ->whereNull('reminder.inventory_id')
+                ->orderBy('inventory_name','DESC')
+                ->get();
+
+            $dct_reminder_type = DictionaryModel::where('dictionary_type', 'reminder_type')
+                ->get();
+
+            $dct_reminder_context = DictionaryModel::where('dictionary_type', 'reminder_context')
+                ->get();
+                
             if($selected == 'table'){
                 $inventory = InventoryModel::select('inventory.id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_room', 
                     'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 

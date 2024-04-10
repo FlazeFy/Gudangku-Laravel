@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AddController;
+use App\Http\Controllers\EditController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
@@ -47,6 +48,10 @@ Route::prefix('/inventory/add')->middleware(['auth_v2:sanctum'])->group(function
     Route::get('/', [AddController::class, 'index']);
 
     Route::post('/addInventory', [AddController::class, 'create']);
+});
+
+Route::prefix('/inventory/edit/{id}')->middleware(['auth_v2:sanctum'])->group(function () {
+    Route::get('/', [EditController::class, 'index']);
 });
 
 Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {

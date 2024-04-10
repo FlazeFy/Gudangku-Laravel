@@ -136,22 +136,21 @@
                 </td>
                 <td><button class="btn btn-success <?php if($in->reminder_id){ echo"bg-success border-0"; } ?>"><i class="fa-solid <?php if($in->reminder_id){ echo"fa-bell"; } else { echo"fa-bell-slash"; } ?>" style="font-size:var(--textXLG);"></i></button></td>
                 <td>
-                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal<?php
+                    <a class="btn btn-warning"
+                        <?php
                         if($in['deleted_at'] != null){
-                            echo "Recover"; 
+                            echo ' data-bs-toggle="modal" data-bs-target="#modalRecover_'.$in->id.'" '; 
                         } else {
-                            echo "Edit";
+                            echo ' href="/inventory/edit/'.$in->id.'" ';
                         }
-                        ?>_{{$in->id}}">
+                        ?>>
                         @if($in['deleted_at'] == null)
                             <i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i>
                         @else 
                             <i class="fa-solid fa-rotate" style="font-size:var(--textXLG);"></i>
                         @endif
-                    </button>
-                    @if($in['deleted_at'] == null)
-
-                    @else
+                    </a>
+                    @if($in['deleted_at'] != null)
                         <div class="modal fade" id="modalRecover_{{$in->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
