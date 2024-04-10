@@ -157,6 +157,11 @@ hr {
     border-radius: var(--roundedMD) !important;
 }
 
+.container, .container-fluid {
+    border-radius: var(--roundedMD);
+    margin-top: var(--spaceMD);
+}
+
 .box-reminder {
     background-color:rgba(0, 195, 99, 0.2);
     padding: var(--spaceMD);

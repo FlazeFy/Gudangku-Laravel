@@ -9,6 +9,7 @@ use App\Models\DictionaryModel;
 use App\Models\ReminderModel;
 
 use App\Helpers\Generator;
+use App\Helpers\Audit;
 
 class EditController extends Controller
 {
@@ -59,51 +60,42 @@ class EditController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function update(Request $request, $id)
     {
-        //
-    }
+        $ctx = 'Update item';
+        $user_id = Generator::getUserId(session()->get('role_key'));
+        $email = Generator::getUserEmail($user_id);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Nullable
+        $inventory_capacity_unit = $request->inventory_capacity_unit;
+        $inventory_capacity_vol = $request->inventory_capacity_vol;
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        if($inventory_capacity_unit == '-'){
+            $inventory_capacity_unit = null;
+            $inventory_capacity_vol = null;
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $data = [
+            'inventory_name' => $request->inventory_name, 
+            'inventory_category' => $request->inventory_category, 
+            'inventory_desc' => $request->inventory_desc, 
+            'inventory_merk' => $request->inventory_merk, 
+            'inventory_room' => $request->inventory_room, 
+            'inventory_storage' => $request->inventory_storage, 
+            'inventory_rack' => $request->inventory_rack, 
+            'inventory_price' => $request->inventory_price, 
+            'inventory_unit' => $request->inventory_unit, 
+            'inventory_vol' => $request->inventory_vol, 
+            'inventory_capacity_unit' => $inventory_capacity_unit, 
+            'inventory_capacity_vol' => $inventory_capacity_vol, 
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        InventoryModel::where('id',$id)->update($data);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // History
+        Audit::createHistory($ctx, $request->inventory_name, $user_id);
+
+        return redirect()->back();
     }
 }

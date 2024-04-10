@@ -14,7 +14,6 @@ use App\Jobs\ProcessMailer;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewInventoryMail;
 
-
 class AddController extends Controller
 {
     /**
@@ -49,6 +48,15 @@ class AddController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
         $email = Generator::getUserEmail($user_id);
 
+        // Nullable
+        $inventory_capacity_unit = $request->inventory_capacity_unit;
+        $inventory_capacity_vol = $request->inventory_capacity_vol;
+
+        if($inventory_capacity_unit == '-'){
+            $inventory_capacity_unit = null;
+            $inventory_capacity_vol = null;
+        }
+
         $data = [
             'id' => Generator::getUUID(), 
             'inventory_name' => $request->inventory_name, 
@@ -61,9 +69,9 @@ class AddController extends Controller
             'inventory_price' => $request->inventory_price, 
             'inventory_image' => $request->inventory_image, 
             'inventory_unit' => $request->inventory_unit, 
-            'inventory_vol' => $request->inventory_vol, 
-            'inventory_capacity_unit' => $request->inventory_capacity_unit, 
-            'inventory_capacity_vol' => $request->inventory_capacity_vol, 
+            'inventory_vol' => $request->inventory_vol,
+            'inventory_capacity_unit' => $inventory_capacity_unit, 
+            'inventory_capacity_vol' => $inventory_capacity_vol, 
             'is_favorite' => 0, 
             'is_reminder' => 0, 
             'created_at' => date("Y-m-d H:i:s"), 

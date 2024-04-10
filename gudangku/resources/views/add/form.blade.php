@@ -55,6 +55,7 @@
         <div class="col-lg-6 py-2">
             <label>Unit</label>
             <select class="form-select mt-2" name="inventory_capacity_unit" aria-label="Default select example">
+                <option value='-' selected>-</option>
                 <option value="percentage">Percentage</option>
                 @foreach($dct_unit as $dct)
                     <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
