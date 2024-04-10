@@ -27,15 +27,18 @@ class ApiTest extends TestCase
     // TC-001
     public function test_post_login()
     {
-        $env = 'web';
-        $response = $this->httpClient->post("/api/v1/login/$env", [
+        // Exec
+        $response = $this->httpClient->post("/api/v1/login", [
             'json' => [
                 'username' => 'flazefy',
                 'password' => 'nopass123',
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
+
         $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertArrayHasKey('token', $data);
         $this->assertArrayHasKey('role', $data);
 
@@ -46,15 +49,18 @@ class ApiTest extends TestCase
     // TC-002
     public function test_get_sign_out(): void
     {
-        $env = 'web';
+        // Exec
         $token = $this->test_post_login();
-        $response = $this->httpClient->get("/api/v1/logout/$env", [
+        $response = $this->httpClient->get("/api/v1/logout", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
+
         $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertArrayHasKey('message', $data);
     }
 }

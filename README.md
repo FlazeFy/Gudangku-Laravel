@@ -57,6 +57,9 @@ or
 # Make Mail
 > php artisan make:mail <NAMA-MAILER>Email
 
+# Make Test 
+> php artisan make:test <NAMA-TEST>Test
+
 # Make Deploy
 > php artisan route:cache
 > php artisan cache:clear

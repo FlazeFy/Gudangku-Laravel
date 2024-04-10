@@ -25,6 +25,8 @@ class SiteTest extends TestCase
         foreach ($routes as $route) {
             $start = microtime(true);
             $response = $this->get($route);
+
+            // Test Parameter
             $response->assertStatus(200);
             $res = Audit::countTime($start) . " on load $route\n";
             $summary .= $res;
