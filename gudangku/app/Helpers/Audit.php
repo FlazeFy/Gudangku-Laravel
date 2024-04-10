@@ -6,7 +6,7 @@ use App\Helpers\Generator;
 
 class Audit
 {
-    public static function auditRecord($ctx, $name, $data){ 
+    public static function auditRecordText($ctx, $name, $data){ 
         $props = time(); 
         $filePath = "tests_reports/text/$name-$props.txt";
 
@@ -18,9 +18,31 @@ class Audit
             fwrite($file, $text);
             fclose($file);
 
-            echo "Audit record of '$name' created successfully\n";
+            echo "Audit (text) record of '$name' created successfully\n";
         } else {
-            echo "Error creating audit record '$name'\n";
+            echo "Error creating audit (text) record '$name'\n";
+        }
+    }
+
+    public static function auditRecordSheet($ctx, $name, $request, $response){ 
+        $props = time(); 
+        $filePath = "tests_reports/csv/template-report.csv";
+    
+        if (file_exists($filePath)) {
+            $file = fopen($filePath, 'a');
+        } else {
+            $file = fopen($filePath, 'w');
+            fputcsv($file, ['Context', 'Title', 'Request', 'Response', 'Created At']);
+        }
+    
+        if ($file) {
+            $record = [$ctx, $name, $request, $response, $props];
+            fputcsv($file, $record);
+            fclose($file);
+    
+            echo "Audit (CSV) record of '$name' created successfully\n";
+        } else {
+            echo "Error adding audit (CSV) record '$name'\n";
         }
     }
 

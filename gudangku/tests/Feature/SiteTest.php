@@ -33,6 +33,7 @@ class SiteTest extends TestCase
             echo $res;
         }
 
-        Audit::auditRecord("Test - Site Test", "Get Page", $summary);
+        Audit::auditRecordText("Test - Site Test", "Get Page", $summary);
+        Audit::auditRecordSheet("Test - Site Test", "Get Page", implode(",", $routes), $summary);
     }
 }

@@ -36,7 +36,8 @@ class HelpersGeneratorTest extends TestCase
         $this->assertIsString($check);
         $this->assertEquals($check_length, strlen($check));
 
-        Audit::auditRecord("Test - Generator Helper", "Generator-getUUID", "Result : ".$check);
+        Audit::auditRecordText("Test - Generator Helper", "Generator-getUUID", "Result : ".$check);
+        Audit::auditRecordSheet("Test - Generator Helper", "Generator-getUUID",'',$check);
     }
 
     public function test_generator_get_user_email(): void
@@ -65,6 +66,7 @@ class HelpersGeneratorTest extends TestCase
         // Test Parameter
         $this->assertIsString($check);
 
-        Audit::auditRecord("Test - Generator Helper", "Generator-getUserEmail", "Request : $user_id, Result: $check");
+        Audit::auditRecordText("Test - Generator Helper", "Generator-getUserEmail", "Request : $user_id, Result: $check");
+        Audit::auditRecordSheet("Test - Generator Helper", "Generator-getUserEmail", $user_id,$check);
     }
 }

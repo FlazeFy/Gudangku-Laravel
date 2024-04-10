@@ -24,7 +24,8 @@ class HelpersValidationTest extends TestCase
         // Exec
         $validator = Validation::getValidateLogin($check);
     
-        Audit::auditRecord("Test - Validation Helper", "Validation-Login", "Request : ".json_encode($check->all()));
+        Audit::auditRecordText("Test - Validation Helper", "Validation-Login", "Request : ".json_encode($check->all()));
+        Audit::auditRecordSheet("Test - Validation Helper", "Validation-Login", json_encode($check->all()),'');
         $this->assertTrue($validator->passes());
     }
 }
