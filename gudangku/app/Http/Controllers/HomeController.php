@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\InventoryModel;
 use App\Models\DictionaryModel;
 use App\Models\ReminderModel;
+use App\Models\UserModel;
 
 use App\Helpers\Generator;
 use App\Helpers\Audit;
@@ -13,6 +14,7 @@ use App\Exports\InventoryExport;
 
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Twilio\Rest\Client;
 
 class HomeController extends Controller
 {
@@ -271,4 +273,48 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
+    public function get_all_inventory_wa_bot()
+    {
+        $sid    = env('TWILIO_SID');
+        $token  = env('TWILIO_TOKEN');
+        $twilio = new Client($sid, $token);
+        $user_id = Generator::getUserId(session()->get('role_key'));
+        $i = 1;
+        $inventory_category_before = '';
+
+        // Fetching
+        $user = UserModel::select('phone','username')
+            ->where('id',$user_id)
+            ->first();
+
+        $res = InventoryModel::select('inventory_name','inventory_category')
+            ->where('created_by',$user_id)
+            ->whereNull('deleted_at')
+            ->orderBy('inventory_category', 'desc')
+            ->orderBy('is_favorite', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Bot Exec
+        $body = "Hello, $user->username. You have ".count($res)." item in your inventory.\nHere the list :\n";
+
+        foreach($res as $dt){
+            if($inventory_category_before == '' || $inventory_category_before != $dt->inventory_category){
+                $body .= "\nCategory : $dt->inventory_category\n";
+                $inventory_category_before = $dt->inventory_category;
+            }
+            $body .= "$i. $dt->inventory_name\n";
+            $i++;
+        }
+
+        $message = $twilio->messages
+            ->create("whatsapp:$user->phone", 
+                [
+                    "from" => "whatsapp:+".env('TWILIO_FROM'),
+                    "body" => $body,
+                ]
+            );
+
+        return redirect()->back();
+    }
 }

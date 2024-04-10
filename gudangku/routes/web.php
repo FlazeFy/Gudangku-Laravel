@@ -42,6 +42,7 @@ Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () 
     Route::post('/favToggleInventory/{id}', [HomeController::class, 'fav_toogle']);
     Route::post('/toogleView', [HomeController::class, 'toogle_view']);
     Route::post('/saveAsCsv', [HomeController::class, 'save_as_csv']);
+    Route::post('/auditWABot', [HomeController::class, 'get_all_inventory_wa_bot']);
 });
 
 Route::prefix('/inventory/add')->middleware(['auth_v2:sanctum'])->group(function () {
