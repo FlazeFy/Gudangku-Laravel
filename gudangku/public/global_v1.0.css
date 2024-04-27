@@ -191,3 +191,11 @@ hr {
     margin-top: -10px;
     margin-left: -10px;
 }
+
+.report-box {
+    border: 2px solid var(--primaryColor);
+    padding: var(--spaceLG) !important;
+    border-radius: var(--roundedLG);
+    width: 100%;
+    text-align: start;
+}

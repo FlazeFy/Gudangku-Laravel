@@ -11,6 +11,7 @@ use App\Http\Controllers\StatsController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,4 +78,8 @@ Route::prefix('/profile')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [CalendarController::class, 'index']);
+});
+
+Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
+    Route::get('/', [ReportController::class, 'index']);
 });
