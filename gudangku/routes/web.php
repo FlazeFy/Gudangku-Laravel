@@ -82,4 +82,5 @@ Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ReportController::class, 'index']);
+    Route::post('/', [ReportController::class, 'create_report']);
 });

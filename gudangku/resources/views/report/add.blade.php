@@ -25,6 +25,9 @@
     .autocomplete-active {
         color: #ffffff;
     }
+    .item_qty_selected {
+        width: 80px;
+    }
 </style>
 
 <div class="modal fade" id="modalAddReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -35,7 +38,7 @@
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST">
+                <form action="/report" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col">
@@ -46,19 +49,32 @@
                             <textarea name="report_desc" class="form-control mt-2"></textarea>
 
                             <label>Category</label>
-                            <select class="form-select mt-2" name="report_category" aria-label="Default select example">
+                            <select class="form-select mt-2" name="report_category"  id="report_category" aria-label="Default select example">
                                 @foreach($dct_cat as $dct)
                                     <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
                                 @endforeach
                             </select>
 
-                            <button class="btn btn-success mt-4 w-100" type="submit">Save</button>
+                            <button class="btn btn-success mt-4 w-100" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
                         </div>
                         <div class="col">
                             <label>Item</label>
                             <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
                             <div id="item_form"></div>
-                            <div id="item_holder"><div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div></div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name, Description</th>
+                                        <th scope="col">Qty</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="item_holder">
+                                    <tr>
+                                        <td colspan="3"><div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </form>
@@ -86,8 +102,7 @@
                 for (var i = 0; i < data.length; i++) {
                     let optionText = `${data[i]['inventory_name']}` +
                         (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '');
-
-                    $('#report_item').append(`<option value="${data[i]}">${optionText}</option>`);
+                    $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`);
                 }
 
                 $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
@@ -98,9 +113,14 @@
             });   
     }
 
-    var countries = [<?php 
+    let warehouse = [<?php 
         foreach($report as $r){
-            echo "'".$r->report_title."',";
+            echo "
+                {
+                    'title':'".$r->report_title."',
+                    'items':'".$r->report_items."'
+                },
+            ";
         }
     ?>];
 
@@ -110,69 +130,144 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <label>Item Name</label>
-                        <input name="item_name" class="form-control" type="text" id="item_name">
+                        <input class="form-control" type="text" id="item_name">
                     </div>
                     <div class="col-lg-4">
                         <label>Qty</label>
-                        <input name="item_qty" class="form-control" type="number" id="item_qty">
+                        <input class="form-control" type="number" id="item_qty" value="1" min="1">
                     </div>
                 </div>
                 <label>Description</label>
-                <textarea name="item_desc" id="item_desc" class="form-control mt-2"></textarea>
+                <textarea id="item_desc" class="form-control mt-2"></textarea>
             `)
         } else if(val == 'copy_report'){
             $('#item_form').empty().append(`
                 <label>Report Title</label><br>
                 <div class="autocomplete" style="width:300px;">
-                    <input id="report_title_template" class="form-control w-100" type="text" name="report_title_template">
+                    <input id="report_title_template" class="form-control w-100" type="text">
                 </div>
+                <input id="temp_items_report" hidden>
             `)
-            $( document ).ready(function() {
-                autocomplete(document.getElementById("report_title_template"), countries)
+            $(document).ready(function() {
+                autocomplete(document.getElementById("report_title_template"), warehouse)
             });
         } else {
+            val = JSON.parse(val)
+            val = val['inventory_name']
+
             $('#item_form').empty().append(`
                 <div class="row">
                     <div class="col-lg-8">
                         <label>Description</label>
-                        <textarea name="item_desc" class="form-control mt-2"></textarea>
+                        <textarea id="item_desc" class="form-control mt-2"></textarea>
                     </div>
                     <div class="col-lg-4">
                         <label>Qty</label>
-                        <input name="item_qty" class="form-control" type="number" id="item_qty">
+                        <input class="form-control" type="number" id="item_qty" value="1" min="1">
                     </div>
                 </div>
             `)
         }
-        $('#item_form').append('<a class="btn btn-success mt-3" onclick="add_item()">Add Item</a><hr>')
+        $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='add_item("${val}")'><i class="fa-solid fa-arrow-down"></i> Add Item</a><hr>`)
     }
 
-    function add_item(){
-        if($('#item_name').val() != ''){
-            $('#item_holder').append(`
-                <table class="table">
-                    <thead>
+    function add_item(val){
+        if ($('#item_holder').find('div.alert').length) {
+            $('#item_holder').empty()
+        } 
+        let itemExists = false
+        $('.item_name_selected').each(function(index) {
+            if ($(this).text() == val || $(this).text() == $('#item_name').val()) {
+                $('.item_qty_selected').eq(index).val(parseInt($('.item_qty_selected').eq(index).val()) + 1)
+                itemExists = true
+                return false
+            }
+        });
+
+        if(!itemExists){
+            let priceInput = ''
+            if($('#report_category').val() == 'Shopping Cart' || $('#report_category').val() == 'Wishlist'){
+                priceInput = `
+                    <div class="form-floating mb-3 mt-2">
+                        <input type="number" class="form-control" min="1" name="item_price[]" value="0">
+                        <label for="floatingInput">Price (optional)</label>
+                    </div>
+                `
+            }
+
+            if(val == 'add_ext'){
+                if($('#item_name').val() != ''){
+                    $('#item_holder').append(`
                         <tr>
-                            <th scope="col">Name, Description</th>
-                            <th scope="col">Qty</th>
-                            <th scope="col">Action</th>
+                            <td>
+                                <input hidden name="item_name[]" value="${$('#item_name').val()}">
+                                <span class="item_name_selected">${$('#item_name').val()}</span>
+                                <div class="form-floating mt-2">
+                                    <textarea class="form-control" name="item_desc[]" style="height: 100px">${$('#item_desc').val()}</textarea>
+                                    <label for="floatingTextarea2">Notes</label>
+                                </div>
+                                ${priceInput}
+                            </td>
+                            <td><input class="item_qty_selected" name="item_qty[]" type="number" min="1" value="${$('#item_qty').val()}"></td>
+                            <td><a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i></a></td>
                         </tr>
-                    </thead>
-                    <tbody>
+                    `)
+                }
+            } else if(val == 'copy_report') {
+                const items_list = $('#temp_items_report').val().split(", ")
+
+                items_list.forEach(el => {
+                    $('#item_holder').append(`
                         <tr>
-                            <th scope="row">${$('#item_name').val()} ${$('#item_desc').val()}</th>
-                            <td>${$('#item_qty').val()}</td>
-                            <td><button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></td>
+                            <td>
+                                <input hidden name="item_name[]" value="${el}">
+                                <span class="item_name_selected">${el}</span>
+                                <div class="form-floating mt-2">
+                                    <textarea class="form-control" name="item_desc[]" style="height: 100px"></textarea>
+                                    <label for="floatingTextarea2">Notes</label>
+                                </div>
+                                ${priceInput}
+                            </td>
+                            <td><input class="item_qty_selected" name="item_qty[]" type="number" min="1" value="1"></td>
+                            <td><a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i></a></td>
                         </tr>
-                    </tbody>
-                </table>
-            `)
+                    `)
+                });
+            } else {
+                $('#item_holder').append(`
+                    <tr>
+                        <td>
+                            <input hidden name="item_name[]" value="${val}">
+                            <span class="item_name_selected">${val}</span>
+                            <div class="form-floating mt-2">
+                                <textarea class="form-control" name="item_desc[]" style="height: 100px">${$('#item_desc').val()}</textarea>
+                                <label for="floatingTextarea2">Notes</label>
+                            </div>
+                            ${priceInput}
+                        </td>
+                        <td><input class="item_qty_selected" name="item_qty[]" type="number" min="1" value="${$('#item_qty').val()}"></td>
+                        <td><a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i></a></td>
+                    </tr>
+                `)
+            }
         }
 
         $('#item_name').val('')
-        $('#item_qty').val('')
+        $('#item_qty').val(1)
         $('#item_desc').val('')
     }
+
+    $('#item_holder').on('click', '.delete-item', function() {
+        $(this).closest('tr').remove()
+
+        if($('#item_holder').children().length == 0) {
+            $('#item_holder').append(`
+                <tr>
+                    <td colspan="3"><div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div></td>
+                </tr>
+            `)
+        }
+    });
 
     function autocomplete(inp, arr) {
         var currentFocus
@@ -190,15 +285,17 @@
             this.parentNode.appendChild(a)
 
             for (i = 0; i < arr.length; i++) {
-                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                if (arr[i]['title'].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
                     b = document.createElement("DIV")
-                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>"
-                    b.innerHTML += arr[i].substr(val.length)
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>"
+                    b.innerHTML = "<strong>" + arr[i]['title'].substr(0, val.length) + "</strong>"
+                    b.innerHTML += arr[i]['title'].substr(val.length)
+                    b.innerHTML += "<input type='hidden' value='" + arr[i]['title'] + "'>"
+                    const items = arr[i]['items']
 
                     b.addEventListener("click", function(e) {
                         inp.value = this.getElementsByTagName("input")[0].value
                         closeAllLists()
+                        $('#temp_items_report').val(items)
                     })
                     a.appendChild(b)
                 }

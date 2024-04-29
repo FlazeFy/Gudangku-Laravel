@@ -198,4 +198,5 @@ hr {
     border-radius: var(--roundedLG);
     width: 100%;
     text-align: start;
+    margin-bottom: var(--spaceLG);
 }

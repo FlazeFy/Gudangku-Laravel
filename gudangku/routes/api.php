@@ -14,8 +14,6 @@ use App\Http\Controllers\Api\HistoryApi\Commands as CommandsHistoryController;
 
 use App\Http\Controllers\Api\StatsApi\Queries as QueriesStatsController;
 
-
-
 ######################### Public Route #########################
 
 Route::post('/v1/login', [CommandAuthApi::class, 'login']);
