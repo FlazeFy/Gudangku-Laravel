@@ -21,17 +21,7 @@ class ReportController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
-            $report = ReportModel::selectRaw('
-                    report_title, report_desc, report_category, report.is_reminder, remind_at, report.created_at, 
-                    count(1) as total_variety, sum(item_qty) as total_item, GROUP_CONCAT(item_name SEPARATOR ", ") as report_items,
-                    sum(item_price * item_qty) as item_price')
-                ->leftjoin('report_item','report_item.report_id','=','report.id')
-                ->leftjoin('inventory','inventory.id','=','report_item.inventory_id')
-                ->where('report.created_by',$user_id)
-                ->whereNull('report.deleted_at')
-                ->groupby('report.id')
-                ->orderby('report.created_at','desc')
-                ->get();
+            $report = ReportModel::getMyReport($user_id);
 
             $dct_cat = DictionaryModel::where('dictionary_type', 'report_category')
                 ->get();

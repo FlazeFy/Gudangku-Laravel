@@ -14,6 +14,10 @@ use App\Http\Controllers\Api\HistoryApi\Commands as CommandsHistoryController;
 
 use App\Http\Controllers\Api\StatsApi\Queries as QueriesStatsController;
 
+use App\Http\Controllers\Api\ReportApi\Queries as QueriesReportController;
+
+use App\Http\Controllers\Api\UserApi\Queries as QueriesUserController;
+
 ######################### Public Route #########################
 
 Route::post('/v1/login', [CommandAuthApi::class, 'login']);
@@ -25,6 +29,7 @@ Route::get('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:san
 Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesInventoryController::class, 'get_all_inventory']);
     Route::get('/list', [QueriesInventoryController::class, 'get_list_inventory']);
+    Route::get('/calendar', [QueriesInventoryController::class, 'get_list_calendar']);
 
     Route::delete('/delete/{id}', [CommandsInventoryController::class, 'soft_delete_inventory_by_id']);
     Route::delete('/destroy/{id}', [CommandsInventoryController::class, 'hard_delete_inventory_by_id']);
@@ -42,4 +47,12 @@ Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesHistoryController::class, 'get_all_history']);
     
     Route::delete('/destroy/{id}', [CommandsHistoryController::class, 'hard_delete_history_by_id']);
+});
+
+Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [QueriesReportController::class, 'get_my_report']);
+});
+
+Route::prefix('/v1/user')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/my_profile', [QueriesUserController::class, 'get_my_profile']);
 });
