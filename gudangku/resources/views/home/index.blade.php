@@ -61,7 +61,7 @@
                 <a class="btn btn-primary mb-3 me-2" href="/calendar"><i class="fa-solid fa-calendar" style="font-size:var(--textXLG);"></i> Calendar</a>
                 <form class="d-inline" action="/inventory/saveAsCsv" method="POST">
                     @csrf
-                    <button class="btn btn-primary mb-3 me-2" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Save as CSV</button>
+                    <button class="btn btn-primary mb-3 me-2" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Save as CSV</button>
                 </form>
                 <form class="d-inline" action="/inventory/auditWABot" method="POST">
                     @csrf

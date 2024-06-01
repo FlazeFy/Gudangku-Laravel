@@ -3,7 +3,7 @@
         <h2 style="font-size:var(--textJumbo); font-weight:600;">{{ucwords(str_replace('_',' ',$ctx))}}</h2><br>
         <div id="Pie_{{$ctx}}"></div>
     @else
-        <img src="{{asset('assets/nodata.png')}}" class="img nodata-icon">
+        <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
         <h6 class="text-center">No Data</h6>
     @endif
 </div>

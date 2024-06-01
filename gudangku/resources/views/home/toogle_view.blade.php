@@ -8,7 +8,7 @@
             echo 'table';
         }
     ?>" name="toogle_view"/>
-    <button class="btn btn-primary mb-3 me-2" type="submit">
+    <button class="btn btn-primary mb-3 me-2" type="submit" id="toogle_view">
         @if($selected == 'table')
             <i class="fa-solid fa-table" style="font-size:var(--textXLG);"></i> Table
         @elseif($selected == 'catalog')

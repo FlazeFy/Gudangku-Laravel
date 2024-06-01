@@ -36,7 +36,7 @@
                 @include('landing.dashboard')
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature" onclick="location.href='/inventory';">
+                        <button class="btn-feature" onclick="location.href='/inventory';" id="nav_inventory_btn">
                             <i class="fa-solid fa-warehouse" style="font-size:100px;"></i>
                             <h2 class="mt-3" style="font-size:var(--textJumbo);">My Inventory</h2>
                         </button>

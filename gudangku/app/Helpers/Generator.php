@@ -48,4 +48,16 @@ class Generator
 
         return $profile->email;
     }
+
+    public static function getTokenValidation($len){
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $res = '';
+        
+        $charCount = strlen($characters);
+        for ($i = 0; $i < $len; $i++) {
+            $res .= $characters[rand(0, $charCount - 1)];
+        }
+        
+        return $res;
+    }
 }

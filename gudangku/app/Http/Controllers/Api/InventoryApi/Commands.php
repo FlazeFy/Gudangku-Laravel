@@ -89,7 +89,7 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
 
-            InventoryModel::where('id',$id)
+            $rows = InventoryModel::where('id',$id)
                 ->where('created_by', $user_id)
                 ->update([
                     'is_favorite' => $request->is_favorite
@@ -101,12 +101,11 @@ class Commands extends Controller
                 if($request->is_favorite == 0){
                     $ctx = 'Unset';
                 }
-                Audit::createHistory($ctx.' to favorite', $request->inventory_name, $user_id);
+                Audit::createHistory($ctx.' to favorite', $inventory->inventory_name, $user_id);
 
                 return response()->json([
                     'status' => 'success',
                     'message' => 'inventory updated',
-                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -142,7 +141,6 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'inventory recovered',
-                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
