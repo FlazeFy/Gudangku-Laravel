@@ -25,8 +25,11 @@ class ProfileController extends Controller
                 ->where('id',$user_id)
                 ->first();
 
+            $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
+
             return view('profile.index')
-                ->with('profile',$profile);
+                ->with('profile',$profile)
+                ->with('validation_telegram',$validation_telegram);
         } else {
             return redirect("/login");
         }
@@ -61,5 +64,36 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->back()->with('success_message', 'Validation has sended to your telegram account'); 
+    }
+
+    public function submit_telegram_validation(Request $request)
+    {
+        $user_id = Generator::getUserId(session()->get('role_key'));
+        $user = UserModel::select('telegram_user_id','username')->where('id',$user_id)->first();
+        $id = $request->id;
+
+        $query = ValidateRequestModel::where('request_context',$request->validate_token)
+            ->where('id',$id)
+            ->where('created_by',$user_id)
+            ->where('request_type','telegram_id_validation')
+            ->delete();
+        
+
+        if ($query > 0) {
+            UserModel::where('id', $user_id)
+                ->update([
+                    'telegram_is_valid' => 1
+                ]);
+
+            $response = Telegram::sendMessage([
+                'chat_id' => $user->telegram_user_id,
+                'text' => "Validation success.\nWelcome <b>{$user->username}</b>!,",
+                'parse_mode' => 'HTML'
+            ]);
+    
+            return redirect()->back()->with('success_message', 'Telegram Account is Validated!');
+        } else {
+            return redirect()->back()->with('error_message', 'Validation failed. Please try again.');
+        }
     }
 }

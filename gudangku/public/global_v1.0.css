@@ -162,10 +162,15 @@ hr {
     margin-top: var(--spaceMD);
 }
 
-.box-reminder {
-    background-color:rgba(0, 195, 99, 0.2);
+.box-reminder,.box-danger  {
     padding: var(--spaceMD);
     border-radius: var(--roundedMD);
+}
+.box-danger {
+    background-color:rgba(221, 0, 33, 0.2);
+}
+.box-reminder {
+    background-color:rgba(0, 195, 99, 0.2);
 }
 .box-reminder p, .box-reminder h5 {
     font-size: var(--textMD);

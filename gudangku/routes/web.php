@@ -75,6 +75,7 @@ Route::prefix('/profile')->middleware(['auth_v2:sanctum'])->group(function () {
 
     Route::post('/sign_out', [ProfileController::class, 'sign_out']);
     Route::post('/validate_telegram', [ProfileController::class, 'validate_telegram_id']);
+    Route::post('/submit_telegram_validation', [ProfileController::class, 'submit_telegram_validation']);
 });
 
 Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
