@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\StatsApi\Queries as QueriesStatsController;
 use App\Http\Controllers\Api\ReportApi\Queries as QueriesReportController;
 
 use App\Http\Controllers\Api\UserApi\Queries as QueriesUserController;
+use App\Http\Controllers\Api\UserApi\Commands as CommandsUserController;
 
 ######################### Public Route #########################
 
@@ -55,4 +56,5 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/user')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/my_profile', [QueriesUserController::class, 'get_my_profile']);
+    Route::put('/update_telegram_id', [CommandsUserController::class, 'update_telegram_id']);
 });

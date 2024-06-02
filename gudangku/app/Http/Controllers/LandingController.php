@@ -26,30 +26,36 @@ class LandingController extends Controller
             }
 
             $total_item = InventoryModel::selectRaw('COUNT(1) AS total')
+                ->where('created_by', $user_id)
                 ->first();
 
             $total_fav = InventoryModel::selectRaw('COUNT(1) AS total')
                 ->where('is_favorite','1')
+                ->where('created_by', $user_id)
                 ->first();
 
             $total_low = InventoryModel::selectRaw('COUNT(1) AS total')
                 ->where('inventory_capacity_unit','percentage')
                 ->where('inventory_capacity_vol','<=',30)
+                ->where('created_by', $user_id)
                 ->first();
 
             $last_added = InventoryModel::select('inventory_name')
                 ->whereNull('deleted_at')
+                ->where('created_by', $user_id)
                 ->orderBy('created_at','DESC')
                 ->first();
 
             $most_category = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
                 ->whereNull('deleted_at')
+                ->where('created_by', $user_id)
                 ->groupBy('inventory_category')
                 ->orderBy('total','DESC')
                 ->first();
 
             $highest_price = InventoryModel::select('inventory_name', 'inventory_price')
                 ->whereNull('deleted_at')
+                ->where('created_by', $user_id)
                 ->orderBy('inventory_price','DESC')
                 ->first();
 
