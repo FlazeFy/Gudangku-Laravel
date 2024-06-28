@@ -206,3 +206,8 @@ hr {
     text-align: start;
     margin-bottom: var(--spaceLG);
 }
+
+.btn-link {
+    text-decoration: none !important;
+    color: var(--primaryColor);
+}

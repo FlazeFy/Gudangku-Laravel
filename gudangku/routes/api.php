@@ -23,6 +23,8 @@ use App\Http\Controllers\Api\UserApi\Commands as CommandsUserController;
 
 Route::post('/v1/login', [CommandAuthApi::class, 'login']);
 Route::post('/v1/register/token', [CommandsUserController::class, 'get_register_validation_token']);
+Route::post('/v1/register/account', [CommandsUserController::class, 'post_validate_register']);
+Route::post('/v1/register/regen_token', [CommandsUserController::class, 'regenerate_register_token']);
 
 ######################### Private Route #########################
 

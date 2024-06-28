@@ -12,6 +12,7 @@ use App\Models\ValidateRequestModel;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 use App\Jobs\UserMailer;
@@ -84,15 +85,196 @@ class Commands extends Controller
     {
         try{
             $username = $request->username;
-            $valid = ValidateRequestModel::selectRaw('*')
-                ->where('request_type','register')
-                ->where('request_context',$username)
+            $check_user = UserModel::selectRaw('1')
+                ->where('username',$username)
                 ->first();
 
-            if(!$valid){
-                $token_length = 6;
-                $token = Generator::getTokenValidation($token_length);
+            if(!$check_user){
+                $valid = ValidateRequestModel::selectRaw('1')
+                    ->where('request_type','register')
+                    ->where('created_by',$username)
+                    ->first();
 
+                if(!$valid){
+                    $token_length = 6;
+                    $token = Generator::getTokenValidation($token_length);
+
+                    $valid_insert = ValidateRequestModel::create([
+                        'id' => Generator::getUUID(), 
+                        'request_type' => 'register',
+                        'request_context' => $token, 
+                        'created_at' => date('Y-m-d H:i:s'), 
+                        'created_by' => $username
+                    ]);
+
+                    if($valid_insert){
+                        // Send email
+                        $ctx = 'Generate registration token';
+                        $email = $request->email;
+                        $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
+
+                        dispatch(new UserMailer($ctx, $data, $username, $email));
+
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => "the validation token has been sended to $email email account",
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'something wrong. Please contact admin',
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'there already a request with same username',
+                    ], Response::HTTP_CONFLICT);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'username already being used',
+                ], Response::HTTP_CONFLICT);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. Please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function post_validate_register(Request $request)
+    {
+        try{
+            $username = $request->username;
+            $valid = ValidateRequestModel::selectRaw('id')
+                ->where('request_type','register')
+                ->where('request_context',$request->token)
+                ->where('created_by',$username)
+                ->first();
+
+            if($valid){
+                $check_user = UserModel::selectRaw('1')
+                    ->where('username',$username)
+                    ->first();
+
+                if(!$check_user){
+                    ValidateRequestModel::destroy($valid->id);
+
+                    $user = UserModel::create([
+                        'id' => Generator::getUUID(), 
+                        'username' => $request->username, 
+                        'password' => Hash::make($request->password),
+                        'telegram_user_id' => null,
+                        'telegram_is_valid' => 0,
+                        'email' => $request->email,
+                        'phone' => null,
+                        'created_at' => date('Y-m-d H:i:s'), 
+                        'updated_at' => null
+                    ]);
+
+                    if($user){
+                        // Send email
+                        $ctx = 'Register new account';
+                        $email = $request->email;
+                        $data = "Welcome to GudangKu, happy explore!";
+
+                        dispatch(new UserMailer($ctx, $data, $username, $email));
+
+                        if(!Hash::check($request->password, $user->password)){
+                            $token = $user->createToken('login')->plainTextToken;
+
+                            return response()->json([
+                                'is_signed_in' => true,
+                                'token' => $token,
+                                'status' => 'success',
+                                'message' => "account is registered",
+                            ], Response::HTTP_OK);   
+                        } else {
+                            return response()->json([
+                                'is_signed_in' => false,
+                                'status' => 'success',
+                                'message' => "account is registered",
+                            ], Response::HTTP_OK);   
+                        }
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'something wrong. Please contact admin',
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'username already used',
+                    ], Response::HTTP_CONFLICT);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Token is invalid',
+                ], Response::HTTP_CONFLICT);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. Please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function regenerate_register_token(Request $request)
+    {
+        try{
+            $username = $request->username;
+            $valid = ValidateRequestModel::select('id')
+                ->where('request_type','register')
+                ->where('created_by',$username)
+                ->first();
+
+            $token_length = 6;
+            $token = Generator::getTokenValidation($token_length);
+
+            if($valid){
+                $delete = ValidateRequestModel::destroy($valid->id);
+
+                if($delete > 0){
+                    $valid_insert = ValidateRequestModel::create([
+                        'id' => Generator::getUUID(), 
+                        'request_type' => 'register',
+                        'request_context' => $token, 
+                        'created_at' => date('Y-m-d H:i:s'), 
+                        'created_by' => $username
+                    ]);
+
+                    if($valid_insert){
+                        // Send email
+                        $ctx = 'Generate registration token';
+                        $email = $request->email;
+                        $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
+
+                        dispatch(new UserMailer($ctx, $data, $username, $email));
+
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => "the validation token has been sended to $email email account",
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'something wrong. Please contact admin'.$e->getMessage(),
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'something wrong. Please contact admin'.$e->getMessage(),
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            } else {
+                // already deleted
                 $valid_insert = ValidateRequestModel::create([
                     'id' => Generator::getUUID(), 
                     'request_type' => 'register',
@@ -116,19 +298,14 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'something wrong. Please contact admin',
+                        'message' => 'something wrong. Please contact admin'.$e->getMessage(),
                     ], Response::HTTP_BAD_REQUEST);
                 }
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'there already a request with same username',
-                ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin '.$e->getMessage(),
+                'message' => 'something wrong. Please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

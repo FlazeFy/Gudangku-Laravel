@@ -79,6 +79,31 @@
         padding-top: calc(var(--spaceJumbo)*1.25);
         min-height: 90vh;
     }
+
+    .pin-code{ 
+        padding: 0; 
+        margin: 0 auto; 
+        display: flex;
+        justify-content:center;
+    } 
+    .pin-code input { 
+        border: 1.75px solid var(--whiteColor); 
+        text-align: center; 
+        width: 48px;
+        height:48px;
+        font-size: 36px; 
+        background-color: #F3F3F3;
+        margin-right:5px;
+    } 
+    .pin-code input:focus { 
+        border: 1px solid #573D8B;
+        outline:none;
+    } 
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 </style>
 <div class="row w-100 h-100">
     <div class="col-lg-5">
@@ -102,7 +127,7 @@
                     <div class="caption">Fill this form to make your account</div>
                 </div>
             </div>
-            <div class="step">
+            <div class="step" id="indicator-service">
                 <div>
                     <div class="circle">3</div>
                 </div>
