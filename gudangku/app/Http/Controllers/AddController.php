@@ -12,7 +12,6 @@ use App\Models\InventoryModel;
 
 use App\Jobs\ProcessMailer;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\NewInventoryMail;
 
 class AddController extends Controller
 {

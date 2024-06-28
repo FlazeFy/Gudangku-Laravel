@@ -47,3 +47,16 @@ function getUUID() {
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     );
 }
+
+function validateInput(type, id, max, min){
+    if(type == "text"){
+        const check = $(`#${id}`).val()
+        const check_len = check.trim().length
+    
+        if(check && check_len > 0 && check_len <= max && check_len >= min){
+            return true
+        } else {
+            return false
+        }
+    }
+}

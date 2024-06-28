@@ -17,7 +17,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = UserModel::select('username','email','created_at')
+            $res = UserModel::select('username','email','telegram_user_id','created_at')
                 ->where('id',$user_id)
                 ->first();
             
