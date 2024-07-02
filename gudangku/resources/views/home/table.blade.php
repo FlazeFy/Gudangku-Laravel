@@ -22,7 +22,7 @@
     <tbody>
         @php($i = 1)
         @foreach($inventory as $in)
-            <tr <?php if($in['deleted_at'] != null){ echo 'style="background:rgba(221, 0, 33, 0.15);"';} ?>>
+            <tr <?php if($in['deleted_at'] != null){ echo 'style="background:rgba(221, 0, 33, 0.15);"';} ?> class="tr-item">
                 <th scope="row" <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$i}}</th>
                 <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
                     @if($in->inventory_image != null)
@@ -136,7 +136,8 @@
                 </td>
                 <td><button class="btn btn-success <?php if($in->reminder_id){ echo"bg-success border-0"; } ?>"><i class="fa-solid <?php if($in->reminder_id){ echo"fa-bell"; } else { echo"fa-bell-slash"; } ?>" style="font-size:var(--textXLG);"></i></button></td>
                 <td>
-                    <a class="btn btn-warning"
+                    <input hidden name="is_editable" value="<?php if($in->deleted_at) { echo "false"; } else {echo "true";} ?>">
+                    <a class="btn btn-warning modal-btn"
                         <?php
                         if($in['deleted_at'] != null){
                             echo ' data-bs-toggle="modal" data-bs-target="#modalRecover_'.$in->id.'" '; 
@@ -172,7 +173,8 @@
                     @endif
                 </td>
                 <td>
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_{{$in->id}}">
+                    <input hidden name="type_delete" value="<?php if($in->deleted_at) { echo "hard"; } else {echo "soft";} ?>">
+                    <button class="btn btn-danger modal-btn"data-bs-toggle="modal" data-bs-target="#modalDelete_{{$in->id}}">
                         @if($in['deleted_at'] == null)
                             <i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i>
                         @else 

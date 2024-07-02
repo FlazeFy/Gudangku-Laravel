@@ -21,7 +21,7 @@ class Queries extends Controller
                 ->where('created_by',$user_id)
                 ->orderBy('is_favorite', 'desc')
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->paginate(15);
             
             if (count($res) > 0) {
                 return response()->json([

@@ -4,6 +4,9 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Laravel\ScheduleMonitor\ScheduleHealth;
+
+use App\Schedule\ReminderSchedule;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,7 +15,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // In staging
+        $schedule->call([new ReminderSchedule, 'remind_inventory'])->hourly();
+
+        // In development
+        $schedule->command(ReminderSchedule::remind_inventory())->everyMinute();
     }
 
     /**

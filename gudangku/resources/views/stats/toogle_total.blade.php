@@ -1,4 +1,4 @@
-<form action="/stats/toogleTotal" method="POST">
+<form action="/stats/toogleTotal" method="POST" id="toogle_total_view_select">
     @csrf
     <div class="form-floating">
         <select class="form-select" id="toogle_total" name="toogle_total" onchange="this.form.submit()">

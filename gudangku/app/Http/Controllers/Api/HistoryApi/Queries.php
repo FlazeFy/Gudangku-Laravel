@@ -20,7 +20,7 @@ class Queries extends Controller
             $res = HistoryModel::select('*')
                 ->where('created_by',$user_id)
                 ->orderby('created_at', 'DESC')
-                ->get();
+                ->paginate(15);
             
             if (count($res) > 0) {
                 return response()->json([

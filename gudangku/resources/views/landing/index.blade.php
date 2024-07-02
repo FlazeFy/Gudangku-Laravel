@@ -42,7 +42,7 @@
                         </button>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature" onclick="location.href='/stats';">
+                        <button class="btn-feature" onclick="location.href='/stats';" id="nav_stats_btn">
                             <i class="fa-solid fa-pie-chart" style="font-size:100px;"></i>
                             <h2 class="mt-3" style="font-size:var(--textJumbo);">Stats</h2>
                         </button>
@@ -62,13 +62,13 @@
                         </button>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature" onclick="location.href='/history';">
+                        <button class="btn-feature" onclick="location.href='/history';" id="nav_history_btn">
                             <i class="fa-solid fa-solid fa-clock-rotate-left" style="font-size:100px;"></i>
                             <h2 class="mt-3" style="font-size:var(--textJumbo);">History</h2>
                         </button>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12">
-                        <button class="btn-feature" onclick="location.href='/profile';">
+                        <button class="btn-feature" onclick="location.href='/profile';" id="nav_profile_btn">
                             <i class="fa-solid fa-solid fa-user" style="font-size:100px;"></i>
                             <h2 class="mt-3" style="font-size:var(--textJumbo);">My Profile</h2>
                         </button>
