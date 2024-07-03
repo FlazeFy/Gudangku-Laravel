@@ -15,5 +15,5 @@ class UserModel extends Authenticatable
 
     protected $table = 'users';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'username', 'password','telegram_user_id','telegram_is_valid','email','phone','created_at', 'updated_at'];
+    protected $fillable = ['id', 'username', 'password','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email','phone','created_at', 'updated_at'];
 }

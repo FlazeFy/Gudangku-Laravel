@@ -8,6 +8,7 @@ use DateTime;
 use App\Helpers\LineMessage;
 
 use App\Models\HistoryModel;
+use App\Models\InventoryModel;
 use App\Models\AdminModel;
 
 use App\Mail\ScheduleEmail;
@@ -28,8 +29,8 @@ class CleanSchedule
         
         if($summary){
             $firebaseRealtime = new FirebaseRealtime();
-            $message = "Hello admin, the system just run a clean history, schedule for about $summary";
-            $admin = AdminModel::select('username','email','telegram_user_id','line_user_id')->get();
+            $message = "[ADMIN] Hello $dt->username, the system just run a clean history, with result of $summary history executed";
+            $admin = AdminModel::getAllContact();
 
             foreach($admin as $dt){
                 if($dt->telegram_user_id){
@@ -57,7 +58,98 @@ class CleanSchedule
                 $record = [
                     'context' => 'history',
                     'context_id' => $dt->id,
-                    'clean_type' => $dt->reminder_type,
+                    'clean_type' => 'destroy',
+                    'telegram_message' => $dt->telegram_user_id,
+                    'line_message' => $dt->line_user_id,
+                    'firebase_fcm_message' => $dt->firebase_fcm_token,
+                ];
+                $firebaseRealtime->insert_command('task_scheduling/clean/' . uniqid(), $record);
+            }
+        }
+    }
+
+    public static function clean_deleted_inventory()
+    {
+        $days = 30;
+        $summary = InventoryModel::getInventoryPlanDestroy($days);
+        
+        if($summary){
+            $firebaseRealtime = new FirebaseRealtime();
+            $admin = AdminModel::getAllContact();
+            $summary_exec = "";
+            $username_before = "";
+            $items = "";
+            $message = "";
+            $total = count($summary); 
+
+            foreach($summary as $index => $in) {
+                $items .= $in->inventory_name;
+                if($index < $total - 1) {
+                    if($summary[$index + 1]->username == $in->username) {
+                        $items .= ", ";
+                    } 
+                }
+            
+                if($index == $total - 1 || $summary[$index + 1]->username != $in->username) {
+                    $message = "Hello $in->username, your inventory $items is permanently deleted";
+            
+                    // Report to user & execute destroy
+                    if($in->telegram_user_id){
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $in->telegram_user_id,
+                            'text' => $message,
+                            'parse_mode' => 'HTML'
+                        ]);
+                    }
+                    if($in->line_user_id){
+                        LineMessage::sendMessage('text',$message,$in->line_user_id);
+                    }
+                    if($in->firebase_fcm_token){
+                        $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                        $messaging = $factory->createMessaging();
+                        $message = CloudMessage::withTarget('token', $in->firebase_fcm_token)
+                            ->withNotification(Notification::create($message, $in->username));
+                        $response = $messaging->send($message);
+                    }
+            
+                    // Destroy inventory items
+                    // InventoryModel::destroy($in->id);
+            
+                    $summary_exec .= "- $items owned by #$in->username\n";
+                    $items = "";
+                }
+            }
+
+            // Report to admin
+            foreach($admin as $dt){
+                $message_admin = "[ADMIN] Hello $dt->username, the system just run a clean inventory, here's the detail:\n\n$summary_exec";
+
+                if($dt->telegram_user_id){
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $dt->telegram_user_id,
+                        'text' => $message_admin,
+                        'parse_mode' => 'HTML'
+                    ]);
+                }
+                if($dt->line_user_id){
+                    LineMessage::sendMessage('text',$message_admin,$dt->line_user_id);
+                }
+                if($dt->firebase_fcm_token){
+                    $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                    $messaging = $factory->createMessaging();
+                    $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)
+                        ->withNotification(Notification::create($message_admin, $dt->id))
+                        ->withData([
+                            'id_context' => $dt->id,
+                        ]);
+                    $response = $messaging->send($message);
+                }
+
+                // Audit to firebase realtime
+                $record = [
+                    'context' => 'inventory_report_admin',
+                    'context_id' => $dt->id,
+                    'clean_type' => 'destroy',
                     'telegram_message' => $dt->telegram_user_id,
                     'line_message' => $dt->line_user_id,
                     'firebase_fcm_message' => $dt->firebase_fcm_token,

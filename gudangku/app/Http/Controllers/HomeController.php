@@ -62,6 +62,7 @@ class HomeController extends Controller
                 $room = DictionaryModel::selectRaw('dictionary_name, COUNT(1) as total')
                     ->leftjoin('inventory','inventory_room','=','dictionary_name')
                     ->where('dictionary_type','inventory_room')
+                    ->where('inventory.created_by',$user_id)
                     ->groupby('dictionary_name')
                     ->orderby('dictionary_name','ASC')
                     ->get();
@@ -69,12 +70,14 @@ class HomeController extends Controller
                 $category = DictionaryModel::selectRaw('dictionary_name, COUNT(1) as total')
                     ->leftjoin('inventory','inventory_category','=','dictionary_name')
                     ->where('dictionary_type','inventory_category')
+                    ->where('inventory.created_by',$user_id)
                     ->groupby('dictionary_name')
                     ->orderby('dictionary_name','ASC')
                     ->get();
 
                 $storage = InventoryModel::selectRaw('inventory_storage, COUNT(1) as total')
                     ->whereNotNull('inventory_storage')
+                    ->where('inventory.created_by',$user_id)
                     ->where('created_by', $user_id)
                     ->groupby('inventory_storage')
                     ->orderby('inventory_storage','ASC')
