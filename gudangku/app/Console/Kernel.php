@@ -24,10 +24,10 @@ class Kernel extends ConsoleKernel
         // $schedule->call([new AuditSchedule, 'audit_error'])->weeklyOn(1, '3:00');	
 
         // In development
-        // $schedule->command(ReminderSchedule::remind_inventory())->everyMinute();
+        $schedule->command(ReminderSchedule::remind_inventory())->everyMinute();
         // $schedule->command(CleanSchedule::clean_history())->everyMinute();
         // $schedule->command(CleanSchedule::clean_deleted_inventory())->everyMinute();
-        $schedule->command(AuditSchedule::audit_error())->everyMinute();
+        // $schedule->command(AuditSchedule::audit_error())->everyMinute();
     }
 
     /**

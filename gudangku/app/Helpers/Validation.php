@@ -10,4 +10,13 @@ class Validation
             'password' => 'required|min:6|string'
         ]);
     }
+
+    public static function getValidateTimezone($val){
+        $regex = '/^[+-](0[0-9]|1[0-4]):([0-5][0-9])$/';
+        if(preg_match($regex, $val) === 1){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

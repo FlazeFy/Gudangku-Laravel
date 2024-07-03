@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\UserApi;
 use App\Http\Controllers\Controller;
 
 use App\Helpers\Generator;
+use App\Helpers\Validation;
 
 // Models
 use App\Models\UserModel;
@@ -76,7 +77,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin '.$e->getMessage(),
+                'message' => 'something wrong. Please contact admin ',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -264,13 +265,13 @@ class Commands extends Controller
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'something wrong. Please contact admin'.$e->getMessage(),
+                            'message' => 'something wrong. Please contact admin',
                         ], Response::HTTP_BAD_REQUEST);
                     }
                 } else {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'something wrong. Please contact admin'.$e->getMessage(),
+                        'message' => 'something wrong. Please contact admin',
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
@@ -298,14 +299,51 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'something wrong. Please contact admin'.$e->getMessage(),
+                        'message' => 'something wrong. Please contact admin',
                     ], Response::HTTP_BAD_REQUEST);
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin'.$e->getMessage(),
+                'message' => 'something wrong. Please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function update_timezone_fcm(Request $request)
+    {
+        try{
+            $user_id = $request->user()->id;
+            $cols = "timezone";
+            $check = Validation::getValidateTimezone($request->timezone);
+            if($check){
+                if($request->firebase_fcm_token == null){
+                    UserModel::where('id',$user_id)->update([
+                        'timezone'=> $request->timezone
+                    ]);
+                } else {
+                    UserModel::where('id',$user_id)->update([
+                        'timezone'=> $request->timezone,
+                        'firebase_fcm_token'=> $request->firebase_fcm_token
+                    ]);
+                    $cols .= " and firebase fcm token";
+                }
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "$cols has been updated",
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Timezone is invalid',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. Please contact admin ',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
