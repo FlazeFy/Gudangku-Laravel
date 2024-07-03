@@ -12,5 +12,5 @@ class ErrorModel extends Model
 
     protected $table = 'errors';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'message', 'stack_trace', 'file', 'line', 'faced_by', 'created_at'];
+    protected $fillable = ['id', 'message', 'stack_trace', 'file', 'line', 'faced_by','is_fixed','created_at'];
 }
