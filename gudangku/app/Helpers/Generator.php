@@ -60,4 +60,18 @@ class Generator
         
         return $res;
     }
+
+    public static function isMobileDevice(){
+        $user = $_SERVER['HTTP_USER_AGENT'];
+    
+        $type = ['mobile', 'android', 'iphone', 'ipod', 'blackberry', 'windows phone'];
+        
+        foreach ($type as $key) {
+            if (stripos($user, $key) !== false) {
+                return true;
+            }
+        }
+    
+        return false;
+    }
 }

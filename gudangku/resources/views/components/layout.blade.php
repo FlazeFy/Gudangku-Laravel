@@ -28,21 +28,17 @@
         <!-- Jquery DataTables -->
         <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
+        <!--Apex Chart-->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
         <!-- Bootstrap dataTables Javascript -->
         <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-        
 
-        <script type="text/javascript" charset="utf-8">
-            $(document).ready(function () {
-                $('#inventory_tb').DataTable({
-                    // columnDefs: [
-                    //     { targets: 0, orderable: true, searchable: true},
-                    //     { targets: 1, orderable: true, searchable: false },
-                    //     { targets: '_all', orderable: false, searchable: false}
-                    // ],
-                });
-            });
-        </script>
+        <!--Full calendar.-->
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
+        <!-- Swal -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <!-- Styles -->
         <style>
@@ -51,14 +47,7 @@
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div class="content" style="width:1440px;;">
-                @include('others.profile')
-                <h2 class="text-white fw-bold mb-4" style="font-size:36px;">My Inventory</h2>
-                <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
-                <a class="btn btn-primary mb-3 me-2" href="/inventory/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Inventory</a>
-                <a class="btn btn-primary mb-3 me-2" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> Stats</a>
-                @include('home.catalog.list')
-            </div>
+            @yield('content')
         </div>
     </body>
 </html>

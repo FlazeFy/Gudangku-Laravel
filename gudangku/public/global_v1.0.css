@@ -52,6 +52,12 @@
     --shadowColor : #E0E0E0;
 }
 
+.content {
+    padding: var(--spaceJumbo);
+    display: block;
+    margin-inline: auto;
+}
+
 .bg-success {
     background: var(--successBG) !important;
 }
@@ -210,4 +216,14 @@ hr {
 .btn-link {
     text-decoration: none !important;
     color: var(--primaryColor);
+}
+
+/* Mobile & Tablet style */
+@media screen and (max-width: 1023px) {
+    .btn-feature {
+        padding: var(--spaceXMD) !important;   
+    }
+    .content {
+        padding: var(--spaceMD);
+    }
 }
