@@ -218,6 +218,21 @@ hr {
     color: var(--primaryColor);
 }
 
+a.relative.inline-flex.items-center {
+    color: var(--whiteColor) !important;
+    background: transparent !important;
+}
+a.relative.inline-flex.items-center, span.relative.inline-flex.items-center {
+    margin-right: var(--spaceXXSM);
+    border-radius: var(--roundedMD);
+    padding-inline: var(--spaceMD) !important;
+}
+span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hover{
+    background: var(--primaryColor) !important;
+    border: 2px solid var(--primaryColor);
+    color: var(--whiteColor);
+}
+
 /* Mobile & Tablet style */
 @media screen and (max-width: 1023px) {
     .btn-feature {

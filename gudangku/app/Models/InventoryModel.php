@@ -27,4 +27,22 @@ class InventoryModel extends Model
 
         return $res->get();
     }
+
+    public static function getCheckInventoryAvaiability($inventory_name, $user_id, $inventory_id){
+        $check = InventoryModel::selectRaw('1')
+            ->where('inventory_name',$inventory_name)
+            ->where('created_by',$user_id);
+
+        if($inventory_id != null){
+            $check->whereNot('id',$inventory_id);
+        }
+
+        $check = $check->first();
+
+        if($check){
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

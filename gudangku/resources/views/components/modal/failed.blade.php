@@ -1,7 +1,9 @@
 <style>
     .modal-content{
-        background-color: var(--whiteColor);
-        border:none;
+        background: var(--darkColor);
+        color: var(--whiteColor) !important;
+        border: none;
+        border: 2.5px solid var(--primaryColor);
     }
 </style>
 
@@ -10,11 +12,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img src="{{asset('images/Failed.png')}}" alt='failed.png' style='width:30%;'><br>
-                <h5 class="modal-title mt-4" id="exampleModalLabel">Failed</h5>
+                <img src="{{asset('images/Failed.png')}}" alt='failed.png' class="d-block mx-auto" style="max-width:120px;"><br>
+                <h5 class="modal-title mt-1 fw-bold" id="exampleModalLabel">Failed</h5>
                 <h7 class="m-2">{{ Session::get('failed_message') }}</h7>
                 <hr>
-                <button class="btn btn-danger rounded-pill px-4" data-bs-dismiss="modal">Try again</button>
+                <button class="btn btn-danger rounded-pill px-4 mt-3" data-bs-dismiss="modal">Continue</button>
             </div>
         </div>
     </div>

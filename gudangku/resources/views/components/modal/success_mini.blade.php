@@ -1,11 +1,14 @@
 <style>
     .toast-body.rounded-bottom{
-        background:var(--toast2);
-        color:var(--text);
+        background: var(--darkColor);
+        color: var(--whiteColor);
     }
     .toast-header{
-        background:var(--toast1);
-        color:var(--text);
+        background: var(--darkColor);
+        color: var(--whiteColor);
+    }
+    .toast {
+        border: 2.5px solid var(--primaryColor);
     }
 </style>
 
@@ -16,7 +19,7 @@
             <img class="mx-2" src="{{asset('images/Success.png')}}" alt='success.png' style='width:22px;'>
             <h6 class="me-auto mt-1 ">Success</h6>
             <small>Recently</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            <button type="button" class="btn-danger py-1 px-2 ms-2" data-bs-dismiss="toast" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="toast-body rounded-bottom">
             {{ Session::get('success_mini_message') }}

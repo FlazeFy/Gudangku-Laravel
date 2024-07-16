@@ -1,5 +1,5 @@
 <a class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#modalSyncToSheet"><i class="fa-solid fa-globe" 
-    style="font-size:var(--textXLG);"></i> Sync to Sheet</a>
+    style="font-size:var(--textXLG);"></i> @if(!$isMobile) Sync to Sheet @endif</a>
 <div class="modal fade" id="modalSyncToSheet" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

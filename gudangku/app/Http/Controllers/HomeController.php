@@ -51,7 +51,7 @@ class HomeController extends Controller
                     ->where('inventory.created_by',$user_id)
                     ->orderBy('is_favorite', 'desc')
                     ->orderBy('inventory.created_at', 'desc')
-                    ->get();
+                    ->paginate(15);
 
                 return view('home.index')
                     ->with('inventory',$inventory)
@@ -145,41 +145,53 @@ class HomeController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        InventoryModel::where('id',$id)
+        $res = InventoryModel::where('id',$id)
             ->where('created_by', $user_id)
             ->update([
                 'deleted_at' => date('Y-m-d H:i:s')
         ]);
 
-        Audit::createHistory('Delete item', $request->inventory_name, $user_id);
+        if($res){
+            Audit::createHistory('Delete item', $request->inventory_name, $user_id);
 
-        return redirect()->back();
+            return redirect()->back()->with('success_message', "Success delete $request->inventory_name");
+        } else {
+            return redirect()->back()->with('failed_message', "Failed delete $request->inventory_name");
+        }
     }
 
     public function hard_delete(Request $request, $id)
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        InventoryModel::destroy($id);
+        $res = InventoryModel::destroy($id);
 
-        Audit::createHistory('Permentally delete item', $request->inventory_name, $user_id);
+        if($res){
+            Audit::createHistory('Permentally delete item', $request->inventory_name, $user_id);
 
-        return redirect()->back();
+            return redirect()->back()->with('success_message', "Success permentally delete $request->inventory_name");
+        } else {
+            return redirect()->back()->with('failed_message', "Failed permentally delete $request->inventory_name");
+        }
     }
 
     public function recover(Request $request, $id)
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        InventoryModel::where('id',$id)
+        $res = InventoryModel::where('id',$id)
             ->where('created_by', $user_id)
             ->update([
                 'deleted_at' => null
         ]);
 
-        Audit::createHistory('Recover item', $request->inventory_name, $user_id);
+        if($res){
+            Audit::createHistory('Recover item', $request->inventory_name, $user_id);
 
-        return redirect()->back();
+            return redirect()->back()->with('success_message', "Success recover $request->inventory_name");
+        } else {
+            return redirect()->back()->with('failed_message', "Failed recover $request->inventory_name");
+        }
     }
 
     public function save_as_csv(){
@@ -190,18 +202,26 @@ class HomeController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        $file_name = date('l, j F Y \a\t H:i:s');
+        if($data->isNotEmpty()){
+            try {
+                $file_name = date('l, j F Y \a\t H:i:s');
+                Audit::createHistory('Print item', 'Inventory', $user_id);
 
-        Audit::createHistory('Print item', 'Inventory', $user_id);
-
-        return Excel::download(new InventoryExport($data), "$file_name-Inventory Data.xlsx");
+                session()->flash('success_message', 'Success generate data');
+                return Excel::download(new InventoryExport($data), "$file_name-Inventory Data.xlsx");
+            } catch (\Exception $e) {
+                return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
+            }
+        } else {
+            return redirect()->back()->with('failed_message', "No Data to generated");
+        }
     }
 
     public function fav_toogle(Request $request, $id)
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        InventoryModel::where('id',$id)
+        $res = InventoryModel::where('id',$id)
             ->where('created_by', $user_id)
             ->update([
                 'is_favorite' => $request->is_favorite
@@ -211,9 +231,14 @@ class HomeController extends Controller
         if($request->is_favorite == 0){
             $ctx = 'Unset';
         }
-        Audit::createHistory($ctx.' to favorite', $request->inventory_name, $user_id);
 
-        return redirect()->back();
+        if($res){
+            Audit::createHistory($ctx.' to favorite', $request->inventory_name, $user_id);
+
+            return redirect()->back()->with('success_mini_message', "$ctx $request->inventory_name to favorite");
+        } else {
+            return redirect()->back()->with('failed_message', "$ctx $request->inventory_name to favorite");
+        }
     }
 
     public function toogle_view(Request $request)
@@ -227,21 +252,26 @@ class HomeController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        ReminderModel::destroy($id);
+        $res = ReminderModel::destroy($id);
 
-        Audit::createHistory('Permentally delete reminder', $request->reminder_desc, $user_id);
-
-        return redirect()->back();
+        if($res){
+            Audit::createHistory('Permentally delete reminder : ', $request->reminder_desc, $user_id);
+            
+            return redirect()->back()->with('success_message', "Success permentally delete reminder : $request->reminder_desc");
+        } else {
+            return redirect()->back()->with('failed_message', "Failed permentally delete reminder : $request->reminder_desc");
+        }
     }
 
     public function copy_reminder(Request $request, $id)
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
-
         $count = count($request->inventory_id);
+        $success_exec = 0;
+        $failed_exec = 0;
 
         for($i = 0; $i < $count; $i++){
-            ReminderModel::create([
+            $res = ReminderModel::create([
                 'id' => Generator::getUUID(), 
                 'inventory_id' => $request->inventory_id[$i], 
                 'reminder_desc' => $request->reminder_desc, 
@@ -251,18 +281,32 @@ class HomeController extends Controller
                 'created_by' => $user_id, 
                 'updated_at' => null
             ]);
+            
+            if($res){
+                $success_exec++;
+            } else {
+                $failed_exec++;
+            }
         }
 
-        Audit::createHistory('Copy reminder', $request->reminder_desc, $user_id);
+        if($failed_exec == 0 && $success_exec == $count){
+            Audit::createHistory('Copy reminder', $request->reminder_desc, $user_id);
 
-        return redirect()->back();
+            return redirect()->back()->with('success_mini_message', "Success copy reminder : $request->reminder_desc");
+        } else if($failed_exec > 0 && $success_exec > 0){
+            Audit::createHistory('Copy reminder', $request->reminder_desc, $user_id);
+
+            return redirect()->back()->with('success_mini_message', "Success some copy reminder : $request->reminder_desc. About $failed_exec inventory failed to copy");
+        } else {
+            return redirect()->back()->with('failed_message', "Failed copy reminder : $request->reminder_desc");
+        }
     }
 
     public function edit_reminder(Request $request, $id)
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        ReminderModel::where('id',$id)
+        $res = ReminderModel::where('id',$id)
             ->where('created_by', $user_id)
             ->update([
                 'reminder_desc' => $request->reminder_desc,
@@ -271,9 +315,13 @@ class HomeController extends Controller
                 'updated_at' => date('Y-m-d H:i:s')
         ]);
 
-        Audit::createHistory('Updated reminder', $request->reminder_desc, $user_id);
+        if($res){
+            Audit::createHistory('Updated reminder', $request->reminder_desc, $user_id);
 
-        return redirect()->back();
+            return redirect()->back()->with('success_mini_message', "Success updated reminder : $request->reminder_desc");
+        } else {
+            return redirect()->back()->with('failed_message', "Failed updated reminder : $request->reminder_desc");
+        }
     }
 
     public function get_all_inventory_wa_bot()

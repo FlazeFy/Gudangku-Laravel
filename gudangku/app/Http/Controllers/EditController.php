@@ -64,7 +64,6 @@ class EditController extends Controller
     {
         $ctx = 'Update item';
         $user_id = Generator::getUserId(session()->get('role_key'));
-        $email = Generator::getUserEmail($user_id);
 
         // Nullable
         $inventory_capacity_unit = $request->inventory_capacity_unit;
@@ -75,27 +74,38 @@ class EditController extends Controller
             $inventory_capacity_vol = null;
         }
 
-        $data = [
-            'inventory_name' => $request->inventory_name, 
-            'inventory_category' => $request->inventory_category, 
-            'inventory_desc' => $request->inventory_desc, 
-            'inventory_merk' => $request->inventory_merk, 
-            'inventory_room' => $request->inventory_room, 
-            'inventory_storage' => $request->inventory_storage, 
-            'inventory_rack' => $request->inventory_rack, 
-            'inventory_price' => $request->inventory_price, 
-            'inventory_unit' => $request->inventory_unit, 
-            'inventory_vol' => $request->inventory_vol, 
-            'inventory_capacity_unit' => $inventory_capacity_unit, 
-            'inventory_capacity_vol' => $inventory_capacity_vol, 
-            'updated_at' => date("Y-m-d H:i:s")
-        ];
+        $inventory_name = $request->inventory_name;
+        $check = InventoryModel::getCheckInventoryAvaiability($inventory_name,$user_id,$id);
 
-        InventoryModel::where('id',$id)->update($data);
+        if($check){
+            $data = [
+                'inventory_name' => $inventory_name, 
+                'inventory_category' => $request->inventory_category, 
+                'inventory_desc' => $request->inventory_desc, 
+                'inventory_merk' => $request->inventory_merk, 
+                'inventory_room' => $request->inventory_room, 
+                'inventory_storage' => $request->inventory_storage, 
+                'inventory_rack' => $request->inventory_rack, 
+                'inventory_price' => $request->inventory_price, 
+                'inventory_unit' => $request->inventory_unit, 
+                'inventory_vol' => $request->inventory_vol, 
+                'inventory_capacity_unit' => $inventory_capacity_unit, 
+                'inventory_capacity_vol' => $inventory_capacity_vol, 
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
 
-        // History
-        Audit::createHistory($ctx, $request->inventory_name, $user_id);
+            $res = InventoryModel::where('id',$id)->update($data);
 
-        return redirect()->back();
+            if($res){
+                // History
+                Audit::createHistory($ctx, $request->inventory_name, $user_id);
+
+                return redirect()->back()->with('success_message', "Inventory : $inventory_name successfully updated");
+            } else {
+                return redirect()->back()->with('failed_message', "Inventory : $inventory_name failed to create");
+            }
+        } else {
+            return redirect()->back()->with('failed_message', "Inventory : $inventory_name failed to update. Name has been used");
+        }
     }
 }

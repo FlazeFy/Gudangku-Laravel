@@ -36,3 +36,9 @@
         </div>
     </div>
 @endforeach
+
+<hr>
+<div class="my-3">
+    {{ $history->links() }}
+</div>
+

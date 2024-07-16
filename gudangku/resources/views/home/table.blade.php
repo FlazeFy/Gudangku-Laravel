@@ -350,6 +350,10 @@
         @endforeach
     </tbody>
 </table>
+<hr>
+<div class="my-3">
+    {{ $inventory->links() }}
+</div>
 
 <script>
     let toogle_check = 0

@@ -50,4 +50,9 @@
             @yield('content')
         </div>
     </body>
+    
+    <!--Modal-->
+    @include('components.modal.success')
+    @include('components.modal.success_mini')
+    @include('components.modal.failed')
 </html>

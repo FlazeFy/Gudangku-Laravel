@@ -52,25 +52,45 @@ class ReportController extends Controller
             'deleted_at' => null
         ]);
 
-        $item_count = count($request->item_name);
-    
-        for($i = 0; $i < $item_count; $i++){
-            ReportItemModel::create([
-                'id' => Generator::getUUID(), 
-                'inventory_id' => null, 
-                'report_id' => $id_report, 
-                'item_name' => $request->item_name[$i], 
-                'item_desc' => $request->item_desc[$i],  
-                'item_qty' => $request->item_qty[$i], 
-                'item_price' => $request->item_price[$i], 
-                'created_at' => date('Y-m-d H:i:s'), 
-                'created_by' => $user_id, 
-            ]);
+        if($report){
+            $item_count = count($request->item_name);
+            $success_exec = 0;
+            $failed_exec = 0;
+            for($i = 0; $i < $item_count; $i++){
+                $res = ReportItemModel::create([
+                    'id' => Generator::getUUID(), 
+                    'inventory_id' => null, 
+                    'report_id' => $id_report, 
+                    'item_name' => $request->item_name[$i], 
+                    'item_desc' => $request->item_desc[$i],  
+                    'item_qty' => $request->item_qty[$i], 
+                    'item_price' => $request->item_price[$i], 
+                    'created_at' => date('Y-m-d H:i:s'), 
+                    'created_by' => $user_id, 
+                ]);
+
+                if($res){
+                    $success_exec++;
+                } else {
+                    $failed_exec++;
+                }
+            }
+
+            if($failed_exec == 0 && $success_exec == $count){
+                // History
+                Audit::createHistory('Create', $report->report_title, $user_id);
+
+                return redirect()->back()->with('success_mini_message', "Success create report and its item");
+            } else if($failed_exec > 0 && $success_exec > 0){
+                // History
+                Audit::createHistory('Create', $report->report_title, $user_id);
+
+                return redirect()->back()->with('success_mini_message', "Success create report and some item has been added: $success_exec. About $failed_exec inventory failed to add");
+            } else {
+                return redirect()->back()->with('failed_message', "Failed add item to report");
+            }
+        } else {
+            return redirect()->back()->with('failed_message', "Failed to create report");
         }
-
-        // History
-        Audit::createHistory('Create', $report->report_title, $user_id);
-
-        return redirect()->back();
     }
 }

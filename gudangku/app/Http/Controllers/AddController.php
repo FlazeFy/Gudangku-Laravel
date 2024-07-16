@@ -56,37 +56,48 @@ class AddController extends Controller
             $inventory_capacity_vol = null;
         }
 
-        $data = [
-            'id' => Generator::getUUID(), 
-            'inventory_name' => $request->inventory_name, 
-            'inventory_category' => $request->inventory_category, 
-            'inventory_desc' => $request->inventory_desc, 
-            'inventory_merk' => $request->inventory_merk, 
-            'inventory_room' => $request->inventory_room, 
-            'inventory_storage' => $request->inventory_storage, 
-            'inventory_rack' => $request->inventory_rack, 
-            'inventory_price' => $request->inventory_price, 
-            'inventory_image' => $request->inventory_image, 
-            'inventory_unit' => $request->inventory_unit, 
-            'inventory_vol' => $request->inventory_vol,
-            'inventory_capacity_unit' => $inventory_capacity_unit, 
-            'inventory_capacity_vol' => $inventory_capacity_vol, 
-            'is_favorite' => 0, 
-            'is_reminder' => 0, 
-            'created_at' => date("Y-m-d H:i:s"), 
-            'created_by' => $user_id,
-            'updated_at' => null, 
-            'deleted_at' => null
-        ];
+        $inventory_name = $request->inventory_name;
+        $check = InventoryModel::getCheckInventoryAvaiability($inventory_name,$user_id,null);
 
-        InventoryModel::create($data);
+        if($check){
+            $data = [
+                'id' => Generator::getUUID(), 
+                'inventory_name' => $inventory_name, 
+                'inventory_category' => $request->inventory_category, 
+                'inventory_desc' => $request->inventory_desc, 
+                'inventory_merk' => $request->inventory_merk, 
+                'inventory_room' => $request->inventory_room, 
+                'inventory_storage' => $request->inventory_storage, 
+                'inventory_rack' => $request->inventory_rack, 
+                'inventory_price' => $request->inventory_price, 
+                'inventory_image' => $request->inventory_image, 
+                'inventory_unit' => $request->inventory_unit, 
+                'inventory_vol' => $request->inventory_vol,
+                'inventory_capacity_unit' => $inventory_capacity_unit, 
+                'inventory_capacity_vol' => $inventory_capacity_vol, 
+                'is_favorite' => 0, 
+                'is_reminder' => 0, 
+                'created_at' => date("Y-m-d H:i:s"), 
+                'created_by' => $user_id,
+                'updated_at' => null, 
+                'deleted_at' => null
+            ];
 
-        // Send email
-        dispatch(new ProcessMailer($ctx, $data, session()->get('username_key'), $email));
+            $res = InventoryModel::create($data);
 
-        // History
-        Audit::createHistory($ctx, $request->inventory_name, $user_id);
+            if($res){
+                // Send email
+                dispatch(new ProcessMailer($ctx, $data, session()->get('username_key'), $email));
 
-        return redirect()->route('home');
+                // History
+                Audit::createHistory($ctx, $request->inventory_name, $user_id);
+
+                return redirect()->route('home')->with('success_message', "Inventory : $inventory_name successfully created");
+            } else {
+                return redirect()->back()->with('failed_message', "Inventory : $inventory_name failed to create");
+            }
+        } else {
+            return redirect()->back()->with('failed_message', "Inventory : $inventory_name failed to create. Item has been exist");
+        }
     }
 }

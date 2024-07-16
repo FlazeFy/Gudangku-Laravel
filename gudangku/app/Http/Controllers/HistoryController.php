@@ -29,7 +29,7 @@ class HistoryController extends Controller
             $history = HistoryModel::select('*')
                 ->where('created_by',$user_id)
                 ->orderby('created_at', 'DESC')
-                ->get();
+                ->paginate(15);
 
             return view('history.index')
                 ->with('history',$history);
@@ -40,9 +40,13 @@ class HistoryController extends Controller
 
     public function hard_delete($id)
     {
-        HistoryModel::destroy($id);
+        $res = HistoryModel::destroy($id);
 
-        return redirect()->back();
+        if($res){
+            return redirect()->back()->with('success_mini_message', "Success delete history");
+        } else {
+            return redirect()->back()->with('failed_message', "Failed delete history");
+        }
     }
 
     public function save_as_csv(){
@@ -52,11 +56,19 @@ class HistoryController extends Controller
             ->where('created_by', $user_id)
             ->orderBy('created_at', 'DESC')
             ->get();
-            
-        $file_name = date('l, j F Y \a\t H:i:s');
 
-        Audit::createHistory('Print item', 'History', $user_id);
+        if($data->isNotEmpty()){
+            try {
+                $file_name = date('l, j F Y \a\t H:i:s');
+                Audit::createHistory('Print item', 'History', $user_id);
 
-        return Excel::download(new HistoryExport($data), "$file_name-History Data.xlsx");
+                session()->flash('success_message', 'Success generate data');
+                return Excel::download(new HistoryExport($data), "$file_name-History Data.xlsx");
+            } catch (\Exception $e) {
+                return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
+            }
+        } else {
+            return redirect()->back()->with('failed_message', "No Data to generated");
+        }
     }
 }
