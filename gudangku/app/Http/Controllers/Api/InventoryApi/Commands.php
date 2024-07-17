@@ -51,6 +51,41 @@ class Commands extends Controller
         }
     }
 
+    public function edit_image_by_id(Request $request, $id)
+    {
+        try{
+            $user_id = $request->user()->id;
+            $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
+
+            $rows = InventoryModel::where('id', $id)
+                ->where('created_by', $user_id)
+                ->update([
+                    'inventory_image' => $request->inventory_image,
+                    'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            if($rows > 0){
+                // History
+                Audit::createHistory('Update Image', $inventory->inventory_name, $user_id);
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'inventory image updated',
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'inventory image failed to updated',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. Please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function hard_delete_inventory_by_id(Request $request, $id)
     {
         try{

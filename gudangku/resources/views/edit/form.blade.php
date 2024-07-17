@@ -7,11 +7,14 @@
             <input type="text" name="inventory_name" value="{{$inventory->inventory_name}}" class="form-control my-2"/>
 
             <label>Category</label>
-            <select class="form-select mt-2" name="inventory_category" aria-label="Default select example">
+            <select class="form-select my-2" name="inventory_category" aria-label="Default select example">
                 @foreach($dct_cat as $dct)
                     <option value="{{$dct['dictionary_name']}}" <?php if($dct['dictionary_name'] == $inventory->inventory_category){ echo 'selected'; } ?>>{{$dct['dictionary_name']}}</option>
                 @endforeach
             </select>
+
+            <label>Color</label>
+            <input type="text" name="inventory_color" id="inventory_color" value="{{$inventory->inventory_color}}" class="form-control my-2"/>
         </div>
         <div class="col-lg-6 py-2">
             @include('edit.image_picker')
