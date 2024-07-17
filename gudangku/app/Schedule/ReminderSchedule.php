@@ -58,7 +58,7 @@ class ReminderSchedule
                     $server_day = $server_datetime->format('H');
                     $split_reminder_context = explode(" ", $dt->reminder_context);
                     $day_reminder = $split_reminder_context[1];
-                    if($day_reminder == (int)$server_day){
+                    if($day_reminder == $server_day){
                         $exec = true;
 
                         // Check idempoten
