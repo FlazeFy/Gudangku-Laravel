@@ -1,8 +1,32 @@
 <style>
-    .inventory-image-holder{
+    .inventory-image {
         position: relative;
         margin-top: 6px;
         margin-bottom: 6px; 
+    }
+    .inventory-image, .no-image-picker {
+        height: 260px;
+    }
+    .no-image-picker {
+        border: 2px dashed var(--whiteColor);
+        width: 100%;
+        border-radius: var(--roundedMD);
+        padding: var(--textLG);
+        margin: var(--spaceMD) 0;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        cursor: pointer;
+        -webkit-transition: all 0.4s !important;
+        -o-transition: all 0.4s !important;
+        transition: all 0.4s !important;
+    }
+    .no-image-picker:hover {
+        transform: scale(1.01);
+    }
+    .no-image-picker a {
+        vertical-align:middle;
     }
     .inventory-image-holder .inventory-image{
         margin-inline: auto;
@@ -51,32 +75,35 @@
     }
 </style>
 
-<div class="inventory-image-holder">
-    <img id="frame" class="inventory-image img img-fluid" src="
-        <?php 
-            if($inventory->inventory_image){
-                echo $inventory->inventory_image;
-            } else {
-                echo asset('images/default_inventory.jpg');
-            }
-        ?>">
-    <div class='image-upload' id='formFileImg'>
-        <label for='file-input'>
-            <img class='btn change-image shadow position-relative p-1' title='Change Image' src="{{asset('images/change_image.png')}}"/>
-        </label>
-        <input id='file-input' type='file' accept="image/*" value="" onchange='setValueInventoryImage()'/>
+<div class="img-holder">
+    <?php 
+        if($inventory->inventory_image){
+            echo "
+                <div class='no-image-picker' title='Change Image' id='no-image-picker'>
+                    <label for='file-input'>
+                        <img id='frame' class='m-2 inventory-image' title='Change Image' src='$inventory->inventory_image' />
+                    </label>
+                    <input id='file-input' type='file' accept='image/*' style='display: none;' onchange='setValueInventoryImage()'/>
+                </div>
+            ";
+        } else {
+            echo "
+                <div class='no-image-picker' title='Change Image' id='no-image-picker'>
+                    <label for='file-input'>
+                        <img id='frame' class='m-2' title='Change Image' style='width: var(--spaceXLG);' src='".asset('images/change_image.png')."' />
+                        <a>No image has been selected</a>
+                    </label>
+                    <input id='file-input' type='file' accept='image/*' style='display: none;' onchange='setValueInventoryImage()'/>
+                </div>
+            ";
+        }
+    ?>
     </div>
     <input hidden type="text" name="inventory_image" id="inventory_image_url" value="">
-    <a class="btn btn-icon-reset-image shadow" title="Reset to default image" onclick="clearImage()"><i class="fa-solid fa-trash-can"></i></a>
-    <span class="status-holder shadow">
-        <a class="attach-upload-status success" id="header-progress"></a>
-        <a class="attach-upload-status danger" id="header-failed"></a>
-        <a class="attach-upload-status warning" id="header-warning"></a>
-    </span>
-    <canvas id="imageCanvas" style="display: none;" src="{{asset('images/change_image.png')}}"></canvas>
-</div>
 
+    <canvas id="imageCanvas" style="display: none;"></canvas>
 <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
+<a class="btn btn-danger px-2 shadow" title="Reset to default image" onclick="clearImage()"><i class="fa-solid fa-trash-can"></i> Reset Image</a>
 
 <script>
     const firebaseConfig = {
@@ -115,6 +142,7 @@
     }
 
     function setValueInventoryImage(){
+        Swal.showLoading()
         let cheader_file_src = document.getElementById('file-input').files[0];
         let filePath = 'inventory/<?= session()->get('id_key') ?>_<?= session()->get('username_key') ?>/' + getUUID();
 
@@ -128,6 +156,7 @@
             document.getElementById('header-progress').innerHTML = `File upload is ${progress}% done`;
         }, 
         function (error) {
+            Swal.hideLoading()
             Swal.fire({
                 title: "Oops!",
                 text: "Something error! File upload is error",
@@ -139,7 +168,7 @@
         function () {
             uploadTask.snapshot.ref.getDownloadURL().then(function (downloadUrl) {
             
-                document.getElementById('frame').src = downloadUrl;
+                document.getElementById('no-image-picker').innerHTML = `<img class="inventory-image" src="${downloadUrl}">`;
                 document.getElementById('inventory_image_url').value = downloadUrl;
                 uploadedInventoryImageUrl = downloadUrl;
 
@@ -161,6 +190,7 @@
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");    
             },
             success: function(response) {
+                Swal.hideLoading()
                 Swal.fire({
                     title: "Success!",
                     text: "Success to upload the image",
@@ -168,6 +198,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.hideLoading()
                 Swal.fire({
                     title: "Oops!",
                     text: "Failed to upload the image",
