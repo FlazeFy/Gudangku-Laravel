@@ -48,16 +48,6 @@
     .image-upload>input {
         display: none;
     }
-    .btn.change-image{
-        width:40px; 
-        height:40px; 
-        -webkit-transition: all 0.4s;
-        -o-transition: all 0.4s;
-        transition: all 0.4s;
-        background:var(--primaryColor);
-        display: block;
-        margin-inline: auto;
-    }
     .inventory-image-holder .btn-icon-reset-image{
         position: absolute; 
         bottom: 10px; 
@@ -103,7 +93,10 @@
 
     <canvas id="imageCanvas" style="display: none;"></canvas>
 <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
-<a class="btn btn-danger px-2 shadow" title="Reset to default image" onclick="clearImage()"><i class="fa-solid fa-trash-can"></i> Reset Image</a>
+
+@if($inventory->inventory_image)
+    <a class="btn btn-danger px-2 shadow" title="Reset to default image" onclick="clearImage()"><i class="fa-solid fa-trash-can"></i> Reset Image</a>
+@endif
 
 <script>
     const firebaseConfig = {
@@ -119,18 +112,21 @@
 
     let uploadedInventoryImageUrl = ""
     function clearImage() {
-        document.getElementById('formFileImg').value = null;
+        Swal.showLoading()
         document.getElementById('frame').src = "{{asset('images/default_inventory.jpg')}}";
-        document.getElementById('inventory_image_url').value = "{{asset('images/default_inventory.jpg')}}";
+        document.getElementById('inventory_image_url').value = null;
 
         if(uploadedInventoryImageUrl && uploadedInventoryImageUrl != ""){
             let storageRef = firebase.storage();
             let desertRef = storageRef.refFromURL(uploadedInventoryImageUrl);
 
             desertRef.delete().then(() => {
+                Swal.hideLoading()
                 document.getElementById('header-progress').innerHTML = `Inventory image has been removed`;
                 uploadedInventoryImageUrl = ""
+                update_image_url(uploadedInventoryImageUrl, '<?= $inventory->id ?>')
             }).catch((error) => {
+                Swal.hideLoading()
                 Swal.fire({
                     title: "Oops!",
                     text: "Failed to deleted the image",

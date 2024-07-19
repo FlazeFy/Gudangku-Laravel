@@ -57,12 +57,18 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
 
+            if($inventory->image == ""){
+                $inventory_image = null;
+            } else {
+                $inventory_image = $inventory->image;
+            }
             $rows = InventoryModel::where('id', $id)
                 ->where('created_by', $user_id)
                 ->update([
-                    'inventory_image' => $request->inventory_image,
+                    'inventory_image' => $inventory_image,
                     'updated_at' => date('Y-m-d H:i:s'),
             ]);
+            
 
             if($rows > 0){
                 // History

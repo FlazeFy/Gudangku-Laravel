@@ -27,6 +27,7 @@
         <a class="btn btn-primary mb-3 me-2" href="/inventory/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Add Inventory @endif</a>
         <a class="btn btn-primary mb-3 me-2" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Stats @endif</a>
         <a class="btn btn-primary mb-3 me-2" href="/calendar"><i class="fa-solid fa-calendar" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Calendar @endif</a>
+        <a class="btn btn-primary mb-3 me-2" href="/room"><i class="fa-solid fa-cube" style="font-size:var(--textXLG);"></i> @if(!$isMobile) 3D Room @endif</a>
         <form class="d-inline" action="/inventory/saveAsCsv" method="POST">
             @csrf
             <button class="btn btn-primary mb-3 me-2" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Save as CSV @endif</button>

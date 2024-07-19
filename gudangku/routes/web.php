@@ -13,6 +13,7 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,4 +89,8 @@ Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
 Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ReportController::class, 'index']);
     Route::post('/', [ReportController::class, 'create_report']);
+});
+
+Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {
+    Route::get('/', [RoomController::class, 'index']);
 });

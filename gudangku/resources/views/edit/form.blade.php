@@ -13,8 +13,10 @@
                 @endforeach
             </select>
 
-            <label>Color</label>
-            <input type="text" name="inventory_color" id="inventory_color" value="{{$inventory->inventory_color}}" class="form-control my-2" readonly/>
+            @if($inventory->inventory_image)
+                <label>Color</label>
+                <input type="text" name="inventory_color" id="inventory_color" value="{{$inventory->inventory_color}}" class="form-control my-2" readonly/>
+            @endif
         </div>
         <div class="col-lg-6 py-2">
             @include('edit.image_picker')
