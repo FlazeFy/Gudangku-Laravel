@@ -12,6 +12,25 @@ use Illuminate\Http\Response;
 
 class Queries extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/user/my_profile",
+     *     summary="Get my profile",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="user fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="user failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_my_profile(Request $request)
     {
         try{

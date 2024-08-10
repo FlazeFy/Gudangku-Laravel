@@ -19,7 +19,7 @@
     <input hidden name="role" value="" id="role">
     <input hidden name="profile_pic" value="" id="profile_pic">
     <a onclick="login()" id="submit_btn" class="btn btn-success border-0" style="background:var(--successBG) !important;"><i class="fa-solid fa-paper-plane mx-1"></i> Submit</a>
-    <a href="/register" id="submit_btn" class="btn btn-success border-0 ms-2" style="background:var(--primaryBG) !important;"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Register</a>
+    <a href="/register" id="regis_btn" class="btn btn-success border-0 ms-2" style="background:var(--primaryBG) !important;"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Register</a>
 </form>
 
 <script>

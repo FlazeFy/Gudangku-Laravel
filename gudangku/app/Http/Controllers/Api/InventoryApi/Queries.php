@@ -12,6 +12,25 @@ use Illuminate\Http\Response;
 
 class Queries extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory",
+     *     summary="Get all inventory",
+     *     tags={"Inventory"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_all_inventory(Request $request)
     {
         try{
@@ -44,6 +63,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/list",
+     *     summary="Get list inventory",
+     *     tags={"Inventory"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_list_inventory(Request $request)
     {
         try{
@@ -76,6 +114,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/calendar",
+     *     summary="Get inventory as calendar format",
+     *     tags={"Inventory"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_list_calendar(Request $request)
     {
         try{

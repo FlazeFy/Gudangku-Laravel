@@ -12,6 +12,25 @@ use Illuminate\Http\Response;
 
 class Queries extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/stats/total_inventory_by_category",
+     *     summary="Get total inventory by category",
+     *     tags={"Stats"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="stats fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="stats failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_total_inventory_by_category(Request $request)
     {
         try{
@@ -43,6 +62,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/stats/total_inventory_by_favorite",
+     *     summary="Get total inventory by favorite",
+     *     tags={"Stats"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="stats fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="stats failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_total_inventory_by_favorite(Request $request)
     {
         try{
@@ -79,6 +117,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/stats/total_inventory_by_room",
+     *     summary="Get total inventory by room",
+     *     tags={"Stats"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="stats fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="stats failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_total_inventory_by_room(Request $request)
     {
         try{

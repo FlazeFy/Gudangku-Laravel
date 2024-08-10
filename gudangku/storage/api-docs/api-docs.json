@@ -1,0 +1,483 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GudangKu",
+        "description": "API Documentation for GudangKu",
+        "contact": {
+            "email": "flazen.edu@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Sign in to the Apps",
+                "operationId": "26ae6f7a2668f358293a502309985206",
+                "responses": {
+                    "200": {
+                        "description": "{user_data}"
+                    },
+                    "422": {
+                        "description": "{validation_msg}"
+                    },
+                    "401": {
+                        "description": "Wrong username or password"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/logout": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Sign out from Apps",
+                "operationId": "8859fad6cbeb2081a7611f5b944b4630",
+                "responses": {
+                    "200": {
+                        "description": "Logout success"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/history/destroy/{id}": {
+            "delete": {
+                "tags": [
+                    "History"
+                ],
+                "summary": "Delete history by id",
+                "operationId": "b777472bb6f3263bd117c26cfecd4dd4",
+                "responses": {
+                    "200": {
+                        "description": "history permentally deleted"
+                    },
+                    "404": {
+                        "description": "history failed to permentally deleted"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/history": {
+            "get": {
+                "tags": [
+                    "History"
+                ],
+                "summary": "Get all history",
+                "operationId": "0f4b533e7eecea6a89a6388545c72dd8",
+                "responses": {
+                    "200": {
+                        "description": "history fetched"
+                    },
+                    "404": {
+                        "description": "history failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/inventory/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Soft delete inventory by id",
+                "operationId": "d65b6267122c2410dff781b1461cae47",
+                "responses": {
+                    "200": {
+                        "description": "inventory deleted"
+                    },
+                    "404": {
+                        "description": "inventory failed to deleted"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/inventory/destroy/{id}": {
+            "put": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Edit inventory image by id",
+                "operationId": "92f078f7fa5ffd5ca10922963f5ec4ed",
+                "responses": {
+                    "200": {
+                        "description": "inventory image updated"
+                    },
+                    "404": {
+                        "description": "inventory image failed to updated"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Hard delete inventory by id",
+                "operationId": "ae5f98a956e96b3d5bae34c2deeecc7f",
+                "responses": {
+                    "200": {
+                        "description": "inventory permentally deleted"
+                    },
+                    "404": {
+                        "description": "inventory failed to permentally deleted"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/inventory/fav_toggle/{id}": {
+            "put": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Toogle favorite inventory by id",
+                "operationId": "dffa279787dd7b1382bd1a05d2d5f0ca",
+                "responses": {
+                    "200": {
+                        "description": "inventory updated"
+                    },
+                    "404": {
+                        "description": "inventory failed to updated"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/inventory/recover/{id}": {
+            "put": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Recover inventory by id",
+                "operationId": "6e035ca103c77ff0b063ef9ade841f95",
+                "responses": {
+                    "200": {
+                        "description": "inventory recovered"
+                    },
+                    "404": {
+                        "description": "inventory failed to recovered"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/inventory": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get all inventory",
+                "operationId": "72cde67a8149d3cf2ca3da99f4ba6f8b",
+                "responses": {
+                    "200": {
+                        "description": "inventory fetched"
+                    },
+                    "404": {
+                        "description": "inventory failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/inventory/list": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get list inventory",
+                "operationId": "cf662e6cbceaa6dd82ec4154ff84057d",
+                "responses": {
+                    "200": {
+                        "description": "inventory fetched"
+                    },
+                    "404": {
+                        "description": "inventory failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/inventory/calendar": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get inventory as calendar format",
+                "operationId": "2db05fcbb4f2038bd4d17acd939bf5d5",
+                "responses": {
+                    "200": {
+                        "description": "inventory fetched"
+                    },
+                    "404": {
+                        "description": "inventory failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/report": {
+            "get": {
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Get all report",
+                "operationId": "b9cea5856eb0fcc283d94fd5ae6255b7",
+                "responses": {
+                    "200": {
+                        "description": "report fetched"
+                    },
+                    "404": {
+                        "description": "report failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/stats/total_inventory_by_category": {
+            "get": {
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get total inventory by category",
+                "operationId": "e901875809bb57c428ae454f2a842cdc",
+                "responses": {
+                    "200": {
+                        "description": "stats fetched"
+                    },
+                    "404": {
+                        "description": "stats failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/stats/total_inventory_by_favorite": {
+            "get": {
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get total inventory by favorite",
+                "operationId": "3306628b237390e6ac08e345274b05a6",
+                "responses": {
+                    "200": {
+                        "description": "stats fetched"
+                    },
+                    "404": {
+                        "description": "stats failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/stats/total_inventory_by_room": {
+            "get": {
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get total inventory by room",
+                "operationId": "545884a8e533ec2295f1ee3083f8e8ad",
+                "responses": {
+                    "200": {
+                        "description": "stats fetched"
+                    },
+                    "404": {
+                        "description": "stats failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/update_telegram_id": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update telegram token id",
+                "operationId": "b3319a420453e08af500d97aa4d48b6d",
+                "responses": {
+                    "200": {
+                        "description": "telegram id updated! and validation has been sended to you"
+                    },
+                    "404": {
+                        "description": "telegram id failed to update"
+                    },
+                    "409": {
+                        "description": "telegram user id has been used"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/register/token": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Check and send validation token to the user who in registration process",
+                "operationId": "f9a08af4b40b9ac720ec6222bb337c0f",
+                "responses": {
+                    "200": {
+                        "description": "the validation token has been sended to {email} email account"
+                    },
+                    "409": {
+                        "description": "there already a request with same username / username already being used"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/register/account": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Register account and accept validation",
+                "operationId": "29226b21d6a5a79d2e87ade3dfed667f",
+                "responses": {
+                    "200": {
+                        "description": "account is registered"
+                    },
+                    "404": {
+                        "description": "Token is invalid"
+                    },
+                    "409": {
+                        "description": "username already used"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/register/regen_token": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Regenerate registration token",
+                "operationId": "de83a252f4cbd7f245743ba8e36c2da2",
+                "responses": {
+                    "200": {
+                        "description": "the validation token has been sended to {email} email account"
+                    },
+                    "404": {
+                        "description": "request not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/update_timezone_fcm": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user timezone",
+                "operationId": "a8507903e83d7a4e0cc32bc26c47889f",
+                "responses": {
+                    "200": {
+                        "description": "firebase message token / timezone has been updated"
+                    },
+                    "422": {
+                        "description": "Timezone is invalid"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/my_profile": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get my profile",
+                "operationId": "c286fe042f9492a53f1a424547fa83e4",
+                "responses": {
+                    "200": {
+                        "description": "user fetched"
+                    },
+                    "404": {
+                        "description": "user failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "History",
+            "description": "History"
+        },
+        {
+            "name": "Inventory",
+            "description": "Inventory"
+        },
+        {
+            "name": "Report",
+            "description": "Report"
+        },
+        {
+            "name": "Stats",
+            "description": "Stats"
+        },
+        {
+            "name": "User",
+            "description": "User"
+        }
+    ]
+}

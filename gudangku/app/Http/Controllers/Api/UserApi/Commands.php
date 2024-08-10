@@ -21,6 +21,29 @@ use Illuminate\Support\Facades\Mail;
 
 class Commands extends Controller
 {
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/user/update_telegram_id",
+     *     summary="Update telegram token id",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="telegram id updated! and validation has been sended to you"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="telegram id failed to update"
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="telegram user id has been used"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function update_telegram_id(Request $request)
     {
         try{
@@ -82,6 +105,25 @@ class Commands extends Controller
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/register/token",
+     *     summary="Check and send validation token to the user who in registration process",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="the validation token has been sended to {email} email account"
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="there already a request with same username / username already being used"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_register_validation_token(Request $request)
     {
         try{
@@ -124,7 +166,7 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'something wrong. Please contact admin',
-                        ], Response::HTTP_BAD_REQUEST);
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 } else {
                     return response()->json([
@@ -146,6 +188,29 @@ class Commands extends Controller
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/register/account",
+     *     summary="Register account and accept validation",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="account is registered"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Token is invalid"
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="username already used"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function post_validate_register(Request $request)
     {
         try{
@@ -204,7 +269,7 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'something wrong. Please contact admin',
-                        ], Response::HTTP_BAD_REQUEST);
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 } else {
                     return response()->json([
@@ -216,7 +281,7 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Token is invalid',
-                ], Response::HTTP_CONFLICT);
+                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
@@ -226,6 +291,25 @@ class Commands extends Controller
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/register/regen_token",
+     *     summary="Regenerate registration token",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="the validation token has been sended to {email} email account"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="request not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function regenerate_register_token(Request $request)
     {
         try{
@@ -266,13 +350,13 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'something wrong. Please contact admin',
-                        ], Response::HTTP_BAD_REQUEST);
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 } else {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'something wrong. Please contact admin',
-                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        'message' => 'request not found',
+                    ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 // already deleted
@@ -300,7 +384,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'failed',
                         'message' => 'something wrong. Please contact admin',
-                    ], Response::HTTP_BAD_REQUEST);
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         } catch(\Exception $e) {
@@ -311,6 +395,25 @@ class Commands extends Controller
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/user/update_timezone_fcm",
+     *     summary="Update user timezone",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="firebase message token / timezone has been updated"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Timezone is invalid"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function update_timezone_fcm(Request $request)
     {
         try{

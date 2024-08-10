@@ -12,6 +12,25 @@ use Illuminate\Http\Response;
 
 class Queries extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/history",
+     *     summary="Get all history",
+     *     tags={"History"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="history fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="history failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function get_all_history(Request $request)
     {
         try{

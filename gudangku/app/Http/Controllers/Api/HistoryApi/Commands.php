@@ -12,6 +12,25 @@ use Illuminate\Http\Response;
 
 class Commands extends Controller
 {
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/history/destroy/{id}",
+     *     summary="Delete history by id",
+     *     tags={"History"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="history permentally deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="history failed to permentally deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function hard_delete_history_by_id(Request $request, $id)
     {
         try{
