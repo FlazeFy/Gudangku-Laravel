@@ -5,6 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     schema="Report",
+ *     type="object",
+ *     required={"id", "report_title", "report_category", "is_reminder", "created_at", "created_by"},
+ * 
+ *     @OA\Property(property="id", type="integer", description="Primary Key"),
+ *     @OA\Property(property="report_title", type="string", description="Title of the report"),
+ *     @OA\Property(property="report_desc", type="string", description="Description of the report"),
+ *     @OA\Property(property="report_category", type="string", description="Category of the report"),
+ *     @OA\Property(property="is_reminder", type="string", description="Indicates if a reminder is set for the report"),
+ * 
+ *     @OA\Property(property="remind_at", type="string", format="date-time", description="Timestamp when the report remind to user"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the user created the report"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the user updated the report"),
+ *     @OA\Property(property="deleted_at", type="string", format="date-time", description="Timestamp when the user deleted the report"),
+ *     @OA\Property(property="created_by", type="string", format="uuid", description="ID of the user who created the report")
+ * )
+ */
+
 class ReportModel extends Model
 {
     use HasFactory;

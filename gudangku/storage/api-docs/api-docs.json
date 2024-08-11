@@ -454,6 +454,662 @@
             }
         }
     },
+    "components": {
+        "schemas": {
+            "Admin": {
+                "required": [
+                    "id",
+                    "username",
+                    "password",
+                    "email",
+                    "telegram_is_valid",
+                    "password",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "telegram_user_id": {
+                        "description": "Telegram Account ID for Bot Apps",
+                        "type": "string"
+                    },
+                    "telegram_is_valid": {
+                        "description": "Validation status of attached telegram account",
+                        "type": "boolean"
+                    },
+                    "firebase_fcm_token": {
+                        "description": "FCM Notification Token for Mobile Apps",
+                        "type": "string"
+                    },
+                    "line_user_id": {
+                        "description": "Line Account ID for Bot Apps",
+                        "type": "string"
+                    },
+                    "username": {
+                        "description": "Unique Identifier for admin",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email for Auth and Task Scheduling",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Sanctum Hashed Password",
+                        "type": "string"
+                    },
+                    "timezone": {
+                        "description": "UTC timezone for Task Scheduling",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the admin was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the admin was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Dictionary": {
+                "required": [
+                    "dictionary_type",
+                    "dictionary_name"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "dictionary_type": {
+                        "description": "Type of the dictionary",
+                        "type": "string"
+                    },
+                    "dictionary_name": {
+                        "description": "Name of the dictionary",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Error": {
+                "required": [
+                    "id",
+                    "message",
+                    "stack_trace",
+                    "file",
+                    "line",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "integer"
+                    },
+                    "message": {
+                        "description": "Message or description of the error",
+                        "type": "string"
+                    },
+                    "stack_trace": {
+                        "description": "Trail of function calls leading up to the error",
+                        "type": "string"
+                    },
+                    "file": {
+                        "description": "Path of the file where the error is faced",
+                        "type": "string"
+                    },
+                    "line": {
+                        "description": "Line of code in specific file where the error is faced",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the error was faced",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "fixed_at": {
+                        "description": "Timestamp when the dev team finally fix and deploy the bug / error fix",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "faced_by": {
+                        "description": "ID of the user who specific faced the error",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "FailedJobs": {
+                "required": [
+                    "id",
+                    "type",
+                    "status",
+                    "payload",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Type of the failed jobs on Task Scheduling",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "Status of the failed jobs on Task Scheduling",
+                        "type": "string"
+                    },
+                    "payload": {
+                        "description": "Respond / Payload from the error",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the jobs had failed",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "History": {
+                "required": [
+                    "id",
+                    "history_type",
+                    "history_context",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "integer"
+                    },
+                    "history_type": {
+                        "description": "Type of the history",
+                        "type": "string"
+                    },
+                    "history_context": {
+                        "description": "Context of the history",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the user created the history",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the history",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "Inventory": {
+                "required": [
+                    "id",
+                    "inventory_name",
+                    "inventory_category",
+                    "inventory_room",
+                    "inventory_price",
+                    "inventory_unit",
+                    "is_favorite",
+                    "is_reminder",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary key for the inventory",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "inventory_name": {
+                        "description": "Name of the inventory",
+                        "type": "string"
+                    },
+                    "inventory_category": {
+                        "description": "Category of the inventory",
+                        "type": "string"
+                    },
+                    "inventory_desc": {
+                        "description": "Description of the inventory",
+                        "type": "string"
+                    },
+                    "inventory_merk": {
+                        "description": "Merk or brand of the inventory",
+                        "type": "string"
+                    },
+                    "inventory_color": {
+                        "description": "Color of the inventory",
+                        "type": "string"
+                    },
+                    "inventory_room": {
+                        "description": "Room where the inventory is located",
+                        "type": "string"
+                    },
+                    "inventory_storage": {
+                        "description": "Storage location of the inventory",
+                        "type": "string"
+                    },
+                    "inventory_rack": {
+                        "description": "Rack or location within the storage",
+                        "type": "string"
+                    },
+                    "inventory_price": {
+                        "description": "Price of the inventory",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "inventory_image": {
+                        "description": "Firebase Storage URL to the image of the inventory",
+                        "type": "string",
+                        "format": "url"
+                    },
+                    "inventory_unit": {
+                        "description": "Unit of measurement for the inventory",
+                        "type": "string"
+                    },
+                    "inventory_vol": {
+                        "description": "Volume of the inventory",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "inventory_capacity_unit": {
+                        "description": "Unit of capacity for the inventory",
+                        "type": "string"
+                    },
+                    "inventory_capacity_vol": {
+                        "description": "Capacity volume of the inventory",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "is_favorite": {
+                        "description": "Indicates if the inventory is marked as a favorite",
+                        "type": "boolean"
+                    },
+                    "is_reminder": {
+                        "description": "Indicates if a reminder is set for the inventory",
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the inventory was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the inventory",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the inventory was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "description": "Timestamp when the inventory was deleted",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "PersonalAccessToken": {
+                "required": [
+                    "id",
+                    "tokenable_type",
+                    "tokenable_id",
+                    "name",
+                    "token",
+                    "abilities",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "integer"
+                    },
+                    "tokenable_type": {
+                        "description": "Model / Role who generated the auth token",
+                        "type": "string"
+                    },
+                    "tokenable_id": {
+                        "description": "ID of the user who generated the auth token",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Source of the auth token generated",
+                        "type": "string"
+                    },
+                    "token": {
+                        "description": "Auth token that will be used for Auth Bearer all the protected API",
+                        "type": "string"
+                    },
+                    "abilities": {
+                        "description": "Ability of auth token",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the auth token was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the auth token was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "expires_at": {
+                        "description": "Timestamp when the auth token will expired",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "last_used_at": {
+                        "description": "Timestamp when the last time token was used for calling other protected API",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Reminder": {
+                "required": [
+                    "id",
+                    "inventory_id",
+                    "reminder_desc",
+                    "reminder_type",
+                    "reminder_context",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary key for the reminder",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "inventory_id": {
+                        "description": "ID of the inventory",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "reminder_desc": {
+                        "description": "Description of the reminder",
+                        "type": "string"
+                    },
+                    "reminder_type": {
+                        "description": "Type of the reminder",
+                        "type": "string"
+                    },
+                    "reminder_context": {
+                        "description": "Context of the reminder",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the reminder was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the reminder",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the reminder was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ReportItem": {
+                "required": [
+                    "id",
+                    "report_id",
+                    "item_name",
+                    "item_qty",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary key for the report item",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "inventory_id": {
+                        "description": "ID of the inventory",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "report_id": {
+                        "description": "ID of the report",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "item_name": {
+                        "description": "Name of the item",
+                        "type": "string"
+                    },
+                    "item_desc": {
+                        "description": "Description of the item",
+                        "type": "string"
+                    },
+                    "item_qty": {
+                        "description": "Quantity of the item",
+                        "type": "integer"
+                    },
+                    "item_price": {
+                        "description": "Price of the item",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the report item was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the report item",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "Report": {
+                "required": [
+                    "id",
+                    "report_title",
+                    "report_category",
+                    "is_reminder",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "integer"
+                    },
+                    "report_title": {
+                        "description": "Title of the report",
+                        "type": "string"
+                    },
+                    "report_desc": {
+                        "description": "Description of the report",
+                        "type": "string"
+                    },
+                    "report_category": {
+                        "description": "Category of the report",
+                        "type": "string"
+                    },
+                    "is_reminder": {
+                        "description": "Indicates if a reminder is set for the report",
+                        "type": "string"
+                    },
+                    "remind_at": {
+                        "description": "Timestamp when the report remind to user",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the user created the report",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the user updated the report",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "description": "Timestamp when the user deleted the report",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the report",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "ScheduleMark": {
+                "required": [
+                    "id",
+                    "reminder_id",
+                    "last_execute"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "integer"
+                    },
+                    "reminder_id": {
+                        "description": "ID of the reminder",
+                        "type": "string"
+                    },
+                    "last_execute": {
+                        "description": "Timestamp when the reminder was executed",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Users": {
+                "required": [
+                    "id",
+                    "username",
+                    "password",
+                    "email",
+                    "telegram_is_valid",
+                    "password",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "telegram_user_id": {
+                        "description": "Telegram Account ID for Bot Apps",
+                        "type": "string"
+                    },
+                    "telegram_is_valid": {
+                        "description": "Validation status of attached telegram account",
+                        "type": "boolean"
+                    },
+                    "firebase_fcm_token": {
+                        "description": "FCM Notification Token for Mobile Apps",
+                        "type": "string"
+                    },
+                    "line_user_id": {
+                        "description": "Line Account ID for Bot Apps",
+                        "type": "string"
+                    },
+                    "username": {
+                        "description": "Unique Identifier for user",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email for Auth and Task Scheduling",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Sanctum Hashed Password",
+                        "type": "string"
+                    },
+                    "phone": {
+                        "description": "Phone number for Task Scheduling and OTP Auth",
+                        "type": "string"
+                    },
+                    "timezone": {
+                        "description": "UTC timezone for Task Scheduling",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the user was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the user was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidateRequest": {
+                "required": [
+                    "id",
+                    "request_type",
+                    "request_context",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "integer"
+                    },
+                    "request_type": {
+                        "description": "Type of the request",
+                        "type": "string"
+                    },
+                    "request_context": {
+                        "description": "Context of the request",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the user make the request",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who make the request",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
     "tags": [
         {
             "name": "Auth",
