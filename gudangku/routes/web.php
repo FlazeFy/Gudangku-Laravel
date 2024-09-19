@@ -60,6 +60,7 @@ Route::prefix('/inventory/edit/{id}')->middleware(['auth_v2:sanctum'])->group(fu
     Route::get('/', [EditController::class, 'index']);
 
     Route::post('/editInventory', [EditController::class, 'update']);
+    Route::post('/editInventory/addReport', [EditController::class, 'create_report']);
 });
 
 Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
