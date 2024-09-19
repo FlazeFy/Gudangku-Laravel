@@ -64,7 +64,7 @@ class ReportController extends Controller
                     'item_name' => $request->item_name[$i], 
                     'item_desc' => $request->item_desc[$i],  
                     'item_qty' => $request->item_qty[$i], 
-                    'item_price' => $request->item_price[$i], 
+                    'item_price' => $request->item_price[$i] ?? null, 
                     'created_at' => date('Y-m-d H:i:s'), 
                     'created_by' => $user_id, 
                 ]);
@@ -76,7 +76,7 @@ class ReportController extends Controller
                 }
             }
 
-            if($failed_exec == 0 && $success_exec == $count){
+            if($failed_exec == 0 && $success_exec == $item_count){
                 // History
                 Audit::createHistory('Create', $report->report_title, $user_id);
 

@@ -58,6 +58,10 @@
     margin-inline: auto;
 }
 
+label {
+    margin: var(--spaceSM);
+}
+
 .bg-success {
     background: var(--successBG) !important;
 }
@@ -231,6 +235,12 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
     background: var(--primaryColor) !important;
     border: 2px solid var(--primaryColor);
     color: var(--whiteColor);
+}
+
+.container-light {
+    border: 1.5px solid var(--whiteColor);
+    border-radius: var(--roundedLG);
+    padding: var(--spaceMD);
 }
 
 /* Mobile & Tablet style */

@@ -28,6 +28,11 @@
     .item_qty_selected {
         width: 80px;
     }
+    .item_name_selected {
+        font-weight: 500;
+        font-size: var(--textJumbo);
+        color: var(--whiteColor);
+    }
 </style>
 
 <div class="modal fade" id="modalAddReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -46,35 +51,25 @@
                             <input name="report_title" class="form-control" type="text" id="report_title" required>
 
                             <label>Description</label>
-                            <textarea name="report_desc" class="form-control mt-2"></textarea>
+                            <textarea name="report_desc" class="form-control"></textarea>
 
                             <label>Category</label>
-                            <select class="form-select mt-2" name="report_category"  id="report_category" aria-label="Default select example">
+                            <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
                                 @foreach($dct_cat as $dct)
                                     <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
                                 @endforeach
                             </select>
-
-                            <button class="btn btn-success mt-4 w-100" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-                        </div>
-                        <div class="col">
+                            <hr>
                             <label>Item</label>
                             <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
                             <div id="item_form"></div>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Name, Description</th>
-                                        <th scope="col">Qty</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="item_holder">
-                                    <tr>
-                                        <td colspan="3"><div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <button class="btn btn-success mt-4 w-100" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                        </div>
+                        <div class="col">
+                            <h5>List Selected Item</h5>
+                            <div id="item_holder">
+                                <div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -168,7 +163,7 @@
                 </div>
             `)
         }
-        $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='add_item("${val}")'><i class="fa-solid fa-arrow-down"></i> Add Item</a><hr>`)
+        $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='add_item("${val}")'><i class="fa-solid fa-plus"></i> Add Item</a><hr>`)
     }
 
     function add_item(val){
@@ -188,9 +183,9 @@
             let priceInput = ''
             if($('#report_category').val() == 'Shopping Cart' || $('#report_category').val() == 'Wishlist'){
                 priceInput = `
-                    <div class="form-floating mb-3 mt-2">
-                        <input type="number" class="form-control" min="1" name="item_price[]" value="0">
-                        <label for="floatingInput">Price (optional)</label>
+                    <div class="col">
+                        <label>Price (optional)</label>
+                        <input type="number" class="form-control w-100" min="1" name="item_price[]" value="0">
                     </div>
                 `
             }
@@ -198,19 +193,24 @@
             if(val == 'add_ext'){
                 if($('#item_name').val() != ''){
                     $('#item_holder').append(`
-                        <tr>
-                            <td>
-                                <input hidden name="item_name[]" value="${$('#item_name').val()}">
+                        <div class="container-light mt-3 item-holder-div">
+                            <input hidden name="item_name[]" value="${$('#item_name').val()}">
+                            <div class="d-flex justify-content-between">
                                 <span class="item_name_selected">${$('#item_name').val()}</span>
-                                <div class="form-floating mt-2">
-                                    <textarea class="form-control" name="item_desc[]" style="height: 100px">${$('#item_desc').val()}</textarea>
-                                    <label for="floatingTextarea2">Notes</label>
+                                <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>
+                            </div>
+                            <div class="my-2">
+                                <label>Notes</label>
+                                <textarea class="form-control" name="item_desc[]" style="height: 100px">${$('#item_desc').val()}</textarea>
+                            </div>
+                            <div class="row extra-form">
+                                <div class="col-4">
+                                    <label>Qty</label>
+                                    <input class="item_qty_selected form-control w-100" name="item_qty[]" type="number" min="1" value="${$('#item_qty').val()}">
                                 </div>
                                 ${priceInput}
-                            </td>
-                            <td><input class="item_qty_selected" name="item_qty[]" type="number" min="1" value="${$('#item_qty').val()}"></td>
-                            <td><a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i></a></td>
-                        </tr>
+                            </div>
+                        </div>
                     `)
                 }
             } else if(val == 'copy_report') {
@@ -218,36 +218,46 @@
 
                 items_list.forEach(el => {
                     $('#item_holder').append(`
-                        <tr>
-                            <td>
-                                <input hidden name="item_name[]" value="${el}">
+                        <div class="container-light mt-3 item-holder-div">
+                            <input hidden name="item_name[]" value="${el}">
+                            <div class="d-flex justify-content-between">
                                 <span class="item_name_selected">${el}</span>
-                                <div class="form-floating mt-2">
-                                    <textarea class="form-control" name="item_desc[]" style="height: 100px"></textarea>
-                                    <label for="floatingTextarea2">Notes</label>
+                                <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>
+                            </div>
+                            <div class="my-2">
+                                <label>Notes</label>
+                                <textarea class="form-control" name="item_desc[]" style="height: 100px"></textarea>
+                            </div>
+                            <div class="row extra-form">
+                                <div class="col-4">
+                                    <label>Qty</label>
+                                    <input class="item_qty_selected form-control w-100" name="item_qty[]" type="number" min="1" value="1">
                                 </div>
                                 ${priceInput}
-                            </td>
-                            <td><input class="item_qty_selected" name="item_qty[]" type="number" min="1" value="1"></td>
-                            <td><a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i></a></td>
-                        </tr>
+                            </div>
+                        </div>
                     `)
                 });
             } else {
                 $('#item_holder').append(`
-                    <tr>
-                        <td>
-                            <input hidden name="item_name[]" value="${val}">
+                    <div class="container-light mt-3 item-holder-div">
+                        <input hidden name="item_name[]" value="${val}">
+                        <div class="d-flex justify-content-between">
                             <span class="item_name_selected">${val}</span>
-                            <div class="form-floating mt-2">
-                                <textarea class="form-control" name="item_desc[]" style="height: 100px">${$('#item_desc').val()}</textarea>
-                                <label for="floatingTextarea2">Notes</label>
+                            <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>
+                        </div>
+                        <div class="my-2">
+                            <label>Notes</label>
+                            <textarea class="form-control" name="item_desc[]" style="height: 100px">${$('#item_desc').val()}</textarea>
+                        </div>
+                        <div class="row extra-form">
+                            <div class="col-4">
+                                <label>Qty</label>
+                                <input class="item_qty_selected form-control w-100" name="item_qty[]" type="number" min="1" value="${$('#item_qty').val()}">
                             </div>
                             ${priceInput}
-                        </td>
-                        <td><input class="item_qty_selected" name="item_qty[]" type="number" min="1" value="${$('#item_qty').val()}"></td>
-                        <td><a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i></a></td>
-                    </tr>
+                        </div>
+                    </div>
                 `)
             }
         }
@@ -257,17 +267,20 @@
         $('#item_desc').val('')
     }
 
-    $('#item_holder').on('click', '.delete-item', function() {
-        $(this).closest('tr').remove()
+    $( document ).ready(function() {
+        $('#report_category').on('change', function() {
+            if($(this).val() != "Shopping Cart" && $(this).val() != "Wishlist"){
+                $('.extra-form').empty()
+            }
+        })
+        $(document).on('click', '.delete-item', function() {
+            $(this).closest('.item-holder-div').remove()
 
-        if($('#item_holder').children().length == 0) {
-            $('#item_holder').append(`
-                <tr>
-                    <td colspan="3"><div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div></td>
-                </tr>
-            `)
-        }
-    });
+            if($('.item-holder-div').length == 0){
+                $('#item_holder').append(`<div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>`)
+            }
+        })
+    })
 
     function autocomplete(inp, arr) {
         var currentFocus
