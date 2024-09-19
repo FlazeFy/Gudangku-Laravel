@@ -35,7 +35,7 @@ class ReportModel extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'report_title', 'report_desc', 'report_category', 'is_reminder', 'remind_at', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
 
-    public static function getMyReport($user_id){
+    public static function getMyReport($user_id, $search,$id){
         $res = ReportModel::selectRaw('
                 report.id, report_title, report_desc, report_category, report.is_reminder, remind_at, report.created_at, 
                 count(1) as total_variety, CAST(SUM(item_qty) AS UNSIGNED) as total_item, GROUP_CONCAT(item_name SEPARATOR ", ") as report_items,
@@ -46,6 +46,14 @@ class ReportModel extends Model
             ->whereNull('report.deleted_at')
             ->groupby('report.id')
             ->orderby('report.created_at','desc');
+
+        if ($search) {
+            $res = $res->orWhere(function($query) use ($search, $id) {
+                $query->whereRaw('LOWER(inventory_name) LIKE ?', ['%' . strtolower($search) . '%'])
+                        ->orWhere('inventory_id', $id);
+            });
+            $res = $res->havingRaw('LOWER(report_items) LIKE ?', ['%' . strtolower($search) . '%']);
+        }
 
         return $res->get();
     }   
