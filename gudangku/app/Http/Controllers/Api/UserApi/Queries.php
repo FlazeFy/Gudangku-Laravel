@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\UserModel;
+use App\Models\ValidateRequestModel;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -36,15 +37,18 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = UserModel::select('username','email','telegram_user_id','created_at')
+            $res = UserModel::select('username','email','telegram_user_id','telegram_is_valid','created_at')
                 ->where('id',$user_id)
                 ->first();
+
+            $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
             
             if ($res) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'user fetched',
-                    'data' => $res
+                    'data' => $res,
+                    'telegram_data' => $validation_telegram
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

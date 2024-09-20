@@ -21,15 +21,7 @@ class ProfileController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
-            $profile = UserModel::select('*')
-                ->where('id',$user_id)
-                ->first();
-
-            $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
-
-            return view('profile.index')
-                ->with('profile',$profile)
-                ->with('validation_telegram',$validation_telegram);
+            return view('profile.index');
         } else {
             return redirect("/login");
         }

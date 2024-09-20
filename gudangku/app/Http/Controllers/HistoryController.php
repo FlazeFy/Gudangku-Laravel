@@ -26,13 +26,7 @@ class HistoryController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
-            $history = HistoryModel::select('*')
-                ->where('created_by',$user_id)
-                ->orderby('created_at', 'DESC')
-                ->paginate(15);
-
-            return view('history.index')
-                ->with('history',$history);
+            return view('history.index');
         } else {
             return redirect("/login");
         }
