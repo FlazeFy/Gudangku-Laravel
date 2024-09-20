@@ -28,7 +28,7 @@
 
                 data.forEach(el => {
                     $(`#${item_holder}`).append(`
-                        <button class="report-box mt-2">
+                        <button class="report-box mt-2" onclick="window.location.href='/report/detail/${el.id}'">
                             <div class="d-flex justify-content-between mb-2">
                                 <div>
                                     <h3 style="font-weight:500; font-size:var(--textJumbo);">${el.report_title}</h3>

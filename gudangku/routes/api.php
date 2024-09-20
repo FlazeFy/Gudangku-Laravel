@@ -57,6 +57,7 @@ Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'get_my_report']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'get_my_report_by_inventory']);
+    Route::get('/detail/item/{id}', [QueriesReportController::class, 'get_my_report_detail']);
 });
 
 Route::prefix('/v1/user')->middleware(['auth:sanctum'])->group(function () {

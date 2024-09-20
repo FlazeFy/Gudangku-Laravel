@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\ReportModel;
+use App\Models\ReportItemModel;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -141,6 +142,69 @@ class Queries extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'something wrong. Please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/report/detail/item/{id}",
+     *     summary="Get report detail by id",
+     *     tags={"Report"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="report fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="report failed to fetched"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
+    public function get_my_report_detail(Request $request,$id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $res = ReportModel::getReportDetail($user_id,$id);
+            $res_item = ReportItemModel::getReportItem($user_id,$id);
+            
+            if ($res) {      
+                $total_item = 0;
+                $total_price = 0;   
+
+                if($res_item){ 
+                    foreach($res_item as $dt){
+                        $total_item = $total_item + $dt->item_qty;
+                        $total_price = $total_price + $dt->item_price;
+                    }
+                }
+
+                $res['total_item'] = $total_item;
+                $res['total_price'] = $total_price; 
+                   
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'report fetched',
+                    'data' => $res,
+                    'data_item' => $res_item
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'report failed to fetched',
+                    'data' => null,
+                    'data_item' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. Please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

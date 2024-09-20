@@ -32,4 +32,12 @@ class ReportItemModel extends Model
     protected $table = 'report_item';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_id', 'report_id', 'item_name', 'item_desc', 'item_qty', 'item_price', 'created_at', 'created_by'];
+
+    public static function getReportItem($user_id,$id){
+        $res = ReportItemModel::selectRaw('*')
+            ->where('created_by',$user_id)
+            ->where('report_id',$id);
+
+        return $res->get();
+    }  
 }
