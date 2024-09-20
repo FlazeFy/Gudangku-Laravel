@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\HistoryApi\Commands as CommandsHistoryController;
 use App\Http\Controllers\Api\StatsApi\Queries as QueriesStatsController;
 
 use App\Http\Controllers\Api\ReportApi\Queries as QueriesReportController;
+use App\Http\Controllers\Api\ReportApi\Commands as CommandsReportController;
 
 use App\Http\Controllers\Api\UserApi\Queries as QueriesUserController;
 use App\Http\Controllers\Api\UserApi\Commands as CommandsUserController;
@@ -58,6 +59,7 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'get_my_report']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'get_my_report_by_inventory']);
     Route::get('/detail/item/{id}', [QueriesReportController::class, 'get_my_report_detail']);
+    Route::delete('/delete/item/{id}', [CommandsReportController::class, 'hard_delete_report_item_by_id']);
 });
 
 Route::prefix('/v1/user')->middleware(['auth:sanctum'])->group(function () {

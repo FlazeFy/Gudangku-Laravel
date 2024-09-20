@@ -45,7 +45,7 @@
                             ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
                                 <div class="d-flex justify-content-between mt-3">
                                     <div>
-                                        <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price: Rp. ${el.item_price.toLocaleString()}</h3>
+                                        <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price: Rp. ${el.item_price}</h3>
                                     </div>
                                     <div>
                                         <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Item: ${el.total_item}</h3>

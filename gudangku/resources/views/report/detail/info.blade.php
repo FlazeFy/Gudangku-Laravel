@@ -59,6 +59,7 @@
                     ` : ''}
                 `);
 
+                $('#report_item_tb tbody').empty()
                 data_item.forEach(dt => {
                     $('#report_item_tb tbody').append(`
                         <tr>
@@ -73,7 +74,23 @@
                             <td>Rp. ${dt.item_price}</td>
                             <td>${getDateToContext(dt.created_at,'calendar')}</td>
                             <td><button class="btn btn-warning"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button></td>
-                            <td><button class="btn btn-danger"><i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i></button></td>
+                            <td>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_${dt.id}"><i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i></button>
+                                <div class="modal fade" id="modalDelete_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h2>Remove this item "${dt.item_name}" from report "${data.report_title}"?</h2>
+                                                <a class="btn btn-danger mt-4" onclick="delete_item('${dt.id}')">Yes, Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     `)
                 });
@@ -89,4 +106,36 @@
         });
     }
     get_detail_report('{{$id}}')
+
+    const delete_item = (id) => {
+        Swal.showLoading()
+        $.ajax({
+            url: `/api/v1/report/delete/item/${id}`,
+            type: 'DELETE',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.close()
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        get_detail_report('{{$id}}')
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.hideLoading()
+                Swal.fire({
+                    title: "Oops!",
+                    text: "Failed to delete the item",
+                    icon: "error"
+                });
+            }
+        });
+    }
 </script>
