@@ -107,18 +107,6 @@
                 // Do someting
             });   
     }
-
-    let warehouse = [<?php 
-        foreach($report as $r){
-            echo "
-                {
-                    'title':'".$r->report_title."',
-                    'items':'".$r->report_items."'
-                },
-            ";
-        }
-    ?>];
-
     function browse_item(val){
         if(val == 'add_ext'){
             $('#item_form').empty().append(`

@@ -243,6 +243,18 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
     padding: var(--spaceMD);
 }
 
+/* Pagination generator */
+.btn-page {
+    background: transparent !important;
+    border: 1.5px solid var(--primaryColor) !important;
+    cursor: pointer;
+    padding: var(--spaceSM) var(--spaceMD);
+    border-radius: var(--roundedMD);
+}
+.btn-page:hover, .btn-page.active{
+    background: var(--primaryColor) !important;
+}
+
 /* Mobile & Tablet style */
 @media screen and (max-width: 1023px) {
     .btn-feature {

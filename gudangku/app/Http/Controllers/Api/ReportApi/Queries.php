@@ -43,6 +43,14 @@ class Queries extends Controller
             $res = ReportModel::getMyReport($user_id,null,null);
             
             if (count($res) > 0) {
+                $res_header = [];
+                foreach($res as $dt){
+                    $res_header[] = [
+                        'report_title' => $dt->report_title,
+                        'report_items' => $dt->report_items
+                    ];
+                }
+
                 $collection = collect($res);
                 $collection = $collection->sortBy('created_at')->values();
                 $perPage = 12;
@@ -59,7 +67,8 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'report fetched',
-                    'data' => $res
+                    'data' => $res,
+                    'report_header' => $res_header
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

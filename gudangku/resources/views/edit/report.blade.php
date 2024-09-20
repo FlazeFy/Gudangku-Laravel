@@ -11,10 +11,11 @@
         return `${beforeMatch}<div class='fst-italic fw-bold bg-primary rounded px-2 py-0 mx-1'>${match}</div>${afterMatch}`
     } 
 
-    const get_my_report_all = (search,id) => {
+    let page = 1
+    const get_my_report_all = (page,search,id) => {
         Swal.showLoading()
         $.ajax({
-            url: `/api/v1/report/${search}/${id}`,
+            url: `/api/v1/report/${search}/${id}?page=${page}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json");
@@ -22,11 +23,14 @@
             },
             success: function(response) {
                 Swal.close()
+                const item_holder = 'report_holder'
                 const data = response.data.data
+                const current_page = response.data.current_page
+                const total_page = response.data.last_page
 
-                $('#report_holder').empty()
+                $(`#${item_holder}`).empty()
                 data.forEach(el => {
-                    $('#report_holder').append(`
+                    $(`#${item_holder}`).append(`
                         <button class="report-box mt-2">
                             <div class="d-flex justify-content-between mb-2">
                                 <div>
@@ -54,6 +58,8 @@
                         </button>
                     `);
                 });
+
+                generate_pagination(item_holder, get_my_report_all, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -65,5 +71,5 @@
             }
         });
     }
-    get_my_report_all("<?= $inventory->inventory_name ?>","<?= $inventory->id ?>")
+    get_my_report_all(page,"<?= $inventory->inventory_name ?>","<?= $inventory->id ?>")
 </script>

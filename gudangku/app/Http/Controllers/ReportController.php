@@ -21,13 +21,10 @@ class ReportController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
-            $report = ReportModel::getMyReport($user_id,null,null);
-
             $dct_cat = DictionaryModel::where('dictionary_type', 'report_category')
                 ->get();
                 
             return view('report.index')
-                ->with('report',$report)
                 ->with('dct_cat',$dct_cat);
         } else {
             return redirect("/login");
