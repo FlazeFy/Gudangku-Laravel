@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AddController;
 use App\Http\Controllers\EditController;
@@ -97,4 +98,8 @@ Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [RoomController::class, 'index']);
+});
+
+Route::prefix('/doc')->group(function () {
+    Route::get('/{id}', [DocumentController::class, 'index']);
 });

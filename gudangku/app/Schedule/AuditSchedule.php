@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DateTime;
 
 use App\Helpers\LineMessage;
+use App\Helpers\Generator;
 
 use App\Models\ErrorModel;
 use App\Models\AdminModel;
@@ -66,20 +67,19 @@ class AuditSchedule
             $admin = AdminModel::getAllContact();
             $datetime = date("Y-m-d H:i:s");    
             $options = new DompdfOptions();
-            $options->set('defaultFont', 'Courier');
+            $options->set('defaultFont', 'Helvetica');
             $dompdf = new Dompdf($options);
+            $header_template = Generator::generateDocTemplate('header');
+            $style_template = Generator::generateDocTemplate('style');
+            $footer_template = Generator::generateDocTemplate('footer');
     
             $html = "
             <html>
                 <head>
-                    <style>
-                        body { font-family: Courier; }
-                        table { border-collapse: collapse; font-size:10px; }
-                        td, th { border: 1px solid #dddddd; text-align: left; padding: 8px; }
-                        th { text-align:center; }
-                    </style>
+                    $style_template
                 </head>
                 <body>
+                    $header_template
                     <h2>Audit - Error</h2>
                     <table>
                         <thead>
@@ -92,7 +92,7 @@ class AuditSchedule
                         </thead>
                         <tbody>$audit</tbody>
                     </table>
-                    <h6>Generated at $datetime</h6>
+                    $footer_template
                 </body>
             </html>";
     

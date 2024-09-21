@@ -170,8 +170,8 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = ReportModel::getReportDetail($user_id,$id);
-            $res_item = ReportItemModel::getReportItem($user_id,$id);
+            $res = ReportModel::getReportDetail($user_id,$id,'data');
+            $res_item = ReportItemModel::getReportItem($user_id,$id,'data');
             
             if ($res) {      
                 $total_item = 0;

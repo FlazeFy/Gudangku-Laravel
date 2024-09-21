@@ -33,7 +33,8 @@
                 const item_holder = 'report_holder'
                 const data = response.data
                 const data_item = response.data_item
-
+                
+                $(`#btn-doc-preview-holder`).html(`<a class="btn btn-primary mb-3 me-2" href="/doc/${data.id}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Preview Document @endif</a>`)
                 $(`#report-title-holder`).text(data.report_title)
                 $(`#${item_holder}`).html(`
                     <div class="d-flex justify-content-between mb-2">
