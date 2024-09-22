@@ -12,6 +12,7 @@
         <div class="d-flex justify-content-start">
             <a class="btn btn-danger mb-3 me-2" href="/report"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
             <div id="btn-doc-preview-holder"></div>
+            @include('report.detail.delete')  
         </div>
         @include('report.detail.info')  
     </div>
