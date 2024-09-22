@@ -16,10 +16,21 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/stats/total_inventory_by_category",
      *     summary="Get total inventory by category",
+     *     description="This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
      *     @OA\Response(
      *         response=200,
-     *         description="stats fetched"
+     *         description="stats fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="stats fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Fashion"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -66,10 +77,21 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/stats/total_inventory_by_favorite",
      *     summary="Get total inventory by favorite",
+     *     description="This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
      *     @OA\Response(
      *         response=200,
-     *         description="stats fetched"
+     *         description="stats fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="stats fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Favorite"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -121,10 +143,21 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/stats/total_inventory_by_room",
      *     summary="Get total inventory by room",
+     *     description="This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
      *     @OA\Response(
      *         response=200,
-     *         description="stats fetched"
+     *         description="stats fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="stats fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Main Room"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,

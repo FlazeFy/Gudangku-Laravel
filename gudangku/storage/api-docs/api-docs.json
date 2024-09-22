@@ -38,10 +38,28 @@
                     "Auth"
                 ],
                 "summary": "Sign out from Apps",
+                "description": "This request is used to get sign out from the Apps (sign out from the session). This request is using MySql database, and have a protected routes.",
                 "operationId": "8859fad6cbeb2081a7611f5b944b4630",
                 "responses": {
                     "200": {
-                        "description": "Logout success"
+                        "description": "Logout success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -75,16 +93,62 @@
                     "History"
                 ],
                 "summary": "Get all history",
+                "description": "This request is used to get all history when user use the App. This request is using MySql database, have a protected routes, and have template pagination.",
                 "operationId": "0f4b533e7eecea6a89a6388545c72dd8",
                 "responses": {
                     "200": {
-                        "description": "history fetched"
-                    },
-                    "404": {
-                        "description": "history failed to fetched"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
+                        "description": "history fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "history fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                            },
+                                                            "history_type": {
+                                                                "type": "string",
+                                                                "example": "Create"
+                                                            },
+                                                            "history_context": {
+                                                                "type": "string",
+                                                                "example": "Barang bawaan"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-09-20 22:53:47"
+                                                            },
+                                                            "created_by": {
+                                                                "type": "string",
+                                                                "example": "2d98f524-de02-11ed-b5ea-0242ac120002"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -247,16 +311,148 @@
                 }
             }
         },
+        "/api/v1/report/delete/item/{id}": {
+            "delete": {
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Hard delete report item by id",
+                "operationId": "c34be0425e5d835998032cc959162f9c",
+                "responses": {
+                    "200": {
+                        "description": "report item deleted"
+                    },
+                    "404": {
+                        "description": "report item failed to deleted"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/report/delete/report/{id}": {
+            "delete": {
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Hard delete report by id",
+                "operationId": "7cdf0bd847708c5176cb9630ca860e54",
+                "responses": {
+                    "200": {
+                        "description": "report deleted"
+                    },
+                    "404": {
+                        "description": "report failed to deleted"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/v1/report": {
             "get": {
                 "tags": [
                     "Report"
                 ],
                 "summary": "Get all report",
+                "description": "This request is used to get all report. This request is using MySql database, have a protected routes, and have template pagination.",
                 "operationId": "b9cea5856eb0fcc283d94fd5ae6255b7",
                 "responses": {
                     "200": {
-                        "description": "report fetched"
+                        "description": "report fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "history fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                            },
+                                                            "report_title": {
+                                                                "type": "string",
+                                                                "example": "Report A"
+                                                            },
+                                                            "report_desc": {
+                                                                "type": "string",
+                                                                "example": "This is a report description"
+                                                            },
+                                                            "report_category": {
+                                                                "type": "string",
+                                                                "example": "Shopping Cart"
+                                                            },
+                                                            "is_reminder": {
+                                                                "type": "integer",
+                                                                "example": "0"
+                                                            },
+                                                            "reminder_at": {
+                                                                "type": "object",
+                                                                "example": ""
+                                                            },
+                                                            "total_variety": {
+                                                                "type": "integer",
+                                                                "example": "1"
+                                                            },
+                                                            "total_item": {
+                                                                "type": "integer",
+                                                                "example": "1"
+                                                            },
+                                                            "report_items": {
+                                                                "type": "string",
+                                                                "example": "Nivea Extra White Repair & Protect"
+                                                            },
+                                                            "item_price": {
+                                                                "type": "integer",
+                                                                "example": "20000"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-09-20 22:53:47"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "report_header": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "report_title": {
+                                                        "type": "string",
+                                                        "example": "Report A"
+                                                    },
+                                                    "report_items": {
+                                                        "type": "string",
+                                                        "example": "Nivea Extra White Repair & Protect"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "report failed to fetched"
@@ -267,16 +463,316 @@
                 }
             }
         },
+        "/api/v1/report/{search}/{id}": {
+            "get": {
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Get all report by inventory",
+                "description": "This request is used to get all report found in a inventory by inventory name and report id. This request is using MySql database, have a protected routes, and have template pagination.",
+                "operationId": "3ae3972762a57830e21afb9058f0cfba",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Report ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    },
+                    {
+                        "name": "search",
+                        "in": "path",
+                        "description": "Inventory Name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Nivea%20Extra%20White%20Repair%20&%20Protect"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "report fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "history fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                            },
+                                                            "report_title": {
+                                                                "type": "string",
+                                                                "example": "Report A"
+                                                            },
+                                                            "report_desc": {
+                                                                "type": "string",
+                                                                "example": "This is a report description"
+                                                            },
+                                                            "report_category": {
+                                                                "type": "string",
+                                                                "example": "Shopping Cart"
+                                                            },
+                                                            "is_reminder": {
+                                                                "type": "integer",
+                                                                "example": "0"
+                                                            },
+                                                            "reminder_at": {
+                                                                "type": "object",
+                                                                "example": ""
+                                                            },
+                                                            "total_variety": {
+                                                                "type": "integer",
+                                                                "example": "1"
+                                                            },
+                                                            "total_item": {
+                                                                "type": "integer",
+                                                                "example": "1"
+                                                            },
+                                                            "report_items": {
+                                                                "type": "string",
+                                                                "example": "Nivea Extra White Repair & Protect"
+                                                            },
+                                                            "item_price": {
+                                                                "type": "integer",
+                                                                "example": "20000"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-09-20 22:53:47"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "report failed to fetched"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/report/detail/item/{id}": {
+            "get": {
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Get report detail by id",
+                "description": "This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
+                "operationId": "94a001b2888362d49f99eea06f083a52",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Report ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Report fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "report fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                },
+                                                "report_title": {
+                                                    "type": "string",
+                                                    "example": "Report A"
+                                                },
+                                                "report_desc": {
+                                                    "type": "string",
+                                                    "example": "This is a report description"
+                                                },
+                                                "report_category": {
+                                                    "type": "string",
+                                                    "example": "Shopping Cart"
+                                                },
+                                                "is_reminder": {
+                                                    "type": "integer",
+                                                    "example": "0"
+                                                },
+                                                "reminder_at": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "total_item": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-09-20 22:53:47"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data_item": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                    },
+                                                    "item_name": {
+                                                        "type": "string",
+                                                        "example": "Nivea Extra White Repair & Protect"
+                                                    },
+                                                    "item_desc": {
+                                                        "type": "string",
+                                                        "example": "This is a report description"
+                                                    },
+                                                    "item_qty": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "item_price": {
+                                                        "type": "integer",
+                                                        "example": 20000
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-09-20 22:53:47"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Report not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Report not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "An unexpected error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/stats/total_inventory_by_category": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
                 "summary": "Get total inventory by category",
+                "description": "This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
                 "operationId": "e901875809bb57c428ae454f2a842cdc",
                 "responses": {
                     "200": {
-                        "description": "stats fetched"
+                        "description": "stats fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "stats fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Fashion"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "stats failed to fetched"
@@ -293,10 +789,44 @@
                     "Stats"
                 ],
                 "summary": "Get total inventory by favorite",
+                "description": "This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
                 "operationId": "3306628b237390e6ac08e345274b05a6",
                 "responses": {
                     "200": {
-                        "description": "stats fetched"
+                        "description": "stats fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "stats fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Favorite"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "stats failed to fetched"
@@ -313,10 +843,44 @@
                     "Stats"
                 ],
                 "summary": "Get total inventory by room",
+                "description": "This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
                 "operationId": "545884a8e533ec2295f1ee3083f8e8ad",
                 "responses": {
                     "200": {
-                        "description": "stats fetched"
+                        "description": "stats fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "stats fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Main Room"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "stats failed to fetched"
@@ -439,10 +1003,76 @@
                     "User"
                 ],
                 "summary": "Get my profile",
+                "description": "This request is used to get user profile info. This request is using MySql database, and have a protected routes",
                 "operationId": "c286fe042f9492a53f1a424547fa83e4",
                 "responses": {
                     "200": {
-                        "description": "user fetched"
+                        "description": "user fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "user fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "flazefy"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "flazen.edu@gmail.com"
+                                                },
+                                                "telegram_user_id": {
+                                                    "type": "string",
+                                                    "example": "1317625970"
+                                                },
+                                                "telegram_is_valid": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-09-20 22:53:47"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "telegram_data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                },
+                                                "request_type": {
+                                                    "type": "string",
+                                                    "example": "register"
+                                                },
+                                                "request_context": {
+                                                    "type": "string",
+                                                    "example": "OUW36L"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-09-20 22:53:47"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "user failed to fetched"
@@ -1107,6 +1737,14 @@
                     }
                 },
                 "type": "object"
+            }
+        },
+        "responses": {
+            "404": {
+                "description": "history failed to fetched"
+            },
+            "500": {
+                "description": "Internal Server Error"
             }
         }
     },

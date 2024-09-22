@@ -16,10 +16,15 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/logout",
      *     summary="Sign out from Apps",
+     *     description="This request is used to get sign out from the Apps (sign out from the session). This request is using MySql database, and have a protected routes.",
      *     tags={"Auth"},
      *     @OA\Response(
      *         response=200,
-     *         description="Logout success"
+     *         description="Logout success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Logout success"),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
