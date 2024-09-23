@@ -26,21 +26,38 @@ class Commands extends Controller
      *     path="/api/v1/user/update_telegram_id",
      *     summary="Update telegram token id",
      *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="telegram id updated! and validation has been sended to you"
+     *         description="telegram id updated! and validation has been sended to you",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="telegram id updated! and validation has been sended to you")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="telegram id failed to update"
+     *         description="telegram id failed to update",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="user not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=409,
-     *         description="telegram user id has been used"
+     *         description="telegram user id has been used",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="telegram user id has been used")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -88,7 +105,7 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'telegram id failed to update',
+                        'message' => 'user not found',
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {

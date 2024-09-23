@@ -18,17 +18,46 @@ class Commands extends Controller
      *     path="/api/v1/report/delete/item/{id}",
      *     summary="Hard delete report item by id",
      *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Report Item ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="report item deleted"
+     *         description="report item deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="report item deleted")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="report item failed to deleted"
+     *         description="report item failed to deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report item not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -49,7 +78,7 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report item failed to deleted',
+                    'message' => 'report item not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -65,17 +94,46 @@ class Commands extends Controller
      *     path="/api/v1/report/delete/report/{id}",
      *     summary="Hard delete report by id",
      *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Report ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="report deleted"
+     *         description="report deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="report deleted")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="report failed to deleted"
+     *         description="report failed to deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -95,12 +153,12 @@ class Commands extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'report item deleted',
+                    'message' => 'report deleted',
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report item failed to deleted',
+                    'message' => 'report not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

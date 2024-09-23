@@ -17,17 +17,46 @@ class Commands extends Controller
      *     path="/api/v1/history/destroy/{id}",
      *     summary="Delete history by id",
      *     tags={"History"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="History ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="history permentally deleted"
+     *         description="history permentally deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="history permentally deleted")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="history failed to permentally deleted"
+     *         description="history failed to permentally deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="history not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -42,13 +71,11 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'history permentally deleted',
-                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'history failed to permentally deleted',
-                    'data' => null
+                    'message' => 'history not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
