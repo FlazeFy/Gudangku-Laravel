@@ -94,6 +94,7 @@ Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::post('/', [ReportController::class, 'create_report']);
 
     Route::get('/detail/{id}', [ReportDetailController::class, 'index']);
+    Route::post('/detail/{id}/toogleEdit', [ReportDetailController::class, 'toogle_edit']);
 });
 
 Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {

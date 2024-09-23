@@ -20,6 +20,8 @@ use App\Http\Controllers\Api\ReportApi\Commands as CommandsReportController;
 use App\Http\Controllers\Api\UserApi\Queries as QueriesUserController;
 use App\Http\Controllers\Api\UserApi\Commands as CommandsUserController;
 
+use App\Http\Controllers\Api\DictionaryApi\Queries as QueriesDictionaryController;
+
 ######################### Public Route #########################
 
 Route::post('/v1/login', [CommandAuthApi::class, 'login']);
@@ -53,6 +55,10 @@ Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesHistoryController::class, 'get_all_history']);
     
     Route::delete('/destroy/{id}', [CommandsHistoryController::class, 'hard_delete_history_by_id']);
+});
+
+Route::prefix('/v1/dictionary')->group(function () {
+    Route::get('/type/{type}', [QueriesDictionaryController::class, 'get_dictionary_by_type']);
 });
 
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {

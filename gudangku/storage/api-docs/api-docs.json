@@ -109,6 +109,102 @@
                 ]
             }
         },
+        "/api/v1/dictionary/type/{type}": {
+            "get": {
+                "tags": [
+                    "Dictionary"
+                ],
+                "summary": "Get dictionary by type",
+                "description": "This request is used to get dictionary by type. This request is using MySql database",
+                "operationId": "6d288a61d84cc02cf8edd8417d8b36f8",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "description": "Dictionary type",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "report_category"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "dictionary fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "dictionary fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "dictionary_name": {
+                                                        "type": "string",
+                                                        "example": "Wishlist"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "dictionary failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "dictionary not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/history/destroy/{id}": {
             "delete": {
                 "tags": [
@@ -3314,6 +3410,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Dictionary",
+            "description": "Dictionary"
         },
         {
             "name": "History",

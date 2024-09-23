@@ -97,3 +97,34 @@ const generate_pagination = (items_holder, fetch_callback, total_page, current_p
         fetch_callback(selectedPage)
     });
 };
+
+const get_dct_by_type = (type) => {
+    return new Promise((resolve, reject) => {
+        Swal.showLoading();
+        $.ajax({
+            url: `/api/v1/dictionary/type/${type}`,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+            },
+            success: function(response) {
+                Swal.close()
+                const data = response.data
+                let res = []
+                data.forEach(dt => {
+                    res.push(dt.dictionary_name)
+                });
+                resolve(res)
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                Swal.fire({
+                    title: "Oops!",
+                    text: "Failed to fetch dictionary",
+                    icon: "error"
+                });
+                reject(errorThrown)
+            }
+        });
+    });
+};

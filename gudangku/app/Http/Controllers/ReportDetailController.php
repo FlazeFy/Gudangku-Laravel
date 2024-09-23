@@ -23,4 +23,11 @@ class ReportDetailController extends Controller
             return redirect("/login");
         }
     }
+
+    public function toogle_edit(Request $request)
+    {
+        $request->session()->put('toogle_edit_report', $request->toogle_edit);
+
+        return redirect()->back();
+    }
 }
