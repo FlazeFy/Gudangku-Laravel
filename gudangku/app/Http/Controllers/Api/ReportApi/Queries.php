@@ -23,6 +23,7 @@ class Queries extends Controller
      *     summary="Get all report",
      *     description="This request is used to get all report. This request is using MySql database, have a protected routes, and have template pagination.",
      *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="report fetched",
@@ -55,12 +56,28 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=404,
-     *         description="report failed to fetched"
+     *         description="report failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -102,14 +119,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report failed to fetched',
-                    'data' => null
+                    'message' => 'report not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -120,6 +136,7 @@ class Queries extends Controller
      *     summary="Get all report by inventory",
      *     description="This request is used to get all report found in a inventory by inventory name and report id. This request is using MySql database, have a protected routes, and have template pagination.",
      *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -162,12 +179,28 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=404,
-     *         description="report failed to fetched"
+     *         description="report failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -200,14 +233,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report failed to fetched',
-                    'data' => null
+                    'message' => 'report not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -218,6 +250,7 @@ class Queries extends Controller
      *     summary="Get report detail by id",
      *     description="This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
      *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -255,17 +288,27 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=404,
-     *         description="Report not found",
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Report not found")
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="report failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report not found")
      *         )
      *     ),
      *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error",
      *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string", example="An unexpected error occurred")
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
      *         )
      *     )
      * )
@@ -301,15 +344,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report failed to fetched',
-                    'data' => null,
-                    'data_item' => null
+                    'message' => 'report not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin'.$e->getMessage(),
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

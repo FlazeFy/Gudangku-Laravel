@@ -18,6 +18,7 @@ class Queries extends Controller
      *     summary="Get all history",
      *     description="This request is used to get all history when user use the App. This request is using MySql database, have a protected routes, and have template pagination.",
      *     tags={"History"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="history fetched",
@@ -37,14 +38,29 @@ class Queries extends Controller
      *             )
      *         )
      *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="history failed to fetched"
+     *         description="history failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="history not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -67,14 +83,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'history failed to fetched',
-                    'data' => null
+                    'message' => 'history not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

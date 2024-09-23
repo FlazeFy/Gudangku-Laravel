@@ -55,7 +55,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -106,7 +106,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

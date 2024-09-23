@@ -19,6 +19,7 @@ class Queries extends Controller
      *     summary="Get my profile",
      *     description="This request is used to get user profile info. This request is using MySql database, and have a protected routes",
      *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="user fetched",
@@ -41,12 +42,28 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=404,
-     *         description="user failed to fetched"
+     *         description="user failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="user not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -71,14 +88,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'user failed to fetched',
-                    'data' => null
+                    'message' => 'user not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

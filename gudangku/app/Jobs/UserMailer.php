@@ -49,7 +49,7 @@ class UserMailer implements ShouldQueue
             Mail::to($this->receiver)->send($email);
         } catch (\Exception $e) {
             $obj = [
-                'message' => 'Something wrong. Please contact admin', 
+                'message' => 'something wrong. please contact admin', 
                 'stack_trace' => $e->getTraceAsString(), 
                 'file' => $e->getFile(), 
                 'line' => $e->getLine(), 

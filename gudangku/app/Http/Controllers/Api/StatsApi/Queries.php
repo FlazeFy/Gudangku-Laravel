@@ -18,6 +18,7 @@ class Queries extends Controller
      *     summary="Get total inventory by category",
      *     description="This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="stats fetched",
@@ -33,12 +34,28 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=404,
-     *         description="stats failed to fetched"
+     *         description="stats failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="stats not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -62,13 +79,12 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'stats failed to fetched',
-                    'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -79,6 +95,7 @@ class Queries extends Controller
      *     summary="Get total inventory by favorite",
      *     description="This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="stats fetched",
@@ -94,12 +111,28 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=404,
-     *         description="stats failed to fetched"
+     *         description="stats failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="stats not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -127,14 +160,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats failed to fetched',
-                    'data' => null
+                    'message' => 'stats not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => $e->getMessage(),
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -145,6 +177,7 @@ class Queries extends Controller
      *     summary="Get total inventory by room",
      *     description="This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="stats fetched",
@@ -160,12 +193,28 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=404,
-     *         description="stats failed to fetched"
+     *         description="stats failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="stats not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -188,14 +237,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats failed to fetched',
-                    'data' => null
+                    'message' => 'stats not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. Please contact admin',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

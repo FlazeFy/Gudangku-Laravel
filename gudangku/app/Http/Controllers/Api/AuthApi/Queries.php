@@ -18,6 +18,7 @@ class Queries extends Controller
      *     summary="Sign out from Apps",
      *     description="This request is used to get sign out from the Apps (sign out from the session). This request is using MySql database, and have a protected routes.",
      *     tags={"Auth"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Logout success",
@@ -27,8 +28,20 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -55,7 +68,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

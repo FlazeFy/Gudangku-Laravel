@@ -153,6 +153,12 @@ return [
          * API security definitions. Will be generated into documentation file.
         */
         'securityDefinitions' => [
+            'bearerAuth' => [
+                'type' => 'apiKey',
+                'description' => 'JWT Authorization header using the Bearer scheme. Example: Bearer {your-token}',
+                'name' => 'Authorization',
+                'in' => 'header',
+            ],
             'securitySchemes' => [
                 /*
                  * Examples of Security schemes
