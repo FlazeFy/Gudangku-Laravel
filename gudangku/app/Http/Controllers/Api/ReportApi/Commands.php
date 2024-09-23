@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Models\ReportItemModel;
 use App\Models\ReportModel;
 
+// Helpers
+use App\Helpers\Audit;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -141,12 +144,16 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $report = ReportModel::select('report_title')->where('id', $id)->first();
 
             $rows = ReportModel::where('id', $id)
                 ->where('created_by', $user_id)
                 ->delete();
 
             if($rows > 0){
+                // History
+                Audit::createHistory('Delete Report', $report->report_title, $user_id);
+                
                 ReportItemModel::where('report_id', $id)
                     ->where('created_by', $user_id)
                     ->delete();
@@ -154,6 +161,89 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'report deleted',
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'report not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/report/update/report/{id}",
+     *     summary="Update report detail by id",
+     *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Report ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="report updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="report updated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="report failed to updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function update_report_by_id(Request $request, $id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $rows = ReportModel::where('id', $id)
+                ->where('created_by', $user_id)
+                ->update([
+                    'report_title' => $request->report_title,
+                    'report_desc' => $request->report_desc,
+                    'report_category' => $request->report_category
+                ]);
+
+            if($rows > 0){
+                // History
+                Audit::createHistory('Update Report', $request->report_title, $user_id);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'report updated',
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

@@ -83,7 +83,23 @@
                 </div>
                 ${is_edit_mode ? 
                     `<label>Description</label>
-                    <textarea class='form-control' id='report_desc'>${data.report_desc}</textarea>`
+                    <textarea class='form-control' id='report_desc'>${data.report_desc}</textarea>
+                    <a class="btn btn-success my-3 me-2" id='save-edit-modal-btn' data-bs-toggle='modal' data-bs-target='#update-validation-modal'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
+                    <div class="modal fade" id="update-validation-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Update</h2>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h2>Are you sure want to <span class="text-warning">update</span> this report? The generated document will affected too</h2>
+                                    <button class="btn btn-success mt-4" id="submit-update-report-btn" onclick="update_report('{{"$id"}}')" >Yes, Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `
                     :
                     `${data.report_desc ? `<p class="mt-2">${data.report_desc}</p>` : `<p class="text-secondary fst-italic mt-2">- No Description Provided -</p>`}`
                 }
@@ -172,6 +188,44 @@
                 Swal.fire({
                     title: "Oops!",
                     text: "Failed to delete the item",
+                    icon: "error"
+                });
+            }
+        });
+    }
+
+    const update_report = (id) => {
+        Swal.showLoading()
+        $.ajax({
+            url: `/api/v1/report/update/report/${id}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                report_title: $('#report_title').val(),
+                report_desc: $('#report_desc').val(),
+                report_category: $('#report_category').val(),
+            }),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.close()
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        get_detail_report(id)
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.hideLoading()
+                Swal.fire({
+                    title: "Oops!",
+                    text: "Failed to update the report",
                     icon: "error"
                 });
             }
