@@ -18,13 +18,7 @@ class CalendarController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
-            $inventory = InventoryModel::select('inventory_name','inventory_price','created_at')
-                ->where('created_by',$user_id)
-                ->whereNull('deleted_at')
-                ->get();
-                
-            return view('calendar.index')
-                ->with('inventory',$inventory);
+            return view('calendar.index');
         } else {
             return redirect("/login");
         }

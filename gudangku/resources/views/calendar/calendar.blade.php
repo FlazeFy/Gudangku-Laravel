@@ -208,7 +208,6 @@
             left: var(--spaceMD);
         }
     }
-
 </style>
 
 <div class="calendar-holder">
@@ -218,7 +217,6 @@
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
-        var offset = getUTCHourOffset();
         var calendar = new FullCalendar.Calendar(calendarEl, {
             locale: sessionStorage.getItem('locale'),
             initialView: 'dayGridMonth',
@@ -231,28 +229,48 @@
             navLinks: true, 
             eventLimit: true,
             dayMaxEvents: 4,
-            events: [
-                <?php
-                    $i = 0;
-                    
-                    foreach($inventory as $in){
-                        echo "
-                            {
-                                groupId: '$in->id',
-                                title: `$in->inventory_name | Rp. "; echo number_format($in['inventory_price'], 0, ',', '.'); echo "`,
-                                start: getDateToContext('$in->created_at','calendar'),
-                                end: getDateToContext('$in->created_at','calendar')
-                            },
-                        ";
-                        $i++;
-                    }
-                    
-                ?>
-            ],
-            eventClick:  function(info, jsEvent, view) {
-                window.location.href = "http://127.0.0.1:8000/event/detail/" +info.event.extendedProps.id;
+            events: [],
+            eventClick: function(info) {
+                window.location.href = "http://127.0.0.1:8000/event/detail/" + info.event.extendedProps.id;
             },
         });
-        calendar.render();
+        calendar.render()
+
+        const get_calendar = () => {
+            Swal.showLoading()
+            $.ajax({
+                url: `/api/v1/inventory/calendar`,
+                type: 'GET',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Accept", "application/json")
+                    xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")
+                },
+                success: function(response) {
+                    Swal.close()
+                    const data = response.data
+                    let events = []
+                    data.forEach(el => {
+                        events.push({
+                            groupId: el.id,
+                            title: `${el.inventory_name} | Rp. ${number_format(el.inventory_price, 0, ',', '.')}`,
+                            start: getDateToContext(el.created_at, 'calendar'),
+                            end: getDateToContext(el.created_at, 'calendar')
+                        })
+                    });
+                    calendar.addEventSource(events)
+                },
+                error: function() {
+                    Swal.close();
+                    Swal.fire({
+                        title: "Oops!",
+                        text: "Failed to get the stats",
+                        icon: "error"
+                    });
+                }
+            });
+        };
+
+        get_calendar()
     });
 </script>
+
