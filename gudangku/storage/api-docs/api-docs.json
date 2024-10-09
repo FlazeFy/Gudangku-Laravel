@@ -2186,14 +2186,30 @@
                 ]
             }
         },
-        "/api/v1/stats/total_inventory_by_category": {
+        "/api/v1/stats/total_inventory_by_category/{type}": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
                 "summary": "Get total inventory by category",
                 "description": "This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
-                "operationId": "e901875809bb57c428ae454f2a842cdc",
+                "operationId": "5ce0054c3490749f73baf16849552d34",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "description": "Stats inventory view type: either 'item' for count or 'price' for sum of prices",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "item",
+                                "price"
+                            ],
+                            "example": "item"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "stats fetched",
@@ -2299,14 +2315,30 @@
                 ]
             }
         },
-        "/api/v1/stats/total_inventory_by_favorite": {
+        "/api/v1/stats/total_inventory_by_favorite/{type}": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
                 "summary": "Get total inventory by favorite",
                 "description": "This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
-                "operationId": "3306628b237390e6ac08e345274b05a6",
+                "operationId": "dea41a117b0093049900a9a0a38e6325",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "description": "Stats inventory view type: either 'item' for count or 'price' for sum of prices",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "item",
+                                "price"
+                            ],
+                            "example": "item"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "stats fetched",
@@ -2412,14 +2444,30 @@
                 ]
             }
         },
-        "/api/v1/stats/total_inventory_by_room": {
+        "/api/v1/stats/total_inventory_by_room/{type}": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
                 "summary": "Get total inventory by room",
                 "description": "This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
-                "operationId": "545884a8e533ec2295f1ee3083f8e8ad",
+                "operationId": "11692c8281d6b3c879e52657fb004991",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "description": "Stats inventory view type: either 'item' for count or 'price' for sum of prices",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "item",
+                                "price"
+                            ],
+                            "example": "item"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "stats fetched",

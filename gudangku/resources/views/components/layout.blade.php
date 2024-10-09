@@ -21,6 +21,7 @@
 
         <!-- JS Collection -->
         <script src="{{ asset('/global_v1.0.js')}}"></script>
+        <script src="{{ asset('/chart_v1.0.js')}}"></script>
 
         <!-- Jquery -->
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>

@@ -12,13 +12,31 @@ use Illuminate\Http\Response;
 
 class Queries extends Controller
 {
+    private function get_inventory_stats_view($type){
+        if($type == "price"){
+            return "CAST(SUM(inventory_price) as UNSIGNED)";
+        } else if($type == "item") {
+            return "COUNT(1)";
+        }
+    }
     /**
      * @OA\GET(
-     *     path="/api/v1/stats/total_inventory_by_category",
+     *     path="/api/v1/stats/total_inventory_by_category/{type}",
      *     summary="Get total inventory by category",
      *     description="This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"item", "price"},
+     *             example="item"
+     *         ),
+     *         description="Stats inventory view type: either 'item' for count or 'price' for sum of prices",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="stats fetched",
@@ -59,12 +77,12 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_inventory_by_category(Request $request)
+    public function get_total_inventory_by_category(Request $request, $type)
     {
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::selectRaw("inventory_category as context, COUNT(1) as total")
+            $res = InventoryModel::selectRaw("inventory_category as context, ".$this->get_inventory_stats_view($type)." as total")
                 ->where('created_by', $user_id)
                 ->groupby('inventory_category')
                 ->get();
@@ -84,18 +102,29 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * @OA\GET(
-     *     path="/api/v1/stats/total_inventory_by_favorite",
+     *     path="/api/v1/stats/total_inventory_by_favorite/{type}",
      *     summary="Get total inventory by favorite",
      *     description="This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"item", "price"},
+     *             example="item"
+     *         ),
+     *         description="Stats inventory view type: either 'item' for count or 'price' for sum of prices",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="stats fetched",
@@ -136,7 +165,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_inventory_by_favorite(Request $request)
+    public function get_total_inventory_by_favorite(Request $request, $type)
     {
         try{
             $user_id = $request->user()->id;
@@ -146,7 +175,7 @@ class Queries extends Controller
                         WHEN is_favorite = 1 THEN 'Favorite' 
                         ELSE 'Normal Item' 
                     END AS context, 
-                    COUNT(1) as total")
+                    ".$this->get_inventory_stats_view($type)." as total")
                 ->where('created_by', $user_id)
                 ->groupby('is_favorite')
                 ->get();
@@ -173,11 +202,22 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/v1/stats/total_inventory_by_room",
+     *     path="/api/v1/stats/total_inventory_by_room/{type}",
      *     summary="Get total inventory by room",
      *     description="This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"item", "price"},
+     *             example="item"
+     *         ),
+     *         description="Stats inventory view type: either 'item' for count or 'price' for sum of prices",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="stats fetched",
@@ -218,12 +258,12 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_inventory_by_room(Request $request)
+    public function get_total_inventory_by_room(Request $request, $type)
     {
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::selectRaw("inventory_room as context, COUNT(1) as total")
+            $res = InventoryModel::selectRaw("inventory_room as context, ".$this->get_inventory_stats_view($type)." as total")
                 ->where('created_by', $user_id)
                 ->groupby('inventory_room')
                 ->get();

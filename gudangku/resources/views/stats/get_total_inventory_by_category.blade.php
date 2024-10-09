@@ -1,8 +1,28 @@
-@php($selected = session()->get('toogle_total_stats'))
-@if($selected == 'item')
-    @php($ctx = 'total_inventory_by_cat')
-@elseif($selected == 'price')
-    @php($ctx = 'total_price_inventory_by_cat')
-@endif
-
-@include('others.pie_chart', ['data'=>$total_inventory_by_cat, 'ctx'=>$ctx])
+<div id="stats_total_inventory_by_category_holder"></div>
+<script>
+    const get_total_inventory_by_category = (page) => {
+        Swal.showLoading()
+        $.ajax({
+            url: `/api/v1/stats/total_inventory_by_category/<?= session()->get('toogle_total_stats') ?>`,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.close()
+                const data = response.data
+                generate_pie_chart('Total <?= session()->get('toogle_total_stats') ?> Inventory By Category','stats_total_inventory_by_category_holder',data)
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                Swal.fire({
+                    title: "Oops!",
+                    text: "Failed to get the stats",
+                    icon: "error"
+                });
+            }
+        });
+    }
+    get_total_inventory_by_category()
+</script>

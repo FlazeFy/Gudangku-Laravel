@@ -255,6 +255,13 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
     background: var(--primaryColor) !important;
 }
 
+.title-chart {
+    font-weight: bold;
+    text-align: center;
+    font-size: var(--spaceLG);
+    margin-bottom: var(--spaceMD);
+}
+
 /* Mobile & Tablet style */
 @media screen and (max-width: 1023px) {
     .btn-feature {
