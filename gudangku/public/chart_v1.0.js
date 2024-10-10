@@ -2,36 +2,112 @@ const generate_pie_chart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
     if(data.length > 0){
-        const totals = data.map(c => c.total)
-        const contexts = data.map(c => c.context)
+        let keys = Object.keys(data[0])
+        if(keys.length == 2 && (typeof data[0][keys[0]] === 'string' && Number.isInteger(data[0][keys[1]]) || typeof data[0][keys[1]] === 'string' && Number.isInteger(data[0][keys[0]]))){
+            const totals = data.map(c => c[Number.isInteger(data[0][keys[1]]) ? keys[1] : keys[0]])
+            const contexts = data.map(c => c[typeof data[0][keys[0]] === 'string' ? keys[0] : keys[1]])
 
-        var options = {
-            series: totals,
-            chart: {
-                width: '360',
-                type: 'pie',
-            },
-            labels: contexts,
-            colors: ['#F9DB00', '#009FF9', '#F78A00', '#42C9E7'],
-            legend: {
-                position: 'bottom'
-            },
-            responsive: [{
-                options: {
-                    chart: {
-                        width: 160
+            var options = {
+                series: totals,
+                chart: {
+                    width: '360',
+                    type: 'pie',
+                },
+                labels: contexts,
+                colors: ['#F9DB00', '#009FF9', '#F78A00', '#42C9E7'],
+                legend: {
+                    position: 'bottom'
+                },
+                responsive: [{
+                    options: {
+                        chart: {
+                            width: 160
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
+
+            let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
+            chart.render()
+        } else {
+            $(`#${holder}`).html(`
+                <h6 class="text-center">Data is Not Valid</h6>
+            `)
+        }
+    } else {
+        $(`#${holder}`).html(`
+            <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
+            <h6 class="text-center">No Data</h6>
+        `)
+    }
+}
+
+const generate_line_column_chart = (title, holder, data) => {
+    $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
+
+    if(data.length > 0){
+        let keys = Object.keys(data[0])
+
+        if(keys.length == 3){
+            const total_1 = data.map(c => Number.isInteger(data[0][keys[1]]) ? c[keys[1]] : Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : c[keys[0]])
+            const total_2 = data.map(c => Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : Number.isInteger(data[0][keys[0]]) ? c[keys[0]] : c[keys[1]])
+            const title_1 = ucEachWord((Number.isInteger(data[0][keys[1]]) ? keys[1] : Number.isInteger(data[0][keys[2]]) ? keys[2] : keys[0]).replaceAll('_',' '))
+            const title_2 = ucEachWord((Number.isInteger(data[0][keys[2]]) ? keys[2] : Number.isInteger(data[0][keys[0]]) ? keys[0] : keys[1]).replaceAll('_',' '))
+            const sum_total_1 = total_1.reduce((acc, val) => acc + val, 0)
+            const sum_total_2 = total_2.reduce((acc, val) => acc + val, 0)
+            const context = data.map(c => c[typeof data[0][keys[0]] === 'string' ? keys[0] : typeof data[0][keys[1]] === 'string' ? keys[1] : keys[2]])
+
+            var options = {
+                series: [
+                    {
+                        name: sum_total_1 > sum_total_2 ? title_2 : title_1,
+                        type: 'column',
+                        data: sum_total_1 > sum_total_2 ? total_2 : total_1
+                    }, 
+                    {
+                        name: sum_total_1 < sum_total_2 ? title_2 : title_1,
+                        type: 'line',
+                        data: sum_total_1 < sum_total_2 ? total_2 : total_1
+                    }
+                ],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    toolbar: {
+                        show: false
                     },
-                    legend: {
-                        position: 'bottom'
+                    zoom: false
+                },
+                stroke: {
+                    width: [0, 4],
+                    curve: 'smooth'
+                },
+                dataLabels: {
+                    enabled: true,
+                    enabledOnSeries: [1]
+                },
+                labels: context,
+                yaxis: {
+                    labels: {
+                        formatter: function (value) {
+                            return value >= 10000 ? (value / 1000).toFixed(1) + 'K' : value;
+                        }
                     }
                 }
-            }]
-        };
+            };
 
-        let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
-        chart.render()
+            let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
+            chart.render()
+        } else {
+            $(`#${holder}`).html(`
+                <h6 class="text-center">Data is Not Valid</h6>
+            `)
+        }
     } else {
-        $(`#${holder}`).append(`
+        $(`#${holder}`).html(`
             <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
             <h6 class="text-center">No Data</h6>
         `)
@@ -40,23 +116,25 @@ const generate_pie_chart = (title, holder, data) => {
 
 const generate_table_context_total = (holder, data) => {
     if(data.length > 0){
-        tbody = ''
-        data.forEach(el=> {
-            tbody += `
-                <tr>
-                    <td>${el.context}</td>
-                    <td>${el.total}</td>
-                </tr>
-            `
-        })
+        let keys = Object.keys(data[0])
+        let thead = `<thead style='background:var(--primaryColor);'><tr>`
+        keys.forEach(dt => {
+            thead += `<th>${ucEachWord(dt.replaceAll('_',' '))}</th>`
+        });
+        thead += `</tr></thead>`
+
+        let tbody = ''
+        data.forEach(el => {
+            tbody += '<tr>'
+            keys.forEach(key => {
+                tbody += `<td>${el[key]}</td>`
+            });
+            tbody += '</tr>'
+        });
+
         $(`#${holder}`).append(`
             <table class='table table-bordered text-center mt-4'>
-                <thead style='background:var(--primaryColor);'>
-                    <tr>
-                        <th>Context</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
+                ${thead}
                 <tbody>
                     ${tbody}
                 </tbody>

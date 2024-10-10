@@ -23,6 +23,12 @@
             <div class="col-lg-4 col-md-6 col-sm-12">
                 @include('stats.get_total_inventory_by_fav')
             </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                @include('stats.get_total_report_created_per_month')
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                @include('stats.get_total_report_spending_per_month')
+            </div>
         </div>
     </div>
 @endsection

@@ -151,6 +151,15 @@ hr {
     color: var(--whiteColor) !important;
     font-size: var(--textXMD) !important;
 }
+.apexcharts-xaxis-label {
+    font-size: var(--textMD) !important;
+}
+.apexcharts-yaxis-label {
+    font-size: var(--textSM) !important;
+}
+.apexcharts-yaxis-label, .apexcharts-xaxis-label {
+    fill: var(--whiteColor) !important;
+}
 
 /* Image */
 .btn-image {
