@@ -46,10 +46,17 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
 });
 
 Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/total_inventory_by_category/{type}', [QueriesStatsController::class, 'get_total_inventory_by_category']);
-    Route::get('/total_inventory_by_favorite/{type}', [QueriesStatsController::class, 'get_total_inventory_by_favorite']);
-    Route::get('/total_inventory_by_room/{type}', [QueriesStatsController::class, 'get_total_inventory_by_room']);
+    Route::prefix('/inventory')->group(function () {
+        Route::get('/total_by_category/{type}', [QueriesStatsController::class, 'get_total_inventory_by_category']);
+        Route::get('/total_by_favorite/{type}', [QueriesStatsController::class, 'get_total_inventory_by_favorite']);
+        Route::get('/total_by_room/{type}', [QueriesStatsController::class, 'get_total_inventory_by_room']);
+    });
+    Route::prefix('/report')->group(function () {
+        Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'get_total_report_created_per_month']);
+        Route::get('/total_spending_per_month/{year}', [QueriesStatsController::class, 'get_total_report_spending_per_month']);
+    });
 });
+
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesHistoryController::class, 'get_all_history']);

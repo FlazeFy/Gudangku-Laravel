@@ -5,7 +5,7 @@
     const get_total_inventory_by_room = (page) => {
         Swal.showLoading()
         $.ajax({
-            url: `/api/v1/stats/total_inventory_by_room/<?= session()->get('toogle_total_stats') ?>`,
+            url: `/api/v1/stats/inventory/total_by_room/<?= session()->get('toogle_total_stats') ?>`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")

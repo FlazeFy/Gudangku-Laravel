@@ -75,6 +75,16 @@ class Generator
         return false;
     }
 
+    public static function generateMonthName($idx,$type){
+        $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    
+        if($type == 'short'){
+            return substr($months[$idx-1], 0, 3);
+        } else if($type == 'full'){
+            return $months[$idx-1];
+        }
+    }
+
     public static function generateDocTemplate($type){
         $datetime = now();
 
