@@ -172,6 +172,10 @@ hr {
     border-radius: var(--roundedMD);
     margin-top: var(--spaceMD);
 }
+.container.bordered {
+    border: 1.5px solid var(--whiteColor);
+    padding: var(--spaceXMD);
+}
 
 .box-reminder,.box-danger  {
     padding: var(--spaceMD);
