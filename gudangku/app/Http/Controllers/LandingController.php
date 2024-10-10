@@ -27,6 +27,9 @@ class LandingController extends Controller
             if(!session()->get('toogle_edit_report')){
                 session()->put('toogle_edit_report', 'false');
             }
+            if(!session()->get('room_opened')){
+                session()->put('room_opened', 'Main Room');
+            }
 
             $total_item = InventoryModel::selectRaw('COUNT(1) AS total')
                 ->where('created_by', $user_id)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\InventoryModel;
+use App\Models\InventoryLayoutModel;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -335,6 +336,95 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'inventory not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/layout/{room}",
+     *     summary="Get inventory layout by room",
+     *     description="This request is used to get inventory layout to show storage by room. This request is using MySql database, and has protected routes",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="room",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             example="Main Room"
+     *         ),
+     *         description="Inventory storage's room",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory layout fetched"),
+     *             @OA\Property(property="data", type="array",
+     *                  @OA\Items(
+     *                      @OA\Property(property="id", type="string", example="17963858-9771-11ee-8f4a-3216422910r4"),
+     *                      @OA\Property(property="inventory_storage", type="string", example="Wardobe"),
+     *                      @OA\Property(property="storage_desc", type="string", example="Store my clothes"),
+     *                      @OA\Property(property="layout", type="string", example="D1:E3")
+     *                  )
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory layout failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory layout not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function get_room_layout(Request $request,$room)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $res = InventoryLayoutModel::select('id','inventory_storage','layout','storage_desc')
+                ->where('created_by',$user_id)
+                ->where('inventory_room',$room)
+                ->get();
+            
+            if (count($res) > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'inventory layout fetched',
+                    'data' => $res
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'inventory layout not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

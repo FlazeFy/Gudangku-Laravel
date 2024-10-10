@@ -1442,6 +1442,139 @@
                 ]
             }
         },
+        "/api/v1/inventory/layout/{room}": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get inventory layout by room",
+                "description": "This request is used to get inventory layout to show storage by room. This request is using MySql database, and has protected routes",
+                "operationId": "ccf4f45e46de0d504d18be3f7a68ad7f",
+                "parameters": [
+                    {
+                        "name": "room",
+                        "in": "path",
+                        "description": "Inventory storage's room",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Main Room"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "inventory fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory layout fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "17963858-9771-11ee-8f4a-3216422910r4"
+                                                    },
+                                                    "inventory_storage": {
+                                                        "type": "string",
+                                                        "example": "Wardobe"
+                                                    },
+                                                    "storage_desc": {
+                                                        "type": "string",
+                                                        "example": "Store my clothes"
+                                                    },
+                                                    "layout": {
+                                                        "type": "string",
+                                                        "example": "D1:E3"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "inventory layout failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory layout not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/report/delete/item/{id}": {
             "delete": {
                 "tags": [
@@ -3463,6 +3596,49 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the history",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "inventory_layout": {
+                "required": [
+                    "id",
+                    "inventory_room",
+                    "inventory_storage",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary key for the inventory layout",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "inventory_room": {
+                        "description": "Room where the inventory is located",
+                        "type": "string"
+                    },
+                    "inventory_storage": {
+                        "description": "Storage location of the inventory",
+                        "type": "string"
+                    },
+                    "storage_desc": {
+                        "description": "Storage description",
+                        "type": "string"
+                    },
+                    "layout": {
+                        "description": "Coordinate of the storage",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the inventory layout was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the inventory layout",
                         "type": "string",
                         "format": "uuid"
                     }
