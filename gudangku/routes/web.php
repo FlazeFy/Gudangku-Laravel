@@ -15,7 +15,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportDetailController;
-use App\Http\Controllers\RoomController;
+use App\Http\Controllers\Room3DController;
+use App\Http\Controllers\Room2DController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,7 +99,10 @@ Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
 });
 
 Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {
-    Route::get('/', [RoomController::class, 'index']);
+    Route::get('/3d', [Room3DController::class, 'index']);
+
+    Route::get('/2d', [Room2DController::class, 'index']);
+    Route::post('/selectRoom', [Room2DController::class, 'select_room']);
 });
 
 Route::prefix('/doc')->group(function () {

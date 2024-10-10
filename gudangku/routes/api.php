@@ -36,6 +36,7 @@ Route::get('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:san
 Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesInventoryController::class, 'get_all_inventory']);
     Route::get('/list', [QueriesInventoryController::class, 'get_list_inventory']);
+    Route::get('/room', [QueriesInventoryController::class, 'get_list_room']);
     Route::get('/calendar', [QueriesInventoryController::class, 'get_list_calendar']);
 
     Route::delete('/delete/{id}', [CommandsInventoryController::class, 'soft_delete_inventory_by_id']);

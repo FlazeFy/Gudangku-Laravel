@@ -1,7 +1,7 @@
 <style>
     #room-container {
         height: 75vh;
-        width: 1480px;
+        width: 100%;
         border: var(--spaceMini) solid var(--primaryColor);
         border-radius: var(--roundedLG);
     }
