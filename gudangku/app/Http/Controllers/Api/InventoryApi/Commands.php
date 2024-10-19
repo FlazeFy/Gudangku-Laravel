@@ -6,9 +6,21 @@ use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\InventoryModel;
+use App\Models\UserModel;
 
 // Helpers
 use App\Helpers\Audit;
+use App\Helpers\Generator;
+use App\Helpers\Validation;
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Dompdf\Canvas\Factory as CanvasFactory;
+use Dompdf\Options as DompdfOptions;
+use Dompdf\Adapter\CPDF;
+
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\FileUpload\InputFile;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -410,6 +422,226 @@ class Commands extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\POST(
+     *     path="/api/v1/inventory",
+     *     summary="Create inventory",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=201,
+     *         description="inventory created"
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Data is already exist",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory is already exist")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function post_inventory(Request $request)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $validator = Validation::getValidateInventory($request,'create');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {  
+                $is_exist = InventoryModel::selectRaw('1')
+                    ->where('inventory_name',$request->inventory_name)
+                    ->where('created_by',$user_id)
+                    ->first();
+
+                if(!$is_exist){
+                    $id = Generator::getUUID();
+                    $res = InventoryModel::create([
+                        'id' => $id, 
+                        'inventory_name' => $request->inventory_name, 
+                        'inventory_category' => $request->inventory_category, 
+                        'inventory_desc' => $request->inventory_desc, 
+                        'inventory_merk' => $request->inventory_merk, 
+                        'inventory_color' => $request->inventory_color, 
+                        'inventory_room' => $request->inventory_room, 
+                        'inventory_storage' => $request->inventory_storage, 
+                        'inventory_rack' => $request->inventory_rack, 
+                        'inventory_price' => $request->inventory_price, 
+                        'inventory_image' => $request->inventory_image, 
+                        'inventory_unit' => $request->inventory_unit, 
+                        'inventory_vol' => $request->inventory_vol, 
+                        'inventory_capacity_unit' => $request->inventory_capacity_unit, 
+                        'inventory_capacity_vol' => $request->inventory_capacity_vol, 
+                        'is_favorite' => $request->is_favorite, 
+                        'is_reminder' => $request->is_reminder, 
+                        'created_at' => date('Y-m-d H:i:s'), 
+                        'created_by' => $user_id, 
+                        'updated_at' => null, 
+                        'deleted_at' => null
+                    ]);
+
+                    if($res){
+                        // History
+                        Audit::createHistory('Create', $request->inventory_name, $user_id);
+                        $user = UserModel::getSocial($user_id);
+
+                        $options = new DompdfOptions();
+                        $options->set('defaultFont', 'Helvetica');
+                        $dompdf = new Dompdf($options);
+                        $datetime = now();
+                        $header_template = Generator::generateDocTemplate('header');
+                        $style_template = Generator::generateDocTemplate('style');
+                        $footer_template = Generator::generateDocTemplate('footer');
+                        $html = "
+                            <html>
+                                <head>
+                                    $style_template
+                                </head>
+                                <body>
+                                    $header_template
+                                    <h3 style='margin:0 0 6px 0;'>Inventory : {$request->inventory_name}</h3>
+                                    <p style='margin:0; font-size:14px;'>ID : $id</p>
+                                    <p style='margin-top:0; font-size:14px;'>Category : {$request->inventory_category}</p><br>
+                                    <p style='font-size:13px; text-align: justify;'>
+                                        At $datetime, this document has been generated from the new inventory called <b>{$request->inventory_name}</b>. You can also import this document into GudangKu Apps or send it to our Telegram Bot if you wish to analyze the inventory. Important to know, that
+                                        this document is <b>accessible for everyone</b> by using this link. Here you can see the item in this report:
+                                    </p>                    
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <th>Description</th>
+                                                <td>" . ($request->inventory_desc ?? '-') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Merk</th>
+                                                <td>" . ($request->inventory_merk ?? '-') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Color</th>
+                                                <td>" . ($request->inventory_color ?? '-') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Room</th>
+                                                <td>{$request->inventory_room}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Storage</th>
+                                                <td>" . ($request->inventory_storage ?? '-') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Rack</th>
+                                                <td>" . ($request->inventory_rack ?? '-') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Price</th>
+                                                <td>Rp. " . number_format($request->inventory_price, 2, ',', '.') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Unit</th>
+                                                <td>{$request->inventory_unit}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Volume</th>
+                                                <td>{$request->inventory_vol}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Capacity Unit</th>
+                                                <td>" . ($request->inventory_capacity_unit ?? '-') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Capacity Volume</th>
+                                                <td>" . ($request->inventory_capacity_vol ?? '-') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Is Favorite</th>
+                                                <td>" . ($request->is_favorite == 1 ? 'Yes' : 'No') . "</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Is Reminder</th>
+                                                <td>" . ($request->is_reminder == 1 ? 'Yes' : 'No') . "</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    $footer_template
+                                </body>
+                            </html>";
+
+
+                        $dompdf->loadHtml($html);
+                        $dompdf->setPaper('A4', 'portrait');
+                        $dompdf->render();
+
+                        $message = "inventory created, its called '$request->inventory_name'";
+
+                        if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                            $pdfContent = $dompdf->output();
+                            $pdfFilePath = public_path("inventory-$id-$request->inventory_name.pdf");
+                            file_put_contents($pdfFilePath, $pdfContent);
+                            $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+                            
+                            $response = Telegram::sendDocument([
+                                'chat_id' => $user->telegram_user_id,
+                                'document' => $inputFile,
+                                'caption' => $message,
+                                'parse_mode' => 'HTML'
+                            ]);
+                            unlink($pdfFilePath);
+                        }
+                        
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => $message,
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'something wrong. please contact admin',
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'inventory is already exist',
+                    ], Response::HTTP_CONFLICT);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

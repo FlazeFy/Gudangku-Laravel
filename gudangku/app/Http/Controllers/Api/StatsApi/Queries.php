@@ -23,7 +23,7 @@ class Queries extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/v1/stats/total_inventory_by_category/{type}",
+     *     path="/api/v1/stats/inventory/total_by_category/{type}",
      *     summary="Get total inventory by category",
      *     description="This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
@@ -111,7 +111,7 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/v1/stats/total_inventory_by_favorite/{type}",
+     *     path="/api/v1/stats/inventory/total_by_favorite/{type}",
      *     summary="Get total inventory by favorite",
      *     description="This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},
@@ -204,7 +204,7 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/v1/stats/total_inventory_by_room/{type}",
+     *     path="/api/v1/stats/inventory/total_by_room/{type}",
      *     summary="Get total inventory by room",
      *     description="This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
      *     tags={"Stats"},

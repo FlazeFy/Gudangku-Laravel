@@ -38,7 +38,7 @@ class ReportModel extends Model
     public static function getMyReport($user_id, $search,$id){
         $res = ReportModel::selectRaw('
                 report.id, report_title, report_desc, report_category, report.is_reminder, remind_at, report.created_at, 
-                count(1) as total_variety, CAST(SUM(item_qty) AS UNSIGNED) as total_item, GROUP_CONCAT(item_name SEPARATOR ", ") as report_items,
+                count(1) as total_variety, CAST(COALESCE(SUM(item_qty),0) AS UNSIGNED) as total_item, GROUP_CONCAT(item_name SEPARATOR ", ") as report_items,
                 CAST(SUM(item_price * item_qty) AS UNSIGNED) as item_price')
             ->leftjoin('report_item','report_item.report_id','=','report.id')
             ->leftjoin('inventory','inventory.id','=','report_item.inventory_id')
