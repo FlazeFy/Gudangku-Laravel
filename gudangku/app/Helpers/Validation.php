@@ -33,8 +33,15 @@ class Validation
             ]);
         } else if($type == 'update_layout'){
             return Validator::make($request->all(), [
-                'inventory_room' => 'required|string|max:36',
+                'inventory_storage' => 'required|string|max:36',
                 'storage_desc' => 'nullable|string|max:255'
+            ]);
+        } else if($type == 'create_layout'){
+            return Validator::make($request->all(), [
+                'inventory_room' => 'required|string|max:36',
+                'inventory_storage' => 'required|string|max:36',
+                'storage_desc' => 'nullable|string|max:255',
+                'layout' => 'nullable|string|max:9',
             ]);
         }
     }

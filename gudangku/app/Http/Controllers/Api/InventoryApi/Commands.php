@@ -765,4 +765,106 @@ class Commands extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\POST(
+     *     path="/api/v1/inventory/layout",
+     *     summary="Post inventory layout",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory layout coordinate created"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function post_inventory_layout(Request $request)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $validator = Validation::getValidateInventory($request,'create_layout');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {  
+                $rows = InventoryLayoutModel::where('inventory_room',$request->inventory_room)
+                    ->where('created_by', $user_id)
+                    ->where('layout', 'like', '%' . $request->layout . '%')
+                    ->first();
+
+                if($rows){
+                    $rows_layout = InventoryLayoutModel::where('id',$rows->id)
+                        ->update([
+                            'layout' => $rows->layout.':'.$request->layout,
+                    ]);
+                    
+                    Audit::createHistory('Create Layout', $request->inventory_storage, $user_id);
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => "inventory layout coordinate created",
+                    ], Response::HTTP_OK);
+                } else {
+                    $check_layout = InventoryLayoutModel::where('inventory_storage',$request->inventory_storage)
+                        ->where('inventory_room',$request->inventory_room)
+                        ->where('created_by', $user_id)
+                        ->first();
+
+                    if($check_layout){
+                        $rows_layout = InventoryLayoutModel::where('id',$check_layout->id)
+                            ->update([
+                                'layout' => $check_layout->layout.':'.$request->layout
+                            ]);
+                    } else {
+                        $rows_layout = InventoryLayoutModel::create([
+                            'id' => Generator::getUUID(),
+                            'inventory_room' => $request->inventory_room,
+                            'inventory_storage' => $request->inventory_storage,
+                            'storage_desc' => $request->storage_desc,
+                            'layout' => $request->layout,
+                            'created_at' => date('Y-m-d H:i'),
+                            'created_by' => $user_id
+                        ]);
+                    }
+                    
+                    Audit::createHistory('Create Layout', $request->inventory_storage, $user_id);
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => "inventory layout coordinate created",
+                    ], Response::HTTP_OK);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
