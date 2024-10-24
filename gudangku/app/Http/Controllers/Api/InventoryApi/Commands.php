@@ -18,7 +18,9 @@ use Dompdf\Options;
 use Dompdf\Canvas\Factory as CanvasFactory;
 use Dompdf\Options as DompdfOptions;
 use Dompdf\Adapter\CPDF;
-
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\FileUpload\InputFile;
 
@@ -620,11 +622,21 @@ class Commands extends Controller
                             ]);
                             unlink($pdfFilePath);
                         }
+                        if($user->firebase_fcm_token){
+                            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                            $messaging = $factory->createMessaging();
+                            $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
+                                ->withNotification(Notification::create($message))
+                                ->withData([
+                                    'inventory_id' => $id,
+                                ]);
+                            $response = $messaging->send($fcm);
+                        }
                         
                         return response()->json([
                             'status' => 'success',
                             'message' => $message,
-                        ], Response::HTTP_OK);
+                        ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'failed',
@@ -641,7 +653,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

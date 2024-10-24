@@ -275,6 +275,14 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
     margin-bottom: var(--spaceMD);
 }
 
+table td {
+    font-size: var(--textXMD) !important;
+}
+table th {
+    font-size: var(--textLG) !important;
+    font-weight: 600 !important;
+}
+
 /* Mobile & Tablet style */
 @media screen and (max-width: 1023px) {
     .btn-feature {

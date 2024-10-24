@@ -1092,6 +1092,103 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "post": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Create inventory",
+                "operationId": "1331e3da20b1fb761c3225c7c994df88",
+                "responses": {
+                    "201": {
+                        "description": "inventory created"
+                    },
+                    "409": {
+                        "description": "Data is already exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory is already exist"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "{validation_msg}",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "{field validation message}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/v1/inventory/list": {
@@ -1540,6 +1637,157 @@
                                         "message": {
                                             "type": "string",
                                             "example": "inventory layout not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/inventory/search/by_room_storage/{room}/{storage}": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get list inventory",
+                "description": "This request is used to get all inventory data in layout page. This request is using MySql database, and has protected routes",
+                "operationId": "538429ed92457a5e9731a5e8b5f0c572",
+                "parameters": [
+                    {
+                        "name": "room",
+                        "in": "path",
+                        "description": "Inventory storage's room",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Main Room"
+                        }
+                    },
+                    {
+                        "name": "storage",
+                        "in": "path",
+                        "description": "Inventory storage",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Main Table"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "inventory fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                    },
+                                                    "inventory_name": {
+                                                        "type": "string",
+                                                        "example": "Cake"
+                                                    },
+                                                    "inventory_unit": {
+                                                        "type": "string",
+                                                        "example": "Pcs"
+                                                    },
+                                                    "inventory_vol": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "inventory_price": {
+                                                        "type": "integer",
+                                                        "example": 200000
+                                                    },
+                                                    "inventory_category": {
+                                                        "type": "string",
+                                                        "example": "Food And Beverages"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "inventory failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory not found"
                                         }
                                     },
                                     "type": "object"
@@ -2428,14 +2676,14 @@
                 ]
             }
         },
-        "/api/v1/stats/total_inventory_by_category/{type}": {
+        "/api/v1/stats/inventory/total_by_category/{type}": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
                 "summary": "Get total inventory by category",
                 "description": "This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
-                "operationId": "5ce0054c3490749f73baf16849552d34",
+                "operationId": "315a78bddbeb2b8b9468fd261406b387",
                 "parameters": [
                     {
                         "name": "type",
@@ -2557,14 +2805,14 @@
                 ]
             }
         },
-        "/api/v1/stats/total_inventory_by_favorite/{type}": {
+        "/api/v1/stats/inventory/total_by_favorite/{type}": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
                 "summary": "Get total inventory by favorite",
                 "description": "This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
-                "operationId": "dea41a117b0093049900a9a0a38e6325",
+                "operationId": "f70fdeaf248cf6bf8ad4d04b757d5346",
                 "parameters": [
                     {
                         "name": "type",
@@ -2686,14 +2934,14 @@
                 ]
             }
         },
-        "/api/v1/stats/total_inventory_by_room/{type}": {
+        "/api/v1/stats/inventory/total_by_room/{type}": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
                 "summary": "Get total inventory by room",
                 "description": "This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
-                "operationId": "11692c8281d6b3c879e52657fb004991",
+                "operationId": "9035d1bb4430f8120c7764c4551f0e02",
                 "parameters": [
                     {
                         "name": "type",

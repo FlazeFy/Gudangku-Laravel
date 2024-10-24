@@ -434,4 +434,105 @@ class Queries extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/search/by_room_storage/{room}/{storage}",
+     *     summary="Get list inventory",
+     *     description="This request is used to get all inventory data in layout page. This request is using MySql database, and has protected routes",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="room",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             example="Main Room"
+     *         ),
+     *         description="Inventory storage's room",
+     *     ),
+     *     @OA\Parameter(
+     *         name="storage",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             example="Main Table"
+     *         ),
+     *         description="Inventory storage",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory fetched"),
+     *             @OA\Property(property="data", type="array",
+     *                  @OA\Items(
+     *                      @OA\Property(property="id", type="string", example="6f59235e-c398-8a83-2f95-3f1fbe95ca6e"),
+     *                      @OA\Property(property="inventory_name", type="string", example="Cake"),
+     *                      @OA\Property(property="inventory_unit", type="string", example="Pcs"),
+     *                      @OA\Property(property="inventory_vol", type="integer", example=1),
+     *                      @OA\Property(property="inventory_price", type="integer", example=200000),
+     *                      @OA\Property(property="inventory_category", type="string", example="Food And Beverages"),
+     *                  )
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function get_inventory_by_storage(Request $request,$room,$storage){
+        try{
+            $user_id = $request->user()->id;
+
+            $res = InventoryModel::select('id','inventory_name','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price')
+                ->where('created_by',$user_id)
+                ->where('inventory_storage',$storage)
+                ->where('inventory_room',$room)
+                ->get();
+            
+            if (count($res) > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'inventory fetched',
+                    'data' => $res
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'inventory not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
