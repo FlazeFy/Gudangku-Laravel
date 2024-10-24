@@ -517,10 +517,18 @@ class Queries extends Controller
                 ->get();
             
             if (count($res) > 0) {
+                $stats = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
+                    ->where('created_by',$user_id)
+                    ->where('inventory_storage',$storage)
+                    ->where('inventory_room',$room)
+                    ->groupby('inventory_category')
+                    ->get();
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'inventory fetched',
-                    'data' => $res
+                    'data' => $res,
+                    'stats' => $stats
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

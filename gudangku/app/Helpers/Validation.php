@@ -31,6 +31,11 @@ class Validation
                 'is_favorite' => 'boolean',
                 'is_reminder' => 'boolean',
             ]);
+        } else if($type == 'update_layout'){
+            return Validator::make($request->all(), [
+                'inventory_room' => 'required|string|max:36',
+                'storage_desc' => 'nullable|string|max:255'
+            ]);
         }
     }
 

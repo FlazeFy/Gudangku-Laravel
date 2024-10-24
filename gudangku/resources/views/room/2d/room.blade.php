@@ -72,7 +72,8 @@
     get_room_layout()
 
     const get_inventory_room_storage = (room,storage,target) => {
-        $(`#${target} tbody`).empty()
+        $(`#table-inventory-${target} tbody`).empty()
+        $(`#pie-chart-${target}`).empty()
         if(storage != '' && storage){
             Swal.showLoading()
             $.ajax({
@@ -85,8 +86,9 @@
                 success: function(response) {
                     Swal.close()
                     const data = response.data
+                    const stats = response.stats
                     data.forEach(dt => {
-                        $(`#${target} tbody`).append(`
+                        $(`#table-inventory-${target} tbody`).append(`
                             <tr>
                                 <td>${dt.inventory_name}</td>
                                 <td class='text-center'>${dt.inventory_category}</td>
@@ -95,9 +97,12 @@
                             </tr>
                         `)
                     });
+                    if(stats){
+                        generate_pie_chart('Category Distribution',`pie-chart-${target}`,stats)
+                    }
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    $(`#${target} tbody`).append(`
+                    $(`#table-inventory-${target} tbody`).append(`
                         <tr>
                             <td colspan='4' class='text-secondary fst-italic text-center'>- No inventory to show -</td>
                         </tr>
@@ -137,7 +142,7 @@
                 });
 
                 const button = $(`
-                    <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${letters[col]}${row}" onclick="get_inventory_room_storage('${room}','${inventory_storage}','table-inventory-${letters[col]}${row}')">
+                    <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${letters[col]}${row}" onclick="get_inventory_room_storage('${room}','${inventory_storage}','${letters[col]}${row}')">
                         <h6 class='coordinate'>${label}</h6>
                     </button>
                     <div class="modal fade" id="modalDetail-${letters[col]}${row}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -150,10 +155,11 @@
                                 <div class="modal-body">
                                     <div class='row'>
                                         <div class='col'>
+                                            <div id='pie-chart-${letters[col]}${row}'></div>
                                             <label>Name</label>
-                                            <input type="text" name="inventory_storage" class="form-control my-2" value='${inventory_storage ?? ''}'/>
+                                            <input type="text" name="inventory_storage" class="form-control" value='${inventory_storage ?? ''}'/>
                                             <label>Description</label>
-                                            <textarea name="inventory_desc" class="form-control mt-2">${storage_desc ?? ''}</textarea>
+                                            <textarea name="inventory_desc" class="form-control">${storage_desc ?? ''}</textarea>
                                         </div>
                                         <div class='col'>
                                             <table id='table-inventory-${letters[col]}${row}' class='table'>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\InventoryModel;
+use App\Models\InventoryLayoutModel;
 use App\Models\UserModel;
 
 // Helpers
@@ -648,6 +649,113 @@ class Commands extends Controller
                         'status' => 'failed',
                         'message' => 'inventory is already exist',
                     ], Response::HTTP_CONFLICT);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/inventory/edit_layout/{id}",
+     *     summary="Update inventory layout by id",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Inventory Layout ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory layout updated"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory failed to updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory layout not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function edit_layout_by_id(Request $request, $id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $validator = Validation::getValidateInventory($request,'update_layout');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {  
+                $old_data = InventoryLayoutModel::find($id);
+
+                if($old_data){
+                    $rows = InventoryLayoutModel::where('id',$id)
+                        ->where('created_by', $user_id)
+                        ->update([
+                            'inventory_storage' => $request->inventory_storage,
+                            'storage_desc' => $request->storage_desc
+                    ]);
+
+                    if($rows > 0){
+                        $rows_inventory = InventoryModel::where('inventory_storage',$old_data->inventory_storage)
+                            ->where('created_by', $user_id)
+                            ->update([
+                                'inventory_storage' => $request->inventory_storage,
+                        ]);
+                        
+                        Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => "inventory layout updated and impacted to $rows_inventory inventory",
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'nothing has change',
+                        ], Response::HTTP_OK);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'inventory layout not found',
+                    ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $e) {

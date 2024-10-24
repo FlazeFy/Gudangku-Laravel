@@ -47,6 +47,7 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::put('/fav_toggle/{id}', [CommandsInventoryController::class, 'fav_toogle_inventory_by_id']);
     Route::put('/recover/{id}', [CommandsInventoryController::class, 'recover_inventory_by_id']);
     Route::put('/edit_image/{id}', [CommandsInventoryController::class, 'edit_image_by_id']);
+    Route::put('/edit_layout/{id}', [CommandsInventoryController::class, 'edit_layout_by_id']);
 });
 
 Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
