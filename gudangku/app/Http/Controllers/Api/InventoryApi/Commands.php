@@ -811,7 +811,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'result' => $validator->errors()
+                    'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {  
                 $rows = InventoryLayoutModel::where('inventory_room',$request->inventory_room)
@@ -820,16 +820,10 @@ class Commands extends Controller
                     ->first();
 
                 if($rows){
-                    $rows_layout = InventoryLayoutModel::where('id',$rows->id)
-                        ->update([
-                            'layout' => $rows->layout.':'.$request->layout,
-                    ]);
-                    
-                    Audit::createHistory('Create Layout', $request->inventory_storage, $user_id);
                     return response()->json([
                         'status' => 'success',
-                        'message' => "inventory layout coordinate created",
-                    ], Response::HTTP_OK);
+                        'message' => "inventory layout has been used",
+                    ], Response::HTTP_CONFLICT);
                 } else {
                     $check_layout = InventoryLayoutModel::where('inventory_storage',$request->inventory_storage)
                         ->where('inventory_room',$request->inventory_room)
@@ -839,7 +833,8 @@ class Commands extends Controller
                     if($check_layout){
                         $rows_layout = InventoryLayoutModel::where('id',$check_layout->id)
                             ->update([
-                                'layout' => $check_layout->layout.':'.$request->layout
+                                'layout' => $check_layout->layout.':'.$request->layout,
+                                'storage_desc' => $request->storage_desc
                             ]);
                     } else {
                         $rows_layout = InventoryLayoutModel::create([

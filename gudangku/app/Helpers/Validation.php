@@ -41,7 +41,7 @@ class Validation
                 'inventory_room' => 'required|string|max:36',
                 'inventory_storage' => 'required|string|max:36',
                 'storage_desc' => 'nullable|string|max:255',
-                'layout' => 'nullable|string|max:9',
+                'layout' => 'nullable|string|min:2',
             ]);
         }
     }

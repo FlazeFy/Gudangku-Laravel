@@ -141,48 +141,115 @@
                     });
                 });
 
-                const button = $(`
-                    <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${letters[col]}${row}" onclick="get_inventory_room_storage('${room}','${inventory_storage}','${letters[col]}${row}')">
-                        <h6 class='coordinate'>${label}</h6>
-                    </button>
-                    <div class="modal fade" id="modalDetail-${letters[col]}${row}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${letters[col]}${row}</h2>
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class='row'>
-                                        <div class='col'>
-                                            <div id='pie-chart-${letters[col]}${row}'></div>
-                                            <label>Name</label>
-                                            <input type="text" name="inventory_storage" class="form-control" value='${inventory_storage ?? ''}'/>
-                                            <label>Description</label>
-                                            <textarea name="inventory_desc" class="form-control">${storage_desc ?? ''}</textarea>
-                                        </div>
-                                        <div class='col'>
-                                            <table id='table-inventory-${letters[col]}${row}' class='table'>
-                                                <thead>
-                                                    <tr class='text-center'>
-                                                        <th>Name</th>
-                                                        <th>Category</th>
-                                                        <th>Price</th>
-                                                        <th>Unit & Volume</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>                                    
+                let modal = ''
+                if(inventory_storage){
+                    modal = `
+                        <div class="modal fade" id="modalDetail-${letters[col]}${row}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${letters[col]}${row}</h2>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class='row'>
+                                            <div class='col'>
+                                                <div id='pie-chart-${letters[col]}${row}'></div>
+                                                <label>Name</label>
+                                                <input type="text" name="inventory_storage" class="form-control" value='${inventory_storage ?? ''}'/>
+                                                <label>Description</label>
+                                                <textarea name="inventory_desc" class="form-control">${storage_desc ?? ''}</textarea>
+                                            </div>
+                                            <div class='col'>
+                                                <table id='table-inventory-${letters[col]}${row}' class='table'>
+                                                    <thead>
+                                                        <tr class='text-center'>
+                                                            <th>Name</th>
+                                                            <th>Category</th>
+                                                            <th>Price</th>
+                                                            <th>Unit & Volume</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    `
+                } else {
+                    modal = `
+                        <div class="modal fade" id="modalDetail-${letters[col]}${row}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${letters[col]}${row}</h2>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id='add-storage-${letters[col]}${row}'>
+                                            <input type="text" name="layout" value='${letters[col]}${row}' hidden required/>
+                                            <label>Room</label>
+                                            <input type="text" name="inventory_room" class="form-control" value='${room}' readonly required/>
+                                            <label>Storage</label>
+                                            <input type="text" name="inventory_storage" class="form-control" required/>
+                                            <label>Description</label>
+                                            <textarea name="storage_desc" class="form-control"></textarea>
+                                            <a class='btn btn-success mt-4 w-100 submit_add_storage'><i class="fa-solid fa-floppy-disk"></i> Submit to Coordinate ${letters[col]}${row}</a>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` 
+                }
+
+                const button = $(`
+                    <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${letters[col]}${row}" ${inventory_storage && `onclick="get_inventory_room_storage('${room}','${inventory_storage}','${letters[col]}${row}')"`}>
+                        <h6 class='coordinate'>${label}</h6>
+                    </button>
+                    ${modal}
                 `)
                 rowContainer.append(button)
             }
             $('#room-container').append(rowContainer)
         }
     }
+
+    const post_storage = (form) => {
+        $.ajax({
+            url: '/api/v1/inventory/layout',
+            type: 'POST',
+            data: $(`#${form}`).serialize(),
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success",
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        get_room_layout() 
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                generate_api_error(response, true)
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $(document).on('click', '.submit_add_storage', function(event) {
+            const form_id = $(this).closest('form').attr('id')
+            post_storage(form_id)
+        });
+    });
 </script>

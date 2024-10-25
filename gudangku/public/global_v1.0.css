@@ -283,6 +283,11 @@ table th {
     font-weight: 600 !important;
 }
 
+li::marker {
+    color: white !important;
+    font-size: 1.5em !important; 
+}
+
 /* Mobile & Tablet style */
 @media screen and (max-width: 1023px) {
     .btn-feature {
