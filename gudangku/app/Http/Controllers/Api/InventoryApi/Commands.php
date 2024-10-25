@@ -773,7 +773,7 @@ class Commands extends Controller
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="inventory layout coordinate created"
      *     ),
      *     @OA\Response(
@@ -825,6 +825,7 @@ class Commands extends Controller
                         'message' => "inventory layout has been used",
                     ], Response::HTTP_CONFLICT);
                 } else {
+                    $is_success = false;
                     $check_layout = InventoryLayoutModel::where('inventory_storage',$request->inventory_storage)
                         ->where('inventory_room',$request->inventory_room)
                         ->where('created_by', $user_id)
@@ -836,6 +837,10 @@ class Commands extends Controller
                                 'layout' => $check_layout->layout.':'.$request->layout,
                                 'storage_desc' => $request->storage_desc
                             ]);
+                        
+                        if($rows_layout > 0){
+                            $is_success = true;
+                        }
                     } else {
                         $rows_layout = InventoryLayoutModel::create([
                             'id' => Generator::getUUID(),
@@ -846,19 +851,145 @@ class Commands extends Controller
                             'created_at' => date('Y-m-d H:i'),
                             'created_by' => $user_id
                         ]);
+
+                        if($rows_layout){
+                            $is_success = true;
+                        }
                     }
                     
-                    Audit::createHistory('Create Layout', $request->inventory_storage, $user_id);
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => "inventory layout coordinate created",
-                    ], Response::HTTP_OK);
+                    if($is_success){
+                        Audit::createHistory('Create Layout', $request->inventory_storage, $user_id);
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => "inventory layout coordinate created",
+                        ], Response::HTTP_CREATED);
+                    } else {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'something wrong. please contact admin',
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/inventory/delete_layout/{id}/{coor}",
+     *     summary="Delete inventory layout",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory layout coordinate deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function hard_del_inventory_layout_by_id_coor(Request $request, $id, $coor){
+        try{
+            $user_id = $request->user()->id;
+            $extra_msg = "";
+
+            $check_layout = InventoryLayoutModel::select('layout','inventory_storage')
+                ->where('id',$id)
+                ->where('created_by',$user_id)
+                ->where('layout', 'like', '%' . $coor . '%')
+                ->first();
+
+            $layout = $check_layout->layout;
+            $storage = $check_layout->inventory_storage;
+            $find = ':'; // Coordinate separate
+            $is_success = false;
+            $msg = '';
+
+            if(substr_count($layout, $find) > 0){
+                $new_layout = str_replace($coor, "", $layout);
+                $new_layout = trim($new_layout, ":");
+                $rows_layout = InventoryLayoutModel::where('id',$id)
+                    ->update([
+                        'layout' => $new_layout
+                    ]);
+                $msg = "$storage's coordinate is updated";
+                
+                if($rows_layout > 0){
+                    $is_success = true;
+                }
+            } else {
+                $rows_layout = InventoryLayoutModel::destroy($id);
+                $msg = "$storage is deleted";
+                if($rows_layout > 0){
+                    $is_success = true;
+
+                    $res_inv = InventoryModel::where('inventory_storage',$storage)
+                        ->where('created_by',$user_id)
+                        ->update([
+                            'inventory_storage' => null,
+                            'updated_at' => date('Y-m-d H:i:s') 
+                        ]);
+
+                    if($res_inv > 0){
+                        $extra_msg = ". At least $res_inv item in inventory has been updated due to storage deletion";
+                    } else {
+                        $extra_msg = ". No item in inventory has been impacted";
+                    }
+
+                    $user = UserModel::getSocial($user_id);
+                    $message = "inventory layout coordinate deleted$extra_msg";
+                    if($user->firebase_fcm_token){
+                        $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                        $messaging = $factory->createMessaging();
+                        $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
+                            ->withNotification(Notification::create($message));
+                        $response = $messaging->send($fcm);
+                    }
+                    if($user->telegram_user_id){
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $user->telegram_user_id,
+                            'text' => $message,
+                            'parse_mode' => 'HTML'
+                        ]);
+                    }
+                }
+            }
+            
+            if($is_success){
+                Audit::createHistory('Delete Layout', $msg, $user_id);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "inventory layout coordinate deleted$extra_msg",
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'something wrong. please contact admin',
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

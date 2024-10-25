@@ -54,6 +54,7 @@
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
             success: function(response) {
+                $('#room-container').empty()
                 Swal.close()
                 const data = response.data
                
@@ -137,6 +138,7 @@
                             used = true
                             inventory_storage = dt.inventory_storage
                             storage_desc = dt.storage_desc
+                            id = dt.id
                         }
                     });
                 });
@@ -159,6 +161,10 @@
                                                 <input type="text" name="inventory_storage" class="form-control" value='${inventory_storage ?? ''}'/>
                                                 <label>Description</label>
                                                 <textarea name="inventory_desc" class="form-control">${storage_desc ?? ''}</textarea>
+                                                <div class='mt-3'>
+                                                    <input value='${id}_${letters[col]}${row}' class='id-coor-holder' hidden>
+                                                    <a class='btn btn-danger remove_coordinate'>Remove Coordinate</a>
+                                                </div>
                                             </div>
                                             <div class='col'>
                                                 <table id='table-inventory-${letters[col]}${row}' class='table'>
@@ -246,10 +252,45 @@
         });
     }
 
+    const remove_coordinate = (id,coor) => {
+        $.ajax({
+            url: `/api/v1/inventory/delete_layout/${id}/${coor}`,
+            type: 'DELETE',
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success",
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        get_room_layout() 
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                generate_api_error(response, true)
+            }
+        });
+    }
+
     $(document).ready(function() {
         $(document).on('click', '.submit_add_storage', function(event) {
             const form_id = $(this).closest('form').attr('id')
             post_storage(form_id)
         });
+
+        $(document).on('click', '.remove_coordinate', function(event) {
+            const idx = $(this).index('.remove_coordinate')
+            const id_coor_holder = $('.id-coor-holder').eq(idx).val().split('_')
+            const id = id_coor_holder[0]
+            const coor = id_coor_holder[1]
+            remove_coordinate(id,coor)
+        })
     });
 </script>
