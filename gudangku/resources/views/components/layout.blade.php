@@ -29,6 +29,12 @@
         <!-- Jquery DataTables -->
         <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
+        <!-- Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.5.1/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Bootstrap Bundle JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.5.1/js/bootstrap.bundle.min.js"></script>
+
         <!--Apex Chart-->
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 

@@ -37,6 +37,11 @@
     table td, table th {
         vertical-align: middle;
     }
+    .btn-layout-config{
+        margin: var(--textMD) 0 0 var(--textMD);
+        font-size: var(--textXMD);
+        font-weight: 500;
+    }
 </style>
 
 <div id="room-container"></div>
@@ -45,6 +50,9 @@
     const room = '<?= session()->get('room_opened') ?>'
 
     const get_room_layout = () => {
+        $(document).ready(function() {
+            $('.modal').modal('hide')
+        })
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/inventory/layout/${room}`,
@@ -119,10 +127,109 @@
         }
     }
 
+    const generate_floor_range = (data) => {
+        let rawLetter = []
+        let rawNum = [] 
+
+        data.forEach(dt => {
+            if (dt.layout) {
+                const coor = dt.layout.split(':')
+                coor.forEach(cr => {
+                    const match = cr.match(/^([A-Z]+)(\d+)$/)
+                    if (match) {
+                        const [_, letters, numbers] = match
+                        rawLetter.push(letters)
+                        rawNum.push(numbers)
+                    }
+                })
+            }
+        })
+        const highestLetter = rawLetter.reduce((max, current) => current > max ? current : max, "A")
+        const highestNumber = Math.max(...rawNum)
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(highestLetter) + 2)
+        
+        return {
+            letters:letters,
+            rows:highestNumber + 1,
+            cols:letters.length
+        }
+    }
+
+    const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
+        if(storage){
+            return `
+                <div class="modal fade" id="modalDetail-${coor}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${coor}</h2>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class='row'>
+                                    <div class='col'>
+                                        <div id='pie-chart-${coor}'></div>
+                                        <label>Name</label>
+                                        <input type="text" name="inventory_storage" class="form-control" value='${storage ?? ''}'/>
+                                        <label>Description</label>
+                                        <textarea name="inventory_desc" class="form-control">${storage_desc ?? ''}</textarea>
+                                        <div class='mt-3'>
+                                            <input value='${id}_${coor}' class='id-coor-holder' hidden>
+                                            <a class='btn btn-danger remove_coordinate'><i class="fa-solid fa-trash"></i> Remove Coordinate</a>
+                                        </div>
+                                    </div>
+                                    <div class='col'>
+                                        <table id='table-inventory-${coor}' class='table'>
+                                            <thead>
+                                                <tr class='text-center'>
+                                                    <th>Name</th>
+                                                    <th>Category</th>
+                                                    <th>Price</th>
+                                                    <th>Unit & Volume</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>                                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        } else {
+            return `
+                <div class="modal fade" id="modalDetail-${coor}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${coor}</h2>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id='add-storage-${coor}'>
+                                    <input type="text" name="layout" value='${coor}' hidden required/>
+                                    <label>Room</label>
+                                    <input type="text" name="inventory_room" class="form-control" value='${room}' readonly required/>
+                                    <label>Storage</label>
+                                    <input type="text" name="inventory_storage" class="form-control" required/>
+                                    <label>Description</label>
+                                    <textarea name="storage_desc" class="form-control"></textarea>
+                                    <a class='btn btn-success mt-4 w-100 submit_add_storage'><i class="fa-solid fa-floppy-disk"></i> Submit to Coordinate ${coor}</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ` 
+        }
+    }
+
     const generate_map_room = (data) => {
-        const rows = 10
-        const cols = 26 
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        const floor_range = generate_floor_range(data)
+        const rows = floor_range.rows
+        let letters = floor_range.letters
+        const cols = floor_range.cols
         
         for (let row = 1; row <= rows; row++) {
             const rowContainer = $('<div class="row"></div>')
@@ -134,7 +241,7 @@
                 data.forEach(dt => {
                     const coor = dt.layout.split(':')
                     coor.forEach(cr => {
-                        if(cr == `${letters[col]}${row}`){
+                        if(cr == label){
                             used = true
                             inventory_storage = dt.inventory_storage
                             storage_desc = dt.storage_desc
@@ -143,77 +250,9 @@
                     });
                 });
 
-                let modal = ''
-                if(inventory_storage){
-                    modal = `
-                        <div class="modal fade" id="modalDetail-${letters[col]}${row}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${letters[col]}${row}</h2>
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class='row'>
-                                            <div class='col'>
-                                                <div id='pie-chart-${letters[col]}${row}'></div>
-                                                <label>Name</label>
-                                                <input type="text" name="inventory_storage" class="form-control" value='${inventory_storage ?? ''}'/>
-                                                <label>Description</label>
-                                                <textarea name="inventory_desc" class="form-control">${storage_desc ?? ''}</textarea>
-                                                <div class='mt-3'>
-                                                    <input value='${id}_${letters[col]}${row}' class='id-coor-holder' hidden>
-                                                    <a class='btn btn-danger remove_coordinate'>Remove Coordinate</a>
-                                                </div>
-                                            </div>
-                                            <div class='col'>
-                                                <table id='table-inventory-${letters[col]}${row}' class='table'>
-                                                    <thead>
-                                                        <tr class='text-center'>
-                                                            <th>Name</th>
-                                                            <th>Category</th>
-                                                            <th>Price</th>
-                                                            <th>Unit & Volume</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody></tbody>
-                                                </table>
-                                            </div>
-                                        </div>                                    
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `
-                } else {
-                    modal = `
-                        <div class="modal fade" id="modalDetail-${letters[col]}${row}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${letters[col]}${row}</h2>
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id='add-storage-${letters[col]}${row}'>
-                                            <input type="text" name="layout" value='${letters[col]}${row}' hidden required/>
-                                            <label>Room</label>
-                                            <input type="text" name="inventory_room" class="form-control" value='${room}' readonly required/>
-                                            <label>Storage</label>
-                                            <input type="text" name="inventory_storage" class="form-control" required/>
-                                            <label>Description</label>
-                                            <textarea name="storage_desc" class="form-control"></textarea>
-                                            <a class='btn btn-success mt-4 w-100 submit_add_storage'><i class="fa-solid fa-floppy-disk"></i> Submit to Coordinate ${letters[col]}${row}</a>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ` 
-                }
-
+                const modal = generate_modal_detail(inventory_storage, storage_desc, room, label, id)
                 const button = $(`
-                    <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${letters[col]}${row}" ${inventory_storage && `onclick="get_inventory_room_storage('${room}','${inventory_storage}','${letters[col]}${row}')"`}>
+                    <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${label}" ${inventory_storage && `onclick="get_inventory_room_storage('${room}','${inventory_storage}','${label}')"`}>
                         <h6 class='coordinate'>${label}</h6>
                     </button>
                     ${modal}
@@ -222,6 +261,11 @@
             }
             $('#room-container').append(rowContainer)
         }
+        $('#room-container').append(`
+            <div class='floor-config'>
+                <a class='d-inline-block btn-layout-config btn btn-success' onclick='expand_floor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
+            </div>
+        `)
     }
 
     const post_storage = (form) => {
@@ -277,6 +321,46 @@
                 generate_api_error(response, true)
             }
         });
+    }
+
+    const expand_floor = () => {
+        let max_letter
+        let max_number
+        $('#room-container > .row').each(function(idx, el) {
+            const coor = $(this).find('.coordinate').last().text()
+            const match = coor.match(/^([A-Z]+)(\d+)$/)
+
+            if (match) {
+                const [_, letters, numbers] = match
+                const letters_next = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(letters) + 2).slice(-1)
+                max_letter = letters_next
+                max_number = parseInt(numbers)
+                const label = `${letters_next}${numbers}`
+
+                const modal = generate_modal_detail(null, null, room, label, null)
+                $(this).append(`
+                    <button class='d-inline-block room-floor' data-bs-toggle="modal" data-bs-target="#modalDetail-${label}">
+                        <h6 class='coordinate'>${label}</h6>
+                    </button>
+                    ${modal}
+                `)
+            }
+        })
+
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(max_letter) + 1)
+        const rowContainer = $('<div class="row"></div>')
+
+        for (let idx = 0; idx < letters.length; idx++) {
+            const label = `${letters[idx]}${max_number+1}`
+            const modal = generate_modal_detail(null, null, room, label, null)
+            rowContainer.append(`
+                <button class='d-inline-block room-floor' data-bs-toggle="modal" data-bs-target="#modalDetail-${label}">
+                    <h6 class='coordinate'>${label}</h6>
+                </button>
+                ${modal}
+            `)
+        }
+        $('#room-container .floor-config').first().before(rowContainer)
     }
 
     $(document).ready(function() {

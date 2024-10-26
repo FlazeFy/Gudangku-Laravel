@@ -840,6 +840,7 @@ class Commands extends Controller
                         
                         if($rows_layout > 0){
                             $is_success = true;
+                            Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
                         }
                     } else {
                         $rows_layout = InventoryLayoutModel::create([
@@ -854,11 +855,28 @@ class Commands extends Controller
 
                         if($rows_layout){
                             $is_success = true;
+
+                            Audit::createHistory('Create Storage', $request->inventory_storage, $user_id);
+                            $user = UserModel::getSocial($user_id);
+                            $message = "inventory storage has been created, its called '$request->inventory_storage'";
+                            if($user->firebase_fcm_token){
+                                $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                                $messaging = $factory->createMessaging();
+                                $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
+                                    ->withNotification(Notification::create($message));
+                                $response = $messaging->send($fcm);
+                            }
+                            if($user->telegram_user_id){
+                                $response = Telegram::sendMessage([
+                                    'chat_id' => $user->telegram_user_id,
+                                    'text' => $message,
+                                    'parse_mode' => 'HTML'
+                                ]);
+                            }
                         }
                     }
                     
                     if($is_success){
-                        Audit::createHistory('Create Layout', $request->inventory_storage, $user_id);
                         return response()->json([
                             'status' => 'success',
                             'message' => "inventory layout coordinate created",
@@ -935,12 +953,14 @@ class Commands extends Controller
                 
                 if($rows_layout > 0){
                     $is_success = true;
+                    Audit::createHistory('Update Layout', $msg, $user_id);
                 }
             } else {
                 $rows_layout = InventoryLayoutModel::destroy($id);
                 $msg = "$storage is deleted";
                 if($rows_layout > 0){
                     $is_success = true;
+                    Audit::createHistory('Delete Storage', $msg, $user_id);
 
                     $res_inv = InventoryModel::where('inventory_storage',$storage)
                         ->where('created_by',$user_id)
@@ -954,20 +974,20 @@ class Commands extends Controller
                     } else {
                         $extra_msg = ". No item in inventory has been impacted";
                     }
+                    $msg = "$msg$extra_msg";
 
                     $user = UserModel::getSocial($user_id);
-                    $message = "inventory layout coordinate deleted$extra_msg";
                     if($user->firebase_fcm_token){
                         $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
                         $messaging = $factory->createMessaging();
                         $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
-                            ->withNotification(Notification::create($message));
+                            ->withNotification(Notification::create($msg));
                         $response = $messaging->send($fcm);
                     }
                     if($user->telegram_user_id){
                         $response = Telegram::sendMessage([
                             'chat_id' => $user->telegram_user_id,
-                            'text' => $message,
+                            'text' => $msg,
                             'parse_mode' => 'HTML'
                         ]);
                     }
@@ -975,7 +995,6 @@ class Commands extends Controller
             }
             
             if($is_success){
-                Audit::createHistory('Delete Layout', $msg, $user_id);
                 return response()->json([
                     'status' => 'success',
                     'message' => "inventory layout coordinate deleted$extra_msg",
