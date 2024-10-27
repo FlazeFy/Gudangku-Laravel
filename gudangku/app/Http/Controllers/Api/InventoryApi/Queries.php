@@ -410,10 +410,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryLayoutModel::select('id','inventory_storage','layout','storage_desc')
-                ->where('created_by',$user_id)
-                ->where('inventory_room',$room)
-                ->get();
+            $res = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
             
             if (count($res) > 0) {
                 return response()->json([

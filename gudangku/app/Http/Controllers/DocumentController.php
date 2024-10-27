@@ -7,6 +7,8 @@ use App\Helpers\Generator;
 use Illuminate\Http\Request;
 
 use App\Models\ReportModel;
+use App\Models\InventoryModel;
+use App\Models\InventoryLayoutModel;
 use App\Models\UserModel;
 use App\Models\ReportItemModel;
 
@@ -21,12 +23,10 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class DocumentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index($id)
+    public function index_report($id)
     {
         $report = ReportModel::getReportDetail(null,$id,'doc');
+        $user_id = $request->user()->id;
 
         if($report){
             $report_item = ReportItemModel::getReportItem(null,$id,'doc');
@@ -130,6 +130,7 @@ class DocumentController extends Controller
 
             $user_id = Generator::getUserId(session()->get('role_key'));
 
+            $file_name = "report-$id-$datetime.pdf";
             if($user_id){
                 $user = UserModel::select('telegram_user_id','username')
                     ->where('id',$user_id)
@@ -137,7 +138,7 @@ class DocumentController extends Controller
                     ->first();
                 if($user->telegram_user_id){
                     $pdfContent = $dompdf->output();
-                    $pdfFilePath = public_path("report-$id-$datetime.pdf");
+                    $pdfFilePath = public_path($file_name);
                     file_put_contents($pdfFilePath, $pdfContent);
                     $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
 
@@ -154,7 +155,187 @@ class DocumentController extends Controller
 
             return response($dompdf->output(), 200)
                 ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename='report-$id-$datetime.pdf'");
+                ->header('Content-Disposition', "inline; filename='$file_name'");
+        } else {
+            return redirect("/login");
+        }
+    }
+
+    public function index_layout(Request $request, $room)
+    {
+        $user_id = $request->user()->id;
+        $inventory = InventoryModel::getInventoryByRoom($room,$user_id);
+        $layout = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
+
+        if($inventory || $layout){
+            $options = new DompdfOptions();
+            $options->set('defaultFont', 'Helvetica');
+            $dompdf = new Dompdf($options);
+            $datetime = now();
+
+            $tbody = "";
+            $header_template = Generator::generateDocTemplate('header');
+            $style_template = Generator::generateDocTemplate('style');
+            $footer_template = Generator::generateDocTemplate('footer');
+            $extra_template = "";
+            $layout_template = "<div id='room-container'>";
+
+            $rawLetter = [];
+            $rawNum = [];
+            foreach ($layout as $dt) {
+                if (!empty($dt->layout)) {
+                    $coor = explode(':', $dt->layout);
+                    foreach ($coor as $cr) {
+                        if (preg_match('/^([A-Z]+)(\d+)$/', $cr, $match)) {
+                            $letters = $match[1];
+                            $numbers = $match[2];
+                            $rawLetter[] = $letters;
+                            $rawNum[] = $numbers;
+                        }
+                    }
+                }
+            }
+            $highestLetter = array_reduce($rawLetter, function($max, $current) {
+                return $current > $max ? $current : $max;
+            }, 'A');
+            $highestNumber = !empty($rawNum) ? max($rawNum) : 0;
+            $letters = substr('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 0, strpos('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $highestLetter) + 1);
+            $rows = $highestNumber + 1;
+            $cols = strlen($letters);
+
+            for ($row = 1; $row < count($layout); $row++) {
+                $layout_template .= "<div class='row'>";
+                for ($col = 0; $col < $cols; $col++) {
+                    $label = $letters[$col] . $row;
+                    $used = false;
+                    $inventory_storage = null;
+                    $storage_desc = null;
+                    $id = null;
+
+                    foreach ($layout as $dt) {
+                        $coor = explode(':', $dt->layout);
+                        if (in_array($label, $coor)) {
+                            $used = true;
+                            $inventory_storage = $dt->inventory_storage;
+                            $storage_desc = $dt->storage_desc;
+                            $id = $dt->id;
+                            break;
+                        }
+                    }
+
+                    $buttonClass = $used ? 'active' : '';
+
+                    $layout_template .= "<a class='room-floor $buttonClass'><h6 class='coordinate'>$label</h6></a>";
+                }
+                $layout_template .= "</div>";
+            }
+            $layout_template .= "</div>";
+
+            foreach ($inventory as $dt) {
+                $tbody .= "
+                    <tr>
+                        <td>$dt->inventory_name</td>
+                        <td>".($dt->inventory_desc ?? '-')."</td>
+                        <td>".($dt->inventory_desc ?? '-')."</td>
+                        <td>$dt->inventory_category</td>
+                        <td>$dt->inventory_vol $dt->inventory_unit</td>
+                        <td>Rp. ".number_format($dt->inventory_price)."</td>
+                    </tr>
+                ";   
+            }
+
+            $html = "
+            <html>
+                <head>
+                    $style_template
+                    <style>
+                        .row {
+                            display: flex;
+                        }
+                        .room-floor {
+                            border-radius: 0 !important;
+                            width: 60px;
+                            height: 60px;
+                            text-align: center;
+                            border: 0.5px solid black !important;
+                            position: relative;
+                            display:inline-block;
+                        }
+                        .room-floor .coordinate {
+                            font-size: 12px;
+                            font-weight: 600;
+                            position: absolute;
+                            bottom: 5px;
+                            right: 5px;
+                        }
+                        .room-floor.active {
+                            background: #3b82f6;
+                        }
+                    </style>
+                </head>
+                <body>
+                    $header_template
+                    <h3 style='margin:0 0 6px 0;'>Room : $room</h3>
+                    <p style='font-size:13px; text-align: justify;'>
+                        At $datetime, this layout document has been generated. You can also import this document into GudangKu Apps or send it to our Telegram Bot if you wish to analyze the items in this document for comparison with your inventory. Important to know, that
+                        this document is <b>accessible for everyone</b> by using this link. Here you can see the item in this report :
+                    </p>
+                    <h4 style='text-align:center;'>Room Layout</h4>
+                    <div style='text-align:center;'>
+                        $layout_template
+                    </div>    
+                    <h4 style='text-align:center;'>Attached Inventory</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Description</th>
+                                <th>Storage</th>
+                                <th>Category</th>
+                                <th>Volume</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>$tbody</tbody>
+                    </table>
+                    $extra_template
+                    $footer_template
+                </body>
+            </html>";
+    
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+
+            $user_id = Generator::getUserId(session()->get('role_key'));
+            $file_name = "layout-$room-$datetime.pdf";
+
+            if($user_id){
+                $user = UserModel::select('telegram_user_id','username')
+                    ->where('id',$user_id)
+                    ->where('telegram_is_valid',1)
+                    ->first();
+
+                if($user->telegram_user_id){
+                    $pdfContent = $dompdf->output();
+                    $pdfFilePath = public_path($file_name);
+                    file_put_contents($pdfFilePath, $pdfContent);
+                    $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+
+                    $response = Telegram::sendDocument([
+                        'chat_id' => $user->telegram_user_id,
+                        'document' => $inputFile,
+                        'caption' => "Hello $user->username, you just preview the $room layout document. Here's the document",
+                        'parse_mode' => 'HTML'
+                    ]);
+
+                    unlink($pdfFilePath);
+                }
+            }
+
+            return response($dompdf->output(), 200)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', "inline; filename='$file_name'");
         } else {
             return redirect("/login");
         }

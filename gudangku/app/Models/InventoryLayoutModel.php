@@ -32,4 +32,12 @@ class InventoryLayoutModel extends Model
     protected $table = 'inventory_layout';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_room', 'inventory_storage', 'layout', 'storage_desc', 'created_at', 'created_by'];
+
+    public static function getInventoryByLayout($user_id, $room){
+        $res = InventoryLayoutModel::select('id','inventory_storage','layout','storage_desc')
+            ->where('created_by',$user_id)
+            ->where('inventory_room',$room);
+        
+        return $res->get();
+    }
 }

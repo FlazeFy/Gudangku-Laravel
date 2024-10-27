@@ -38,7 +38,7 @@
         vertical-align: middle;
     }
     .btn-layout-config{
-        margin: var(--textMD) 0 0 var(--textMD);
+        margin: var(--textXMD) 0 0 var(--textMD);
         font-size: var(--textXMD);
         font-weight: 500;
     }
@@ -264,6 +264,7 @@
         $('#room-container').append(`
             <div class='floor-config'>
                 <a class='d-inline-block btn-layout-config btn btn-success' onclick='expand_floor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
+                <a class='d-inline-block btn-layout-config btn btn-success' href='/doc/layout/${room}'><i class="fa-solid fa-print"></i> Print</a>
             </div>
         `)
     }

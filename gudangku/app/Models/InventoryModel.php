@@ -57,6 +57,16 @@ class InventoryModel extends Model
         return $res->get();
     }
 
+    public static function getInventoryByRoom($room,$user_id){
+        $res = InventoryModel::select('inventory_name','inventory_desc','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price','inventory_storage')
+            ->where('created_by',$user_id)
+            ->where('inventory_room',$room)
+            ->orderby('inventory_storage','ASC')
+            ->orderby('inventory_name','ASC');
+
+        return $res->get();
+    }
+
     public static function getCheckInventoryAvaiability($inventory_name, $user_id, $inventory_id){
         $check = InventoryModel::selectRaw('1')
             ->where('inventory_name',$inventory_name)
