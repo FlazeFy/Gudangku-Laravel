@@ -1,14 +1,14 @@
 <div class='container bordered'>
-    <div id="stats_total_report_created_per_month"></div>
+    <div id="stats_total_report_used_per_month"></div>
 </div>
 <script>
-    const get_total_report_created_per_month = (year) => {
+    const get_total_report_used_per_month = (year) => {
         Swal.showLoading()
-        const title = 'Total Report Created Per Month'
-        const ctx_holder = "stats_total_report_created_per_month"
+        const title = 'Total Report Used Per Month'
+        const ctx_holder = "stats_total_report_used_per_month"
 
         $.ajax({
-            url: `/api/v1/stats/report/total_created_per_month/${year}`,
+            url: `/api/v1/stats/report/total_used_per_month/${year}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
@@ -25,7 +25,7 @@
                 if(response.status != 404){
                     Swal.fire({
                         title: "Oops!",
-                        text: `Failed to get the stats Total Report Created Per Month in ${year}`,
+                        text: `Failed to get the stats Total Report Used Per Month in ${year}`,
                         icon: "error"
                     });
                 } else {
@@ -35,5 +35,5 @@
             }
         });
     }
-    get_total_report_created_per_month(year)
+    get_total_report_used_per_month(year)
 </script>

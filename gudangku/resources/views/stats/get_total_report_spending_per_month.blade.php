@@ -2,9 +2,11 @@
     <div id="stats_total_report_spending_per_month"></div>
 </div>
 <script>
-    const get_total_report_spending_per_month = () => {
-        const year = 2024
+    const get_total_report_spending_per_month = (year) => {
         Swal.showLoading()
+        const title = 'Total Report Spending Per Month'
+        const ctx_holder = "stats_total_report_spending_per_month"
+
         $.ajax({
             url: `/api/v1/stats/report/total_spending_per_month/${year}`,
             type: 'GET',
@@ -15,18 +17,23 @@
             success: function(response) {
                 Swal.close()
                 const data = response.data
-                generate_line_column_chart('Total Report Spending Per Month','stats_total_report_spending_per_month',data.map(({ total_item, ...rest }) => rest))
-                generate_table_context_total('stats_total_report_spending_per_month',data)
+                generate_line_column_chart(title,ctx_holder,data.map(({ total_item, ...rest }) => rest))
+                generate_table_context_total(ctx_holder,data)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get the stats",
-                    icon: "error"
-                });
+                if(response.status != 404){
+                    Swal.fire({
+                        title: "Oops!",
+                        text: `Failed to get the stats Total Report Spending Per Month in ${year}`,
+                        icon: "error"
+                    });
+                } else {
+                    template_alert_container(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>')
+                    $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
+                }
             }
         });
     }
-    get_total_report_spending_per_month()
+    get_total_report_spending_per_month(year)
 </script>

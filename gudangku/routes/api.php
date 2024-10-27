@@ -62,6 +62,7 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
     Route::prefix('/report')->group(function () {
         Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'get_total_report_created_per_month']);
         Route::get('/total_spending_per_month/{year}', [QueriesStatsController::class, 'get_total_report_spending_per_month']);
+        Route::get('/total_used_per_month/{year}', [QueriesStatsController::class, 'get_total_report_used_per_month']);
     });
 });
 
