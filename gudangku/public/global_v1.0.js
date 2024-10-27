@@ -1,3 +1,5 @@
+const statsFetchRestTime = 120
+
 const getDateToContext = (datetime, type) => {
     if(datetime){
         const result = new Date(datetime);
