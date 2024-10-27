@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 // Models
 use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
+use App\Models\ReminderModel;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -526,6 +527,127 @@ class Queries extends Controller
                     'message' => 'inventory fetched',
                     'data' => $res,
                     'stats' => $stats
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'inventory not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/detail/{id}",
+     *     summary="Get inventory detail",
+     *     description="Fetch inventory details and reminders by the given inventory's `id`. This request uses a MySQL database and requires authentication with a protected route.",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             example="09397f65-211e-3598-2fa5-b50cdba5183c"
+     *         ),
+     *         description="Inventory ID"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Inventory details fetched successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory fetched"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="string", example="83ce75db-4016-d87c-2c3c-db1e222d0001"),
+     *                 @OA\Property(property="inventory_name", type="string", example="Stand Bracket Laptop"),
+     *                 @OA\Property(property="inventory_category", type="string", example="Office Tools"),
+     *                 @OA\Property(property="inventory_desc", type="string", example="Stand 2 laptop dan hp"),
+     *                 @OA\Property(property="inventory_merk", type="string", example="A Merk"),
+     *                 @OA\Property(property="inventory_room", type="string", example="Main Room"),
+     *                 @OA\Property(property="inventory_storage", type="string", example="Desk"),
+     *                 @OA\Property(property="inventory_rack", type="string", example=null),
+     *                 @OA\Property(property="inventory_price", type="integer", example=28200),
+     *                 @OA\Property(property="inventory_image", type="string", example="https://firebasestorage.googleapis.com/v0/b/gudangku-94edc.appspot.com/o/inventory%2F2d98f524-de02-11ed-b5ea-0242ac120002_flazefy%2Fdbc22192-f630-4c68-8a95-d148de537bde?alt=media&token=ac5e7d97-9711-4f4e-b22e-4ff911cf6006"),
+     *                 @OA\Property(property="inventory_unit", type="string", example="Pcs"),
+     *                 @OA\Property(property="inventory_vol", type="integer", example=1),
+     *                 @OA\Property(property="inventory_capacity_unit", type="string", example=null),
+     *                 @OA\Property(property="inventory_capacity_vol", type="integer", example=null),
+     *                 @OA\Property(property="inventory_color", type="string", example=null),
+     *                 @OA\Property(property="is_favorite", type="integer", example=0),
+     *                 @OA\Property(property="is_reminder", type="integer", example=0),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-03-14 02:28:37"),
+     *                 @OA\Property(property="created_by", type="string", example="2d98f524-de02-11ed-b5ea-0242ac120002"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-25 09:37:20"),
+     *                 @OA\Property(property="deleted_at", type="string", format="date-time", example=null)
+     *             ),
+     *             @OA\Property(
+     *                 property="reminder",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="reminder_desc", type="string", example="Clean using hand sanitizer and micellar water"),
+     *                     @OA\Property(property="reminder_type", type="string", example="Every Month"),
+     *                     @OA\Property(property="reminder_context", type="string", example="Every 1"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2024-07-16T00:06:05.000000Z")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Authorization token required",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Inventory not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     )
+     * )
+     */
+    public function get_inventory_by_id(Request $request, $id){
+        try{
+            $user_id = $request->user()->id;
+
+            $res = InventoryModel::select('*')
+                ->where('created_by',$user_id)
+                ->where('id',$id)
+                ->first();
+            
+            if ($res) {
+                $reminder = ReminderModel::select('reminder_desc','reminder_type','reminder_context','created_at')
+                    ->where('created_by',$user_id)
+                    ->where('inventory_id',$id)
+                    ->get();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'inventory fetched',
+                    'data' => $res,
+                    'reminder' => $reminder
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

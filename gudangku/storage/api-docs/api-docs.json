@@ -115,7 +115,7 @@
                     "Dictionary"
                 ],
                 "summary": "Get dictionary by type",
-                "description": "This request is used to get dictionary by type. This request is using MySql database",
+                "description": "This request is used to get dictionary by type. Can be multiple dictionary type if separate using `,`. This request is using MySql database",
                 "operationId": "6d288a61d84cc02cf8edd8417d8b36f8",
                 "parameters": [
                     {
@@ -1302,6 +1302,144 @@
                 ]
             }
         },
+        "/api/v1/inventory/layout": {
+            "post": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Post inventory layout",
+                "operationId": "301030d32cd3c3ee9b3a5ec047594e5e",
+                "responses": {
+                    "201": {
+                        "description": "inventory layout coordinate created"
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "{validation_msg}",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "{field validation message}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/inventory/delete_layout/{id}/{coor}": {
+            "delete": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Delete inventory layout",
+                "operationId": "ae80b67dad513d00fbb6277ca9ad5095",
+                "responses": {
+                    "200": {
+                        "description": "inventory layout coordinate deleted"
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/inventory/list": {
             "get": {
                 "tags": [
@@ -1888,6 +2026,232 @@
                     },
                     "404": {
                         "description": "inventory failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/inventory/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get inventory detail",
+                "description": "Fetch inventory details and reminders by the given inventory's `id`. This request uses a MySQL database and requires authentication with a protected route.",
+                "operationId": "5e02e110b3ba4e5334cfa9d4eff6281a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Inventory ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "09397f65-211e-3598-2fa5-b50cdba5183c"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory details fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "83ce75db-4016-d87c-2c3c-db1e222d0001"
+                                                },
+                                                "inventory_name": {
+                                                    "type": "string",
+                                                    "example": "Stand Bracket Laptop"
+                                                },
+                                                "inventory_category": {
+                                                    "type": "string",
+                                                    "example": "Office Tools"
+                                                },
+                                                "inventory_desc": {
+                                                    "type": "string",
+                                                    "example": "Stand 2 laptop dan hp"
+                                                },
+                                                "inventory_merk": {
+                                                    "type": "string",
+                                                    "example": "A Merk"
+                                                },
+                                                "inventory_room": {
+                                                    "type": "string",
+                                                    "example": "Main Room"
+                                                },
+                                                "inventory_storage": {
+                                                    "type": "string",
+                                                    "example": "Desk"
+                                                },
+                                                "inventory_rack": {
+                                                    "type": "string",
+                                                    "example": null
+                                                },
+                                                "inventory_price": {
+                                                    "type": "integer",
+                                                    "example": 28200
+                                                },
+                                                "inventory_image": {
+                                                    "type": "string",
+                                                    "example": "https://firebasestorage.googleapis.com/v0/b/gudangku-94edc.appspot.com/o/inventory%2F2d98f524-de02-11ed-b5ea-0242ac120002_flazefy%2Fdbc22192-f630-4c68-8a95-d148de537bde?alt=media&token=ac5e7d97-9711-4f4e-b22e-4ff911cf6006"
+                                                },
+                                                "inventory_unit": {
+                                                    "type": "string",
+                                                    "example": "Pcs"
+                                                },
+                                                "inventory_vol": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "inventory_capacity_unit": {
+                                                    "type": "string",
+                                                    "example": null
+                                                },
+                                                "inventory_capacity_vol": {
+                                                    "type": "integer",
+                                                    "example": null
+                                                },
+                                                "inventory_color": {
+                                                    "type": "string",
+                                                    "example": null
+                                                },
+                                                "is_favorite": {
+                                                    "type": "integer",
+                                                    "example": 0
+                                                },
+                                                "is_reminder": {
+                                                    "type": "integer",
+                                                    "example": 0
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-03-14 02:28:37"
+                                                },
+                                                "created_by": {
+                                                    "type": "string",
+                                                    "example": "2d98f524-de02-11ed-b5ea-0242ac120002"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-10-25 09:37:20"
+                                                },
+                                                "deleted_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": null
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "reminder": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "reminder_desc": {
+                                                        "type": "string",
+                                                        "example": "Clean using hand sanitizer and micellar water"
+                                                    },
+                                                    "reminder_type": {
+                                                        "type": "string",
+                                                        "example": "Every Month"
+                                                    },
+                                                    "reminder_context": {
+                                                        "type": "string",
+                                                        "example": "Every 1"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-07-16T00:06:05.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authorization token required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Inventory not found",
                         "content": {
                             "application/json": {
                                 "schema": {

@@ -19,10 +19,6 @@
         <!-- CSS Collection -->
         <link rel="stylesheet" href="{{ asset('/global_v1.0.css') }}"/>
 
-        <!-- JS Collection -->
-        <script src="{{ asset('/global_v1.0.js')}}"></script>
-        <script src="{{ asset('/chart_v1.0.js')}}"></script>
-
         <!-- Jquery -->
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
@@ -49,6 +45,11 @@
 
         <!-- Tenserflow -->
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+
+        <!-- JS Collection -->
+        <script src="{{ asset('/global_v1.0.js')}}"></script>
+        <script src="{{ asset('/chart_v1.0.js')}}"></script>
+        <script src="{{ asset('/template_v1.0.js')}}"></script>
 
         <!-- Styles -->
         <style>

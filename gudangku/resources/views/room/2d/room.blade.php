@@ -103,6 +103,7 @@
                                 <td class='text-center'>${dt.inventory_category}</td>
                                 <td>Rp. ${number_format(dt.inventory_price, 0, ',', '.')}</td>
                                 <td class='text-center'>${dt.inventory_vol} ${dt.inventory_unit}</td>
+                                <td><a class="btn btn-warning modal-btn" href="/inventory/edit/${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></a></td>
                             </tr>
                         `)
                     });
@@ -117,11 +118,13 @@
                         </tr>
                     `)
                     Swal.close()
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the inventory",
-                        icon: "error"
-                    });
+                    if(response.status != 404){
+                        Swal.fire({
+                            title: "Oops!",
+                            text: "Something wrong. Please contact admin",
+                            icon: "error"
+                        });
+                    }
                 }
             });
         }
@@ -186,6 +189,7 @@
                                                     <th>Category</th>
                                                     <th>Price</th>
                                                     <th>Unit & Volume</th>
+                                                    <th>Edit</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>

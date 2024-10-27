@@ -13,6 +13,7 @@
 
     let page = 1
     const get_my_report_all = (page,search,id) => {
+        const item_holder = 'report_holder'
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/report/${search}/${id}?page=${page}`,
@@ -23,7 +24,6 @@
             },
             success: function(response) {
                 Swal.close()
-                const item_holder = 'report_holder'
                 const data = response.data.data
                 const current_page = response.data.current_page
                 const total_page = response.data.last_page
@@ -63,13 +63,16 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get the report",
-                    icon: "error"
-                });
+                if(response.status != 404){
+                    Swal.fire({
+                        title: "Oops!",
+                        text: "Something wrong. Please contact admin",
+                        icon: "error"
+                    });
+                } else {
+                    template_alert_container(item_holder, 'no-data', "This item doesn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')
+                }
             }
         });
     }
-    get_my_report_all(page,"<?= $inventory->inventory_name ?>","<?= $inventory->id ?>")
 </script>

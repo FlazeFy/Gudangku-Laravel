@@ -16,7 +16,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/dictionary/type/{type}",
      *     summary="Get dictionary by type",
-     *     description="This request is used to get dictionary by type. This request is using MySql database",
+     *     description="This request is used to get dictionary by type. Can be multiple dictionary type if separate using `,`. This request is using MySql database",
      *     tags={"Dictionary"},
      *     @OA\Parameter(
      *         name="type",
@@ -60,8 +60,17 @@ class Queries extends Controller
     public function get_dictionary_by_type(Request $request,$type)
     {
         try{
-            $res = DictionaryModel::select('dictionary_name')
-                ->where('dictionary_type',$type)
+            $res = DictionaryModel::select('dictionary_name','dictionary_type');
+            if(strpos($type, ',')){
+                $dcts = explode(",", $type);
+                foreach ($dcts as $dt) {
+                    $res = $res->orwhere('dictionary_type',$dt); 
+                }
+            } else {
+                $res = $res->where('dictionary_type',$type); 
+            }
+
+            $res = $res->orderby('dictionary_type', 'ASC')
                 ->orderby('dictionary_name', 'ASC')
                 ->get();
             

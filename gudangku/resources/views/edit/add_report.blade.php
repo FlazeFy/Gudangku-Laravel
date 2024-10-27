@@ -39,14 +39,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fw-bold" id="exampleModalLabel">Add Report using item : {{$inventory->inventory_name}}</h2>
+                <h2 class="modal-title fw-bold" id="exampleModalLabel">Add Report using item : <span id='inventory_name_title_add_report'></span></h2>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <form action="/inventory/edit/{{$inventory->id}}/editInventory/addReport" method="POST">
+                <form id='form_add_report' method="POST">
                     @csrf
-                    <input hidden value="{{$inventory->id}}" name="inventory_id">
-                    <input hidden value="{{$inventory->inventory_name}}" name="item_name">
+                    <input hidden id='inventory_id_add_report' name="inventory_id">
+                    <input hidden id='inventory_name_add_report' name="item_name">
 
                     <label>Title</label>
                     <input name="report_title" class="form-control" type="text" id="report_title" required>
@@ -55,11 +55,7 @@
                     <textarea name="report_desc" class="form-control"></textarea>
 
                     <label>Category</label>
-                    <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
-                        @foreach($dct_report as $dct)
-                            <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                        @endforeach
-                    </select>
+                    <select class="form-select" name="report_category" id="report_category" aria-label="Default select example"></select>
                     <hr>
                     <label>Item Notes</label>
                     <textarea class="form-control" name="item_desc" style="height: 100px"></textarea>

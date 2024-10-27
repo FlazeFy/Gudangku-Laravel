@@ -65,38 +65,11 @@
     }
 </style>
 
-<div class="img-holder">
-    <?php 
-        if($inventory->inventory_image){
-            echo "
-                <div class='no-image-picker' title='Change Image' id='no-image-picker'>
-                    <label for='file-input'>
-                        <img id='frame' class='m-2 inventory-image' title='Change Image' src='$inventory->inventory_image' />
-                    </label>
-                    <input id='file-input' type='file' accept='image/*' style='display: none;' onchange='setValueInventoryImage()'/>
-                </div>
-            ";
-        } else {
-            echo "
-                <div class='no-image-picker' title='Change Image' id='no-image-picker'>
-                    <label for='file-input'>
-                        <img id='frame' class='m-2' title='Change Image' style='width: var(--spaceXLG);' src='".asset('images/change_image.png')."' />
-                        <a>No image has been selected</a>
-                    </label>
-                    <input id='file-input' type='file' accept='image/*' style='display: none;' onchange='setValueInventoryImage()'/>
-                </div>
-            ";
-        }
-    ?>
-    </div>
-    <input hidden type="text" name="inventory_image" id="inventory_image_url" value="">
-
-    <canvas id="imageCanvas" style="display: none;"></canvas>
+<div class="img-holder" id='img_holder'></div>
+<input hidden type="text" name="inventory_image" id="inventory_image_url" value="">
+<canvas id="imageCanvas" style="display: none;"></canvas>
 <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
-
-@if($inventory->inventory_image)
-    <a class="btn btn-danger px-2 shadow" title="Reset to default image" onclick="clearImage()"><i class="fa-solid fa-trash-can"></i> Reset Image</a>
-@endif
+<div id='reset_img_btn_handler'></div>
 
 <script>
     const firebaseConfig = {
@@ -111,7 +84,7 @@
     firebase.initializeApp(firebaseConfig)
 
     let uploadedInventoryImageUrl = ""
-    function clearImage() {
+    function clearImage(id) {
         Swal.showLoading()
         document.getElementById('frame').src = "{{asset('images/default_inventory.jpg')}}";
         document.getElementById('inventory_image_url').value = null;
@@ -124,7 +97,7 @@
                 Swal.hideLoading()
                 document.getElementById('header-progress').innerHTML = `Inventory image has been removed`;
                 uploadedInventoryImageUrl = ""
-                update_image_url(uploadedInventoryImageUrl, '<?= $inventory->id ?>')
+                update_image_url(uploadedInventoryImageUrl, id)
             }).catch((error) => {
                 Swal.hideLoading()
                 Swal.fire({
@@ -137,7 +110,7 @@
         }        
     }
 
-    function setValueInventoryImage(){
+    function setValueInventoryImage(id){
         Swal.showLoading()
         let cheader_file_src = document.getElementById('file-input').files[0];
         let filePath = 'inventory/<?= session()->get('id_key') ?>_<?= session()->get('username_key') ?>/' + getUUID();
@@ -168,7 +141,7 @@
                 document.getElementById('inventory_image_url').value = downloadUrl;
                 uploadedInventoryImageUrl = downloadUrl;
 
-                update_image_url(uploadedInventoryImageUrl, '<?= $inventory->id ?>')
+                update_image_url(uploadedInventoryImageUrl, id)
             });
         });
     }
