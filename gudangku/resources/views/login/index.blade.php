@@ -29,8 +29,8 @@
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div class="p-5">
-                <h2 class="text-white fw-bold" style="font-size:36px;">Welcome to Gudangku</h2>
+            <div class="me-4 text-center">
+                @include('login.landing')
             </div>
             @include('login.form')
         </div>
