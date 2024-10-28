@@ -70,11 +70,15 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get the layout",
-                    icon: "error"
-                });
+                if(response.status != 404){
+                    Swal.fire({
+                        title: "Oops!",
+                        text: "Failed to get the layout",
+                        icon: "error"
+                    });
+                } else {
+                    generate_map_room(null)
+                }
             }
         });
     }
@@ -230,11 +234,21 @@
     }
 
     const generate_map_room = (data) => {
-        const floor_range = generate_floor_range(data)
-        const rows = floor_range.rows
-        let letters = floor_range.letters
-        const cols = floor_range.cols
-        
+        let rows
+        let letters
+        let cols
+
+        if(data){
+            const floor_range = generate_floor_range(data)
+            rows = floor_range.rows
+            letters = floor_range.letters
+            cols = floor_range.cols
+        } else {
+            rows = 5
+            letters = 'ABCDE'
+            cols = 5
+        }
+
         for (let row = 1; row <= rows; row++) {
             const rowContainer = $('<div class="row"></div>')
             for (let col = 0; col < cols; col++) {
@@ -242,17 +256,21 @@
                 let used = false
                 let inventory_storage = null
                 let storage_desc = null
-                data.forEach(dt => {
-                    const coor = dt.layout.split(':')
-                    coor.forEach(cr => {
-                        if(cr == label){
-                            used = true
-                            inventory_storage = dt.inventory_storage
-                            storage_desc = dt.storage_desc
-                            id = dt.id
-                        }
+                let id = null
+
+                if(data){
+                    data.forEach(dt => {
+                        const coor = dt.layout.split(':')
+                        coor.forEach(cr => {
+                            if(cr == label){
+                                used = true
+                                inventory_storage = dt.inventory_storage
+                                storage_desc = dt.storage_desc
+                                id = dt.id
+                            }
+                        });
                     });
-                });
+                }
 
                 const modal = generate_modal_detail(inventory_storage, storage_desc, room, label, id)
                 const button = $(`
@@ -268,7 +286,7 @@
         $('#room-container').append(`
             <div class='floor-config'>
                 <a class='d-inline-block btn-layout-config btn btn-success' onclick='expand_floor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
-                <a class='d-inline-block btn-layout-config btn btn-success' href='/doc/layout/${room}'><i class="fa-solid fa-print"></i> Print</a>
+                ${data && `<a class='d-inline-block btn-layout-config btn btn-success' href='/doc/layout/${room}'><i class="fa-solid fa-print"></i> Print</a>`}
             </div>
         `)
     }

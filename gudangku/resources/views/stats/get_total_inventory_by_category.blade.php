@@ -43,7 +43,6 @@
         if(ctx in localStorage){
             const lastHit = parseInt(localStorage.getItem(`last-hit-${ctx}`))
             const now = Date.now()
-            console.log((now - lastHit) / 1000)
 
             if(((now - lastHit) / 1000) < statsFetchRestTime){
                 const data = JSON.parse(localStorage.getItem(ctx))

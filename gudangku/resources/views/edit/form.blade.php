@@ -164,11 +164,15 @@
                 $('#reminder_desc').text(data.reminder_desc)
                 
                 $('#inventory_name_add_report').val(data.inventory_name)
-                $('#inventory_name_title_add_report').val(data.inventory_name)
+                $('#inventory_name_title_add_report').text(data.inventory_name)
                 $('#inventory_id_add_report').val(data.id)
                 $('#form_add_report').attr('action', `/inventory/edit/${data.id}/editInventory/addReport`)
                 $('#form_edit_inventory').attr('action', `/inventory/edit/${data.id}/editInventory`)
                 get_my_report_all(page,data.inventory_name,data.id)
+
+                $('#inventory_name_add_reminder').val(data.inventory_name)
+                $('#inventory_name_title_add_reminder').text(data.inventory_name)
+                $('#inventory_id_add_reminder').val(data.id)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
