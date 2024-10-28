@@ -86,6 +86,7 @@
             success: function(response) {
                 Swal.close()
                 const data = response.data
+                const reminder = response.reminder
 
                 if(data.inventory_image){
                     $('#inventory_color_holder').html(`
@@ -113,23 +114,54 @@
                     `)
                 }
 
-                if(data.reminder){
-                    $('#reminder_holder').html(`
-                        <div class="row">
-                            <div class="col-lg-6 py-2">
-                                <label>Type</label>
-                                <select class="form-select mt-2" name="reminder_type" id="reminder_type" aria-label="Default select example"></select>
+                if(reminder){
+                    $('#reminder_holder').empty()
+                    reminder.forEach(dt => {
+                        $('#reminder_holder').append(`
+                            <div class="btn btn-primary w-100 text-start mt-3 mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReminder${dt.id}" aria-expanded="false" aria-controls="collapseExample">
+                                <div class='d-flex justify-content-between'>
+                                    <a>Reminder : ${dt.reminder_desc}</a>
+                                    <span class='rounded-pill bg-success px-2 py-1' style='font-size:var(--textMD); font-weight:600;'><i class="fa-solid fa-bell"></i> ${dt.reminder_type} at ${dt.reminder_context}</span>
+                                </div>
                             </div>
-                            <div class="col-lg-6 py-2">
-                                <label>Context</label>
-                                <select class="form-select mt-2" name="reminder_context" id="reminder_context" aria-label="Default select example"></select>
+                            <div class="collapse" id="collapseReminder${dt.id}">
+                                <div class="container py-0">
+                                    <div class='d-flex justify-content-between'>
+                                        <a class='text-secondary fst-italic'>Created at <span>${dt.created_at}</span></a>
+                                        <a class='btn btn-danger' data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${dt.id}"><i class="fa-solid fa-trash"></i> Delete Reminder</a>
+                                        <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" id="modalDeleteReminder_${dt.id}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete Reminder</h2>
+                                                        <a class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h2><span class="text-danger">Permentally Delete</span> this reminder "${dt.reminder_desc}"?</h2>
+                                                        <a class="btn btn-danger mt-4" onclick='delete_reminder("${dt.id}")'>Yes, Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 py-2">
+                                            <label>Type</label>
+                                            <select class="form-select mt-2" name="reminder_type" aria-label="Default select example"></select>
+                                        </div>
+                                        <div class="col-lg-6 py-2">
+                                            <label>Context</label>
+                                            <select class="form-select mt-2" name="reminder_context" aria-label="Default select example"></select>
+                                        </div>
+                                        <div class="col-lg-6 py-2">
+                                            <label>Description</label>
+                                            <textarea name="reminder_desc" class="form-control mt-2">${dt.reminder_desc}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-lg-6 py-2">
-                                <label>Description</label>
-                                <textarea name="reminder_desc" class="form-control mt-2"></textarea>
-                            </div>
-                        </div>
-                    `)
+                        `)
+                    });
                 } else {
                     $('#reminder_holder').html(`
                         <div class="container p-3" style="background-color:rgba(59, 131, 246, 0.2);">
@@ -139,7 +171,7 @@
                                 </div>
                                 <div>
                                     <h4>This item doesn't have reminder</h4>
-                                    <a class="btn btn-primary mt-3"><i class="fa-solid fa-plus"></i> Add New Reminder</a>
+                                    <a class="btn btn-primary mt-3" data-bs-toggle='modal' data-bs-target='#modalAddReminder'><i class="fa-solid fa-plus"></i> Add New Reminder</a>
                                 </div>
                             </div>
                         </div>
@@ -201,12 +233,18 @@
                 const data = response.data
                 
                 data.forEach(dt => {
-                    if(dt.dictionary_type == 'inventory_unit'){
-                        $('#inventory_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
-                        $('#inventory_capacity_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
-                    } else {
-                        $(`#${dt.dictionary_type}`).append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
-                    }
+                    $( document ).ready(function() {
+                        if(dt.dictionary_type == 'inventory_unit'){
+                            $('#inventory_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
+                            $('#inventory_capacity_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
+                        } else if(dt.dictionary_type == 'reminder_type' || dt.dictionary_type == 'reminder_context'){
+                            $(`select[name="${dt.dictionary_type}"]`).each(function() {
+                                $(this).append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
+                            });
+                        } else {
+                            $(`#${dt.dictionary_type}`).append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
+                        }
+                    });
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
@@ -215,6 +253,41 @@
                     Swal.fire({
                         title: "Oops!",
                         text: "Something wrong. Please contact admin",
+                        icon: "error"
+                    });
+                }
+            }
+        });
+    }
+    const delete_reminder = (id) => {
+        Swal.showLoading()
+        $.ajax({
+            url: `/api/v1/reminder/${id}`,
+            type: 'DELETE',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.close()
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success"
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                if(response.status != 404){
+                    Swal.fire({
+                        title: "Oops!",
+                        text: "Something wrong. Please contact admin",
+                        icon: "error"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Oops!",
+                        text: response.responseJSON.message,
                         icon: "error"
                     });
                 }

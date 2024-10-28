@@ -27,7 +27,7 @@ class Commands extends Controller
      * @OA\POST(
      *     path="/api/v1/reminder",
      *     summary="Create a reminder",
-     *     tags={"Report"},
+     *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=201,
@@ -136,6 +136,90 @@ class Commands extends Controller
                     'status' => 'failed',
                     'message' => 'reminder with same type and context has been used',
                 ], Response::HTTP_CONFLICT);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/reminder/{id}",
+     *     summary="Delete reminder by id",
+     *     tags={"Reminder"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Reminder ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="reminder deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="reminder deleted")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="reminder not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="reminder not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function delete_reminder_by_id(Request $request, $id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $reminder = ReminderModel::select('reminder_desc','inventory_name')
+                ->join('inventory','inventory.id','=','reminder.inventory_id')
+                ->where('reminder.id',$id)
+                ->first();
+
+            $res = ReminderModel::where('created_by', $user_id)
+                ->where('id',$id)
+                ->delete();
+
+            if($reminder && $res > 0){
+                // History
+                Audit::createHistory('Delete Reminder', "$reminder->reminder_desc for inventory $reminder->inventory_name", $user_id);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'reminder deleted',
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'reminder not found',
+                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([

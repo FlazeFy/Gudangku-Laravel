@@ -70,6 +70,7 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/', [CommandsReminderController::class, 'post_reminder']);
+    Route::delete('/{id}', [CommandsReminderController::class, 'delete_reminder_by_id']);
 });
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {

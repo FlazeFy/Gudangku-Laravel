@@ -594,6 +594,7 @@ class Queries extends Controller
      *                 property="reminder",
      *                 type="array",
      *                 @OA\Items(
+     *                     @OA\Property(property="id", type="string", example="26c0092a-5013-2a81-3a36-fc0abeb7ce6e"),
      *                     @OA\Property(property="reminder_desc", type="string", example="Clean using hand sanitizer and micellar water"),
      *                     @OA\Property(property="reminder_type", type="string", example="Every Month"),
      *                     @OA\Property(property="reminder_context", type="string", example="Every 1"),
@@ -638,7 +639,7 @@ class Queries extends Controller
                 ->first();
             
             if ($res) {
-                $reminder = ReminderModel::select('reminder_desc','reminder_type','reminder_context','created_at')
+                $reminder = ReminderModel::select('id','reminder_desc','reminder_type','reminder_context','created_at')
                     ->where('created_by',$user_id)
                     ->where('inventory_id',$id)
                     ->get();
@@ -647,7 +648,7 @@ class Queries extends Controller
                     'status' => 'success',
                     'message' => 'inventory fetched',
                     'data' => $res,
-                    'reminder' => $reminder
+                    'reminder' => count($reminder) > 0 ? $reminder : null
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
