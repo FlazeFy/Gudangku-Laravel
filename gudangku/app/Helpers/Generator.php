@@ -117,4 +117,52 @@ class Generator
             ";
         }
     }
+
+    public static function getRandomDate($null){
+        if($null == 0){
+            $start = strtotime('2023-01-01 00:00:00');
+            $end = strtotime(date("Y-m-d H:i:s"));
+            $random = mt_rand($start, $end); 
+            $res = date('Y-m-d H:i:s', $random);
+        } else {
+            $res = null;
+        }
+
+        return $res;
+    }
+
+    public static function getRandomTimezone(){
+        $symbol = ['+','-'];
+        $ran = mt_rand(0, 1);
+        $select_symbol = $symbol[$ran];
+        if($select_symbol == '+'){
+            $hour = mt_rand(0, 14);
+        } else {
+            $hour = mt_rand(0, 12);
+        }
+
+        $timezone = "$select_symbol$hour:00";
+        return $timezone;
+    }
+
+    public static function getRandomVol($unit){
+        if($unit == 'Kilogram'){
+            $res = mt_rand(1, 30);
+        } else if($unit == 'Pcs'){
+            $res = mt_rand(1, 20);
+        } else if($unit == 'Liter'){
+            $res = mt_rand(1, 5);
+        } else if($unit == 'Ml'){
+            $res = mt_rand(25, 750);
+            $res = round($res / 5) * 5;
+        }
+        return $res;
+    }
+
+    public static function getRandomStorage(){
+        $storages = ["Main Table","Secondary Table","Desk","Wardrobe","Cabinet","Shelf","Top Drawer","Bottom Drawer","Center Drawer","Locker","Cupboard","Top Rack","Bottom Rack",
+            "Center Rack","Box","Container","Crate","Closet","Stand","Case","Safe","Pantry"];
+        $ran = mt_rand(0, count($storages)-1);
+        return $storages[$ran];
+    }
 }

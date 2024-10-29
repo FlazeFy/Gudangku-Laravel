@@ -259,13 +259,15 @@
                     });
                     calendar.addEventSource(events)
                 },
-                error: function() {
+                error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close();
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the stats",
-                        icon: "error"
-                    });
+                    if(response.status != 404){
+                        Swal.fire({
+                            title: "Oops!",
+                            text: "Failed to get the calendar",
+                            icon: "error"
+                        });
+                    }
                 }
             });
         };

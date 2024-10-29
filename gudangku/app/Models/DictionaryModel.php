@@ -26,4 +26,15 @@ class DictionaryModel extends Model
     protected $table = 'dictionary';
     protected $primaryKey = 'id';
     protected $fillable = ['dictionary_type', 'dictionary_name'];
+
+    public static function getRandom($null,$type){
+        if($null == 0){
+            $data = DictionaryModel::inRandomOrder()->take(1)->where('dictionary_type',$type)->first();
+            $res = $data->dictionary_name;
+        } else {
+            $res = null;
+        }
+        
+        return $res;
+    }
 }

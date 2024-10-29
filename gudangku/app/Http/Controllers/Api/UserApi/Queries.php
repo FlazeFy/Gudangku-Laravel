@@ -81,7 +81,7 @@ class Queries extends Controller
             $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
             
             if ($res) {
-                $res = $res->role = 'user';
+                $res->role = 'user';
                 return response()->json([
                     'status' => 'success',
                     'message' => 'user fetched',

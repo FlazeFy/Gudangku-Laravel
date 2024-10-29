@@ -12,6 +12,7 @@
     let page = 1
     const get_history = (page) => {
         Swal.showLoading()
+        const item_holder = 'history_holder'
         $.ajax({
             url: `/api/v1/history?page=${page}`,
             type: 'GET',
@@ -21,7 +22,6 @@
             },
             success: function(response) {
                 Swal.close()
-                const item_holder = 'history_holder'
                 const data = response.data.data
                 const current_page = response.data.current_page
                 const total_page = response.data.last_page
@@ -64,11 +64,16 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get the report",
-                    icon: "error"
-                });
+                if(response.status != 404){
+                    Swal.fire({
+                        title: "Oops!",
+                        text: "Failed to get the history",
+                        icon: "error"
+                    });
+                } else {
+                    template_alert_container(item_holder, 'no-data', "No history found to show", null, '<i class="fa-solid fa-rotate-left"></i>')
+                    $(`#${item_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
+                }
             }
         });
     }

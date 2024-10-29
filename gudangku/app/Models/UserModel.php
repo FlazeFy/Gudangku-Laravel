@@ -47,4 +47,15 @@ class UserModel extends Authenticatable
 
         return $res;
     }
+
+    public static function getRandom($null){
+        if($null == 0){
+            $data = UserModel::inRandomOrder()->take(1)->first();
+            $res = $data->id;
+        } else {
+            $res = null;
+        }
+        
+        return $res;
+    }
 }

@@ -7,7 +7,7 @@ const template_alert_container = (target, type, msg, btn_title, icon) => {
                 </div>
                 <div>
                     <h4>${msg}</h4>
-                    <a class="btn btn-primary mt-3"><i class="${type == 'no-data'? 'fa-solid fa-plus':''}"></i> ${ucEachWord(btn_title)}</a>
+                    ${btn_title != null ? `<a class="btn btn-primary mt-3"><i class="${type == 'no-data'? 'fa-solid fa-plus':''}"></i> ${ucEachWord(btn_title)}</a>`:''}
                 </div>
             </div>
         </div>

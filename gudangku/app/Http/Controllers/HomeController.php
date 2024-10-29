@@ -18,9 +18,6 @@ use Twilio\Rest\Client;
 
 class HomeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
