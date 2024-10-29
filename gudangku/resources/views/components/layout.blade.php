@@ -59,7 +59,18 @@
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            @yield('content')
+            <div>
+                @yield('content')
+                <footer class="py-3 my-4">
+                    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                        <li class="nav-item"><a href="/" class="nav-link px-2">Landing</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link px-2">Features</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link px-2">FAQs</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link px-2">About</a></li>
+                    </ul>
+                    <p class="text-center">© 2024 Part Of FlazenApps</p>
+                </footer>
+            </div>
         </div>
     </body>
     
@@ -67,14 +78,4 @@
     @include('components.modal.success')
     @include('components.modal.success_mini')
     @include('components.modal.failed')
-
-    <footer class="py-3 my-4">
-        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Landing</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
-        </ul>
-        <p class="text-center text-muted">© 2024 Part Of FlazenApps</p>
-    </footer>
 </html>

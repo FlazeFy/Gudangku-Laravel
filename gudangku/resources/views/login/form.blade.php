@@ -56,10 +56,12 @@
                 }
                 
                 if(found){
+                    localStorage.setItem('token_key',response.token)
                     $('#token').val(response.token)
                     $('#role').val(response.role)
                     $('#email').val(response.result.email)
                     $('#id').val(response.result.id)
+                    is_submit = true
                     $('#form-login').submit()
                 } else {
                     $('#username_msg').html("")

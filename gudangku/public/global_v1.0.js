@@ -176,3 +176,108 @@ const number_format = (number, decimals, dec_point, thousands_sep) => {
     
     return x1 + x2;
 }
+
+const check_filling_status = (list) => {
+    return list.some((dt) => {
+        const el = $(`#${dt}`)
+        const tag = el.prop("tagName").toLowerCase()
+        const type = el.attr("type") || null
+        
+        if (tag === 'input') {
+            if ((type === 'text' || type === 'email' || type === 'password') && el.val().trim() !== '') {
+                return true
+            }
+            if (type === 'checkbox' && el.is(":checked")) {
+                return true
+            }
+        }
+        return false
+    });
+}
+
+const formValidation = () => {
+    $(document).ready(function() {
+        $('.form-validated').each(function(idx, el) {
+            if ($(this).is('input, textarea')) {
+                if ($(this).attr('name')) {
+                    const name = ucEachWord($(this).attr('name').trim().replaceAll('_',' '))
+                    const type = $(this).attr('type')
+                    const is_required = $(this).attr('required') === undefined ? false : true
+                    let max
+                    let min
+                    let lengthTitle = ''
+
+                    if(type == 'number'){
+                        max = $(this).attr('max') === undefined ? null : $(this).attr('max')
+                        min = $(this).attr('min') === undefined ? null : $(this).attr('min')
+                    } else {
+                        max = $(this).attr('maxlength') === undefined ? null : $(this).attr('maxlength')
+                        min = $(this).attr('minlength') === undefined ? null : $(this).attr('minlength')
+                    }
+
+                    if(max || min){
+                        lengthTitle += '. Have '
+                        if(type == 'number'){
+                            if(max){
+                                lengthTitle += `max value up to ${max}`
+                            }
+                            if(max && min){ lengthTitle += ' and ' }
+                            if(min){
+                                lengthTitle += `min value down to ${min}`
+                            }
+                        } else {
+                            if(max){
+                                lengthTitle += `max character up to ${max} characters`
+                            }
+                            if(max && min){ lengthTitle += ' and ' }
+                            if(min){
+                                lengthTitle += `min character down to ${min} characters`
+                            }
+                        }
+                        $(this).after(`<span id='alert-holder-${idx}-${$(this).attr('name')}'></span>`)
+                    }
+
+                    $(this).before(`<label title='This input is ${is_required ? 'mandatory' : 'optional'}${lengthTitle}'>${is_required == true ? `<span class='text-danger'>*</span>`:''}${name}</label>`)
+
+                    $(document).on('input', `.form-validated`, function(idx2, el2) {            
+                        const val = $(this).val().trim()
+                        let lengthWarning = ''
+                        
+                        if(type == 'number'){
+                            if(max && val >= max){
+                                lengthWarning = `${name} has reached the maximum value. The limit is ${max}`
+                            }
+                            if(min && val <= min){
+                                lengthWarning = `${name} has reached the minimum value. The limit is ${min}`
+                            }
+                        } else {
+                            if(max && val.length >= max){
+                                lengthWarning = `${name} has reached the maximum characters. The limit is ${max} characters`
+                            }
+                            if(min && val.length <= min){
+                                lengthWarning = `${name} has reached the minimum characters. The limit is ${min} characters`
+                            }
+                        }
+
+                        if(lengthWarning != ''){
+                            $(`#alert-holder-${idx}-${$(this).attr('name')}`).html(`<label class='text-danger fst-italic' style='font-size:12px;'><i class="fa-solid fa-triangle-exclamation"></i> ${lengthWarning}</label><br>`)
+                            $(this).css({
+                                'border':'2px solid var(--dangerBG)'
+                            })
+                        } else {
+                            $(`#alert-holder-${idx}-${$(this).attr('name')}`).empty()
+                            $(this).css({
+                                'border':'1.5px solid var(--primaryColor)'
+                            })
+                        }
+                    })                  
+                } else {
+                    alert(`Can't validate a form with index - ${idx}: No name attribute`)
+                }
+            } else {
+                alert(`Can't validate a form with index - ${idx} : Not valid form validation`)
+            }
+        });
+    });
+}
+formValidation()

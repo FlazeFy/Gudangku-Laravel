@@ -266,7 +266,7 @@ class Commands extends Controller
 
                         dispatch(new UserMailer($ctx, $data, $username, $email));
 
-                        if(!Hash::check($request->password, $user->password)){
+                        if(Hash::check($request->password, $user->password)){
                             $token = $user->createToken('login')->plainTextToken;
 
                             return response()->json([

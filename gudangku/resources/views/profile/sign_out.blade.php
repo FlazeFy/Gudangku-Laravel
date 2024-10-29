@@ -27,16 +27,17 @@
                 "Authorization": "Bearer <?= session()->get("token_key"); ?>"
             },
             success: function(data, textStatus, jqXHR) {
-                sessionStorage.clear();
-                $('#form-sign-out').submit();
+                sessionStorage.clear()
+                localStorage.clear()
+                $('#form-sign-out').submit()
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status == 401) {
-                    sessionStorage.clear();
-                    window.location.href = "/login";
+                    sessionStorage.clear()
+                    localStorage.clear()
+                    window.location.href = "/login"
                 }
             }
         });
     }
-
 </script>

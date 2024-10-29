@@ -5,4 +5,15 @@
         <br><br>
         @include('register.form')
     </div>
+    <script>
+        is_process = false
+        window.addEventListener('beforeunload', function(event) {
+            is_process = check_filling_status(['checkTerm','username','password','email','password_validation'])
+            console.log(is_process)
+            if(is_process == true){
+                event.preventDefault()
+                event.returnValue = ''
+            }
+        });
+    </script>
 @endsection

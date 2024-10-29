@@ -288,6 +288,10 @@ li::marker {
     font-size: 1.5em !important; 
 }
 
+footer {
+    color: var(--whiteColor) !important;
+}
+
 /* Mobile & Tablet style */
 @media screen and (max-width: 1023px) {
     .btn-feature {
