@@ -28,6 +28,8 @@
             const data_item = response.data_item
             let select_cat_el = ''
 
+            $('#created_at').text(getDateToContext(data.created_at,'calendar'))
+            $('#updated_at').text(data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-')
             list_cat.forEach(el => {
                 select_cat_el += `<option value='${el}' ${el == data.report_category && 'selected'}>${el}</option>`
             });
@@ -107,7 +109,7 @@
                 ${(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist') && `
                     <div class="d-flex justify-content-between mt-3">
                         <div>
-                            <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price: Rp. ${data.total_price}</h3>
+                            <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price: Rp. ${number_format(data.total_price, 0, ',', '.')}</h3>
                         </div>
                         <div>
                             <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Item: ${data.total_item}</h3>
@@ -128,7 +130,7 @@
                         <td>${dt.item_name}</td>
                         <td>${dt.item_desc ?? '<span class="fst-italic text-secondary">- No Description Provided -</span>'}</td>
                         <td>${dt.item_qty}</td>
-                        ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td>Rp. ${dt.item_price}</td>` : ''}
+                        ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td>Rp. ${number_format(dt.item_price, 0, ',', '.')}</td>` : ''}
                         <td>${getDateToContext(dt.created_at,'calendar')}</td>
                         <td><button class="btn btn-warning"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button></td>
                         <td>

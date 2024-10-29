@@ -91,6 +91,12 @@ button:hover, .btn:hover {
     transform: scale(1.05);
 }
 
+.date-text {
+    font-size: var(--textXMD);
+    color: var(--greyColor) !important;
+    font-style: italic;
+}
+
 .error_input {
     color: var(--dangerBG) !important;
     font-size: var(--textMD);

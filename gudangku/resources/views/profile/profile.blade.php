@@ -10,7 +10,7 @@
 <input type="text" name="telegram_user_id" id="telegram_user_id" class="form-control mt-2"/><br>
 <input id="telegram_user_id_old" hidden/>
 <div id="telegram_validation_status_box"></div>
-<label class="fst-italic">Joined since <span class="date_holder" id="created_at_holder"></span></label>
+<label class="fst-italic">Joined since <span id="created_at_holder"></span></label>
 
 <script>
     const get_my_profile = () => {
@@ -56,7 +56,7 @@
                                         <button class="btn btn-success bg-success ms-2" style="width:240px;" type="submit">Validate Token</button>
                                     </div>
                                 </form>
-                                <a class="fst-italic" style="font-size:var(--textMD);">Requested at <span class="date_holder">${getDateToContext(tele_data.created_at,'calendar')}</span></a>
+                                <a class="fst-italic" style="font-size:var(--textMD);">Requested at <span>${getDateToContext(tele_data.created_at,'calendar')}</span></a>
                             </div>
                         `)
                         $('#telegram_user_id').attr('disabled', true)
@@ -74,13 +74,6 @@
         });
     }
     get_my_profile()
-
-    const date_holder = document.querySelectorAll('.date_holder')
-
-    date_holder.forEach(e => {
-        const date = new Date(e.textContent);
-        e.textContent = getDateToContext(e.textContent, "datetime")
-    });
 
     function validate_telegram_change(){
         const tele_id_new = $("#telegram_user_id").val()

@@ -114,7 +114,7 @@ const generate_line_column_chart = (title, holder, data) => {
     }
 }
 
-const generate_table_context_total = (holder, data) => {
+const generate_table_context_total = (holder, data, key_currency) => {
     if(data.length > 0){
         let keys = Object.keys(data[0])
         let thead = `<thead style='background:var(--primaryColor);'><tr>`
@@ -127,7 +127,7 @@ const generate_table_context_total = (holder, data) => {
         data.forEach(el => {
             tbody += '<tr>'
             keys.forEach(key => {
-                tbody += `<td>${el[key]}</td>`
+                tbody += `<td>${key.includes('price') || (key.includes(key_currency) && key_currency) ? `Rp. ${number_format(el[key], 0, ',', '.')}` : el[key]}</td>`
             });
             tbody += '</tr>'
         });

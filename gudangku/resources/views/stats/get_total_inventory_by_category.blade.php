@@ -7,6 +7,7 @@
         const title = 'Inventory By Category'
         const ctx = 'total_inventory_by_category_temp'
         const ctx_holder = 'stats_total_inventory_by_category_holder'
+        const type_chart =  '<?= session()->get('toogle_total_stats') ?>'
 
         const failedMsg = () => {
             Swal.fire({
@@ -17,7 +18,7 @@
         }
         const fetchData = () => {
             $.ajax({
-                url: `/api/v1/stats/inventory/total_by_category/<?= session()->get('toogle_total_stats') ?>`,
+                url: `/api/v1/stats/inventory/total_by_category/${type_chart}`,
                 type: 'GET',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Accept", "application/json")
@@ -28,8 +29,8 @@
                     const data = response.data
                     localStorage.setItem(ctx,JSON.stringify(data))
                     localStorage.setItem(`last-hit-${ctx}`,Date.now())
-                    generate_pie_chart(`Total <?= session()->get('toogle_total_stats') ?> ${title}`,ctx_holder,data)
-                    generate_table_context_total(ctx_holder,data)
+                    generate_pie_chart(`Total ${type_chart} ${title}`,ctx_holder,data)
+                    generate_table_context_total(ctx_holder,data,type_chart == 'price' && ['total'])
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
@@ -50,8 +51,8 @@
             if(((now - lastHit) / 1000) < statsFetchRestTime){
                 const data = JSON.parse(localStorage.getItem(ctx))
                 if(data){
-                    generate_pie_chart(`Total <?= session()->get('toogle_total_stats') ?> ${title}`,ctx_holder,data)
-                    generate_table_context_total(ctx_holder,data)
+                    generate_pie_chart(`Total ${type_chart} ${title}`,ctx_holder,data)
+                    generate_table_context_total(ctx_holder,data,type_chart == 'price' && ['total'])
                     Swal.close()
                 } else {
                     Swal.close()

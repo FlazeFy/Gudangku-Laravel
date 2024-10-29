@@ -125,9 +125,12 @@
                                 </div>
                             </div>
                             <div class="collapse" id="collapseReminder${dt.id}">
-                                <div class="container py-0">
+                                <div class="container py-0 ps-4 ms-5 w-auto" style='border-left: var(--spaceMini) solid var(--primaryColor); border-radius:0;'>
                                     <div class='d-flex justify-content-between'>
-                                        <a class='text-secondary fst-italic'>Created at <span>${dt.created_at}</span></a>
+                                        <div>
+                                            <h6 class='date-text'>Created At : ${getDateToContext(dt.created_at,'calendar')}</h6>
+                                            <h6 class='date-text mt-2'>Last Updated : ${dt.updated_at ? getDateToContext(dt.updated_at,'calendar') : '-'}</h6>
+                                        </div>
                                         <a class='btn btn-danger' data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${dt.id}"><i class="fa-solid fa-trash"></i> Delete Reminder</a>
                                         <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" id="modalDeleteReminder_${dt.id}" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -178,7 +181,6 @@
                     `)
                 }
                 
-                
                 $('#inventory_name').val(data.inventory_name)
                 $('#inventory_desc').text(data.inventory_desc)
                 $('#inventory_storage').val(data.inventory_storage)
@@ -194,6 +196,8 @@
                 $('#reminder_type').val(data.reminder_type)
                 $('#reminder_context').val(data.reminder_context)
                 $('#reminder_desc').text(data.reminder_desc)
+                $('#created_at').text(getDateToContext(data.created_at,'calendar'))
+                $('#updated_at').text(data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-')
                 
                 $('#inventory_name_add_report').val(data.inventory_name)
                 $('#inventory_name_title_add_report').text(data.inventory_name)

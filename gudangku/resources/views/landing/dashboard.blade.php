@@ -80,7 +80,7 @@
                 $('#most_category_total').html(data.most_category ? data.most_category.total : '-')
                 $('#most_category_context').html(data.most_category ? data.most_category.context : '-')
                 $('#highest_price_name').html(data.highest_price ? data.highest_price.inventory_name : '-')
-                $('#highest_price').html(data.highest_price ? data.highest_price.inventory_price : '-')
+                $('#highest_price').html(data.highest_price ? `Rp. ${number_format(data.highest_price.inventory_price, 0, ',', '.')}` : '-')
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
