@@ -572,8 +572,8 @@ class Queries extends Controller
             $user_id = $request->user()->id;
 
             $res = ReportModel::selectRaw("
-                    SUM(CASE WHEN report_category = 'Checkout' THEN 1 ELSE 0 END) as total_checkout,
-                    SUM(CASE WHEN report_category = 'Wash List' THEN 1 ELSE 0 END) as total_washlist,
+                    CAST(SUM(CASE WHEN report_category = 'Checkout' THEN 1 ELSE 0 END) AS UNSIGNED) as total_checkout,
+                    CAST(SUM(CASE WHEN report_category = 'Wash List' THEN 1 ELSE 0 END) AS UNSIGNED) as total_washlist,
                     MONTH(report.created_at) as context
                 ")
                 ->join('report_item', 'report_item.report_id', '=', 'report.id')

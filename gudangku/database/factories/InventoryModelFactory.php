@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Helpers\Generator;
 use App\Models\DictionaryModel;
+use App\Models\UserModel;
 
 class InventoryModelFactory extends Factory
 {

@@ -68,4 +68,14 @@ class ReportModel extends Model
 
         return $res->first();
     }   
+
+    public static function getRandom($null,$user_id){
+        if($null == 0){
+            $res = ReportModel::inRandomOrder()->take(1)->where('created_by',$user_id)->first();
+        } else {
+            $res = null;
+        }
+        
+        return $res;
+    }
 }
