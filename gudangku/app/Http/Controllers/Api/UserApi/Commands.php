@@ -467,4 +467,61 @@ class Commands extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/user/validate_telegram_id",
+     *     summary="Validate telegram id change",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="telegram id has been validated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="validation token is not valid"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
+    public function validate_telegram_id(Request $request){
+        try{
+            $user_id = $request->user()->id;
+            $res = ValidateRequestModel::where('request_type','telegram_id_validation')
+                ->where('created_by',$user_id)
+                ->where('request_context',$request->request_context)
+                ->delete();
+            if($res > 0){
+                $user = UserModel::find($user_id);
+                UserModel::where('id', $user_id)
+                    ->update([
+                        'telegram_is_valid' => 1
+                    ]);
+
+                $response = Telegram::sendMessage([
+                    'chat_id' => $user->telegram_user_id,
+                    'text' => "Validation success.\nWelcome <b>{$user->username}</b>!,",
+                    'parse_mode' => 'HTML'
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "telegram id has been validated",
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'validation token is not valid',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin ',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

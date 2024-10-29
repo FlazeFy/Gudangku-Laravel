@@ -67,7 +67,7 @@
                 Swal.close()
                 Swal.fire({
                     title: "Oops!",
-                    text: "Failed to get the report",
+                    text: "Failed to get the user data",
                     icon: "error"
                 });
             }

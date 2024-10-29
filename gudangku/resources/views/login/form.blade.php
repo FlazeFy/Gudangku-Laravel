@@ -112,6 +112,43 @@
         });
     }
 
+    const auto_login = () => {
+        if(localStorage.getItem('token_key') !== null){
+            const token = localStorage.getItem('token_key')
+            Swal.showLoading()
+            $.ajax({
+                url: `/api/v1/user/my_profile`,
+                type: 'GET',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Accept", "application/json")
+                    xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+                },
+                success: function(response) {
+                    Swal.close()
+                    const data = response.data
+                    $('#token').val(token)
+                    $('#role').val(data.role)
+                    $('#email').val(data.email)
+                    $('#id').val(data.id)
+                    is_submit = true
+                    $('#form-login').submit()
+                },
+                error: function(response, jqXHR, textStatus, errorThrown) {
+                    Swal.close()
+                    Swal.fire({
+                        title: "Oops!",
+                        text: "Failed to get the user data",
+                        icon: "error"
+                    });
+                }
+            });
+        } else {
+            sessionStorage.clear()
+            localStorage.clear()
+        }
+    }
+    auto_login()
+
     function submitOnEnter(event) {
         if (event.keyCode === 13) { 
             event.preventDefault() 

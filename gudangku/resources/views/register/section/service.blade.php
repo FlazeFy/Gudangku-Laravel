@@ -42,12 +42,13 @@
                     Swal.fire({
                         title: "Success!",
                         text: response.message,
-                        icon: "success"
+                        icon: "success",
                         allowOutsideClick: false
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $('#telegram_user_id').attr('readonly',true)
-                            $('#telegram_user_id').after(`<input type='text' class='form-control form-validated' name='telegram_user_id' id='telegram_user_id' maxlength='36'>`)
+                            $('#validate-telegram-id-btn').remove()
+                            $('#telegram_user_id').after(`<input type='text' class='form-control mt-2' name=telegram_token_validation' id='telegram_token_validation' maxlength='7'>`)
                         }
                     });
                 },
@@ -68,6 +69,52 @@
                     }
                 }
             });
+        })
+        $(document).on('input','#telegram_token_validation', function(){
+            if($(this).val().length == 6){
+                const token = localStorage.getItem('token_key')
+                $.ajax({
+                    url: '/api/v1/user/validate_telegram_id',
+                    type: 'PUT',
+                    data: {
+                        request_context: $(this).val()
+                    },
+                    dataType: 'json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Accept", "application/json");
+                        xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
+                    },
+                    success: function(response) {
+                        Swal.hideLoading()
+                        Swal.fire({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#telegram_token_validation').remove()
+                            }
+                        });
+                    },
+                    error: function(response, jqXHR, textStatus, errorThrown) {
+                        Swal.hideLoading()
+                        if(response.status != 404){
+                            Swal.fire({
+                                title: "Oops!",
+                                text: "Something wrong. Please contact admin",
+                                icon: "error"
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Oops!",
+                                text: response.responseJSON.message,
+                                icon: "error"
+                            });
+                        }
+                    }
+                });
+            }
         })
     });
 </script>

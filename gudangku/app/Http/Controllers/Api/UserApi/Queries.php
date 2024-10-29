@@ -27,8 +27,10 @@ class Queries extends Controller
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="user fetched"),
      *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="string", example="17963858-9771-11ee-8f4a-3216422910r4"),
      *                 @OA\Property(property="username", type="string", example="flazefy"),
      *                 @OA\Property(property="email", type="string", example="flazen.edu@gmail.com"),
+     *                 @OA\Property(property="role", type="string", example="user"),
      *                 @OA\Property(property="telegram_user_id", type="string", example="1317625970"),
      *                 @OA\Property(property="telegram_is_valid", type="integer", example=1),
      *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-09-20 22:53:47")
@@ -72,13 +74,14 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = UserModel::select('username','email','telegram_user_id','telegram_is_valid','created_at')
+            $res = UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','created_at')
                 ->where('id',$user_id)
                 ->first();
 
             $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
             
             if ($res) {
+                $res = $res->role = 'user';
                 return response()->json([
                     'status' => 'success',
                     'message' => 'user fetched',
