@@ -108,7 +108,10 @@
 <div class="row w-100 h-100">
     <div class="col-lg-5">
         <div style="top:5vh; position:sticky;">
-            <h2 class="text-white fw-bold mb-4" style="font-size:36px;">Register</h2>
+            <a class='btn btn-danger mb-1' href='/login'><i class="fa-solid fa-arrow-left"></i> Back to Login</a>
+            <div id='start-browsing-holder-btn'></div>
+            <hr>
+            <h2 class="text-white fw-bold my-4" style="font-size:36px;">Register</h2>
             <div class="step step-active" id="indicator-tnc">
                 <div>
                     <div class="circle"><i class="fa fa-check"></i></div>

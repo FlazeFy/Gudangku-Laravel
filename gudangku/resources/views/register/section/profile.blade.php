@@ -127,8 +127,10 @@
             const data = response
             Swal.hideLoading()
 
+            $('#start-browsing-holder-btn').html(`<a class='btn btn-success ms-1 mb-1' href='/'><i class="fa-solid fa-arrow-right"></i> Start Browsing</a>`)
             $('#token-section').html(`
                 <h6 class="text-center">Account is validated. Welcome to GudangKu</h6>
+                <a class='btn btn-success ms-1 mb-1' href='/'><i class="fa-solid fa-arrow-right"></i> Start Browsing</a>
             `)
             $('#service_section').css({
                 "display":"block"

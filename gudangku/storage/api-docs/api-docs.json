@@ -2305,7 +2305,7 @@
         "/api/v1/reminder": {
             "post": {
                 "tags": [
-                    "Report"
+                    "Reminder"
                 ],
                 "summary": "Create a reminder",
                 "operationId": "0d8df3357f5e549d080b43568c02a0ac",
@@ -2383,6 +2383,114 @@
                                         "message": {
                                             "type": "string",
                                             "example": "reminder with same type and context has been used"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/reminder/{id}": {
+            "delete": {
+                "tags": [
+                    "Reminder"
+                ],
+                "summary": "Delete reminder by id",
+                "operationId": "7123e739147cbc99531f035b9a207d32",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Reminder ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "reminder deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "reminder not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder not found"
                                         }
                                     },
                                     "type": "object"
@@ -4049,6 +4157,150 @@
                 ]
             }
         },
+        "/api/v1/stats/dashboard": {
+            "get": {
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get dashboard",
+                "description": "This request is used to get inventory dashboard. This request is using MySql database, and have a protected routes.",
+                "operationId": "2eb4a30c320e91085f38931b2fbe87c0",
+                "responses": {
+                    "200": {
+                        "description": "stats fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "stats fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "total_item": {
+                                                    "type": "integer",
+                                                    "example": 14
+                                                },
+                                                "total_fav": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                },
+                                                "total_low": {
+                                                    "type": "integer",
+                                                    "example": 0
+                                                },
+                                                "last_added": {
+                                                    "type": "string",
+                                                    "example": "New Balance"
+                                                },
+                                                "most_category": {
+                                                    "properties": {
+                                                        "context": {
+                                                            "type": "string",
+                                                            "example": "Skin & Body Care"
+                                                        },
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 8
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "highest_price": {
+                                                    "properties": {
+                                                        "inventory_name": {
+                                                            "type": "string",
+                                                            "example": "New Balance"
+                                                        },
+                                                        "inventory_price": {
+                                                            "type": "integer",
+                                                            "example": 2249000
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "stats failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "stats not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/user/update_telegram_id": {
             "put": {
                 "tags": [
@@ -4228,6 +4480,26 @@
                 }
             }
         },
+        "/api/v1/user/validate_telegram_id": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Validate telegram id change",
+                "operationId": "de1ceb7d57fb3bab1493d6315a623752",
+                "responses": {
+                    "200": {
+                        "description": "telegram id has been validated"
+                    },
+                    "404": {
+                        "description": "validation token is not valid"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/v1/user/my_profile": {
             "get": {
                 "tags": [
@@ -4253,6 +4525,10 @@
                                         },
                                         "data": {
                                             "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "17963858-9771-11ee-8f4a-3216422910r4"
+                                                },
                                                 "username": {
                                                     "type": "string",
                                                     "example": "flazefy"
@@ -4260,6 +4536,10 @@
                                                 "email": {
                                                     "type": "string",
                                                     "example": "flazen.edu@gmail.com"
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "user"
                                                 },
                                                 "telegram_user_id": {
                                                     "type": "string",
@@ -5097,6 +5377,10 @@
         {
             "name": "Inventory",
             "description": "Inventory"
+        },
+        {
+            "name": "Reminder",
+            "description": "Reminder"
         },
         {
             "name": "Report",

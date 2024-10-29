@@ -620,4 +620,112 @@ class Queries extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/stats/dashboard",
+     *     summary="Get dashboard",
+     *     description="This request is used to get inventory dashboard. This request is using MySql database, and have a protected routes.",
+     *     tags={"Stats"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="stats fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="stats fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="total_item", type="integer", example=14),
+     *                 @OA\Property(property="total_fav", type="integer", example=4),
+     *                 @OA\Property(property="total_low", type="integer", example=0),
+     *                 @OA\Property(property="last_added", type="string", example="New Balance"),
+     *                 @OA\Property(property="most_category", type="object",
+     *                     @OA\Property(property="context", type="string", example="Skin & Body Care"),
+     *                     @OA\Property(property="total", type="integer", example=8)
+     *                 ),
+     *                 @OA\Property(property="highest_price", type="object",
+     *                     @OA\Property(property="inventory_name", type="string", example="New Balance"),
+     *                     @OA\Property(property="inventory_price", type="integer", example=2249000)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="stats failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="stats not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function get_dashboard(Request $request){
+        try{
+            $user_id = $request->user()->id;
+
+            $total_item = InventoryModel::selectRaw('COUNT(1) AS total')
+                ->where('created_by', $user_id)
+                ->first();
+            $total_fav = InventoryModel::selectRaw('COUNT(1) AS total')
+                ->where('is_favorite','1')
+                ->where('created_by', $user_id)
+                ->first();
+            $total_low = InventoryModel::selectRaw('COUNT(1) AS total')
+                ->where('inventory_capacity_unit','percentage')
+                ->where('inventory_capacity_vol','<=',30)
+                ->where('created_by', $user_id)
+                ->first();
+            $last_added = InventoryModel::select('inventory_name')
+                ->whereNull('deleted_at')
+                ->where('created_by', $user_id)
+                ->orderBy('created_at','DESC')
+                ->first();
+            $most_category = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
+                ->whereNull('deleted_at')
+                ->where('created_by', $user_id)
+                ->groupBy('inventory_category')
+                ->orderBy('total','DESC')
+                ->first();
+            $highest_price = InventoryModel::select('inventory_name', 'inventory_price')
+                ->whereNull('deleted_at')
+                ->where('created_by', $user_id)
+                ->orderBy('inventory_price','DESC')
+                ->first();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'stats fetched',
+                'data' => [
+                    'total_item' => $total_item ? $total_item->total : null,
+                    'total_fav' => $total_fav ? $total_fav->total : null,
+                    'total_low' => $total_low ? $total_low->total : null,
+                    'last_added' => $last_added ? $last_added->inventory_name : null,
+                    'most_category' => $most_category,
+                    'highest_price' => $highest_price
+                ]
+            ], Response::HTTP_OK);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -135,6 +135,8 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
+                    sessionStorage.clear()
+                    localStorage.clear()
                     Swal.fire({
                         title: "Oops!",
                         text: "Failed to get the user data",

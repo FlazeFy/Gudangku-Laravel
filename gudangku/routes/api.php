@@ -56,6 +56,8 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
 });
 
 Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/dashboard', [QueriesStatsController::class, 'get_dashboard']);
+
     Route::prefix('/inventory')->group(function () {
         Route::get('/total_by_category/{type}', [QueriesStatsController::class, 'get_total_inventory_by_category']);
         Route::get('/total_by_favorite/{type}', [QueriesStatsController::class, 'get_total_inventory_by_favorite']);

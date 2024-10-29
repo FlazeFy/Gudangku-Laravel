@@ -48,7 +48,7 @@
                         if (result.isConfirmed) {
                             $('#telegram_user_id').attr('readonly',true)
                             $('#validate-telegram-id-btn').remove()
-                            $('#telegram_user_id').after(`<input type='text' class='form-control mt-2' name=telegram_token_validation' id='telegram_token_validation' maxlength='7'>`)
+                            $('#telegram_user_id').after(`<label>Token Validation</label><input type='text' class='form-control mt-2' name=telegram_token_validation' id='telegram_token_validation' maxlength='7'>`)
                         }
                     });
                 },
