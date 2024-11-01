@@ -35,7 +35,10 @@
             });
 
             if(data_item.length > 0){
-                $(`#btn-doc-preview-holder`).html(`<a class="btn btn-primary mb-3 me-2" href="/doc/report/${data.id}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Preview Document @endif</a>`)
+                $(`#btn-doc-preview-holder`).html(`
+                    <a class="btn btn-primary mb-3 me-2" href="/doc/report/${data.id}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print @endif</a>
+                    <a class="btn btn-primary mb-3 me-2" href="/doc/report/${data.id}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
+                `)
             }
             if(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist'){
                 $('#report_item_tb thead').html(`

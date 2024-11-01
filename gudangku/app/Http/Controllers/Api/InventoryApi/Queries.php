@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api\InventoryApi;
 
 use App\Http\Controllers\Controller;
 
+// Helpers
+use App\Helpers\Document;
+
 // Models
 use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
@@ -660,6 +663,85 @@ class Queries extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/layout/{room}/doc",
+     *     summary="Get room layout html format by id",
+     *     description="This request is used to get room layout html format for document generate. This request is using MySQL database, and has protected routes.",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Room",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Layout document generated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="layout generated"),
+     *             @OA\Property(property="data", type="string", example="<p>Ini document</p>"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="layout document failed to generated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="layout not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     )
+     * )
+     */
+    public function get_document(Request $request,$room)
+    {
+        try{
+            $user_id = $request->user()->id;
+            $inventory = InventoryModel::getInventoryByRoom($room,$user_id);
+            $layout = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
+
+            if ($inventory || $layout) {                
+                $res = Document::documentTemplateLayout(null,null,null,$layout,$inventory,$room);
+     
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'layout generated',
+                    'data' => $res
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'layout not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

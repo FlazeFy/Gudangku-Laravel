@@ -1,19 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Api\ReportApi;
-
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+// Helpers
+use App\Helpers\Document;
 
 // Models
 use App\Models\ReportModel;
 use App\Models\ReportItemModel;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class Queries extends Controller
 {
@@ -340,6 +340,85 @@ class Queries extends Controller
                     'message' => 'report fetched',
                     'data' => $res,
                     'data_item' => $res_item
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'report not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/report/detail/item/{id}/doc",
+     *     summary="Get report detail document html format by id",
+     *     description="This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
+     *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Report ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Report document generated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="report generated"),
+     *             @OA\Property(property="data", type="string", example="<p>Ini document</p>"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="report document failed to generated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     )
+     * )
+     */
+    public function get_document(Request $request,$id)
+    {
+        try{
+            $user_id = $request->user()->id;
+            $report = ReportModel::getReportDetail(null,$id,'doc');
+
+            if ($report) {                
+                $report_item = ReportItemModel::getReportItem(null,$id,'doc');
+                $res = Document::documentTemplateReport(null,null,null,$report,$report_item);
+     
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'report generated',
+                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

@@ -287,6 +287,7 @@
             <div class='floor-config'>
                 <a class='d-inline-block btn-layout-config btn btn-success' onclick='expand_floor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
                 ${data && `<a class='d-inline-block btn-layout-config btn btn-success' href='/doc/layout/${room}'><i class="fa-solid fa-print"></i> Print</a>`}
+                ${data && `<a class='d-inline-block btn-layout-config btn btn-success' href='/doc/layout/${room}/custom'><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>`}
             </div>
         `)
     }

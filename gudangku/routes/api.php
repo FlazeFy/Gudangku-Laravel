@@ -36,8 +36,11 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::get('/search/by_room_storage/{room}/{storage}', [QueriesInventoryController::class, 'get_inventory_by_storage']);
     Route::get('/list', [QueriesInventoryController::class, 'get_list_inventory']);
     Route::get('/room', [QueriesInventoryController::class, 'get_list_room']);
-    Route::get('/layout/{room}', [QueriesInventoryController::class, 'get_room_layout']);
     Route::get('/calendar', [QueriesInventoryController::class, 'get_list_calendar']);
+    Route::prefix('/layout/{room}')->group(function (){
+        Route::get('/', [QueriesInventoryController::class, 'get_room_layout']);
+        Route::get('/doc', [QueriesInventoryController::class, 'get_document']);
+    });
 
     Route::post('/', [CommandsInventoryController::class, 'post_inventory']);
     Route::post('/layout', [CommandsInventoryController::class, 'post_inventory_layout']);
@@ -83,8 +86,11 @@ Route::prefix('/v1/dictionary')->group(function () {
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'get_my_report']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'get_my_report_by_inventory']);
-    Route::get('/detail/item/{id}', [QueriesReportController::class, 'get_my_report_detail']);
 
+    Route::prefix('/detail/item/{id}')->group(function (){
+        Route::get('/', [QueriesReportController::class, 'get_my_report_detail']);
+        Route::get('/doc', [QueriesReportController::class, 'get_document']);
+    });
     Route::prefix('/update')->group(function (){
         Route::put('/report/{id}', [CommandsReportController::class, 'update_report_by_id']);
         Route::put('/report_item/{id}', [CommandsReportController::class, 'update_report_item_by_id']);

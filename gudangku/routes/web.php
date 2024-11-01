@@ -93,6 +93,12 @@ Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {
 });
 
 Route::prefix('/doc')->group(function () {
-    Route::get('/report/{id}', [DocumentController::class, 'index_report']);
-    Route::get('/layout/{room}', [DocumentController::class, 'index_layout'])->middleware(['auth_v2:sanctum']);
+    Route::prefix('/report/{id}')->group(function (){
+        Route::get('/', [DocumentController::class, 'index_report']);
+        Route::get('/custom', [DocumentController::class, 'custom_report']);
+    });
+    Route::prefix('/layout/{room}')->middleware(['auth_v2:sanctum'])->group(function (){
+        Route::get('/', [DocumentController::class, 'index_layout']);
+        Route::get('/custom', [DocumentController::class, 'custom_layout']);
+    });
 });
