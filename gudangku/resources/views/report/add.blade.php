@@ -51,7 +51,7 @@
                             <input name="report_title" class="form-control" type="text" id="report_title" required>
 
                             <label>Description</label>
-                            <textarea name="report_desc" class="form-control"></textarea>
+                            <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
 
                             <label>Category</label>
                             <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">

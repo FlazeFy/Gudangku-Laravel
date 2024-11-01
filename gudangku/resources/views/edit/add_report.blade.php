@@ -52,13 +52,13 @@
                     <input name="report_title" class="form-control" type="text" id="report_title" required>
 
                     <label>Description</label>
-                    <textarea name="report_desc" class="form-control"></textarea>
+                    <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
 
                     <label>Category</label>
                     <select class="form-select" name="report_category" id="report_category" aria-label="Default select example"></select>
                     <hr>
                     <label>Item Notes</label>
-                    <textarea class="form-control" name="item_desc" style="height: 100px"></textarea>
+                    <textarea class="form-control" name="item_desc" id="item_desc" style="height: 100px"></textarea>
                     <div class="row">
                         <div class="col-4">
                             <label>Qty</label>

@@ -46,6 +46,19 @@ class Validation
         }
     }
 
+    public static function getValidateReportItem($request,$type){
+        if($type == 'create'){
+            
+        } else if($type == 'update'){
+            return Validator::make($request->all(), [
+                'item_name' => 'required|string|max:75|min:2',
+                'item_desc' => 'nullable|string|max:144',
+                'item_qty' => 'required|numeric|min:0|max:9999',
+                'item_price' => 'required|numeric|min:0|max:999999999',
+            ]);
+        } 
+    }
+
     public static function getValidateTimezone($val){
         $regex = '/^[+-](0[0-9]|1[0-4]):([0-5][0-9])$/';
         if(preg_match($regex, $val) === 1){

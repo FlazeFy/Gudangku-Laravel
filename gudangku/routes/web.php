@@ -18,29 +18,20 @@ use App\Http\Controllers\ReportDetailController;
 use App\Http\Controllers\Room3DController;
 use App\Http\Controllers\Room2DController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+######################### Public Route #########################
 
 Route::prefix('/')->group(function () {
     Route::get('/', [LandingController::class, 'index'])->name('landing');
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::get('/register', [RegisterController::class, 'index'])->name('register');
-
     Route::post('/login/validate', [LoginController::class, 'login_auth']);
 });
 
+######################### Private Route #########################
+
 Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/by/{view}/{context}', [HomeController::class, 'catalog_index']);
-    
+    Route::get('/by/{view}/{context}', [HomeController::class, 'catalog_index']); 
     Route::post('/deleteInventory/{id}', [HomeController::class, 'soft_delete']);
     Route::post('/destroyInventory/{id}', [HomeController::class, 'hard_delete']);
     Route::post('/destroyReminder/{id}', [HomeController::class, 'hard_delete_reminder']);
@@ -51,19 +42,16 @@ Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () 
     Route::post('/toogleView', [HomeController::class, 'toogle_view']);
     Route::post('/saveAsCsv', [HomeController::class, 'save_as_csv']);
     Route::post('/auditWABot', [HomeController::class, 'get_all_inventory_wa_bot']);
-});
 
-Route::prefix('/inventory/add')->middleware(['auth_v2:sanctum'])->group(function () {
-    Route::get('/', [AddController::class, 'index']);
-
-    Route::post('/addInventory', [AddController::class, 'create']);
-});
-
-Route::prefix('/inventory/edit/{id}')->middleware(['auth_v2:sanctum'])->group(function () {
-    Route::get('/', [EditController::class, 'index']);
-
-    Route::post('/editInventory', [EditController::class, 'update']);
-    Route::post('/editInventory/addReport', [EditController::class, 'create_report']);
+    Route::prefix('/add')->group(function (){
+        Route::get('/', [AddController::class, 'index']);
+        Route::post('/addInventory', [AddController::class, 'create']);
+    });
+    Route::prefix('/edit/{id}')->group(function (){
+        Route::get('/', [EditController::class, 'index']);
+        Route::post('/editInventory', [EditController::class, 'update']);
+        Route::post('/editInventory/addReport', [EditController::class, 'create_report']);
+    });
 });
 
 Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
@@ -73,14 +61,12 @@ Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HistoryController::class, 'index']);
-
     Route::post('/delete/{id}', [HistoryController::class, 'hard_delete']);
     Route::post('/saveAsCsv', [HistoryController::class, 'save_as_csv']);
 });
 
 Route::prefix('/profile')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ProfileController::class, 'index']);
-
     Route::post('/sign_out', [ProfileController::class, 'sign_out']);
     Route::post('/validate_telegram', [ProfileController::class, 'validate_telegram_id']);
     Route::post('/submit_telegram_validation', [ProfileController::class, 'submit_telegram_validation']);
@@ -94,13 +80,14 @@ Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ReportController::class, 'index']);
     Route::post('/', [ReportController::class, 'create_report']);
 
-    Route::get('/detail/{id}', [ReportDetailController::class, 'index']);
-    Route::post('/detail/{id}/toogleEdit', [ReportDetailController::class, 'toogle_edit']);
+    Route::prefix('/detail/{id}')->group(function (){
+        Route::get('/', [ReportDetailController::class, 'index']);
+        Route::post('/toogleEdit', [ReportDetailController::class, 'toogle_edit']);    
+    });
 });
 
 Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/3d', [Room3DController::class, 'index']);
-
     Route::get('/2d', [Room2DController::class, 'index']);
     Route::post('/selectRoom', [Room2DController::class, 'select_room']);
 });

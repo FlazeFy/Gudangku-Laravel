@@ -17,6 +17,9 @@ return new class extends Migration
             // Props
             $table->dateTime('created_at', $precision = 0);
             $table->string('faced_by',36)->nullable();
+
+            // References
+            $table->foreign('faced_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

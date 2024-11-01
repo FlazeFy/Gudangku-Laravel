@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-6 py-2">
             <label>Name</label>
-            <input type="text" name="inventory_name" class="form-control my-2"/>
+            <input type="text" name="inventory_name" id='inventory_name' class="form-control my-2"/>
 
             <label>Category</label>
             <select class="form-select my-2" name="inventory_category" aria-label="Default select example">
@@ -21,15 +21,15 @@
         </div>
         <div class="col-lg-12 py-2">
             <label>Description</label>
-            <textarea name="inventory_desc" class="form-control mt-2"></textarea>
+            <textarea name="inventory_desc" id="inventory_desc" class="form-control mt-2"></textarea>
         </div>
         <div class="col-lg-6 py-2">
             <label>Merk</label>
-            <input type="text" name="inventory_merk" class="form-control mt-2"/>
+            <input type="text" name="inventory_merk" id="inventory_merk" class="form-control mt-2"/>
         </div>
         <div class="col-lg-6 py-2">
             <label>Price</label>
-            <input type="number" name="inventory_price" class="form-control mt-2"/>
+            <input type="number" name="inventory_price" id="inventory_price" class="form-control mt-2"/>
         </div>
     </div><hr>
 
@@ -37,7 +37,7 @@
     <div class="row">
         <div class="col-lg-6 py-2">
             <label>Volume</label>
-            <input type="number" name="inventory_vol" class="form-control mt-2"/>
+            <input type="number" name="inventory_vol" id="inventory_vol" class="form-control mt-2"/>
         </div>
         <div class="col-lg-6 py-2">
             <label>Unit</label>
@@ -53,7 +53,7 @@
     <div class="row">
         <div class="col-lg-6 py-2">
             <label>Volume</label>
-            <input type="number" name="inventory_capacity_vol" class="form-control mt-2"/>
+            <input type="number" name="inventory_capacity_vol" id='inventory_capacity_vol' class="form-control mt-2"/>
         </div>
         <div class="col-lg-6 py-2">
             <label>Unit</label>
@@ -79,11 +79,11 @@
         </div>
         <div class="col-lg-6 py-2">
             <label>Storage</label>
-            <input type="text" name="inventory_storage" class="form-control mt-2"/>
+            <input type="text" name="inventory_storage" id="inventory_storage" class="form-control mt-2"/>
         </div>
         <div class="col-lg-6 py-2">
             <label>Rack</label>
-            <input type="text" name="inventory_rack" class="form-control mt-2"/>
+            <input type="text" name="inventory_rack" id="inventory_rack" class="form-control mt-2"/>
         </div>
     </div>
 

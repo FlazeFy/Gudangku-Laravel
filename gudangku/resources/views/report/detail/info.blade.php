@@ -132,7 +132,34 @@
                         <td>${dt.item_qty}</td>
                         ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td>Rp. ${number_format(dt.item_price, 0, ',', '.')}</td>` : ''}
                         <td>${getDateToContext(dt.created_at,'calendar')}</td>
-                        <td><button class="btn btn-warning"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button></td>
+                        <td><button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit_${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button>
+                            <div class="modal fade" id="modalEdit_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Update Report Item : ${dt.item_name}</h2>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id='edit-report-item-${dt.id}'>
+                                                <label>Name</label>
+                                                <input class="form-control" type="text" name="item_name" value="${dt.item_name}">
+                                                <label>Description</label>
+                                                <textarea class="form-control mt-2" name="item_desc">${dt.item_desc ?? ''}</textarea>
+                                                <label>Qty</label>
+                                                <input class="form-control" type="number" name="item_qty" value="${dt.item_qty}" min="1">
+                                                ${
+                                                    data.report_category.includes('Shopping Cart','Wishlist') ? `
+                                                    <label>Price</label>
+                                                    <input class="form-control" name="item_price" type="number" value="${dt.item_price}" min="1">` :''
+                                                }
+                                                <a class="btn btn-success mt-3 w-100 border-0" onclick="update_report_item('${dt.id}')" style="background:var(--successBG) !important;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_${dt.id}"><i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i></button>
                             <div class="modal fade" id="modalDelete_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -163,6 +190,40 @@
         }
     };
     get_detail_report('{{$id}}')
+
+    const update_report_item = (id) => {
+        Swal.showLoading()
+        $.ajax({
+            url: `/api/v1/report/update/report_item/${id}`,
+            type: 'PUT',
+            data: $(`#edit-report-item-${id}`).serialize(),
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.close()
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        get_detail_report('{{$id}}')
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.hideLoading()
+                Swal.fire({
+                    title: "Oops!",
+                    text: "Failed to update the item",
+                    icon: "error"
+                });
+            }
+        });
+    }
 
     const delete_item = (id) => {
         Swal.showLoading()

@@ -5,31 +5,26 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\AuthApi\Commands as CommandAuthApi;
 use App\Http\Controllers\Api\AuthApi\Queries as QueryAuthApi;
-
 use App\Http\Controllers\Api\InventoryApi\Queries as QueriesInventoryController;
 use App\Http\Controllers\Api\InventoryApi\Commands as CommandsInventoryController;
-
 use App\Http\Controllers\Api\HistoryApi\Queries as QueriesHistoryController;
 use App\Http\Controllers\Api\HistoryApi\Commands as CommandsHistoryController;
-
 use App\Http\Controllers\Api\StatsApi\Queries as QueriesStatsController;
-
 use App\Http\Controllers\Api\ReportApi\Queries as QueriesReportController;
 use App\Http\Controllers\Api\ReportApi\Commands as CommandsReportController;
-
 use App\Http\Controllers\Api\UserApi\Queries as QueriesUserController;
 use App\Http\Controllers\Api\UserApi\Commands as CommandsUserController;
-
 use App\Http\Controllers\Api\ReminderApi\Commands as CommandsReminderController;
-
 use App\Http\Controllers\Api\DictionaryApi\Queries as QueriesDictionaryController;
 
 ######################### Public Route #########################
 
 Route::post('/v1/login', [CommandAuthApi::class, 'login']);
-Route::post('/v1/register/token', [CommandsUserController::class, 'get_register_validation_token']);
-Route::post('/v1/register/account', [CommandsUserController::class, 'post_validate_register']);
-Route::post('/v1/register/regen_token', [CommandsUserController::class, 'regenerate_register_token']);
+Route::prefix('/v1/register')->group(function () {
+    Route::post('/token', [CommandsUserController::class, 'get_register_validation_token']);
+    Route::post('/account', [CommandsUserController::class, 'post_validate_register']);
+    Route::post('/regen_token', [CommandsUserController::class, 'regenerate_register_token']);
+});
 
 ######################### Private Route #########################
 
@@ -89,9 +84,15 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'get_my_report']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'get_my_report_by_inventory']);
     Route::get('/detail/item/{id}', [QueriesReportController::class, 'get_my_report_detail']);
-    Route::delete('/delete/item/{id}', [CommandsReportController::class, 'hard_delete_report_item_by_id']);
-    Route::delete('/delete/report/{id}', [CommandsReportController::class, 'hard_delete_report_by_id']);
-    Route::put('/update/report/{id}', [CommandsReportController::class, 'update_report_by_id']);
+
+    Route::prefix('/update')->group(function (){
+        Route::put('/report/{id}', [CommandsReportController::class, 'update_report_by_id']);
+        Route::put('/report_item/{id}', [CommandsReportController::class, 'update_report_item_by_id']);
+    });
+    Route::prefix('/delete')->group(function (){
+        Route::delete('/item/{id}', [CommandsReportController::class, 'hard_delete_report_item_by_id']);
+        Route::delete('/report/{id}', [CommandsReportController::class, 'hard_delete_report_by_id']);
+    });
 });
 
 Route::prefix('/v1/user')->middleware(['auth:sanctum'])->group(function () {
