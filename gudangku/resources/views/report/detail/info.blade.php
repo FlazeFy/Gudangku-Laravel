@@ -1,4 +1,5 @@
 <div id="report_holder"></div>
+<div id="report_check_action"></div>
 <div id="report_item_holder">
     <table class="table mt-3" id="report_item_tb">
         <thead></thead>
@@ -50,7 +51,7 @@
                         <th scope="col">Price</th>
                         <th scope="col">Created At</th>
                         <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
+                        <th scope="col">Remove</th>
                     </tr>
                 `)
             } else {
@@ -62,7 +63,7 @@
                         <th scope="col">Qty</th>
                         <th scope="col">Created At</th>
                         <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
+                        <th scope="col">Remove</th>
                     </tr>
                 `)
             }
@@ -127,7 +128,7 @@
                     <tr>
                         <td>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="">
+                                <input class="form-check-input check-inventory" type="checkbox" value="${dt.id}_${dt.item_name}">
                             </div>
                         </td>
                         <td>${dt.item_name}</td>
@@ -297,4 +298,52 @@
             }
         });
     }
+
+    $(document).on('change','.check-inventory', function(){
+        const report_action_holder = '#report_check_action'
+        let checkedItems = []
+
+        $('.check-inventory').each(function() {
+            if ($(this).is(':checked')) {
+                const item_split = $(this).val().split('_')
+                checkedItems.push({
+                    id: item_split[0],
+                    item_name: item_split[1]
+                })
+            }
+        });
+        
+        if(checkedItems.length > 0){
+            let selected_item_name = ''
+            let selected_item_id = ''
+            checkedItems.forEach((el,idx) => {
+                selected_item_name += `<a class='fst-italic fw-bold bg-primary rounded px-2 py-1 mx-1 mb-1'>${el.item_name}</a>`
+                if(idx < checkedItems.length - 1){
+                    selected_item_id += `${el.id},`
+                } else {
+                    selected_item_id += `${el.id}`
+                }
+            });
+            $(report_action_holder).html(`
+                <div class='container bordered row'>
+                    <div class='col'>
+                        <h2 class='text-primary fw-bold' style='font-size:calc(var(--textXLG)*2);'>${checkedItems.length} Items</h2>
+                        <h5 class='fw-bold' style='font-size:var(--textXLG);'>Selected</h5>
+                        <hr class='mt-3 mb-2'>
+                        ${selected_item_name}
+                    </div>
+                    <div class='col text-end'>
+                        <h5 class='fw-bold my-4' style='font-size:var(--textXLG);'>What you want to do?</h5>
+                        <a class='btn btn-primary me-2' href="/doc/report/{{$id}}/custom?filter_in=${selected_item_id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
+                        <a class='btn btn-primary me-2'><i class="fa-solid fa-arrows-split-up-and-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Split Report @endif</a>
+                        <a class='btn btn-primary me-2'><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print Detail @endif</a>
+                        <a class='btn btn-primary me-2'><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Analyze @endif</a>
+                        <a class='btn btn-danger mt-2'><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Remove @endif</a>
+                    </div>
+                </div>
+            `)
+        } else {
+            $(report_action_holder).empty()
+        }
+    })
 </script>

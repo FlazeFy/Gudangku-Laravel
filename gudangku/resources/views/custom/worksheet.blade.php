@@ -6,7 +6,7 @@
     const get_generated_default_document = () => {
         Swal.showLoading()
         $.ajax({
-            url: type == 'report' ? `/api/v1/report/detail/item/${id}/doc` : `/api/v1/inventory/layout/${id}/doc`,
+            url: type == 'report' ? `/api/v1/report/detail/item/${id}/doc<?= $filter_in ? "?filter_in=$filter_in" : '' ?>` : `/api/v1/inventory/layout/${id}/doc`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")

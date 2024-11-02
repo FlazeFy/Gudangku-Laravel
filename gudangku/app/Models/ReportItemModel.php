@@ -33,12 +33,20 @@ class ReportItemModel extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_id', 'report_id', 'item_name', 'item_desc', 'item_qty', 'item_price', 'created_at', 'created_by'];
 
-    public static function getReportItem($user_id,$id,$type){
+    public static function getReportItem($user_id,$id,$type,$filter_in = null){
         $res = ReportItemModel::selectRaw($type == 'data' ? '*' : 'item_name, item_desc, item_qty, item_price')
             ->where('report_id',$id);
 
         if($type == 'data'){
             $res = $res->where('created_by',$user_id);
+        }
+        if($filter_in){
+            $list_id = explode(",", $filter_in);
+            $res = $res->where(function($query) use ($list_id) {
+                foreach ($list_id as $dt) {
+                    $query->orWhere('id', $dt);
+                }
+            });
         }
 
         return $res->get();

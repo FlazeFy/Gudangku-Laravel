@@ -76,9 +76,11 @@ class DocumentController extends Controller
         $user_id = $request->user()->id;
 
         if($user_id){
+            $filter_in = $request->query('filter_in', null);
             return view('custom.index')
                 ->with('type','report')
-                ->with('id',$id);
+                ->with('id',$id)
+                ->with('filter_in',$filter_in);
         } else {
             return redirect("/login");
         }

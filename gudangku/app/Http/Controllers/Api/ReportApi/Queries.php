@@ -10,6 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 // Helpers
 use App\Helpers\Document;
+use App\Helpers\Validation;
 
 // Models
 use App\Models\ReportModel;
@@ -410,9 +411,19 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
             $report = ReportModel::getReportDetail(null,$id,'doc');
+            $filter_in = $request->query('filter_in', null);
+
+            if($filter_in){
+                if(Validation::getValidateUUID($filter_in)){
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Validation Failed : Selected item not valid',
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+            }
 
             if ($report) {                
-                $report_item = ReportItemModel::getReportItem(null,$id,'doc');
+                $report_item = ReportItemModel::getReportItem(null,$id,'doc',$filter_in);
                 $res = Document::documentTemplateReport(null,null,null,$report,$report_item);
      
                 return response()->json([
