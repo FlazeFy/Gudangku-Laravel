@@ -71,13 +71,21 @@ class Commands extends Controller
             $user_id = $request->user()->id;
 
             $rows = ReportItemModel::where('id', $id)
+                ->where('created_by', $user_id);
+
+            $list_id = explode(",", $id);
+            $rows = ReportItemModel::whereIn('id', $list_id)
                 ->where('created_by', $user_id)
                 ->delete();
 
             if($rows > 0){
+                $extra = "";
+                if(count($list_id) > 1){
+                    $extra = count($list_id);
+                }
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'report item deleted',
+                    'message' => $extra." report item deleted",
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

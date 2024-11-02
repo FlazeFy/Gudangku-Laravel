@@ -9,6 +9,7 @@
 
 <script>
     const is_edit_mode = <?= session()->get('toogle_edit_report') ?>;
+    let report_title
 
     const get_detail_report = async (id) => {
         try {
@@ -27,6 +28,7 @@
             const item_holder = 'report_holder'
             const data = response.data
             const data_item = response.data_item
+            report_title = data.report_title
             let select_cat_el = ''
 
             $('#created_at').text(getDateToContext(data.created_at,'calendar'))
@@ -338,7 +340,21 @@
                         <a class='btn btn-primary me-2'><i class="fa-solid fa-arrows-split-up-and-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Split Report @endif</a>
                         <a class='btn btn-primary me-2'><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print Detail @endif</a>
                         <a class='btn btn-primary me-2'><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Analyze @endif</a>
-                        <a class='btn btn-danger mt-2'><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Remove @endif</a>
+                        <a class='btn btn-danger mt-2' data-bs-toggle="modal" data-bs-target="#modalDeleteManyItem"><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Remove @endif</a>
+                        <div class="modal fade" id="modalDeleteManyItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h2>Remove this item ${selected_item_name} from report "${report_title}"?</h2>
+                                        <a class="btn btn-danger mt-4" onclick="delete_item('${selected_item_id}')">Yes, Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `)
