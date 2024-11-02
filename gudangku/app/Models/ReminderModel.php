@@ -38,4 +38,12 @@ class ReminderModel extends Model
 
         return $res->get();
     }
+
+    public static function getReminderByInventoryId($id,$user_id){
+        $res = ReminderModel::select('id','reminder_desc','reminder_type','reminder_context','created_at')
+            ->where('created_by',$user_id)
+            ->where('inventory_id',$id);
+
+        return $res->get();
+    }
 }

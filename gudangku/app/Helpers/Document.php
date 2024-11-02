@@ -244,4 +244,103 @@ class Document
 
         return $html;
     }
+
+    public static function documentTemplateInventory($header_template,$style_template,$footer_template,$inventory,$reminder){ 
+        $tbody = "";
+        $datetime = now();
+        if($header_template == null){
+            $header_template = Generator::generateDocTemplate('header');
+        }
+        if($style_template == null){
+            $style_template = Generator::generateDocTemplate('style');
+        }
+        if($footer_template == null){
+            $footer_template = Generator::generateDocTemplate('footer');
+        }
+        $reminder_template = "";
+        foreach ($reminder as $dt) {
+            $reminder_template .= "
+                <p>- <b>Reminder $dt->reminder_type $dt->reminder_context</b> : $dt->reminder_desc</p>
+            ";   
+        }
+
+        if($inventory->is_favorite == 1){
+            $is_favorite = "True";
+        } else {
+            $is_favorite = "False";
+        }
+
+        $html = "
+            <html>
+                <head>
+                    $style_template
+                    <style>
+                        .row {
+                            display: flex;
+                        }
+                    </style>
+                </head>
+                <body>
+                    $header_template
+                    <h3 style='margin:0 0 6px 0;'>Inventory: $inventory->inventory_name</h3>
+                    <p style='margin:0; font-size:14px;'>ID: $inventory->id</p>
+                    <p style='margin-top:0; font-size:14px;'>Category: $inventory->inventory_category</p><br>
+                    <p style='font-size:13px; text-align: justify;'>
+                        At $datetime, this document has been created from the inventory called <b>$inventory->inventory_name</b>. 
+                        You can also import this document into GudangKu Apps or send it to our Telegram Bot if you wish to analyze the inventory.
+                        Important to know, that this document is <b>accessible for everyone</b> by using this link. Here you can see the item in this report:
+                    </p>                    
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Description</th>
+                                <td>" . (!empty($inventory->inventory_desc) ? $inventory->inventory_desc : '-') . "</td>
+                            </tr>
+                            <tr>
+                                <th>Merk</th>
+                                <td>" . (!empty($inventory->inventory_merk) ? $inventory->inventory_merk : '-') . "</td>
+                            </tr>
+                            <tr>
+                                <th>Room</th>
+                                <td>$inventory->inventory_room</td>
+                            </tr>
+                            <tr>
+                                <th>Storage</th>
+                                <td>" . (!empty($inventory->inventory_storage) ? $inventory->inventory_storage : '-') . "</td>
+                            </tr>
+                            <tr>
+                                <th>Rack</th>
+                                <td>" . (!empty($inventory->inventory_rack) ? $inventory->inventory_rack : '-') . "</td>
+                            </tr>
+                            <tr>
+                                <th>Price</th>
+                                <td>Rp. ".number_format($inventory->inventory_price).",00</td>
+                            </tr>
+                            <tr>
+                                <th>Unit</th>
+                                <td>$inventory->inventory_unit</td>
+                            </tr>
+                            <tr>
+                                <th>Volume</th>
+                                <td>" . (!empty($inventory->inventory_vol) ? $inventory->inventory_vol : '-') . "</td>
+                            </tr>
+                            <tr>
+                                <th>Capacity Unit</th>
+                                <td>$inventory->inventory_capacity</td>
+                            </tr>
+                            <tr>
+                                <th>Is Favorite</th>
+                                <td>$is_favorite</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4>Reminder : </h4>
+                    $reminder_template
+                    $footer_template
+                </body>
+            </html>";
+
+
+        return $html;
+    }
 }

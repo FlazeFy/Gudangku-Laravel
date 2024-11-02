@@ -101,4 +101,8 @@ Route::prefix('/doc')->group(function () {
         Route::get('/', [DocumentController::class, 'index_layout']);
         Route::get('/custom', [DocumentController::class, 'custom_layout']);
     });
+    Route::prefix('/inventory/{id}')->middleware(['auth_v2:sanctum'])->group(function (){
+        Route::get('/', [DocumentController::class, 'index_inventory']);
+        Route::get('/custom', [DocumentController::class, 'custom_inventory']);
+    });
 });

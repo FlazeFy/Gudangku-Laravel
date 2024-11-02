@@ -635,17 +635,10 @@ class Queries extends Controller
     public function get_inventory_by_id(Request $request, $id){
         try{
             $user_id = $request->user()->id;
-
-            $res = InventoryModel::select('*')
-                ->where('created_by',$user_id)
-                ->where('id',$id)
-                ->first();
+            $res = InventoryModel::getInventoryDetail($id,$user_id);
             
             if ($res) {
-                $reminder = ReminderModel::select('id','reminder_desc','reminder_type','reminder_context','created_at')
-                    ->where('created_by',$user_id)
-                    ->where('inventory_id',$id)
-                    ->get();
+                $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
 
                 return response()->json([
                     'status' => 'success',
@@ -684,10 +677,10 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Layout document generated",
+     *         description="inventory detail document generated",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="layout generated"),
+     *             @OA\Property(property="message", type="string", example="inventory detail generated"),
      *             @OA\Property(property="data", type="string", example="<p>Ini document</p>"),
      *         )
      *     ),
@@ -701,10 +694,10 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="layout document failed to generated",
+     *         description="inventory detail document failed to generated",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="layout not found")
+     *             @OA\Property(property="message", type="string", example="inventory detail not found")
      *         )
      *     ),
      *     @OA\Response(
@@ -717,31 +710,31 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_document(Request $request,$room)
+    public function get_document(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::getInventoryByRoom($room,$user_id);
-            $layout = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
+            $inventory = InventoryModel::getInventoryDetail($id,$user_id);
 
-            if ($inventory || $layout) {                
-                $res = Document::documentTemplateLayout(null,null,null,$layout,$inventory,$room);
+            if ($inventory) {    
+                $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
+                $html = Document::documentTemplateInventory(null,null,null,$inventory,$reminder);
      
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'layout generated',
-                    'data' => $res
+                    'message' => 'inventory detail generated',
+                    'data' => $html
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'layout not found',
+                    'message' => 'inventory detail not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -11,6 +11,7 @@ use App\Models\ReportModel;
 use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
 use App\Models\UserModel;
+use App\Models\ReminderModel;
 use App\Models\ReportItemModel;
 
 use Dompdf\Dompdf;
@@ -143,7 +144,70 @@ class DocumentController extends Controller
         if($user_id){
             return view('custom.index')
                 ->with('type','layout')
-                ->with('id',$id);
+                ->with('id',$id)
+                ->with('filter_in',null);
+        } else {
+            return redirect("/login");
+        }
+    }
+
+    public function index_inventory(Request $request, $id)
+    {
+        $user_id = $request->user()->id;
+        $inventory = InventoryModel::getInventoryDetail($id,$user_id);
+
+        if($inventory){
+            $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
+            $options = new DompdfOptions();
+            $options->set('defaultFont', 'Helvetica');
+            $dompdf = new Dompdf($options);
+            $datetime = now();
+
+            $html = Document::documentTemplateInventory(null,null,null,$inventory,$reminder);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+
+            $file_name = "inventory-$id-$datetime.pdf";
+            if($user_id){
+                $user = UserModel::select('telegram_user_id','username')
+                    ->where('id',$user_id)
+                    ->where('telegram_is_valid',1)
+                    ->first();
+
+                if($user->telegram_user_id){
+                    $pdfContent = $dompdf->output();
+                    $pdfFilePath = public_path($file_name);
+                    file_put_contents($pdfFilePath, $pdfContent);
+                    $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+
+                    $response = Telegram::sendDocument([
+                        'chat_id' => $user->telegram_user_id,
+                        'document' => $inputFile,
+                        'caption' => "Hello $user->username, you just preview the inventory document. Here's the document",
+                        'parse_mode' => 'HTML'
+                    ]);
+
+                    unlink($pdfFilePath);
+                }
+            }
+
+            return response($dompdf->output(), 200)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', "inline; filename='$file_name'");
+        } else {
+            return redirect("/login");
+        }
+    }
+
+    public function custom_inventory(Request $request, $id){
+        $user_id = $request->user()->id;
+
+        if($user_id){
+            return view('custom.index')
+                ->with('type','inventory')
+                ->with('id',$id)
+                ->with('filter_in',null);
         } else {
             return redirect("/login");
         }

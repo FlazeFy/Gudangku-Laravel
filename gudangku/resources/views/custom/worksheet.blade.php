@@ -6,7 +6,17 @@
     const get_generated_default_document = () => {
         Swal.showLoading()
         $.ajax({
-            url: type == 'report' ? `/api/v1/report/detail/item/${id}/doc<?= $filter_in ? "?filter_in=$filter_in" : '' ?>` : `/api/v1/inventory/layout/${id}/doc`,
+            url: (() => {
+                if (type === 'report') {
+                    return `/api/v1/report/detail/item/${id}/doc${filter_in ? `?filter_in=${filter_in}` : ''}`
+                } else if (type === 'layout') {
+                    return `/api/v1/inventory/layout/${id}/doc`
+                } else if (type === 'inventory') {
+                    return `/api/v1/inventory/detail/${id}/doc`
+                } else {
+                    return ''
+                }
+            })(),
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")

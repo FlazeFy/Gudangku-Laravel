@@ -67,6 +67,14 @@ class InventoryModel extends Model
         return $res->get();
     }
 
+    public static function getInventoryDetail($id,$user_id){
+        $res = InventoryModel::select('id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'updated_at')
+            ->where('created_by',$user_id)
+            ->where('id',$id);
+
+        return $res->first();
+    }
+
     public static function getCheckInventoryAvaiability($inventory_name, $user_id, $inventory_id){
         $check = InventoryModel::selectRaw('1')
             ->where('inventory_name',$inventory_name)
