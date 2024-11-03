@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 use Illuminate\Support\Facades\Validator;
+use App\Rules\ReportCategory;
 
 class Validation
 {
@@ -56,6 +57,18 @@ class Validation
                 'item_qty' => 'required|numeric|min:0|max:9999',
                 'item_price' => 'required|numeric|min:0|max:999999999',
             ]);
+        } 
+    }
+
+    public static function getValidateReport($request,$type){
+        if($type == 'create'){
+            return Validator::make($request->all(), [
+                'report_title' => 'required|string|max:36',
+                'report_desc' => 'nullable|string|max:255',
+                'report_category' => ['required', new ReportCategory],
+                'is_reminder' => 'required|numeric|min:0|max:1',
+                'reminder_at' => 'nullable|datetime',
+            ]);  
         } 
     }
 

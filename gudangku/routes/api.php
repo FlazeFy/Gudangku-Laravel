@@ -98,6 +98,7 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::prefix('/update')->group(function (){
         Route::put('/report/{id}', [CommandsReportController::class, 'update_report_by_id']);
         Route::put('/report_item/{id}', [CommandsReportController::class, 'update_report_item_by_id']);
+        Route::put('/report_split/{id}', [CommandsReportController::class, 'update_split_report_item_by_id']);
     });
     Route::prefix('/delete')->group(function (){
         Route::delete('/item/{id}', [CommandsReportController::class, 'hard_delete_report_item_by_id']);

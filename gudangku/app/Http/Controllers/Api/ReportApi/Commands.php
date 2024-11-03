@@ -360,4 +360,188 @@ class Commands extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/report/update/report_split/{id}",
+     *     summary="Update report item by splitting it into a new report",
+     *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Report ID to split from",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="report_title", type="string", example="New Balance"),
+     *             @OA\Property(property="report_desc", type="string", example="Sepatu track"),
+     *             @OA\Property(property="report_category", type="string", example="Home Supplies"),
+     *             @OA\Property(property="is_reminder", type="boolean", example=true),
+     *             @OA\Property(property="remind_at", type="string", format="date-time", example="2024-12-01T12:00:00Z"),
+     *             @OA\Property(property="list_id", type="string", example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9,e1288783-a5d4-1c4c-2cd6-0e92f7cc4a0"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully updated and split report items",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="all report items updated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="validation failed : {validation errors}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Authorization required",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Report or Report Item not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report item not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function update_split_report_item_by_id(Request $request, $id){
+        try{
+            $validator = Validation::getValidateReport($request,'create');
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'validation failed : '.$validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {   
+                $user_id = $request->user()->id;
+                $list_item_id = explode(',',$request->list_id);
+
+                $old_check_report = ReportModel::find($id);
+
+                if($old_check_report){
+                    foreach ($list_item_id as $dt) {
+                        if (!Generator::getValidateUUID($dt)) {
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => 'Validation failed: list item ID is not a valid UUID'
+                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+                    }
+
+                    $report = ReportModel::create([
+                        'id' => Generator::getUUID(), 
+                        'report_title' => $request->report_title, 
+                        'report_desc' => $request->report_desc, 
+                        'report_category' => $request->report_category,  
+                        'is_reminder' => $request->is_reminder,  
+                        'remind_at' => $request->remind_at,  
+                        'created_at' => date('Y-m-d H:i:s'), 
+                        'created_by' => $user_id, 
+                        'updated_at' => null, 
+                        'deleted_at' => null
+                    ]);
+
+                    if($report){
+                        $success_migrate = 0;
+                        $failed_migrate = 0;
+                        $list_item_name = "";
+
+                        foreach ($list_item_id as $dt) {
+                            $old_report_item = ReportItemModel::where('id', $dt)
+                                ->where('created_by', $user_id)
+                                ->where('report_id', $id)
+                                ->first();
+                
+                            if ($old_report_item) {
+                                $list_item_name .= "$old_report_item->item_name,";
+                                $report_item = ReportItemModel::create([
+                                    'id' => Generator::getUUID(),
+                                    'inventory_id' => $dt,
+                                    'report_id' => $id,
+                                    'item_name' => $old_report_item->item_name,
+                                    'item_desc' => $old_report_item->item_desc,
+                                    'item_qty' => $old_report_item->item_qty,
+                                    'item_price' => $old_report_item->item_price,
+                                    'created_at' => date('Y-m-d H:i:s'), 
+                                    'created_by' => $user_id,
+                                ]);
+                
+                                if ($report_item) {
+                                    $rows = ReportItemModel::where('id', $dt)
+                                        ->where('created_by', $user_id)
+                                        ->delete();
+                
+                                    $rows > 0 ? $success_migrate++ : $failed_migrate++;
+                                } else {
+                                    $failed_migrate++;
+                                }
+                            } else {
+                                $failed_migrate++;
+                            }
+                        }
+        
+                        if($success_migrate > 0){
+                            // History
+                            Audit::createHistory('Split Report', "From $old_check_report->report_title has been removed item of $list_item_name to $report->report_title", $user_id);
+                            Audit::createHistory('Create Report', $request->report_title, $user_id);
+        
+                            if ($success_migrate > 0) {
+                                $status_message = $failed_migrate == 0 ? 'all report items updated' : 'some report items updated';
+                            }
+                            
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => $status_message,
+                            ], Response::HTTP_OK);
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'report item not found',
+                            ], Response::HTTP_NOT_FOUND);
+                        }
+                    } else {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'something wrong. please contact admin',
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'report not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }   
 }
