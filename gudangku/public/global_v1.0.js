@@ -195,6 +195,15 @@ const check_filling_status = (list) => {
     });
 }
 
+const check_all = (target,type) => {
+    $(target).prop('checked', type == 'check' ? true : false)
+    Swal.fire({
+        title: "Success!",
+        text: `${ucFirst(type)}ed all items`,
+        icon: "success"
+    });
+} 
+
 const formValidation = () => {
     $(document).ready(function() {
         $('.form-validated').each(function(idx, el) {

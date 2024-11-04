@@ -1,5 +1,6 @@
 <?php
 namespace App\Helpers;
+use Illuminate\Support\Collection;
 
 class Document
 {
@@ -32,8 +33,8 @@ class Document
                 $sub_total = $sub_total + $total;
 
                 $tbody_template = "
-                    <td>Rp. $dt->item_price</td>
-                    <td>Rp. ".$total."</td>
+                    <td>Rp. ".number_format($dt->item_price)."</td>
+                    <td>Rp. ".number_format($total)."</td>
                     <td></td>
                 ";
             } else {
@@ -62,7 +63,7 @@ class Document
                 <th>Total</th>
                 <th>Checklist</th>
             ";
-            $extra_template = "<h5 style='margin-bottom:0;'>Total Item : $total_qty</h5><h5 style='margin:0;'>Sub-Total : Rp. $sub_total</h5>";
+            $extra_template = "<h5 style='margin-bottom:0;'>Total Item : $total_qty</h5><h5 style='margin:0;'>Sub-Total : Rp. ".number_format($sub_total)."</h5>";
         } else {
             $thead_template = "
                 <th>Checklist</th>
@@ -264,82 +265,111 @@ class Document
             ";   
         }
 
-        if($inventory->is_favorite == 1){
-            $is_favorite = "True";
+        $html = "<html>
+            <head>
+                $style_template
+                <style>
+                    .row {
+                        display: flex;
+                    }
+                </style>
+            </head>
+            <body>
+            $header_template";
+
+        $inventory_identity = null;
+        
+        if (!is_array($inventory) && !($inventory instanceof Collection)) {
+            $arr_inventory[] = $inventory; 
+            $inventory_identity = "
+                <h3 style='margin:0 0 6px 0;'>Inventory: $inventory->inventory_name</h3>
+                <p style='margin:0; font-size:14px;'>ID: $inventory->id</p>
+                <p style='margin-top:0; font-size:14px;'>Category: $inventory->inventory_category</p>
+                <p style='font-size:13px; text-align: justify;'>
+                    At $datetime, this document has been created from the inventory called <b>$inventory->inventory_name</b>. 
+                    You can also import this document into GudangKu Apps or send it to our Telegram Bot if you wish to analyze the inventory.
+                    Important to know, that this document is <b>accessible for everyone</b> by using this link. Here you can see the item in this report:
+                </p>
+            ";
         } else {
-            $is_favorite = "False";
+            $arr_inventory = $inventory;
         }
 
-        $html = "
-            <html>
-                <head>
-                    $style_template
-                    <style>
-                        .row {
-                            display: flex;
-                        }
-                    </style>
-                </head>
-                <body>
-                    $header_template
-                    <h3 style='margin:0 0 6px 0;'>Inventory: $inventory->inventory_name</h3>
-                    <p style='margin:0; font-size:14px;'>ID: $inventory->id</p>
-                    <p style='margin-top:0; font-size:14px;'>Category: $inventory->inventory_category</p><br>
-                    <p style='font-size:13px; text-align: justify;'>
-                        At $datetime, this document has been created from the inventory called <b>$inventory->inventory_name</b>. 
-                        You can also import this document into GudangKu Apps or send it to our Telegram Bot if you wish to analyze the inventory.
-                        Important to know, that this document is <b>accessible for everyone</b> by using this link. Here you can see the item in this report:
-                    </p>                    
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>Description</th>
-                                <td>" . (!empty($inventory->inventory_desc) ? $inventory->inventory_desc : '-') . "</td>
-                            </tr>
-                            <tr>
-                                <th>Merk</th>
-                                <td>" . (!empty($inventory->inventory_merk) ? $inventory->inventory_merk : '-') . "</td>
-                            </tr>
-                            <tr>
-                                <th>Room</th>
-                                <td>$inventory->inventory_room</td>
-                            </tr>
-                            <tr>
-                                <th>Storage</th>
-                                <td>" . (!empty($inventory->inventory_storage) ? $inventory->inventory_storage : '-') . "</td>
-                            </tr>
-                            <tr>
-                                <th>Rack</th>
-                                <td>" . (!empty($inventory->inventory_rack) ? $inventory->inventory_rack : '-') . "</td>
-                            </tr>
-                            <tr>
-                                <th>Price</th>
-                                <td>Rp. ".number_format($inventory->inventory_price).",00</td>
-                            </tr>
-                            <tr>
-                                <th>Unit</th>
-                                <td>$inventory->inventory_unit</td>
-                            </tr>
-                            <tr>
-                                <th>Volume</th>
-                                <td>" . (!empty($inventory->inventory_vol) ? $inventory->inventory_vol : '-') . "</td>
-                            </tr>
-                            <tr>
-                                <th>Capacity Unit</th>
-                                <td>$inventory->inventory_capacity</td>
-                            </tr>
-                            <tr>
-                                <th>Is Favorite</th>
-                                <td>$is_favorite</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h4>Reminder : </h4>
-                    $reminder_template
-                    $footer_template
-                </body>
-            </html>";
-
+        foreach ($arr_inventory as $dt) {
+            if($dt->is_favorite == 1){
+                $is_favorite = "True";
+            } else {
+                $is_favorite = "False";
+            }
+    
+            $img = "";
+            if($dt->inventory_image){
+                $img = "
+                <tr>
+                    <th>Image</th>
+                    <td style='text-align:center'><img style='margin:10px; width:500px;' src='$dt->inventory_image'></td>
+                </tr>";
+            }
+    
+            $html .= 
+                    (
+                        $inventory_identity ?? " <h3 style='margin:0 0 6px 0;'>Inventory: $dt->inventory_name</h3>
+                        <p style='margin:0; font-size:14px;'>ID: $dt->id</p>
+                        <p style='margin-top:0; font-size:14px;'>Category: $dt->inventory_category</p>"
+                    )
+                ."
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>Description</th>
+                            <td>" . (!empty($dt->inventory_desc) ? $dt->inventory_desc : '-') . "</td>
+                        </tr>
+                        <tr>
+                            <th>Merk</th>
+                            <td>" . (!empty($dt->inventory_merk) ? $dt->inventory_merk : '-') . "</td>
+                        </tr>
+                        <tr>
+                            <th>Room</th>
+                            <td>$dt->inventory_room</td>
+                        </tr>
+                        <tr>
+                            <th>Storage</th>
+                            <td>" . (!empty($dt->inventory_storage) ? $dt->inventory_storage : '-') . "</td>
+                        </tr>
+                        <tr>
+                            <th>Rack</th>
+                            <td>" . (!empty($dt->inventory_rack) ? $dt->inventory_rack : '-') . "</td>
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            <td>Rp. ".number_format($dt->inventory_price)."</td>
+                        </tr>
+                        <tr>
+                            <th>Unit</th>
+                            <td>$dt->inventory_unit</td>
+                        </tr>
+                        <tr>
+                            <th>Volume</th>
+                            <td>" . (!empty($dt->inventory_vol) ? $dt->inventory_vol : '-') . "</td>
+                        </tr>
+                        <tr>
+                            <th>Capacity Unit</th>
+                            <td>$dt->inventory_capacity</td>
+                        </tr>
+                        <tr>
+                            <th>Is Favorite</th>
+                            <td>$is_favorite</td>
+                        </tr>
+                        $img
+                    </tbody>
+                </table><br>";
+        }
+        $html .= "
+                <h4>Reminder : </h4>
+                $reminder_template
+                $footer_template
+            </body>
+        </html>";
 
         return $html;
     }

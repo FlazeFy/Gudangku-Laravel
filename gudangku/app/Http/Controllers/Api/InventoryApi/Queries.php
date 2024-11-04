@@ -716,7 +716,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $inventory = InventoryModel::getInventoryDetail($id,$user_id);
 
-            if ($inventory) {    
+            if (is_array($inventory) ? count($inventory) > 0 : $inventory) {    
                 $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
                 $html = Document::documentTemplateInventory(null,null,null,$inventory,$reminder);
      
@@ -734,7 +734,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

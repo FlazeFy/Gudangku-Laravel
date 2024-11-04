@@ -1,11 +1,9 @@
 <div id="report_holder"></div>
 <div id="report_check_action"></div>
 <div id="report_item_holder">
-    <table class="table mt-3" id="report_item_tb">
-        <thead></thead>
-        <tbody></tbody>
-    </table>
+    <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
 </div>
+<div id="report_check_extra"></div>
 
 <script>
     const is_edit_mode = <?= session()->get('toogle_edit_report') ?>;
@@ -130,7 +128,7 @@
                     <tr>
                         <td>
                             <div class="form-check">
-                                <input class="form-check-input check-inventory" type="checkbox" value="${dt.id}_${dt.item_name}">
+                                <input class="form-check-input check-inventory" type="checkbox" value="${dt.id}_${dt.item_name}_${dt.inventory_id}">
                             </div>
                         </td>
                         <td>${dt.item_name}</td>
@@ -186,6 +184,10 @@
                     </tr>
                 `)
             });
+            $('#report_check_extra').html(`
+                <a class='btn btn-primary me-2' onclick="check_all('.check-inventory','check'); checked_toggle_event();"><i class="fa-solid fa-check style="font-size:var(--textXLG);"></i> @if(!$isMobile) Check All @endif</a>
+                <a class='btn btn-danger me-2' onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();"><i class="fa-solid fa-xmark style="font-size:var(--textXLG);"></i> @if(!$isMobile) Uncheck All @endif</a>
+            `)
         } catch (error) {
             Swal.close();
             Swal.fire({
@@ -374,7 +376,7 @@
         });
     }
 
-    $(document).on('change','.check-inventory', function(){
+    const checked_toggle_event = () => {
         const report_action_holder = '#report_check_action'
         let checkedItems = []
 
@@ -383,7 +385,8 @@
                 const item_split = $(this).val().split('_')
                 checkedItems.push({
                     id: item_split[0],
-                    item_name: item_split[1]
+                    item_name: item_split[1],
+                    inventory_id: item_split[2]
                 })
             }
         });
@@ -391,12 +394,15 @@
         if(checkedItems.length > 0){
             let selected_item_name = ''
             let selected_item_id = ''
+            let selected_inventory_id = ''
             checkedItems.forEach((el,idx) => {
                 selected_item_name += `<a class='fst-italic fw-bold bg-primary rounded px-2 py-1 mx-1 mb-1'>${el.item_name}</a>`
                 if(idx < checkedItems.length - 1){
                     selected_item_id += `${el.id},`
+                    selected_inventory_id += `${el.inventory_id},`
                 } else {
                     selected_item_id += `${el.id}`
+                    selected_inventory_id += `${el.inventory_id}`
                 }
             });
             $(report_action_holder).html(`
@@ -443,7 +449,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a class='btn btn-primary me-2'><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print Detail @endif</a>
+                        <a class='btn btn-primary me-2' href="/doc/inventory/${selected_inventory_id}/custom"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print Detail @endif</a>
                         <a class='btn btn-primary me-2'><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Analyze @endif</a>
                         <a class='btn btn-danger mt-2' data-bs-toggle="modal" data-bs-target="#modalDeleteManyItem"><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Remove @endif</a>
                         <div class="modal fade" id="modalDeleteManyItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -465,6 +471,10 @@
             `)
         } else {
             $(report_action_holder).empty()
+            $(report_check_extra).empty()
         }
+    }
+    $(document).on('change','.check-inventory', function(){
+        checked_toggle_event()
     })
 </script>
