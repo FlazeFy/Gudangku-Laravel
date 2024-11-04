@@ -11,6 +11,7 @@ use App\Models\ReportModel;
 // Helpers
 use App\Helpers\Audit;
 use App\Helpers\Validation;
+use App\Helpers\Generator;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -444,13 +445,11 @@ class Commands extends Controller
                 $old_check_report = ReportModel::find($id);
 
                 if($old_check_report){
-                    foreach ($list_item_id as $dt) {
-                        if (!Generator::getValidateUUID($dt)) {
-                            return response()->json([
-                                'status' => 'error',
-                                'message' => 'Validation failed: list item ID is not a valid UUID'
-                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-                        }
+                    if (Validation::getValidateUUID($request->list_id)) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Validation failed: list item ID is not a valid UUID'
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     $report = ReportModel::create([
@@ -476,27 +475,16 @@ class Commands extends Controller
                                 ->where('created_by', $user_id)
                                 ->where('report_id', $id)
                                 ->first();
-                
+
                             if ($old_report_item) {
                                 $list_item_name .= "$old_report_item->item_name,";
-                                $report_item = ReportItemModel::create([
-                                    'id' => Generator::getUUID(),
-                                    'inventory_id' => $dt,
-                                    'report_id' => $id,
-                                    'item_name' => $old_report_item->item_name,
-                                    'item_desc' => $old_report_item->item_desc,
-                                    'item_qty' => $old_report_item->item_qty,
-                                    'item_price' => $old_report_item->item_price,
-                                    'created_at' => date('Y-m-d H:i:s'), 
-                                    'created_by' => $user_id,
-                                ]);
-                
-                                if ($report_item) {
-                                    $rows = ReportItemModel::where('id', $dt)
-                                        ->where('created_by', $user_id)
-                                        ->delete();
-                
-                                    $rows > 0 ? $success_migrate++ : $failed_migrate++;
+                                $updated = ReportItemModel::where('id', $dt)
+                                    ->update([
+                                        'report_id' => $report->id,
+                                        'created_at' => date('Y-m-d H:i:s'),
+                                    ]);
+                                if ($updated > 0) {
+                                    $success_migrate++;
                                 } else {
                                     $failed_migrate++;
                                 }
@@ -540,7 +528,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }   

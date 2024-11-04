@@ -18,7 +18,7 @@ class ReportCategory implements Rule
 
     public function passes($attribute, $value)
     {
-        $type = ['Shopping Cart','Checkout','Wash List','Wishlist','Others'];
+        $type = ['Shopping Cart','Checkout','Wash List','Wishlist','Others','Checklist'];
 
         foreach ($type as $format) {
             if ($format === $value) {

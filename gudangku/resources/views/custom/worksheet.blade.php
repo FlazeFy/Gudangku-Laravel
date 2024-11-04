@@ -3,6 +3,7 @@
     let editor = new RichTextEditor("#work_area")
     const type = '<?= $type ?>'
     const id = '<?= $id ?>'
+    const filter_in = '<?= $filter_in ?? ''?>'
     const get_generated_default_document = () => {
         Swal.showLoading()
         $.ajax({
