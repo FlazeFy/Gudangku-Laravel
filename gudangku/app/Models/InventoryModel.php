@@ -111,4 +111,26 @@ class InventoryModel extends Model
         
         return $res;
     }
+
+    public static function getAnalyzeMost($user_id, $col){
+        $avgCol = $col === 'inventory_price' ? "CAST(AVG($col) as UNSIGNED) as average_$col," : "";
+        $maxCol = $col === 'inventory_price' ? "CAST(MAX($col) as UNSIGNED)" : "MAX($col)";
+        $minCol = $col === 'inventory_price' ? "CAST(MIN($col) as UNSIGNED)" : "MIN($col)";
+        $selectColumns = trim("$avgCol $maxCol as max_$col, $minCol as min_$col");
+
+        $res = InventoryModel::selectRaw($selectColumns)
+            ->where('created_by', $user_id)
+            ->first();
+
+        return $res;
+    }
+
+    public static function getAnalyzeContext($user_id, $col, $target){
+        $res = InventoryModel::selectRaw("COUNT(1) as total, CAST(AVG(inventory_price)as UNSIGNED) as average_price")
+            ->where($col,$target)
+            ->where('created_by', $user_id)
+            ->first();
+
+        return $res;
+    }
 }

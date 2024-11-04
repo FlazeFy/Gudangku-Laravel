@@ -2415,6 +2415,186 @@
                 ]
             }
         },
+        "/api/v1/inventory/analyze/{id}": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get analyze data of inventory by id",
+                "description": "This request is used to get analyze data of inventory. This request is using MySQL database, and has protected routes.",
+                "operationId": "08cb649c09363567a1580cd526190c30",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Inventory ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "inventory analyzed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory analyzed"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "inventory_name": {
+                                                    "type": "string",
+                                                    "example": "Air Fryer"
+                                                },
+                                                "inventory_price": {
+                                                    "type": "integer",
+                                                    "example": 1200
+                                                },
+                                                "inventory_category": {
+                                                    "type": "string",
+                                                    "example": "Electronics"
+                                                },
+                                                "inventory_room": {
+                                                    "type": "string",
+                                                    "example": "Room 101"
+                                                },
+                                                "inventory_storage": {
+                                                    "type": "string",
+                                                    "example": "Storage A"
+                                                },
+                                                "inventory_rack": {
+                                                    "type": "string",
+                                                    "example": "Rack 5"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2024-11-01 10:00:00"
+                                                },
+                                                "inventory_price_analyze": {
+                                                    "properties": {
+                                                        "average_inventory_price": {
+                                                            "type": "integer",
+                                                            "example": 700000
+                                                        },
+                                                        "max_inventory_price": {
+                                                            "type": "integer",
+                                                            "example": 150000
+                                                        },
+                                                        "min_inventory_price": {
+                                                            "type": "integer",
+                                                            "example": 100000
+                                                        },
+                                                        "diff_ammount_average_to_price": {
+                                                            "type": "integer",
+                                                            "example": 340000
+                                                        },
+                                                        "diff_status_average_to_price": {
+                                                            "type": "string",
+                                                            "example": "More Expensive"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "inventory_category_analyze": {
+                                                    "properties": {
+                                                        "average_inventory_category": {
+                                                            "type": "string",
+                                                            "example": "Electronics"
+                                                        },
+                                                        "most_common_inventory_category": {
+                                                            "type": "string",
+                                                            "example": "Electronics"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "inventory detail document failed to analyze",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/reminder": {
             "post": {
                 "tags": [

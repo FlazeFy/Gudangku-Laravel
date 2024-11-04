@@ -10,7 +10,7 @@
                 <a class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#modalAddReminder" ><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Reminder</a>
                 <a class="btn btn-primary mb-3 me-2" href="/doc/inventory/{{$id}}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</a>
                 <a class="btn btn-primary mb-3 me-2" href="/doc/inventory/{{$id}}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Print Custom</a>
-                <a class="btn btn-primary mb-3 me-2"><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> Analyze</a>
+                <a class="btn btn-primary mb-3 me-2" href="/analyze/inventory/{{$id}}"><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> Analyze</a>
             </div>
             <div class='text-end'>
                 <h6 class='date-text'>Created At : <span id='created_at'></span></h6>

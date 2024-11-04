@@ -14,6 +14,7 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AnalyzeController;
 use App\Http\Controllers\ReportDetailController;
 use App\Http\Controllers\Room3DController;
 use App\Http\Controllers\Room2DController;
@@ -104,5 +105,17 @@ Route::prefix('/doc')->group(function () {
     Route::prefix('/inventory/{id}')->middleware(['auth_v2:sanctum'])->group(function (){
         Route::get('/', [DocumentController::class, 'index_inventory']);
         Route::get('/custom', [DocumentController::class, 'custom_inventory']);
+    });
+});
+
+Route::prefix('/analyze')->group(function () {
+    Route::prefix('/report/{id}')->group(function (){
+        Route::get('/', [AnalyzeController::class, 'index_report']);
+    });
+    Route::prefix('/layout/{room}')->middleware(['auth_v2:sanctum'])->group(function (){
+        Route::get('/', [AnalyzeController::class, 'index_layout']);
+    });
+    Route::prefix('/inventory/{id}')->middleware(['auth_v2:sanctum'])->group(function (){
+        Route::get('/', [AnalyzeController::class, 'index_inventory']);
     });
 });

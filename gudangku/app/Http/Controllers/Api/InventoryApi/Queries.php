@@ -738,4 +738,126 @@ class Queries extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/analyze/{id}",
+     *     summary="Get analyze data of inventory by id",
+     *     description="This request is used to get analyze data of inventory. This request is using MySQL database, and has protected routes.",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Inventory ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory analyzed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory analyzed"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="inventory_name", type="string", example="Air Fryer"),
+     *                 @OA\Property(property="inventory_price", type="integer", example=1200),
+     *                 @OA\Property(property="inventory_category", type="string", example="Electronics"),
+     *                 @OA\Property(property="inventory_room", type="string", example="Room 101"),
+     *                 @OA\Property(property="inventory_storage", type="string", example="Storage A"),
+     *                 @OA\Property(property="inventory_rack", type="string", example="Rack 5"),
+     *                 @OA\Property(property="created_at", type="string", example="2024-11-01 10:00:00"),
+     *                 @OA\Property(
+     *                     property="inventory_price_analyze",
+     *                     type="object",
+     *                     @OA\Property(property="average_inventory_price", type="integer", example=700000),
+     *                     @OA\Property(property="max_inventory_price", type="integer", example=150000),
+     *                     @OA\Property(property="min_inventory_price", type="integer", example=100000),
+     *                     @OA\Property(property="diff_ammount_average_to_price", type="integer", example=340000),
+     *                     @OA\Property(property="diff_status_average_to_price", type="string", example="More Expensive")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="inventory_category_analyze",
+     *                     type="object",
+     *                     @OA\Property(property="average_inventory_category", type="string", example="Electronics"),
+     *                     @OA\Property(property="most_common_inventory_category", type="string", example="Electronics")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory detail document failed to analyze",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     )
+     * )
+     */
+    public function get_analyze_inventory(Request $request,$id)
+    {
+        try{
+            $user_id = $request->user()->id;
+            $inventory = InventoryModel::find($id);
+
+            if ($inventory) {    
+                $res_price = InventoryModel::getAnalyzeMost($user_id, 'inventory_price');
+                $diff_price_avg = $res_price->average_inventory_price - $inventory->inventory_price;
+                $res_price->diff_ammount_average_to_price = $diff_price_avg;
+                $res_price->diff_status_average_to_price = $diff_price_avg < 0 ? 'More Exspensive' : 'More Cheaper';
+
+                $res_category = InventoryModel::getAnalyzeContext($user_id, 'inventory_category',$inventory->inventory_category);
+
+                $res_info = [
+                    'inventory_name' => $inventory->inventory_name,
+                    'inventory_price' => $inventory->inventory_price,
+                    'inventory_category' => $inventory->inventory_category,
+                    'inventory_room' => $inventory->inventory_room,
+                    'inventory_storage' => $inventory->inventory_storage,
+                    'inventory_rack' => $inventory->inventory_rack,
+                    'created_at' => $inventory->created_at,
+                ];
+
+                $res = (object) array_merge($res_info, [
+                    'inventory_price_analyze' => $res_price,
+                    'inventory_category_analyze' => $res_category,
+                ]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'inventory analyzed',
+                    'data' => $res
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'inventory not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

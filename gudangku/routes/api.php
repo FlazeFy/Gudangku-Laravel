@@ -36,6 +36,7 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::get('/list', [QueriesInventoryController::class, 'get_list_inventory']);
     Route::get('/room', [QueriesInventoryController::class, 'get_list_room']);
     Route::get('/calendar', [QueriesInventoryController::class, 'get_list_calendar']);
+    Route::get('/analyze/{id}', [QueriesInventoryController::class, 'get_analyze_inventory']);
 
     Route::prefix('/layout/{room}')->group(function (){
         Route::get('/', [QueriesInventoryController::class, 'get_room_layout']);
