@@ -25,6 +25,8 @@
         </div>
         @include('analyze.inventory_price')
         @include('analyze.inventory_category')
+        @include('analyze.inventory_unit_vol')
+        @include('analyze.inventory_room')
     </div>
     <script>
         const get_analyze = (id) => {
@@ -41,6 +43,10 @@
                     const data = response.data
                     $('.inventory_name').text(data.inventory_name)
                     $('.inventory_category').text(data.inventory_category)
+                    $('.inventory_room').text(data.inventory_room)
+                    $('.inventory_unit').text(data.inventory_unit)
+                    $('.inventory_vol').text(data.inventory_vol)
+                    $('.inventory_unit_vol').text(`${data.inventory_vol} ${data.inventory_unit}`)
                     $('.inventory_price').text(`Rp. ${number_format(data.inventory_price, 0, ',', '.')}`)
                     $('#inventory_price_max').text(`Rp. ${number_format(data.inventory_price_analyze.max_inventory_price, 0, ',', '.')}`)
                     $('#inventory_price_min').text(`Rp. ${number_format(data.inventory_price_analyze.min_inventory_price, 0, ',', '.')}`)
@@ -49,6 +55,11 @@
                     $('#inventory_price_avg').text(`Rp. ${number_format(data.inventory_price_analyze.average_inventory_price, 0, ',', '.')}`)
                     $('#inventory_price_avg_category').text(`Rp. ${number_format(data.inventory_category_analyze.average_price, 0, ',', '.')}`)
                     $('#total_inventory_category').text(data.inventory_category_analyze.total)
+                    $('#inventory_storage_rack').html(`${data.inventory_storage && `storage <span class='text-primary'>${data.inventory_storage}</span>`}${data.inventory_rack && `, rack <span class='text-primary'>${data.inventory_rack}</span>`}`)
+                    $('#total_inventory_room').text(data.inventory_room_analyze.total)
+                    $('#inventory_price_avg_room').text(`Rp. ${number_format(data.inventory_room_analyze.average_price, 0, ',', '.')}`)
+                    $('#inventory_price_avg_unit').text(`Rp. ${number_format(data.inventory_unit_analyze.average_price, 0, ',', '.')}`)
+                    $('#total_inventory_unit').text(data.inventory_unit_analyze.total)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()

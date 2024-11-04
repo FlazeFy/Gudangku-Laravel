@@ -828,6 +828,10 @@ class Queries extends Controller
 
                 $res_category = InventoryModel::getAnalyzeContext($user_id, 'inventory_category',$inventory->inventory_category);
 
+                $res_room = InventoryModel::getAnalyzeContext($user_id, 'inventory_room',$inventory->inventory_room);
+
+                $res_unit = InventoryModel::getAnalyzeContext($user_id, 'inventory_unit',$inventory->inventory_unit);
+
                 $res_info = [
                     'inventory_name' => $inventory->inventory_name,
                     'inventory_price' => $inventory->inventory_price,
@@ -835,12 +839,16 @@ class Queries extends Controller
                     'inventory_room' => $inventory->inventory_room,
                     'inventory_storage' => $inventory->inventory_storage,
                     'inventory_rack' => $inventory->inventory_rack,
+                    'inventory_unit' => $inventory->inventory_unit,
+                    'inventory_vol' => $inventory->inventory_vol,
                     'created_at' => $inventory->created_at,
                 ];
 
                 $res = (object) array_merge($res_info, [
                     'inventory_price_analyze' => $res_price,
                     'inventory_category_analyze' => $res_category,
+                    'inventory_room_analyze' => $res_room,
+                    'inventory_unit_analyze' => $res_unit,
                 ]);
                 return response()->json([
                     'status' => 'success',
