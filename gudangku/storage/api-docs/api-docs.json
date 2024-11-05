@@ -2454,49 +2454,61 @@
                                             "properties": {
                                                 "inventory_name": {
                                                     "type": "string",
-                                                    "example": "Air Fryer"
+                                                    "example": "odio omnis cum"
                                                 },
                                                 "inventory_price": {
                                                     "type": "integer",
-                                                    "example": 1200
+                                                    "example": 4145000
                                                 },
                                                 "inventory_category": {
                                                     "type": "string",
-                                                    "example": "Electronics"
+                                                    "example": "Skin & Body Care"
                                                 },
                                                 "inventory_room": {
                                                     "type": "string",
-                                                    "example": "Room 101"
+                                                    "example": "Car Cabin"
                                                 },
                                                 "inventory_storage": {
                                                     "type": "string",
-                                                    "example": "Storage A"
+                                                    "example": "Stand"
                                                 },
                                                 "inventory_rack": {
                                                     "type": "string",
-                                                    "example": "Rack 5"
+                                                    "example": "Rack-b3"
+                                                },
+                                                "inventory_unit": {
+                                                    "type": "string",
+                                                    "example": "Pcs"
+                                                },
+                                                "inventory_vol": {
+                                                    "type": "integer",
+                                                    "example": 6
                                                 },
                                                 "created_at": {
                                                     "type": "string",
-                                                    "example": "2024-11-01 10:00:00"
+                                                    "example": "2024-10-24 21:15:01"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "example": "2024-11-03 18:25:48"
                                                 },
                                                 "inventory_price_analyze": {
                                                     "properties": {
                                                         "average_inventory_price": {
                                                             "type": "integer",
-                                                            "example": 700000
+                                                            "example": 2473052
                                                         },
                                                         "max_inventory_price": {
                                                             "type": "integer",
-                                                            "example": 150000
+                                                            "example": 4995000
                                                         },
                                                         "min_inventory_price": {
                                                             "type": "integer",
-                                                            "example": 100000
+                                                            "example": 30000
                                                         },
                                                         "diff_ammount_average_to_price": {
                                                             "type": "integer",
-                                                            "example": 340000
+                                                            "example": -1671948
                                                         },
                                                         "diff_status_average_to_price": {
                                                             "type": "string",
@@ -2507,16 +2519,78 @@
                                                 },
                                                 "inventory_category_analyze": {
                                                     "properties": {
-                                                        "average_inventory_category": {
-                                                            "type": "string",
-                                                            "example": "Electronics"
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 98
                                                         },
-                                                        "most_common_inventory_category": {
-                                                            "type": "string",
-                                                            "example": "Electronics"
+                                                        "average_price": {
+                                                            "type": "integer",
+                                                            "example": 2418571
                                                         }
                                                     },
                                                     "type": "object"
+                                                },
+                                                "inventory_room_analyze": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 83
+                                                        },
+                                                        "average_price": {
+                                                            "type": "integer",
+                                                            "example": 2515723
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "inventory_unit_analyze": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 84
+                                                        },
+                                                        "average_price": {
+                                                            "type": "integer",
+                                                            "example": 2439762
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "inventory_history_analyze": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "total": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            },
+                                                            "report_category": {
+                                                                "type": "string",
+                                                                "example": "Others"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "inventory_report": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2024-09-14 02:22:18"
+                                                            },
+                                                            "report_title": {
+                                                                "type": "string",
+                                                                "example": "et amet"
+                                                            },
+                                                            "report_category": {
+                                                                "type": "string",
+                                                                "example": "Others"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"

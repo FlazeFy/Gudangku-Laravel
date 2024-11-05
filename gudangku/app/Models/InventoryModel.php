@@ -133,4 +133,16 @@ class InventoryModel extends Model
 
         return $res;
     }
+
+    public static function getAnalyzeHistory($user_id,$id){
+        $res = ReportModel::selectRaw("COUNT(1) as total, report_category")
+            ->join('report_item','report_item.report_id','=','report.id')
+            ->where('report_item.created_by',$user_id)
+            ->where('report_item.inventory_id',$id)
+            ->groupby('report_category')
+            ->orderby('total','desc')
+            ->get();
+
+        return count($res) > 0 ? $res : null;
+    }
 }

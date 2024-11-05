@@ -11,6 +11,7 @@ use App\Helpers\Document;
 use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
 use App\Models\ReminderModel;
+use App\Models\ReportModel;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -763,27 +764,61 @@ class Queries extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 @OA\Property(property="inventory_name", type="string", example="Air Fryer"),
-     *                 @OA\Property(property="inventory_price", type="integer", example=1200),
-     *                 @OA\Property(property="inventory_category", type="string", example="Electronics"),
-     *                 @OA\Property(property="inventory_room", type="string", example="Room 101"),
-     *                 @OA\Property(property="inventory_storage", type="string", example="Storage A"),
-     *                 @OA\Property(property="inventory_rack", type="string", example="Rack 5"),
-     *                 @OA\Property(property="created_at", type="string", example="2024-11-01 10:00:00"),
+     *                 @OA\Property(property="inventory_name", type="string", example="odio omnis cum"),
+     *                 @OA\Property(property="inventory_price", type="integer", example=4145000),
+     *                 @OA\Property(property="inventory_category", type="string", example="Skin & Body Care"),
+     *                 @OA\Property(property="inventory_room", type="string", example="Car Cabin"),
+     *                 @OA\Property(property="inventory_storage", type="string", example="Stand"),
+     *                 @OA\Property(property="inventory_rack", type="string", example="Rack-b3"),
+     *                 @OA\Property(property="inventory_unit", type="string", example="Pcs"),
+     *                 @OA\Property(property="inventory_vol", type="integer", example=6),
+     *                 @OA\Property(property="created_at", type="string", example="2024-10-24 21:15:01"),
+     *                 @OA\Property(property="updated_at", type="string", example="2024-11-03 18:25:48"),
      *                 @OA\Property(
      *                     property="inventory_price_analyze",
      *                     type="object",
-     *                     @OA\Property(property="average_inventory_price", type="integer", example=700000),
-     *                     @OA\Property(property="max_inventory_price", type="integer", example=150000),
-     *                     @OA\Property(property="min_inventory_price", type="integer", example=100000),
-     *                     @OA\Property(property="diff_ammount_average_to_price", type="integer", example=340000),
+     *                     @OA\Property(property="average_inventory_price", type="integer", example=2473052),
+     *                     @OA\Property(property="max_inventory_price", type="integer", example=4995000),
+     *                     @OA\Property(property="min_inventory_price", type="integer", example=30000),
+     *                     @OA\Property(property="diff_ammount_average_to_price", type="integer", example=-1671948),
      *                     @OA\Property(property="diff_status_average_to_price", type="string", example="More Expensive")
      *                 ),
      *                 @OA\Property(
      *                     property="inventory_category_analyze",
      *                     type="object",
-     *                     @OA\Property(property="average_inventory_category", type="string", example="Electronics"),
-     *                     @OA\Property(property="most_common_inventory_category", type="string", example="Electronics")
+     *                     @OA\Property(property="total", type="integer", example=98),
+     *                     @OA\Property(property="average_price", type="integer", example=2418571)
+     *                 ),
+     *                 @OA\Property(
+     *                     property="inventory_room_analyze",
+     *                     type="object",
+     *                     @OA\Property(property="total", type="integer", example=83),
+     *                     @OA\Property(property="average_price", type="integer", example=2515723)
+     *                 ),
+     *                 @OA\Property(
+     *                     property="inventory_unit_analyze",
+     *                     type="object",
+     *                     @OA\Property(property="total", type="integer", example=84),
+     *                     @OA\Property(property="average_price", type="integer", example=2439762)
+     *                 ),
+     *                 @OA\Property(
+     *                     property="inventory_history_analyze",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="total", type="integer", example=2),
+     *                         @OA\Property(property="report_category", type="string", example="Others")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="inventory_report",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="created_at", type="string", example="2024-09-14 02:22:18"),
+     *                         @OA\Property(property="report_title", type="string", example="et amet"),
+     *                         @OA\Property(property="report_category", type="string", example="Others")
+     *                     )
      *                 )
      *             )
      *         )
@@ -814,6 +849,7 @@ class Queries extends Controller
      *     )
      * )
      */
+
     public function get_analyze_inventory(Request $request,$id)
     {
         try{
@@ -832,6 +868,9 @@ class Queries extends Controller
 
                 $res_unit = InventoryModel::getAnalyzeContext($user_id, 'inventory_unit',$inventory->inventory_unit);
 
+                $res_history = InventoryModel::getAnalyzeHistory($user_id,$inventory->id);
+                $res_report = ReportModel::getLastFoundInventoryReport($user_id,$inventory->id);
+
                 $res_info = [
                     'inventory_name' => $inventory->inventory_name,
                     'inventory_price' => $inventory->inventory_price,
@@ -842,6 +881,7 @@ class Queries extends Controller
                     'inventory_unit' => $inventory->inventory_unit,
                     'inventory_vol' => $inventory->inventory_vol,
                     'created_at' => $inventory->created_at,
+                    'updated_at' => $inventory->updated_at,
                 ];
 
                 $res = (object) array_merge($res_info, [
@@ -849,6 +889,8 @@ class Queries extends Controller
                     'inventory_category_analyze' => $res_category,
                     'inventory_room_analyze' => $res_room,
                     'inventory_unit_analyze' => $res_unit,
+                    'inventory_history_analyze' => $res_history,
+                    'inventory_report' => $res_report
                 ]);
                 return response()->json([
                     'status' => 'success',

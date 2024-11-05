@@ -195,6 +195,22 @@ const check_filling_status = (list) => {
     });
 }
 
+const count_time = (date1,date2,type) => {
+    const oneHour = 60 * 60 * 1000
+    const oneDay = 24 * oneHour
+    const firstDate = new Date(date1)
+    const secondDate = new Date(date2 ?? Date.now())
+    const diffInMilliseconds = Math.abs(secondDate - firstDate)
+
+    let res = 'invalid type'
+    if (type === "day") {
+        res = Math.floor(diffInMilliseconds / oneDay)
+    } else if (type === "hour") {
+        res = Math.floor(diffInMilliseconds / oneHour)
+    } 
+    return res
+}
+
 const check_all = (target,type) => {
     $(target).prop('checked', type == 'check' ? true : false)
     Swal.fire({

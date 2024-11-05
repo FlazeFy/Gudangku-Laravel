@@ -78,4 +78,14 @@ class ReportModel extends Model
         
         return $res;
     }
+
+    public static function getLastFoundInventoryReport($user_id,$invetory_id){
+        $res = ReportModel::select('report.created_at','report_title','report_category')
+            ->join('report_item','report_item.report_id','=','report.id')
+            ->where('report.created_by',$user_id)
+            ->where('inventory_id',$invetory_id)
+            ->get();
+
+        return $res;
+    }
 }

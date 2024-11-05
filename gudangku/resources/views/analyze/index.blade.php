@@ -27,6 +27,7 @@
         @include('analyze.inventory_category')
         @include('analyze.inventory_unit_vol')
         @include('analyze.inventory_room')
+        @include('analyze.inventory_history')
     </div>
     <script>
         const get_analyze = (id) => {
@@ -46,6 +47,45 @@
                     $('.inventory_room').text(data.inventory_room)
                     $('.inventory_unit').text(data.inventory_unit)
                     $('.inventory_vol').text(data.inventory_vol)
+                    $('#created_at').text(getDateToContext(data.created_at,'calendar'))
+                    $('#days_exist').text(count_time(data.created_at,null,'day'))
+                    if(data.updated_at){
+                        $('#updated_at').html(` And the last updated on ${getDateToContext(data.updated_at,'calendar')} that about <b>${count_time(data.updated_at,null,'day')}</b> days ago.`)
+                    }
+                    if(data.inventory_history_analyze){
+                        let report_history = ' This item also had been used in report '
+                        let tbody_report = ''
+
+                        data.inventory_history_analyze.forEach(dt => {
+                            report_history += `<b class='text-primary'>${dt.report_category} (${dt.total}x)</b>, `
+                        });
+                        data.inventory_report.forEach(dt => {
+                            tbody_report += `
+                                <tbody>
+                                    <tr>
+                                        <td>${dt.report_title}</td>
+                                        <td class='text-center'>${dt.report_category}</td>
+                                        <td class='text-center'>${getDateToContext(dt.created_at,'calendar')}</td>
+                                    </tr>
+                                </tbody>
+                            `
+                        });
+
+                        $('#report_history').html(`${report_history}`)
+                        $('#report_history_table').html(`
+                            <h4 class='mt-3 fw-bold'>Showing ${data.inventory_report.length} Last Report where this inventory can be found</h4>
+                            <table class='table table-bordered my-3'>
+                                <thead class='text-center'>
+                                    <tr>
+                                        <th>Report Title</th>
+                                        <th>Category</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${tbody_report}</tbody>
+                            </table>
+                        `)
+                    }
                     $('.inventory_unit_vol').text(`${data.inventory_vol} ${data.inventory_unit}`)
                     $('.inventory_price').text(`Rp. ${number_format(data.inventory_price, 0, ',', '.')}`)
                     $('#inventory_price_max').text(`Rp. ${number_format(data.inventory_price_analyze.max_inventory_price, 0, ',', '.')}`)
