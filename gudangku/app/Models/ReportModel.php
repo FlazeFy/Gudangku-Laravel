@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -79,13 +80,43 @@ class ReportModel extends Model
         return $res;
     }
 
-    public static function getLastFoundInventoryReport($user_id,$invetory_id){
+    public static function getLastFoundInventoryReport($user_id,$inventory_id){
         $res = ReportModel::select('report.created_at','report_title','report_category')
             ->join('report_item','report_item.report_id','=','report.id')
             ->where('report.created_by',$user_id)
-            ->where('inventory_id',$invetory_id)
+            ->where('inventory_id',$inventory_id)
             ->get();
 
         return $res;
+    }
+
+    public static function getInventoryMonthlyInReport($user_id, $inventory_id, $year = null) {
+        if ($year === null) {
+            $year = date('Y');
+        }        
+        $res = ReportModel::selectRaw('MONTH(report.created_at) as context, CAST(COUNT(1) AS UNSIGNED) as total')
+            ->join('report_item','report_item.report_id','=','report.id')
+            ->where('report.created_by',$user_id)
+            ->where('inventory_id',$inventory_id)
+            ->whereRaw("YEAR(report.created_at) = '$year'")
+            ->groupByRaw('MONTH(report.created_at)')
+            ->get();
+
+        $res_final = [];
+        for ($i=1; $i <= 12; $i++) { 
+            $total = 0;
+            foreach ($res as $idx => $val) {
+                if($i == $val->context){
+                    $total = $val->total;
+                    break;
+                }
+            }
+            array_push($res_final, [
+                'context' => Generator::generateMonthName($i,'short'),
+                'total' => $total,
+            ]);
+        }
+
+        return $res_final;
     }
 }

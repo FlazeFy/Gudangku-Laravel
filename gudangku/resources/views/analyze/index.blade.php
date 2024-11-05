@@ -22,32 +22,40 @@
         <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">Analyze : {{ucfirst($type)}} <b class='inventory_name text-primary'></b></h2>
         <div class="d-flex justify-content-start">
             <a class="btn btn-danger mb-3 me-2" href="/inventory/edit/{{$id}}"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
+            <a class="btn btn-primary mb-3 me-2" onclick="generate_custom()"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
         </div>
-        <div class="row mb-4">
-            <div class="col">
-                @include('analyze.inventory_price')
-                @include('analyze.inventory_category')
+        <div id="render_area">
+            <div class="row">
+                <div class="col">
+                    <br>
+                    @include('analyze.inventory_price')
+                    @include('analyze.inventory_category')
+                </div>
+                <div class="col">
+                    <div id='price-pie-chart-holder'></div>
+                </div>
             </div>
-            <div class="col">
-                <div id='price-pie-chart-holder'></div>
-            </div>
+            <br><br>
+            <div class="row">
+                <div class="col">
+                    <div id='price-line-chart-holder'></div>
+                </div>
+                <div class="col">
+                    <br>
+                    @include('analyze.inventory_unit_vol')
+                    @include('analyze.inventory_room')
+                </div>
+            </div><br><br>
+            @include('analyze.inventory_history')
         </div>
-        <div class="row mt-3">
-            <div class="col">
-                <div id='price-line-chart-holder'></div>
-            </div>
-            <div class="col">
-                @include('analyze.inventory_unit_vol')
-                @include('analyze.inventory_room')
-            </div>
-        </div>
-        @include('analyze.inventory_history')
+        <div id="work_area" class='d-none'></div>
     </div>
     <script>
         const get_analyze = (id) => {
             Swal.showLoading()
+            const year = new Date().getFullYear()
             $.ajax({
-                url: `/api/v1/inventory/analyze/${id}`,
+                url: `/api/v1/inventory/analyze/${id}?year=${year}`,
                 type: 'GET',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Accept", "application/json");
@@ -93,8 +101,8 @@
                             `
                         });
 
-                        $('#report_history').html(`${report_history}`)
-                        $('#report_history_table').html(`
+                        $('#last_report_history').html(`${report_history}`)
+                        $('#last_report_history_table').html(`
                             <h4 class='mt-3 fw-bold'>Showing ${data.inventory_report.length} Last Report where this inventory can be found</h4>
                             <table class='table table-bordered my-3'>
                                 <thead class='text-center'>
@@ -107,6 +115,10 @@
                                 <tbody>${tbody_report}</tbody>
                             </table>
                         `)
+                        const totalUsedInReportYear = data.inventory_in_monthly_report.reduce((sum, dt) => {
+                            return sum + dt.total
+                        }, 0);
+                        $('#whole_year_total_in_report').html(`<p>In whole year ${year}, there is about <b class='text-primary'>${totalUsedInReportYear} report</b> are using this inventory.</p>`)
                     }
                     if(data.inventory_capacity_unit && data.inventory_capacity_vol){
                         $('#capacity_holder').html(`
@@ -140,12 +152,13 @@
                         { context: 'Whole Inventory', total: data.inventory_price_analyze.sub_total - data.inventory_price}
                     ]
                     const data_price_avg_pie_chart = [
-                        { context: `Average by Category`, total: data.inventory_category_analyze.average_price},
-                        { context: `Average by Unit`, total: data.inventory_unit_analyze.average_price},
-                        { context: `Average by Room`, total: data.inventory_room_analyze.average_price}
+                        { context: `By Category`, total: data.inventory_category_analyze.average_price},
+                        { context: `By Unit`, total: data.inventory_unit_analyze.average_price},
+                        { context: `By Room`, total: data.inventory_room_analyze.average_price}
                     ]
                     generate_pie_chart(`Price Comparison to All Inventory`,'price-pie-chart-holder',data_price_pie_chart)
-                    generate_bar_chart(`Average Context Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_pie_chart)
+                    generate_bar_chart(`Average Price Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_pie_chart)
+                    generate_line_column_chart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
@@ -160,5 +173,23 @@
             });
         }
         get_analyze("<?= $id ?>")
+
+        let toggle_show_customize = false
+        const generate_custom = () => {
+            const header = `<?= Generator::generateDocTemplate('header') ?>`
+            const footer = `<?= Generator::generateDocTemplate('footer') ?>`
+            const style = `<?= Generator::generateDocTemplate('style') ?>`
+            if(!toggle_show_customize){
+                let editor = new RichTextEditor("#work_area")
+                editor.setHTML(`<head>${style}</head>${header}${$('#render_area').html()}${footer}`)
+                toggle_show_customize = true
+                $('#work_area').removeClass('d-none')
+                $('#render_area').addClass('d-none')
+            } else {
+                $('#work_area').empty().removeClass().addClass('d-none')
+                $('#render_area').removeClass('d-none')
+                toggle_show_customize = false
+            }
+        }
     </script>
 @endsection

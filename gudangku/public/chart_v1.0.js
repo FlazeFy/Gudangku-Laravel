@@ -55,11 +55,19 @@ const generate_bar_chart = (title, holder, data) => {
             const contexts = data.map(c => c[typeof data[0][keys[0]] === 'string' ? keys[0] : keys[1]])
 
             var options = {
-                series: totals,
+                series: [{
+                    name: title,
+                    data: totals
+                }],
                 chart: {
                     type: 'bar',
+                    toolbar: {
+                        show: true,        
+                        tools: {
+                            download: false 
+                        }
+                    }
                 },
-                labels: contexts,
                 colors: ['#F9DB00', '#009FF9', '#F78A00', '#42C9E7'],
                 legend: {
                     position: 'bottom'
@@ -68,6 +76,9 @@ const generate_bar_chart = (title, holder, data) => {
                     bar: {
                         horizontal: false
                     }
+                },
+                xaxis: {
+                    categories: contexts,
                 },
                 responsive: [{
                     options: {
@@ -102,27 +113,27 @@ const generate_line_column_chart = (title, holder, data) => {
     if(data.length > 0){
         let keys = Object.keys(data[0])
 
-        if(keys.length == 3){
+        if(keys.length == 3 || keys.length == 2){
             const total_1 = data.map(c => Number.isInteger(data[0][keys[1]]) ? c[keys[1]] : Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : c[keys[0]])
-            const total_2 = data.map(c => Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : Number.isInteger(data[0][keys[0]]) ? c[keys[0]] : c[keys[1]])
+            const total_2 = keys.length == 3 ? data.map(c => Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : Number.isInteger(data[0][keys[0]]) ? c[keys[0]] : c[keys[1]]) : null
             const title_1 = ucEachWord((Number.isInteger(data[0][keys[1]]) ? keys[1] : Number.isInteger(data[0][keys[2]]) ? keys[2] : keys[0]).replaceAll('_',' '))
-            const title_2 = ucEachWord((Number.isInteger(data[0][keys[2]]) ? keys[2] : Number.isInteger(data[0][keys[0]]) ? keys[0] : keys[1]).replaceAll('_',' '))
+            const title_2 = keys.length == 3 ? ucEachWord((Number.isInteger(data[0][keys[2]]) ? keys[2] : Number.isInteger(data[0][keys[0]]) ? keys[0] : keys[1]).replaceAll('_',' ')) : null
             const sum_total_1 = total_1.reduce((acc, val) => acc + val, 0)
-            const sum_total_2 = total_2.reduce((acc, val) => acc + val, 0)
+            const sum_total_2 = keys.length == 3 ? total_2.reduce((acc, val) => acc + val, 0) : null
             const context = data.map(c => c[typeof data[0][keys[0]] === 'string' ? keys[0] : typeof data[0][keys[1]] === 'string' ? keys[1] : keys[2]])
 
             var options = {
                 series: [
                     {
-                        name: sum_total_1 > sum_total_2 ? title_2 : title_1,
+                        name: sum_total_1 > sum_total_2 && total_2 ? title_2 : title_1,
                         type: 'column',
-                        data: sum_total_1 > sum_total_2 ? total_2 : total_1
+                        data: sum_total_1 > sum_total_2 && total_2 ? total_2 : total_1
                     }, 
-                    {
+                    ...(total_2 !== null ? [{
                         name: sum_total_1 < sum_total_2 ? title_2 : title_1,
                         type: 'line',
                         data: sum_total_1 < sum_total_2 ? total_2 : total_1
-                    }
+                    }] : [])
                 ],
                 chart: {
                     height: 350,

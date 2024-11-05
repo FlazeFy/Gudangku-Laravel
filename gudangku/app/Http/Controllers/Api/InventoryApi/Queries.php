@@ -855,6 +855,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
             $inventory = InventoryModel::find($id);
+            $year = $request->query('year', date('Y'));
 
             if ($inventory) {    
                 $res_price = InventoryModel::getAnalyzeMost($user_id, 'inventory_price');
@@ -870,6 +871,7 @@ class Queries extends Controller
 
                 $res_history = InventoryModel::getAnalyzeHistory($user_id,$inventory->id);
                 $res_report = ReportModel::getLastFoundInventoryReport($user_id,$inventory->id);
+                $res_montly_in_report = ReportModel::getInventoryMonthlyInReport($user_id,$inventory->id,$year);
 
                 $res_info = [
                     'inventory_name' => $inventory->inventory_name,
@@ -892,7 +894,8 @@ class Queries extends Controller
                     'inventory_room_analyze' => $res_room,
                     'inventory_unit_analyze' => $res_unit,
                     'inventory_history_analyze' => $res_history,
-                    'inventory_report' => $res_report
+                    'inventory_report' => $res_report,
+                    'inventory_in_monthly_report' => $res_montly_in_report
                 ]);
                 return response()->json([
                     'status' => 'success',
