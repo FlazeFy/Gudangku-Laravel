@@ -880,6 +880,8 @@ class Queries extends Controller
                     'inventory_rack' => $inventory->inventory_rack,
                     'inventory_unit' => $inventory->inventory_unit,
                     'inventory_vol' => $inventory->inventory_vol,
+                    'inventory_capacity_unit' => $inventory->inventory_capacity_unit,
+                    'inventory_capacity_vol' => $inventory->inventory_capacity_vol,
                     'created_at' => $inventory->created_at,
                     'updated_at' => $inventory->updated_at,
                 ];

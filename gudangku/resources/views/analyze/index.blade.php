@@ -23,10 +23,24 @@
         <div class="d-flex justify-content-start">
             <a class="btn btn-danger mb-3 me-2" href="/inventory/edit/{{$id}}"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
         </div>
-        @include('analyze.inventory_price')
-        @include('analyze.inventory_category')
-        @include('analyze.inventory_unit_vol')
-        @include('analyze.inventory_room')
+        <div class="row mb-4">
+            <div class="col">
+                @include('analyze.inventory_price')
+                @include('analyze.inventory_category')
+            </div>
+            <div class="col">
+                <div id='price-pie-chart-holder'></div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                <div id='price-line-chart-holder'></div>
+            </div>
+            <div class="col">
+                @include('analyze.inventory_unit_vol')
+                @include('analyze.inventory_room')
+            </div>
+        </div>
         @include('analyze.inventory_history')
     </div>
     <script>
@@ -49,9 +63,17 @@
                     $('.inventory_vol').text(data.inventory_vol)
                     $('#created_at').text(getDateToContext(data.created_at,'calendar'))
                     $('#days_exist').text(count_time(data.created_at,null,'day'))
+
                     if(data.updated_at){
                         $('#updated_at').html(` And the last updated on ${getDateToContext(data.updated_at,'calendar')} that about <b>${count_time(data.updated_at,null,'day')}</b> days ago.`)
                     }
+                    const isExpensive = data.inventory_price > data.inventory_price_analyze.average_inventory_price
+                    const capacityClass = isExpensive ? 'bg-danger' : 'bg-success'
+                    const capacityText = isExpensive ? 'Expensive' : 'Cheap'
+                    const capacityIcon = isExpensive ? '<i class="fa-solid fa-triangle-exclamation"></i>': '<i class="fa-solid fa-thumbs-up"></i>'
+
+                    $('#expensiveness_holder').html(`<a class='${capacityClass} rounded-pill px-3 py-2 ms-3' style='font-size:var(--textXMD);'>${capacityIcon} ${capacityText}</a>`)
+
                     if(data.inventory_history_analyze){
                         let report_history = ' This item also had been used in report '
                         let tbody_report = ''
@@ -86,6 +108,18 @@
                             </table>
                         `)
                     }
+                    if(data.inventory_capacity_unit && data.inventory_capacity_vol){
+                        $('#capacity_holder').html(`
+                            <h2 class='text-primary fw-bolder mt-2' style='font-size:calc(var(--textJumbo)*2.5);'>${data.inventory_capacity_vol} <span class='text-white' style='font-size:calc(var(--textLG)*1.75);'>${data.inventory_capacity_unit == 'percentage' ? '%' : data.inventory_capacity_unit} of remaining capacity</span></h2>
+                        `)
+                        const isLowCapacity = data.inventory_capacity_unit === 'percentage' && data.inventory_capacity_vol <= 30
+                        const capacityClass = isLowCapacity ? 'bg-danger' : 'bg-success'
+                        const capacityText = isLowCapacity ? 'At Low Capacity' : 'Normal Capacity'
+                        const capacityIcon = isLowCapacity ? '<i class="fa-solid fa-triangle-exclamation"></i>': '<i class="fa-solid fa-thumbs-up"></i>'
+
+                        $('#low_capacity_holder').html(`<a class='${capacityClass} rounded-pill px-3 py-2 ms-3' style='font-size:var(--textXMD);'>${capacityIcon} ${capacityText}</a>`)
+                    }
+
                     $('.inventory_unit_vol').text(`${data.inventory_vol} ${data.inventory_unit}`)
                     $('.inventory_price').text(`Rp. ${number_format(data.inventory_price, 0, ',', '.')}`)
                     $('#inventory_price_max').text(`Rp. ${number_format(data.inventory_price_analyze.max_inventory_price, 0, ',', '.')}`)
@@ -100,6 +134,18 @@
                     $('#inventory_price_avg_room').text(`Rp. ${number_format(data.inventory_room_analyze.average_price, 0, ',', '.')}`)
                     $('#inventory_price_avg_unit').text(`Rp. ${number_format(data.inventory_unit_analyze.average_price, 0, ',', '.')}`)
                     $('#total_inventory_unit').text(data.inventory_unit_analyze.total)
+
+                    const data_price_pie_chart = [
+                        { context: data.inventory_name, total: data.inventory_price},
+                        { context: 'Whole Inventory', total: data.inventory_price_analyze.sub_total - data.inventory_price}
+                    ]
+                    const data_price_avg_pie_chart = [
+                        { context: `Average by Category`, total: data.inventory_category_analyze.average_price},
+                        { context: `Average by Unit`, total: data.inventory_unit_analyze.average_price},
+                        { context: `Average by Room`, total: data.inventory_room_analyze.average_price}
+                    ]
+                    generate_pie_chart(`Price Comparison to All Inventory`,'price-pie-chart-holder',data_price_pie_chart)
+                    generate_bar_chart(`Average Context Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_pie_chart)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()

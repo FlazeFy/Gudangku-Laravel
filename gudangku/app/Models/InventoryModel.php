@@ -113,7 +113,7 @@ class InventoryModel extends Model
     }
 
     public static function getAnalyzeMost($user_id, $col){
-        $avgCol = $col === 'inventory_price' ? "CAST(AVG($col) as UNSIGNED) as average_$col," : "";
+        $avgCol = $col === 'inventory_price' ? "CAST(AVG($col) as UNSIGNED) as average_$col, CAST(SUM($col) as UNSIGNED) as sub_total, " : "";
         $maxCol = $col === 'inventory_price' ? "CAST(MAX($col) as UNSIGNED)" : "MAX($col)";
         $minCol = $col === 'inventory_price' ? "CAST(MIN($col) as UNSIGNED)" : "MIN($col)";
         $selectColumns = trim("$avgCol $maxCol as max_$col, $minCol as min_$col");
