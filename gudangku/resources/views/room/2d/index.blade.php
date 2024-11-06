@@ -6,13 +6,9 @@
 ?>  
 @php($isMobile = Generator::isMobileDevice())  
 
-<!-- ThreeJS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/loaders/3DSLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/TDSLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/controls/OrbitControls.js"></script>
-
 @section('content')
+    <link rel="stylesheet" href="{{ asset('/room_v1.0.css') }}"/>
+
     <div class="content" style="width:1280px;">
         <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">2D Room</h2>
         <div class="d-flex justify-content-start">

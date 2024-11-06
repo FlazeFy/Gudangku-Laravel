@@ -61,6 +61,7 @@ const generate_bar_chart = (title, holder, data) => {
                 }],
                 chart: {
                     type: 'bar',
+                    height: 350,
                     toolbar: {
                         show: true,        
                         tools: {

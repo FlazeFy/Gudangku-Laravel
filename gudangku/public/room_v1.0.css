@@ -1,0 +1,44 @@
+/* Dont use variable for context of using in richtexteditor */
+#room-container {
+    height: 75vh;
+    width: 100%;
+    border: 4px solid #3b82f6;
+    border-radius: 18px;
+    overflow: auto;
+    display: block;
+}
+.row {
+    display: flex;
+}
+.room-floor {
+    border-radius: 0 !important;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    border: 0.5px solid white !important;
+    position: relative;
+}
+.room-floor:hover {
+    background: #00C363;
+}
+.room-floor .coordinate {
+    font-size: 12px;
+    font-weight: 600;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+.room-floor.active {
+    background: #3b82f6;
+}
+table td {
+    padding: 11px !important;
+}
+table td, table th {
+    vertical-align: middle;
+}
+.btn-layout-config{
+    margin: 14px 0 0 13px;
+    font-size: 14px;
+    font-weight: 500;
+}

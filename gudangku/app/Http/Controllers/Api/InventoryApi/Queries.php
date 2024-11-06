@@ -819,6 +819,23 @@ class Queries extends Controller
      *                         @OA\Property(property="report_title", type="string", example="et amet"),
      *                         @OA\Property(property="report_category", type="string", example="Others")
      *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="inventory_in_monthly_report",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="context", type="string", example="Jan"),
+     *                         @OA\Property(property="total", type="integer", example=2)
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="inventory_layout",
+     *                     type="object",
+     *                         @OA\Property(property="inventory_storage", type="string", example="Wardobe"),
+     *                         @OA\Property(property="layout", type="string", example="E1"),
+     *                         @OA\Property(property="storage_desc", type="string", example="Lorem ipsum"),
+     *                         @OA\Property(property="created_at", type="string", example="2024-10-25 09:13:00")
      *                 )
      *             )
      *         )
@@ -872,6 +889,7 @@ class Queries extends Controller
                 $res_history = InventoryModel::getAnalyzeHistory($user_id,$inventory->id);
                 $res_report = ReportModel::getLastFoundInventoryReport($user_id,$inventory->id);
                 $res_montly_in_report = ReportModel::getInventoryMonthlyInReport($user_id,$inventory->id,$year);
+                $res_layout = InventoryLayoutModel::getFindInventoryByRoomStorage($user_id,$inventory->inventory_room,$inventory->inventory_storage);
 
                 $res_info = [
                     'inventory_name' => $inventory->inventory_name,
@@ -895,7 +913,8 @@ class Queries extends Controller
                     'inventory_unit_analyze' => $res_unit,
                     'inventory_history_analyze' => $res_history,
                     'inventory_report' => $res_report,
-                    'inventory_in_monthly_report' => $res_montly_in_report
+                    'inventory_in_monthly_report' => $res_montly_in_report,
+                    'inventory_layout' => $res_layout
                 ]);
                 return response()->json([
                     'status' => 'success',

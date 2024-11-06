@@ -18,6 +18,8 @@
             margin-bottom:var(--spaceMD);
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('/room_v1.0.css') }}"/>
+
     <div class="content" style="width:1280px;">
         <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">Analyze : {{ucfirst($type)}} <b class='inventory_name text-primary'></b></h2>
         <div class="d-flex justify-content-start">
@@ -47,6 +49,7 @@
                 </div>
             </div><br><br>
             @include('analyze.inventory_history')
+            <div id='layout-holder'></div>
         </div>
         <div id="work_area" class='d-none'></div>
     </div>
@@ -151,14 +154,24 @@
                         { context: data.inventory_name, total: data.inventory_price},
                         { context: 'Whole Inventory', total: data.inventory_price_analyze.sub_total - data.inventory_price}
                     ]
-                    const data_price_avg_pie_chart = [
-                        { context: `By Category`, total: data.inventory_category_analyze.average_price},
-                        { context: `By Unit`, total: data.inventory_unit_analyze.average_price},
-                        { context: `By Room`, total: data.inventory_room_analyze.average_price}
+                    const data_price_avg_line_chart = [
+                        { context: `By Category`, average_price: data.inventory_category_analyze.average_price, inventory_price: data.inventory_price},
+                        { context: `By Unit`, average_price: data.inventory_unit_analyze.average_price, inventory_price: data.inventory_price},
+                        { context: `By Room`, average_price: data.inventory_room_analyze.average_price, inventory_price: data.inventory_price}
                     ]
                     generate_pie_chart(`Price Comparison to All Inventory`,'price-pie-chart-holder',data_price_pie_chart)
-                    generate_bar_chart(`Average Price Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_pie_chart)
-                    generate_line_column_chart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
+                    generate_line_column_chart(`Average Price Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_line_chart,60)
+                    generate_bar_chart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
+
+                    $('#layout-holder').html(`
+                        <h3>6. The Room Layout</h3>
+                        <p>You can find <span class='text-primary'>${data.inventory_name}</span> at storage <span class='text-primary'>${data.inventory_storage}</span>, layout <span class='text-primary'>${data.inventory_layout.layout}</span>.
+                        This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about ${count_time(data.inventory_layout.created_at,null,'day')} days ago.
+                        </p>
+                        <div id='room_layout_map' class='mx-3 mt-2'></div>
+                        <br>
+                    `)
+                    generate_map_room('#room_layout_map',[data.inventory_layout],false,data.inventory_room)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
@@ -181,7 +194,7 @@
             const style = `<?= Generator::generateDocTemplate('style') ?>`
             if(!toggle_show_customize){
                 let editor = new RichTextEditor("#work_area")
-                editor.setHTML(`<head>${style}</head>${header}${$('#render_area').html()}${footer}`)
+                editor.setHTML(`<head>${style}<link rel="stylesheet" href="{{ asset('/room_v1.0.css') }}"/></head>${header}${$('#render_area').html()}${footer}`)
                 toggle_show_customize = true
                 $('#work_area').removeClass('d-none')
                 $('#render_area').addClass('d-none')
