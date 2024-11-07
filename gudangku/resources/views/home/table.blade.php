@@ -1,359 +1,18 @@
 <table class="table" id="inventory_tb">
     <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Category</th>
-            <th scope="col">Description</th>
-            <th scope="col">Merk</th>
-            <th scope="col">Room</th>
-            <th scope="col">Storage / Rack</th>
-            <th scope="col">Price</th>
+            <th scope="col">Name & Description</th>
+            <th scope="col" style='min-width:140px;'>Category & Merk</th>
+            <th scope="col" style='min-width:140px;'>Placement</th>
+            <th scope="col" style='min-width:110px;'>Price</th>
             <th scope="col">Unit</th>
             <th scope="col">Capacity</th>
-
-            <th scope="col">Info</th>
-            <th scope="col">Favorite</th>
-            <th scope="col">Reminder</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
+            <th scope="col" style='min-width:140px;'>Action</th>
         </tr>
     </thead>
-    <tbody>
-        @php($i = 1)
-        @foreach($inventory as $in)
-            <tr <?php if($in['deleted_at'] != null){ echo 'style="background:rgba(221, 0, 33, 0.15);"';} ?> class="tr-item">
-                <th scope="row" <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$i}}</th>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
-                    @if($in->inventory_image != null)
-                        <button type="button" class="btn btn-image" data-bs-toggle="modal" data-bs-target="#zoom_image-{{$in->id}}"><img src="{{$in->inventory_image}}" title="{{$in->inventory_name}}"></button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="zoom_image-{{$in->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <div>
-                                        <h4 class="modal-title fw-bold" id="staticBackdropLabel">{{$in->inventory_name}}</h4>
-                                        <h5 class="modal-title" id="staticBackdropLabel">{{$in->inventory_category}}</h5>
-                                    </div>
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                </div>
-                                <div class="modal-body">
-                                    <img class="img img-fluid" style="border-radius: var(--roundedMD);" src="{{$in->inventory_image}}" title="{{$in->inventory_name}}">
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    @endif
-
-                    @if($in['is_favorite'])
-                        <i class="fa-solid fa-bookmark" style="color:var(--primaryColor);" title="Favorite"></i>
-                    @endif
-                    {{$in['inventory_name']}}
-                </td>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$in['inventory_category']}}</td>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
-                    @if($in['inventory_desc'] != null)
-                        {{$in['inventory_desc']}} 
-                    @else 
-                        -
-                    @endif
-                </td>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
-                    @if($in['inventory_merk'] != null)
-                        {{$in['inventory_merk']}} 
-                    @else 
-                        -
-                    @endif
-                </td>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$in['inventory_room']}}</td>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
-                    @if($in['inventory_storage'] != null)
-                        {{$in['inventory_storage']}} 
-                    @else 
-                        -
-                    @endif
-                    / 
-                    @if($in['inventory_rack'] != null)
-                        {{$in['inventory_rack']}}
-                    @else 
-                        -
-                    @endif
-                </td>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>Rp. {{number_format($in['inventory_price'], 0, ',', '.')}}</td>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>{{$in['inventory_vol']}} {{$in['inventory_unit']}}</td>
-                <td <?php if($in->reminder_id){ echo'rowspan="2"'; } ?>>
-                    @if($in['inventory_capacity_unit'] == 'percentage')
-                        {{$in['inventory_capacity_vol']}}%
-                    @elseif($in['inventory_capacity_unit'] == null)
-                        -
-                    @endif
-                </td>
-                <td>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInfoProps_{{$in->id}}"><i class="fa-solid fa-circle-info" style="font-size:var(--textXLG);"></i></button>
-                    <div class="modal fade" id="modalInfoProps_{{$in->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Properties</h2>
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                </div>
-                                <div class="modal-body">
-                                    <h2>Created At</h2>
-                                    <h6 class="date_holder">{{$in['created_at']}}</h6>
-                                    <br><h2>Updated At</h2>
-                                    @if($in['updated_at'] != null)
-                                        <h6 class="date_holder">{{$in['updated_at']}}</h6>
-                                    @else 
-                                        <h6>-</h6>
-                                    @endif
-                                    <br><h2>Deleted At</h2>
-                                    @if($in['deleted_at'] != null)
-                                        <h6 class="date_holder">{{$in['deleted_at']}}</h6>
-                                    @else 
-                                        <h6>-</h6>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <form action="/inventory/favToggleInventory/{{$in['id']}}" method="POST">
-                        @csrf
-                        <input hidden name="is_favorite" value="<?php 
-                            if($in['is_favorite'] == '1'){
-                                echo '0';
-                            } else {
-                                echo '1';
-                            }
-                        ?>"/>
-                        <input hidden name="inventory_name" value="{{$in['inventory_name']}}"/>
-                        <button class="btn btn-danger" type="submit" <?php if($in['is_favorite'] == '1'){echo'style="background:var(--dangerBG) !important; border:none;"';}?>>
-                        <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i></button>
-                    </form>
-                </td>
-                <td><button class="btn btn-success <?php if($in->reminder_id){ echo"bg-success border-0"; } ?>"><i class="fa-solid <?php if($in->reminder_id){ echo"fa-bell"; } else { echo"fa-bell-slash"; } ?>" style="font-size:var(--textXLG);"></i></button></td>
-                <td>
-                    <input hidden name="is_editable" value="<?php if($in->deleted_at) { echo "false"; } else {echo "true";} ?>">
-                    <a class="btn btn-warning modal-btn"
-                        <?php
-                        if($in['deleted_at'] != null){
-                            echo ' data-bs-toggle="modal" data-bs-target="#modalRecover_'.$in->id.'" '; 
-                        } else {
-                            echo ' href="/inventory/edit/'.$in->id.'" ';
-                        }
-                        ?>>
-                        @if($in['deleted_at'] == null)
-                            <i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i>
-                        @else 
-                            <i class="fa-solid fa-rotate" style="font-size:var(--textXLG);"></i>
-                        @endif
-                    </a>
-                    @if($in['deleted_at'] != null)
-                        <div class="modal fade" id="modalRecover_{{$in->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Recover</h2>
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="/inventory/recoverInventory/{{$in['id']}}" method="POST">
-                                            @csrf
-                                            <input hidden name="inventory_name" value="{{$in['inventory_name']}}"/>
-                                            <h2>Recover this item "{{$in['inventory_name']}}"?</h2>
-                                            <button class="btn btn-success mt-4" type="submit">Yes, Recover</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                </td>
-                <td>
-                    <input hidden name="type_delete" value="<?php if($in->deleted_at) { echo "hard"; } else {echo "soft";} ?>">
-                    <button class="btn btn-danger modal-btn"data-bs-toggle="modal" data-bs-target="#modalDelete_{{$in->id}}">
-                        @if($in['deleted_at'] == null)
-                            <i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i>
-                        @else 
-                            <i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i>
-                        @endif
-                    </button>
-                    <div class="modal fade" id="modalDelete_{{$in->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="/<?php 
-                                        if($in['deleted_at'] == null){
-                                            echo "inventory/deleteInventory/".$in['id'];
-                                        } else {
-                                            echo "inventory/destroyInventory/".$in['id'];
-                                        }
-                                        ?>" method="POST">
-                                        @csrf
-                                        <input hidden name="inventory_name" value="{{$in['inventory_name']}}"/>
-                                        <h2>
-                                            @if($in['deleted_at'] == null)
-                                                Delete
-                                            @else 
-                                                <span class="text-danger">Permentally Delete</span>
-                                            @endif
-                                             this item "{{$in['inventory_name']}}"?
-                                        </h2>
-                                        <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            @if($in->reminder_id)
-                <tr style="border-style : hidden!important;">
-                    <td colspan="5">
-                        <div class="box-reminder">
-                            <h5 class="fw-bold mb-0">Reminder | {{ucwords(str_replace("_"," ",$in->reminder_type))}}</h5>
-                            <p>{{$in->reminder_desc}}</p>
-                            <p class="mt-2 mb-0">Time : {{ucwords(str_replace("_"," ",$in->reminder_context))}}</p>
-                            <p class="my-0">Created At : {{date('Y-m-d H:i', strtotime($in->reminder_created_at))}}</p><hr class="my-2">
-
-                            <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;"> 
-                                <i class="fa-solid fa-trash" style="font-size:var(--textSM);"></i>
-                            </button>
-                            <div class="modal fade" id="modalDeleteReminder_{{$in->reminder_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/inventory/destroyReminder/{{$in['reminder_id']}}" method="POST">
-                                                @csrf
-                                                <input hidden name="reminder_desc" value="{{$in['reminder_desc']}}"/>
-                                                <h2><span class="text-danger">Permentally Delete</span>
-                                                    this reminder "{{$in['reminder_desc']}}"?
-                                                </h2>
-                                                <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#modalEditReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;"> 
-                                <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i>
-                            </button>
-                            <div class="modal fade" id="modalEditReminder_{{$in->reminder_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Edit Reminder</h2>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/inventory/editReminder/{{$in['reminder_id']}}" method="POST">
-                                                @csrf
-                                                <label>Description</label>
-                                                <textarea name="reminder_desc" class="form-control mt-2">{{$in['reminder_desc']}}</textarea>
-
-                                                <label>Type</label>
-                                                <select class="form-select mt-2" name="reminder_type" aria-label="Default select example">
-                                                    @foreach($dct_reminder_type as $dct)
-                                                        <option value="{{$dct['dictionary_name']}}" <?php if($in['reminder_type'] == $dct['dictionary_name']){ echo'selected'; } ?>>{{$dct['dictionary_name']}}</option>
-                                                    @endforeach
-                                                </select>
-
-                                                <label>Context</label>
-                                                <select class="form-select mt-2" name="reminder_context" aria-label="Default select example">
-                                                    @foreach($dct_reminder_context as $dct)
-                                                        <option value="{{$dct['dictionary_name']}}" <?php if($in['reminder_context'] == $dct['dictionary_name']){ echo'selected'; } ?>>{{$dct['dictionary_name']}}</option>
-                                                    @endforeach
-                                                </select>
-
-                                                <button class="btn btn-success mt-4" type="submit">Save Changes</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-success" data-bs-toggle="modal" onclick="loadDatatableInventoryReminder('<?= $in->reminder_id; ?>')" data-bs-target="#modalCopyReminder_{{$in->reminder_id}}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
-                                <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i>
-                            </button>
-                            <div class="modal fade" id="modalCopyReminder_{{$in->reminder_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Copy Reminder</h2>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/inventory/copyReminder/{{$in['reminder_id']}}" method="POST">
-                                                @csrf
-                                                @php($tb=0)
-                                                <input hidden value="{{$in->reminder_context}}" name="reminder_context">
-                                                <input hidden value="{{$in->reminder_desc}}" name="reminder_desc">
-                                                <input hidden value="{{$in->reminder_type}}" name="reminder_type">
-                                                <table class="table" id="tb-inventory-name-{{$in->reminder_id}}">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">
-                                                                <span id="checked_all_holder_btn">
-                                                                    <a class="btn btn-primary" onclick="toogleCheck()" style="font-size:var(--textMD); padding: var(--spaceMini) var(--spaceSM) !important;">Check All</a>
-                                                                </span>
-                                                            </th>
-                                                            <th scope="col">Inventory Name</th>
-                                                            <th scope="col">Category</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach($inventory_name as $inn)
-                                                            @if($inn->inventory_name != $in->inventory_name)
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input check-inventory" type="checkbox" name="inventory_id[]" value="{{$inn->id}}" id="flexCheckDefault">
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>{{$inn['inventory_name']}}</td>
-                                                                    <td>{{$inn['inventory_category']}}</td>
-                                                                </tr>
-                                                            @endif
-                                                        @endforeach
-                                                    </tbody>
-                                                </table><br>
-                                                @php($tb++)
-                                                <input hidden name="reminder_desc" value="{{$in['reminder_desc']}}"/>
-                                                <h2>Are you sure to copy this reminder "{{$in['reminder_desc']}}" to inventory <span id="inventory_selected_name"></span>?</h2>
-                                                <button class="btn btn-success mt-4" type="submit">Yes, Copy</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="15"></td>
-                </tr>
-            @endif
-            @php($i++)
-        @endforeach
-    </tbody>
+    <tbody id="inventory_tb_body"></tbody>
 </table>
 <hr>
-<div class="my-3">
-    {{ $inventory->links() }}
-</div>
 
 <script>
     let toogle_check = 0
@@ -363,6 +22,327 @@
         const date = new Date(e.textContent);
         e.textContent = getDateToContext(e.textContent, "datetime")
     });
+
+    let page = 1
+    const get_inventory = (page) => {
+        Swal.showLoading()
+        const item_holder = 'inventory_tb_body'
+        $.ajax({
+            url: `/api/v1/inventory?page=${page}`,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.close()
+                const data = response.data.data
+                const current_page = response.data.current_page
+                const total_page = response.data.last_page
+
+                $(`#${item_holder}`).empty()
+
+                data.forEach((el, idx) => {
+                    let styletr = ''
+                    let reminders = ''
+                    if (el.deleted_at != null) {
+                        styletr = `style="background:rgba(221, 0, 33, 0.15);"`
+                    }
+                    if(el.reminder){
+                        reminders += `<tr style="border-style: hidden !important;"><td colspan="5">`
+                        el.reminder.forEach(rm => {
+                            reminders += `
+                                <div class="box-reminder mb-3">
+                                    <h5 class="fw-bold mb-0">Reminder | ${rm.reminder_type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</h5>
+                                    <p>${rm.reminder_desc}</p>
+                                    <p class="mt-2 mb-0">Time: ${rm.reminder_context.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</p>
+                                    <p class="my-0">Created At: ${getDateToContext(rm.created_at,'calendar')}</p>
+                                    <hr class="my-2">
+                                    
+                                    <!-- Delete Button -->
+                                    <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
+                                        <i class="fa-solid fa-trash" style="font-size:var(--textSM);"></i>
+                                    </button>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="modalDeleteReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="/inventory/destroyReminder/${rm.id}" method="POST">
+                                                        <input type="hidden" name="reminder_desc" value="${rm.reminder_desc}"/>
+                                                        <h2><span class="text-danger">Permanently Delete</span> this reminder "${rm.reminder_desc}"?</h2>
+                                                        <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Edit Button -->
+                                    <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#modalEditReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
+                                        <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i>
+                                    </button>
+
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="modalEditReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Edit Reminder</h2>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="/inventory/editReminder/${rm.id}" method="POST">
+                                                        <label>Description</label>
+                                                        <textarea name="reminder_desc" class="form-control mt-2">${rm.reminder_desc}</textarea>
+
+                                                        <label>Type</label>
+                                                        <select class="form-select mt-2" name="reminder_type"></select>
+                                                        <label>Context</label>
+                                                        <select class="form-select mt-2" name="reminder_context"></select>
+                                                        <button class="btn btn-success mt-4" type="submit">Save Changes</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Copy Button -->
+                                    <button class="btn btn-success" data-bs-toggle="modal" onclick="loadDatatableInventoryReminder('${rm.id}')" data-bs-target="#modalCopyReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
+                                        <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i>
+                                    </button>
+
+                                    <!-- Copy Modal -->
+                                    <div class="modal fade" id="modalCopyReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Copy Reminder</h2>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="/inventory/copyReminder/${rm.id}" method="POST">
+                                                        <input type="hidden" value="${rm.reminder_context}" name="reminder_context">
+                                                        <input type="hidden" value="${rm.reminder_desc}" name="reminder_desc">
+                                                        <input type="hidden" value="${rm.reminder_type}" name="reminder_type">
+
+                                                        <table class="table" id="tb-inventory-name-${rm.id}">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">
+                                                                        <span id="checked_all_holder_btn">
+                                                                            <a class="btn btn-primary" onclick="toggleCheck()" style="font-size:var(--textMD); padding: var(--spaceMini) var(--spaceSM) !important;">Check All</a>
+                                                                        </span>
+                                                                    </th>
+                                                                    <th scope="col">Inventory Name</th>
+                                                                    <th scope="col">Category</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class='inventory-selectable'></tbody>
+                                                        </table>
+                                                        <br>
+                                                        <h2>Are you sure to copy this reminder "${rm.reminder_desc}" to inventory <span id="inventory_selected_name"></span>?</h2>
+                                                        <button class="btn btn-success mt-4" type="submit">Yes, Copy</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `
+                        });
+                        reminders += `</td></tr><tr><td colspan="15"></td></tr>`
+                    }
+                    
+                    $(`#${item_holder}`).append(`
+                        <tr ${styletr}>
+                            <td ${el.reminder ? 'rowspan="2"' : ''}>
+                                ${el.inventory_image ? `
+                                    <button type="button" class="btn btn-image" data-bs-toggle="modal" data-bs-target="#zoom_image-${el.id}">
+                                        <img src="${el.inventory_image}" title="${el.inventory_name}">
+                                    </button>
+                                    <div class="modal fade" id="zoom_image-${el.id}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <div>
+                                                        <h4 class="modal-title fw-bold" id="staticBackdropLabel">${el.inventory_name}</h4>
+                                                        <h5 class="modal-title" id="staticBackdropLabel">${el.inventory_category}</h5>
+                                                    </div>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img class="img img-fluid" style="border-radius: var(--roundedMD);" src="${el.inventory_image}" title="${el.inventory_name}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                ${el.is_favorite ? `<span class='bg-success rounded-pill px-3 py-1'><i class="fa-solid fa-bookmark" title="Favorite"></i> Favorite</span>` : ''}
+                                <h6 class='mt-2' style='font-size:var(--textLG); font-weight:600;'>${el.inventory_name}</h6>
+                                <hr class='my-2'>
+                                <h6 class='fw-bold mt-2'>Description</h6>
+                                <h6>${el.inventory_desc || '-'}</h6>
+                            </td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''}>
+                                <h6 class='fw-bold'>Category</h6>
+                                <h6>${el.inventory_category}</h6>
+                                <h6 class='fw-bold mt-2'>Merk</h6>
+                                <h6>${el.inventory_merk || '-'}</h6>
+                            </td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''}>
+                                <h6 class='fw-bold'>Room</h6>
+                                <h6>${el.inventory_room}</h6>
+                                <h6 class='fw-bold mt-2'>Storage</h6>
+                                <h6>${el.inventory_storage ?? '-'}</h6>
+                                <h6 class='fw-bold mt-2'>Rack</h6>
+                                <h6>${el.inventory_rack ?? '-'}</h6>
+                            </td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''}>Rp. ${number_format(el.inventory_price, 0, ',', '.')}</td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''}>${el.inventory_vol} ${el.inventory_unit}</td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''}>
+                                ${el.inventory_capacity_unit === 'percentage' ? `${el.inventory_capacity_vol}%` : '-'}
+                            </td>
+                            <td>
+                                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalInfoProps_${el.id}">
+                                    <i class="fa-solid fa-circle-info" style="font-size:var(--textXLG);"></i> Properties
+                                </button>
+                                <div class="modal fade" id="modalInfoProps_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h2 class="modal-title fw-bold">Properties</h2>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h6 class='fw-bold'>Created At</h6>
+                                                <h6>${el.created_at}</h6>
+                                                <h6 class='fw-bold mt-2'>Updated At</h6>
+                                                <h6>${el.updated_at || '-'}</h6>
+                                                <h6 class='fw-bold mt-2'>Deleted At</h6>
+                                                <h6>${el.deleted_at || '-'}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='row mt-2 mx-1'>
+                                    <div class='col p-0 pe-1'>
+                                        <form action="/inventory/favToggleInventory/${el.id}" method="POST">
+                                            <input type="hidden" name="is_favorite" value="${el.is_favorite ? '0' : '1'}"/>
+                                            <button class="btn btn-danger w-100" type="submit" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
+                                                <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class='col p-0 ps-1'>
+                                        <input type="hidden" name="type_delete" value="${el.deleted_at ? "hard" : "soft"}">
+                                        <button class="btn btn-danger modal-btn w-100" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}">
+                                            <i class="fa-solid ${el.deleted_at ? "fa-fire" : "fa-trash"}" style="font-size:var(--textXLG);"></i>
+                                        </button>
+                                        <div class="modal fade" id="modalDelete_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                                                            <i class="fa-solid fa-xmark"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/${el.deleted_at ? "inventory/destroyInventory" : "inventory/deleteInventory"}/${el.id}" method="POST">
+                                                            <input type="hidden" name="inventory_name" value="${el.inventory_name}"/>
+                                                            <h2>
+                                                                ${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'}
+                                                                this item "${el.inventory_name}"?
+                                                            </h2>
+                                                            <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='row mt-2 mx-1'>
+                                    <div class='col p-0 pe-1'>
+                                        <input type="hidden" name="is_editable" value="${el.deleted_at ? "false" : "true"}">
+                                        <button class="btn btn-warning modal-btn w-100 "
+                                            ${el.deleted_at 
+                                                ? `data-bs-toggle="modal" data-bs-target="#modalRecover_${el.id}"` 
+                                                : `href="/inventory/edit/${el.id}"`
+                                            }>
+                                            <i class="fa-solid ${el.deleted_at ? "fa-rotate" : "fa-pen-to-square"}" style="font-size:var(--textXLG);"></i>
+                                        </button>
+                                        ${el.deleted_at ? `
+                                        <div class="modal fade" id="modalRecover_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Recover</h2>
+                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                                                            <i class="fa-solid fa-xmark"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/inventory/recoverInventory/${el.id}" method="POST">
+                                                            <input type="hidden" name="inventory_name" value="${el.inventory_name}" />
+                                                            <h2>Recover this item "${el.inventory_name}"?</h2>
+                                                            <button class="btn btn-success mt-4" type="submit">Yes, Recover</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>` : ''}
+                                    </div>
+                                    <div class='col p-0 ps-1'>
+                                        <button class="btn btn-success ${el.reminder && "bg-success border-0"} w-100">
+                                            <i class="fa-solid ${el.reminder ? "fa-bell" : "fa-bell-slash"}" style="font-size:var(--textXLG);"></i>
+                                        </button>
+                                        ${reminders}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `)
+                });
+
+                $('.inventory-selectable').empty()
+                data.forEach((el, idx) => {
+                    $('.inventory-selectable').append(`
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input check-inventory" type="checkbox" name="inventory_id[]" value="${el.id}" id="flexCheckDefault">
+                                </div>
+                            </td>
+                            <td>${el.inventory_name}</td>
+                            <td>${el.inventory_category}</td>
+                        </tr>
+                    `)
+                })
+
+                generate_pagination(item_holder, get_inventory, total_page, current_page)
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                if(response.status != 404){
+                    Swal.fire({
+                        title: "Oops!",
+                        text: "Failed to get the history",
+                        icon: "error"
+                    });
+                } else {
+                    template_alert_container(item_holder, 'no-data', "No inventory found to show", null, '<i class="fa-solid fa-rotate-left"></i>')
+                }
+            }
+        });
+    }
+    get_inventory(page)
 
     function loadDatatableInventoryReminder(id){
         $(`#tb-inventory-name-${id}`).DataTable({

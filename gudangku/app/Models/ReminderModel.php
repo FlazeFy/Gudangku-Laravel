@@ -42,7 +42,8 @@ class ReminderModel extends Model
     public static function getReminderByInventoryId($id,$user_id){
         $res = ReminderModel::select('id','reminder_desc','reminder_type','reminder_context','created_at')
             ->where('created_by',$user_id)
-            ->where('inventory_id',$id);
+            ->where('inventory_id',$id)
+            ->orderby('created_at','desc');
 
         return $res->get();
     }

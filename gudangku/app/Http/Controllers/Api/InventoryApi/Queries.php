@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\InventoryApi;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 // Helpers
 use App\Helpers\Document;
@@ -93,15 +96,34 @@ class Queries extends Controller
 
             $res = InventoryModel::select('*')
                 ->where('created_by',$user_id)
-                ->orderBy('is_favorite', 'desc')
-                ->orderBy('created_at', 'desc')
-                ->paginate(15);
+                ->get();
             
             if (count($res) > 0) {
+                $res_final = [];
+                foreach ($res as $idx => $dt) {
+                    $reminder = ReminderModel::getReminderByInventoryId($dt->id,$user_id);
+
+                    $dt->reminder = count($reminder) > 0 ? $reminder : null;
+                    $res_final[] = $dt;
+                }
+
+                $collection = collect($res_final);
+                $collection = $collection->sortByDesc('is_favorite')->sortByDesc('created_at')->values();
+                $perPage = 12;
+                $page = request()->input('page', 1);
+                $paginator = new LengthAwarePaginator(
+                    $collection->forPage($page, $perPage)->values(),
+                    $collection->count(),
+                    $perPage,
+                    $page,
+                    ['path' => url()->current()]
+                );
+                $res_final = $paginator->appends(request()->except('page'));
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'inventory fetched',
-                    'data' => $res
+                    'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

@@ -33,11 +33,6 @@
             @csrf
             <button class="btn btn-primary mb-3 me-2" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Save as CSV @endif</button>
         </form>
-        <form class="d-inline" action="/inventory/auditWABot" method="POST">
-            @csrf
-            <button class="btn btn-primary mb-3 me-2" type="submit"><i class="fa-brands fa-whatsapp" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Audit to My Whatsapp @endif</button>
-        </form>
-        @include('home.sync_to_sheet')
         @php($selected = session()->get('toogle_view_inventory'))
         @if($selected == 'table')
             @include('home.table')

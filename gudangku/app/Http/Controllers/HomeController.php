@@ -14,7 +14,6 @@ use App\Exports\InventoryExport;
 
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use Twilio\Rest\Client;
 
 class HomeController extends Controller
 {
@@ -40,18 +39,7 @@ class HomeController extends Controller
                 ->get();
                 
             if($selected == 'table'){
-                $inventory = InventoryModel::select('inventory.id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_room', 
-                    'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 
-                    'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'inventory.created_at', 'inventory.updated_at', 'inventory.deleted_at',
-                    'reminder.id as reminder_id', 'reminder_desc', 'reminder_type', 'reminder_context', 'reminder.created_at as reminder_created_at', 'reminder.updated_at as reminder_updated_at')
-                    ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
-                    ->where('inventory.created_by',$user_id)
-                    ->orderBy('is_favorite', 'desc')
-                    ->orderBy('inventory.created_at', 'desc')
-                    ->paginate(15);
-
                 return view('home.index')
-                    ->with('inventory',$inventory)
                     ->with('inventory_name',$inventory_name)
                     ->with('dct_reminder_type', $dct_reminder_type)
                     ->with('dct_reminder_context', $dct_reminder_context);
@@ -319,50 +307,5 @@ class HomeController extends Controller
         } else {
             return redirect()->back()->with('failed_message', "Failed updated reminder : $request->reminder_desc");
         }
-    }
-
-    public function get_all_inventory_wa_bot()
-    {
-        $sid    = env('TWILIO_SID');
-        $token  = env('TWILIO_TOKEN');
-        $twilio = new Client($sid, $token);
-        $user_id = Generator::getUserId(session()->get('role_key'));
-        $i = 1;
-        $inventory_category_before = '';
-
-        // Fetching
-        $user = UserModel::select('phone','username')
-            ->where('id',$user_id)
-            ->first();
-
-        $res = InventoryModel::select('inventory_name','inventory_category')
-            ->where('created_by',$user_id)
-            ->whereNull('deleted_at')
-            ->orderBy('inventory_category', 'desc')
-            ->orderBy('is_favorite', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Bot Exec
-        $body = "Hello, $user->username. You have ".count($res)." item in your inventory.\nHere the list :\n";
-
-        foreach($res as $dt){
-            if($inventory_category_before == '' || $inventory_category_before != $dt->inventory_category){
-                $body .= "\nCategory : $dt->inventory_category\n";
-                $inventory_category_before = $dt->inventory_category;
-            }
-            $body .= "$i. $dt->inventory_name\n";
-            $i++;
-        }
-
-        $message = $twilio->messages
-            ->create("whatsapp:$user->phone", 
-                [
-                    "from" => "whatsapp:+".env('TWILIO_FROM'),
-                    "body" => $body,
-                ]
-            );
-
-        return redirect()->back();
     }
 }
