@@ -23,6 +23,7 @@ class HomeController extends Controller
 
         if($user_id != null){
             $search_key = $request->query('search_key');
+            $filter_category = $request->query('filter_category');
             $selected = session()->get('toogle_view_inventory');
 
             $dct_reminder_type = DictionaryModel::where('dictionary_type', 'reminder_type')
@@ -35,6 +36,7 @@ class HomeController extends Controller
                 return view('home.index')
                     ->with('search_key',$search_key)
                     ->with('dct_reminder_type', $dct_reminder_type)
+                    ->with('filter_category',$filter_category)
                     ->with('dct_reminder_context', $dct_reminder_context);
             } elseif($selected == 'catalog'){
                 $room = DictionaryModel::selectRaw('dictionary_name, COUNT(1) as total')
@@ -63,6 +65,7 @@ class HomeController extends Controller
 
                 return view('home.index')
                     ->with('search_key',$search_key)
+                    ->with('filter_category',$filter_category)
                     ->with('room',$room)
                     ->with('category',$category)
                     ->with('storage',$storage)

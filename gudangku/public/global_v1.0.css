@@ -65,6 +65,9 @@ label {
 .bg-success {
     background: var(--successBG) !important;
 }
+.bg-dark {
+    background: var(--darkColor) !important;
+}
 
 input, button, .btn, textarea, select{
     padding: var(--spaceMD) !important;

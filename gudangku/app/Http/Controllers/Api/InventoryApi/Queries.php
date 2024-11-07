@@ -94,6 +94,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
             $search_key = $request->query('search_key');
+            $filter_category = $request->query('filter_category') ?? 'all';
 
             $res = InventoryModel::select('*')
                 ->where('created_by',$user_id);
@@ -103,7 +104,18 @@ class Queries extends Controller
                     $query->where('inventory_name', 'like', "%$search_key%")
                             ->orWhere('inventory_merk', 'like', "%$search_key%");
                 });
-            }                
+            }     
+            if($filter_category != 'all'){
+                if($filter_category == 'deleted'){
+                    $res->whereNotNull('deleted_at');
+                } else if($filter_category == 'favorite'){
+                    $res->where('is_favorite',1);
+                } else if($filter_category == 'reminder'){
+                    $res->where('is_reminder',1);
+                } else {
+                    $res->where('inventory_category',$filter_category);
+                }
+            }           
 
             $res = $res->get();
             

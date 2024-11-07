@@ -1,7 +1,7 @@
 <table class="table" id="inventory_tb">
     <thead class="text-center">
         <tr>
-            <th scope="col">Name & Description</th>
+            <th scope="col" style='width:260px;'>Name & Description</th>
             <th scope="col" style='min-width:140px;'>Category & Merk</th>
             <th scope="col" style='min-width:140px;'>Placement</th>
             <th scope="col" style='min-width:110px;'>Price</th>
@@ -23,11 +23,14 @@
         e.textContent = getDateToContext(e.textContent, "datetime")
     });
 
-    const get_inventory = (page,name) => {
+    const get_inventory = (page,name,category) => {
         Swal.showLoading()
         const item_holder = 'inventory_tb_body'
+        let search_key_url = name ? `&search_key=${name}`:''
+        let filter_cat_url = category ? `&filter_category=${category}`:''
+
         $.ajax({
-            url: `/api/v1/inventory?page=${page}&search_key=${name}`,
+            url: `/api/v1/inventory?page=${page}${search_key_url}${filter_cat_url}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
@@ -341,7 +344,7 @@
             }
         });
     }
-    get_inventory(page,search_key)
+    get_inventory(page,search_key,filter_category)
 
     function loadDatatableInventoryReminder(id){
         $(`#tb-inventory-name-${id}`).DataTable({

@@ -9,6 +9,7 @@
 @section('content')
     <script>
         let search_key = '<?= $search_key ?>'
+        let filter_category = '<?= $filter_category ?>'
         let page = 1
     </script>
     <div class="content" style="width:1280px;">
