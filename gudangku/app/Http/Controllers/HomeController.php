@@ -17,20 +17,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
+            $search_key = $request->query('search_key');
             $selected = session()->get('toogle_view_inventory');
-
-            $inventory_name = InventoryModel::select('inventory.id','inventory_name','inventory_category')
-                ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
-                ->where('inventory.created_by',$user_id)
-                ->whereNull('deleted_at')
-                ->whereNull('reminder.inventory_id')
-                ->orderBy('inventory_name','DESC')
-                ->get();
 
             $dct_reminder_type = DictionaryModel::where('dictionary_type', 'reminder_type')
                 ->get();
@@ -40,7 +33,7 @@ class HomeController extends Controller
                 
             if($selected == 'table'){
                 return view('home.index')
-                    ->with('inventory_name',$inventory_name)
+                    ->with('search_key',$search_key)
                     ->with('dct_reminder_type', $dct_reminder_type)
                     ->with('dct_reminder_context', $dct_reminder_context);
             } elseif($selected == 'catalog'){
@@ -69,10 +62,10 @@ class HomeController extends Controller
                     ->get();
 
                 return view('home.index')
+                    ->with('search_key',$search_key)
                     ->with('room',$room)
                     ->with('category',$category)
                     ->with('storage',$storage)
-                    ->with('inventory_name',$inventory_name)
                     ->with('dct_reminder_type', $dct_reminder_type)
                     ->with('dct_reminder_context', $dct_reminder_context);
             }

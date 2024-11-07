@@ -93,10 +93,19 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $search_key = $request->query('search_key');
 
             $res = InventoryModel::select('*')
-                ->where('created_by',$user_id)
-                ->get();
+                ->where('created_by',$user_id);
+
+            if ($search_key && trim($search_key) != "") {
+                $res = $res->where(function ($query) use ($search_key) {
+                    $query->where('inventory_name', 'like', "%$search_key%")
+                            ->orWhere('inventory_merk', 'like', "%$search_key%");
+                });
+            }                
+
+            $res = $res->get();
             
             if (count($res) > 0) {
                 $res_final = [];

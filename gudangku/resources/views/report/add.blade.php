@@ -82,7 +82,7 @@
     get_list_inventory()
     function get_list_inventory() {
         $.ajax({
-                url: "http://127.0.0.1:8000/api/v1/inventory/list",
+                url: "/api/v1/inventory/list",
                 datatype: "json",
                 type: "get",
                 beforeSend: function (xhr) {

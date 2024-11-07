@@ -7,18 +7,10 @@
 @php($isMobile = Generator::isMobileDevice())  
 
 @section('content')
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#inventory_tb').DataTable({
-                // columnDefs: [
-                //     { targets: 0, orderable: true, searchable: true},
-                //     { targets: 1, orderable: true, searchable: false },
-                //     { targets: '_all', orderable: false, searchable: false}
-                // ],
-            });
-        });
+    <script>
+        let search_key = '<?= $search_key ?>'
+        let page = 1
     </script>
-
     <div class="content" style="width:1280px;">
         @include('others.profile')
         <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">My Inventory</h2>
@@ -34,6 +26,7 @@
             <button class="btn btn-primary mb-3 me-2" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Save as CSV @endif</button>
         </form>
         @php($selected = session()->get('toogle_view_inventory'))
+        @include('home.filter')
         @if($selected == 'table')
             @include('home.table')
         @elseif($selected == 'catalog')

@@ -1,5 +1,5 @@
 <table class="table" id="inventory_tb">
-    <thead>
+    <thead class="text-center">
         <tr>
             <th scope="col">Name & Description</th>
             <th scope="col" style='min-width:140px;'>Category & Merk</th>
@@ -23,12 +23,11 @@
         e.textContent = getDateToContext(e.textContent, "datetime")
     });
 
-    let page = 1
-    const get_inventory = (page) => {
+    const get_inventory = (page,name) => {
         Swal.showLoading()
         const item_holder = 'inventory_tb_body'
         $.ajax({
-            url: `/api/v1/inventory?page=${page}`,
+            url: `/api/v1/inventory?page=${page}&search_key=${name}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
@@ -271,13 +270,13 @@
                                 <div class='row mt-2 mx-1'>
                                     <div class='col p-0 pe-1'>
                                         <input type="hidden" name="is_editable" value="${el.deleted_at ? "false" : "true"}">
-                                        <button class="btn btn-warning modal-btn w-100 "
+                                        <a class="btn btn-warning modal-btn w-100 "
                                             ${el.deleted_at 
                                                 ? `data-bs-toggle="modal" data-bs-target="#modalRecover_${el.id}"` 
                                                 : `href="/inventory/edit/${el.id}"`
                                             }>
                                             <i class="fa-solid ${el.deleted_at ? "fa-rotate" : "fa-pen-to-square"}" style="font-size:var(--textXLG);"></i>
-                                        </button>
+                                        </a>
                                         ${el.deleted_at ? `
                                         <div class="modal fade" id="modalRecover_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -342,7 +341,7 @@
             }
         });
     }
-    get_inventory(page)
+    get_inventory(page,search_key)
 
     function loadDatatableInventoryReminder(id){
         $(`#tb-inventory-name-${id}`).DataTable({
