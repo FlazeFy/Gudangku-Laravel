@@ -23,14 +23,15 @@
         e.textContent = getDateToContext(e.textContent, "datetime")
     });
 
-    const get_inventory = (page,name,category) => {
+    const get_inventory = (page,name,category,sort) => {
         Swal.showLoading()
         const item_holder = 'inventory_tb_body'
         let search_key_url = name ? `&search_key=${name}`:''
         let filter_cat_url = category ? `&filter_category=${category}`:''
+        let sorting_url = sort ? `&sorting=${sort}`:''
 
         $.ajax({
-            url: `/api/v1/inventory?page=${page}${search_key_url}${filter_cat_url}`,
+            url: `/api/v1/inventory?page=${page}${search_key_url}${filter_cat_url}${sorting_url}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
@@ -328,7 +329,7 @@
                     `)
                 })
 
-                generate_pagination(item_holder, get_inventory, total_page, current_page)
+                generate_pagination(item_holder, get_inventory, total_page, current_page,sorting)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()

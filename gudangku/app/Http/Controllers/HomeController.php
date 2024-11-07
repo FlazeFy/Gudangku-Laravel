@@ -24,6 +24,7 @@ class HomeController extends Controller
         if($user_id != null){
             $search_key = $request->query('search_key');
             $filter_category = $request->query('filter_category');
+            $sorting = $request->query('sorting');
             $selected = session()->get('toogle_view_inventory');
 
             $dct_reminder_type = DictionaryModel::where('dictionary_type', 'reminder_type')
@@ -35,6 +36,7 @@ class HomeController extends Controller
             if($selected == 'table'){
                 return view('home.index')
                     ->with('search_key',$search_key)
+                    ->with('sorting',$sorting)
                     ->with('dct_reminder_type', $dct_reminder_type)
                     ->with('filter_category',$filter_category)
                     ->with('dct_reminder_context', $dct_reminder_context);
@@ -66,6 +68,7 @@ class HomeController extends Controller
                 return view('home.index')
                     ->with('search_key',$search_key)
                     ->with('filter_category',$filter_category)
+                    ->with('sorting',$sorting)
                     ->with('room',$room)
                     ->with('category',$category)
                     ->with('storage',$storage)

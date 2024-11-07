@@ -20,6 +20,18 @@
                 </select>
             </div>
         </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <label>Sorting</label>
+            <div class="position-relative">
+                <select class="form-select" aria-label="Default select example" id='sorting'>
+                    <option value="desc_name" <?= ($sorting == 'desc_name') ? 'selected':'' ?>>Descending by Name</option>
+                    <option value="asc_name" <?= ($sorting == 'asc_name') ? 'selected':'' ?>>Ascending by Name</option>
+                    <hr>
+                    <option value="desc_created" <?= ($sorting == 'desc_created') ? 'selected':'' ?>>Descending by Created Date</option>
+                    <option value="asc_created" <?= ($sorting == 'asc_created') ? 'selected':'' ?>>Ascending by Created Date</option>
+                </select>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -53,7 +65,7 @@
         } else {
             window.location.href = '/inventory'
         }
-        get_inventory(page,search_key,filter_category)
+        get_inventory(page,search_key,filter_category,sorting)
     })
     $(document).on('change', '#search_by_category',function(){
         if($(this).val() != 'all'){
@@ -65,6 +77,18 @@
         } else {
             window.location.href = '/inventory'
         }
-        get_inventory(page,search_key,filter_category)
+        get_inventory(page,search_key,filter_category,sorting)
+    })
+    $(document).on('change', '#sorting',function(){
+        if($(this).val()){
+            const url = new URL(window.location)
+            const search_val = $(this).val()
+            url.searchParams.set('sorting', search_val)
+            filter_category = search_val
+            window.history.pushState({ path: url.href }, '', url.href)
+        } else {
+            window.location.href = '/inventory'
+        }
+        get_inventory(page,search_key,filter_category,sorting)
     })
 </script>

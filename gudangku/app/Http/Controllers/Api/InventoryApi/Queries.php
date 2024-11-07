@@ -92,19 +92,25 @@ class Queries extends Controller
     public function get_all_inventory(Request $request)
     {
         try{
+            // Attribute
             $user_id = $request->user()->id;
             $search_key = $request->query('search_key');
             $filter_category = $request->query('filter_category') ?? 'all';
+            $sorting = $request->query('sorting') ?? 'desc_created';
 
+            // Inventory fetch
             $res = InventoryModel::select('*')
                 ->where('created_by',$user_id);
 
+            // Searching
             if ($search_key && trim($search_key) != "") {
                 $res = $res->where(function ($query) use ($search_key) {
                     $query->where('inventory_name', 'like', "%$search_key%")
                             ->orWhere('inventory_merk', 'like', "%$search_key%");
                 });
             }     
+
+            // Filtering by category or context
             if($filter_category != 'all'){
                 if($filter_category == 'deleted'){
                     $res->whereNotNull('deleted_at');
@@ -120,6 +126,7 @@ class Queries extends Controller
             $res = $res->get();
             
             if (count($res) > 0) {
+                // Reminder fetch
                 $res_final = [];
                 foreach ($res as $idx => $dt) {
                     $reminder = ReminderModel::getReminderByInventoryId($dt->id,$user_id);
@@ -129,7 +136,16 @@ class Queries extends Controller
                 }
 
                 $collection = collect($res_final);
-                $collection = $collection->sortByDesc('is_favorite')->sortByDesc('created_at')->values();
+
+                // Sorting
+                if($sorting == 'desc_created' && $sorting == 'asc_created'){
+                    $collection = $sorting == 'desc_created' ? $collection->sortByDesc('created_at') : $collection->sortBy('created_at');
+                } else if($sorting == 'desc_name' && $sorting == 'asc_name'){
+                    $collection = $sorting == 'desc_name' ? $collection->sortByDesc('inventory_name') : $collection->sortBy('inventory_name');
+                }
+
+                // Paginate
+                $collection = $collection->sortByDesc('is_favorite')->values();
                 $perPage = 12;
                 $page = request()->input('page', 1);
                 $paginator = new LengthAwarePaginator(
