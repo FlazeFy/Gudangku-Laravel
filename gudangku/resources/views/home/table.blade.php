@@ -42,7 +42,9 @@
                 const data = response.data.data
                 const current_page = response.data.current_page
                 const total_page = response.data.last_page
+                const total_item = response.data.total
 
+                $('#total-item').text(total_item)
                 $(`#${item_holder}`).empty()
 
                 data.forEach((el, idx) => {

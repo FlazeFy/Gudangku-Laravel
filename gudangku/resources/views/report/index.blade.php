@@ -10,6 +10,12 @@
 </script>
 
 @section('content')
+    <script>
+        let page = 1
+        let search_key = `<?= $search_key ?>`
+        let filter_category = `<?= $filter_category ?>`
+        let sorting = `<?= $sorting ?>`
+    </script>
     <div class="content" style="width:1280px;">
         <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">Report</h2>
         <div class="d-flex justify-content-start">
@@ -17,6 +23,7 @@
             <a class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#modalAddReport" ><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Report</a>
             @include('report.add')  
         </div>
+        @include('report.filter')
         @include('report.report')
     </div>
     <script>

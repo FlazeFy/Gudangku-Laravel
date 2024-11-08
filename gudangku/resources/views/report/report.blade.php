@@ -1,11 +1,14 @@
 <div id="report_holder"></div>
 <script>
-    let page = 1
-    const get_my_report_all = (page) => {
+    const get_my_report_all = (page,name,category,sort) => {
         Swal.showLoading()
         const item_holder = 'report_holder'
+        let search_key_url = name ? `&search_key=${name}`:''
+        let filter_cat_url = category ? `&filter_category=${category}`:''
+        let sorting_url = sort ? `&sorting=${sort}`:''
+
         $.ajax({
-            url: `/api/v1/report?page=${page}`,
+            url: `/api/v1/report?page=${page}${search_key_url}${filter_cat_url}${sorting_url}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
@@ -17,7 +20,9 @@
                 const data_report_header = response.report_header
                 const current_page = response.data.current_page
                 const total_page = response.data.last_page
+                const total_item = response.data.total
 
+                $('#total-item').text(total_item)
                 $(`#${item_holder}`).empty()
                 data_report_header.forEach(el => {
                     warehouse.push({
@@ -73,5 +78,5 @@
             }
         });
     }
-    get_my_report_all(page)
+    get_my_report_all(page,search_key,filter_category,sorting)
 </script>
