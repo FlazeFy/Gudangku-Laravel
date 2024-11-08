@@ -87,6 +87,8 @@ class Queries extends Controller
             $res = InventoryModel::selectRaw("inventory_category as context, ".$this->get_inventory_stats_view($type)." as total")
                 ->where('created_by', $user_id)
                 ->groupby('inventory_category')
+                ->orderby('total','desc')
+                ->limit(7)
                 ->get();
             
             if (count($res) > 0) {
@@ -180,6 +182,8 @@ class Queries extends Controller
                     ".$this->get_inventory_stats_view($type)." as total")
                 ->where('created_by', $user_id)
                 ->groupby('is_favorite')
+                ->orderby('total','desc')
+                ->limit(7)
                 ->get();
             
             if (count($res) > 0) {
@@ -268,6 +272,8 @@ class Queries extends Controller
             $res = InventoryModel::selectRaw("inventory_room as context, ".$this->get_inventory_stats_view($type)." as total")
                 ->where('created_by', $user_id)
                 ->groupby('inventory_room')
+                ->orderby('total','desc')
+                ->limit(7)
                 ->get();
             
             if (count($res) > 0) {
@@ -280,6 +286,97 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'stats not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/stats/inventory/total_by_merk/{type}",
+     *     summary="Get total inventory by merk",
+     *     description="This request is used to get total inventory by its merk. This request is using MySql database, and have a protected routes.",
+     *     tags={"Stats"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"item", "price"},
+     *             example="item"
+     *         ),
+     *         description="Stats inventory view type: either 'item' for count or 'price' for sum of prices",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="stats fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="stats fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Fashion"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="stats failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="stats not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function get_total_inventory_by_merk(Request $request, $type)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $res = InventoryModel::selectRaw("inventory_merk as context, ".$this->get_inventory_stats_view($type)." as total")
+                ->where('created_by', $user_id)
+                ->whereNotNull('inventory_merk')
+                ->groupby('inventory_merk')
+                ->orderby('total','desc')
+                ->limit(7)
+                ->get();
+            
+            if (count($res) > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'stats fetched',
+                    'data' => $res
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'stats failed to fetched',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

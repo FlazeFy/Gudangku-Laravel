@@ -342,6 +342,7 @@
                         icon: "error"
                     });
                 } else {
+                    $('#total-item').text(0)
                     template_alert_container(item_holder, 'no-data', "No inventory found to show", null, '<i class="fa-solid fa-rotate-left"></i>')
                 }
             }
