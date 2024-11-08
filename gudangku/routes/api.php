@@ -66,6 +66,7 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
         Route::get('/total_by_favorite/{type}', [QueriesStatsController::class, 'get_total_inventory_by_favorite']);
         Route::get('/total_by_merk/{type}', [QueriesStatsController::class, 'get_total_inventory_by_merk']);
         Route::get('/total_by_room/{type}', [QueriesStatsController::class, 'get_total_inventory_by_room']);
+        Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'get_total_inventory_created_per_month']);
     });
     Route::prefix('/report')->group(function () {
         Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'get_total_report_created_per_month']);

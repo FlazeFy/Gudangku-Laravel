@@ -497,6 +497,109 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
+     *     path="/api/v1/stats/inventory/total_created_per_month/{year}",
+     *     summary="Get total inventory created per month",
+     *     description="This request is used to get total inventory created per month by given `year`. This request is using MySql database, and have a protected routes.",
+     *     tags={"Stats"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="year",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             example="2024"
+     *         ),
+     *         description="Inventory created year",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="stats fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="stats fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Jan"),
+     *                          @OA\Property(property="total", type="integer", example=3)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="stats failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="stats not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function get_total_inventory_created_per_month(Request $request, $year)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $res = InventoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context")
+                ->where('created_by', $user_id)
+                ->whereRaw("YEAR(created_at) = '$year'")
+                ->groupByRaw('MONTH(created_at)')
+                ->get();
+            
+            if (count($res) > 0) {
+                $res_final = [];
+                for ($i=1; $i <= 12; $i++) { 
+                    $total = 0;
+                    foreach ($res as $idx => $val) {
+                        if($i == $val->context){
+                            $total = $val->total;
+                            break;
+                        }
+                    }
+                    array_push($res_final, [
+                        'context' => Generator::generateMonthName($i,'short'),
+                        'total' => $total,
+                    ]);
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'stats fetched',
+                    'data' => $res_final
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'stats not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
      *     path="/api/v1/stats/report/total_spending_per_month/{year}",
      *     summary="Get total report spending per month",
      *     description="This request is used to get total report created per month by given `year`. This request is using MySql database, and have a protected routes.",

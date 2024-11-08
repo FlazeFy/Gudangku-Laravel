@@ -30,6 +30,9 @@
                 @include('stats.get_total_inventory_by_merk')
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 mx-auto">
+                @include('stats.get_total_inventory_created_per_month')
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 mx-auto">
                 @include('stats.get_total_report_created_per_month')
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 mx-auto">
