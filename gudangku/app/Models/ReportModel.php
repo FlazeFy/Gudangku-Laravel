@@ -36,7 +36,7 @@ class ReportModel extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'report_title', 'report_desc', 'report_category', 'is_reminder', 'remind_at', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
 
-    public static function getMyReport($user_id, $search,$id){
+    public static function getMyReport($user_id, $search_item, $search_report_title, $id, $filter_category){
         $res = ReportModel::selectRaw('
                 report.id, report_title, report_desc, report_category, report.is_reminder, remind_at, report.created_at, 
                 count(1) as total_variety, CAST(COALESCE(SUM(item_qty),0) AS UNSIGNED) as total_item, GROUP_CONCAT(item_name SEPARATOR ", ") as report_items,
@@ -48,13 +48,23 @@ class ReportModel extends Model
             ->groupby('report.id')
             ->orderby('report.created_at','desc');
 
-        if ($search) {
-            $res = $res->orWhere(function($query) use ($search, $id) {
-                $query->whereRaw('LOWER(inventory_name) LIKE ?', ['%' . strtolower($search) . '%'])
+        // Search by inventory name
+        if ($search_item) {
+            $res = $res->orWhere(function($query) use ($search_item, $id) {
+                $query->whereRaw('LOWER(inventory_name) LIKE ?', ['%' . strtolower($search_item) . '%'])
                         ->orWhere('inventory_id', $id);
             });
-            $res = $res->havingRaw('LOWER(report_items) LIKE ?', ['%' . strtolower($search) . '%']);
+            $res = $res->havingRaw('LOWER(report_items) LIKE ?', ['%' . strtolower($search_item) . '%']);
         }
+        // Search by report title
+        if ($search_report_title) {
+            $res = $res->whereRaw('LOWER(report_title) LIKE ?', ['%' . strtolower($search_report_title) . '%']);
+        }
+
+        // Filtering by category
+        if($filter_category){
+            $res->where('report_category',$filter_category);
+        }     
 
         return $res->get();
     }   

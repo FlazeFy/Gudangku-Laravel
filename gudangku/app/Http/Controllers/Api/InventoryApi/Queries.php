@@ -138,10 +138,14 @@ class Queries extends Controller
                 $collection = collect($res_final);
 
                 // Sorting
-                if($sorting == 'desc_created' && $sorting == 'asc_created'){
-                    $collection = $sorting == 'desc_created' ? $collection->sortByDesc('created_at') : $collection->sortBy('created_at');
-                } else if($sorting == 'desc_name' && $sorting == 'asc_name'){
-                    $collection = $sorting == 'desc_name' ? $collection->sortByDesc('inventory_name') : $collection->sortBy('inventory_name');
+                if ($sorting == 'desc_created') {
+                    $collection = $collection->sortByDesc('created_at');
+                } else if ($sorting == 'asc_created') {
+                    $collection = $collection->sortBy('created_at');
+                } else if ($sorting == 'desc_name') {
+                    $collection = $collection->sortByDesc('inventory_name');
+                } else if ($sorting == 'asc_name') {
+                    $collection = $collection->sortBy('inventory_name');
                 }
 
                 // Paginate

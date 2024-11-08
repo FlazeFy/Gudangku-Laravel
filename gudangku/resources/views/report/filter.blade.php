@@ -62,7 +62,7 @@
             window.history.pushState({ path: url.href }, '', url.href)
             place_reset_btn()
         } else {
-            window.location.href = '/inventory'
+            window.location.href = '/report'
         }
         get_my_report_all(page,search_key,filter_category,sorting)
     })
@@ -74,7 +74,7 @@
             filter_category = search_val
             window.history.pushState({ path: url.href }, '', url.href)
         } else {
-            window.location.href = '/inventory'
+            window.location.href = '/report'
         }
         get_my_report_all(page,search_key,filter_category,sorting)
     })
@@ -86,7 +86,7 @@
             sorting = search_val
             window.history.pushState({ path: url.href }, '', url.href)
         } else {
-            window.location.href = '/inventory'
+            window.location.href = '/report'
         }
         get_my_report_all(page,search_key,filter_category,sorting)
     })

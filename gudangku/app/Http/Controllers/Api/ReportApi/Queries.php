@@ -86,8 +86,12 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $search_key = $request->query('search_key');
+            $filter_category = $request->query('filter_category') ?? null;
+            $sorting = $request->query('sorting') ?? 'desc_created';
 
-            $res = ReportModel::getMyReport($user_id,null,null);
+            // Report fetching
+            $res = ReportModel::getMyReport($user_id,null,$search_key,null,$filter_category);
             
             if (count($res) > 0) {
                 $res_header = [];
@@ -99,7 +103,19 @@ class Queries extends Controller
                 }
 
                 $collection = collect($res);
-                $collection = $collection->sortBy('created_at')->values();
+
+                // Sorting
+                if ($sorting == 'desc_created') {
+                    $collection = $collection->sortByDesc('created_at');
+                } else if ($sorting == 'asc_created') {
+                    $collection = $collection->sortBy('created_at');
+                } else if ($sorting == 'desc_title') {
+                    $collection = $collection->sortByDesc('report_title');
+                } else if ($sorting == 'asc_title') {
+                    $collection = $collection->sortBy('report_title');
+                }
+                
+                // Paginate
                 $perPage = 12;
                 $page = request()->input('page', 1);
                 $paginator = new LengthAwarePaginator(
@@ -210,7 +226,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = ReportModel::getMyReport($user_id,$search,$id);
+            $res = ReportModel::getMyReport($user_id,$search,null,$id,null);
             
             if (count($res) > 0) {
                 $collection = collect($res);
