@@ -237,7 +237,7 @@
                                 </div>
                                 <div class='row mt-2 mx-1'>
                                     <div class='col p-0 pe-1'>
-                                        <a class="btn btn-danger w-100" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '<?= session()->get("token_key"); ?>', 
+                                        <a class="btn btn-danger w-100" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
                                             ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
                                             <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i>
                                         </a>
@@ -257,14 +257,8 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form action="/${el.deleted_at ? "inventory/destroyInventory" : "inventory/deleteInventory"}/${el.id}" method="POST">
-                                                            <input type="hidden" name="inventory_name" value="${el.inventory_name}"/>
-                                                            <h2>
-                                                                ${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'}
-                                                                this item "${el.inventory_name}"?
-                                                            </h2>
-                                                            <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
-                                                        </form>
+                                                        <h2>${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'}this item "${el.inventory_name}"?</h2>
+                                                        <a class="btn btn-danger mt-4" onclick="delete_inventory_by_id('${el.id}', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
                                                     </div>
                                                 </div>
                                             </div>

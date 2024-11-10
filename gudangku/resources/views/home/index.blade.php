@@ -9,12 +9,14 @@
 @section('content')
     <!-- JS Collection -->
     <script src="{{ asset('/usecases/fav_toogle_inventory_by_id_v1.0.0.js')}}"></script>
+    <script src="{{ asset('/usecases/delete_inventory_by_id_v1.0.0.js')}}"></script>
 
     <script>
         let search_key = `<?= $search_key ?>`
         let filter_category = `<?= $filter_category ?>`
         let sorting = `<?= $sorting ?>`
         let page = 1
+        let token = '<?= session()->get("token_key"); ?>'
     </script>
     <div class="content" style="width:1280px;">
         @include('others.profile')

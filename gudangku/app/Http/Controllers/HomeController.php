@@ -125,40 +125,6 @@ class HomeController extends Controller
         }
     }
 
-    public function soft_delete(Request $request, $id)
-    {
-        $user_id = Generator::getUserId(session()->get('role_key'));
-
-        $res = InventoryModel::where('id',$id)
-            ->where('created_by', $user_id)
-            ->update([
-                'deleted_at' => date('Y-m-d H:i:s')
-        ]);
-
-        if($res){
-            Audit::createHistory('Delete item', $request->inventory_name, $user_id);
-
-            return redirect()->back()->with('success_message', "Success delete $request->inventory_name");
-        } else {
-            return redirect()->back()->with('failed_message', "Failed delete $request->inventory_name");
-        }
-    }
-
-    public function hard_delete(Request $request, $id)
-    {
-        $user_id = Generator::getUserId(session()->get('role_key'));
-
-        $res = InventoryModel::destroy($id);
-
-        if($res){
-            Audit::createHistory('Permentally delete item', $request->inventory_name, $user_id);
-
-            return redirect()->back()->with('success_message', "Success permentally delete $request->inventory_name");
-        } else {
-            return redirect()->back()->with('failed_message', "Failed permentally delete $request->inventory_name");
-        }
-    }
-
     public function recover(Request $request, $id)
     {
         $user_id = Generator::getUserId(session()->get('role_key'));

@@ -33,13 +33,10 @@ Route::prefix('/')->group(function () {
 Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/by/{view}/{context}', [HomeController::class, 'catalog_index']); 
-    Route::post('/deleteInventory/{id}', [HomeController::class, 'soft_delete']);
-    Route::post('/destroyInventory/{id}', [HomeController::class, 'hard_delete']);
     Route::post('/destroyReminder/{id}', [HomeController::class, 'hard_delete_reminder']);
     Route::post('/copyReminder/{id}', [HomeController::class, 'copy_reminder']);
     Route::post('/editReminder/{id}', [HomeController::class, 'edit_reminder']);
     Route::post('/recoverInventory/{id}', [HomeController::class, 'recover']);
-    Route::post('/favToggleInventory/{id}', [HomeController::class, 'fav_toogle']);
     Route::post('/toogleView', [HomeController::class, 'toogle_view']);
     Route::post('/saveAsCsv', [HomeController::class, 'save_as_csv']);
 
