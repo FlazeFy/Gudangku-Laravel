@@ -36,7 +36,6 @@ Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () 
     Route::post('/destroyReminder/{id}', [HomeController::class, 'hard_delete_reminder']);
     Route::post('/copyReminder/{id}', [HomeController::class, 'copy_reminder']);
     Route::post('/editReminder/{id}', [HomeController::class, 'edit_reminder']);
-    Route::post('/recoverInventory/{id}', [HomeController::class, 'recover']);
     Route::post('/toogleView', [HomeController::class, 'toogle_view']);
     Route::post('/saveAsCsv', [HomeController::class, 'save_as_csv']);
 
@@ -53,6 +52,7 @@ Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () 
 Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [StatsController::class, 'index']);
     Route::post('/toogleTotal', [StatsController::class, 'toogle_total']);
+    Route::post('/toogleView', [StatsController::class, 'toogle_view']);
 });
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {

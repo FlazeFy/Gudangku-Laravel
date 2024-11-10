@@ -27,6 +27,9 @@ class LandingController extends Controller
             if(!session()->get('room_opened')){
                 session()->put('room_opened', 'Main Room');
             }
+            if(!session()->get('toogle_view_stats')){
+                session()->put('toogle_view_stats', 'top chart');
+            }
 
             return view('landing.index');
         } else {

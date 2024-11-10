@@ -1,4 +1,4 @@
-<div class='container bordered w-100 mb-4 bg-dark shadow <?php if(!$isMobile){ echo 'position-sticky'; } ?>' style='<?php if(!$isMobile){ echo 'top:var(--spaceMD)'; } ?>'>
+<div class='control-panel <?php if(!$isMobile){ echo 'position-sticky'; } ?>' style='<?php if(!$isMobile){ echo 'top:var(--spaceMD)'; } ?>'>
     <h4 class="fw-bold" style='font-size:var(--textXJumbo);'>Control Panel</h4>
     <div class="mt-1 mb-2 row">
         <div class="col-lg-4 col-md-6 col-sm-12">

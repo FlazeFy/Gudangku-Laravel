@@ -25,4 +25,11 @@ class StatsController extends Controller
 
         return redirect()->back();
     }
+
+    public function toogle_view(Request $request)
+    {
+        $request->session()->put('toogle_view_stats', $request->toogle_view);
+
+        return redirect()->back();
+    }
 }
