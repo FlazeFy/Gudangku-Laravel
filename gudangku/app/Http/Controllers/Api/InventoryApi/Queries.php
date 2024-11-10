@@ -146,6 +146,14 @@ class Queries extends Controller
                     $collection = $collection->sortByDesc('inventory_name');
                 } else if ($sorting == 'asc_name') {
                     $collection = $collection->sortBy('inventory_name');
+                } else if ($sorting == 'desc_price') {
+                    $collection = $collection->sortByDesc('inventory_price');
+                } else if ($sorting == 'asc_price') {
+                    $collection = $collection->sortBy('inventory_price');
+                } else if ($sorting == 'desc_updated') {
+                    $collection = $collection->sortByDesc('updated_at');
+                } else if ($sorting == 'asc_updated') {
+                    $collection = $collection->sortBy('updated_at');
                 }
 
                 // Paginate

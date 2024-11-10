@@ -45,7 +45,6 @@ Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () 
 
     Route::prefix('/add')->group(function (){
         Route::get('/', [AddController::class, 'index']);
-        Route::post('/addInventory', [AddController::class, 'create']);
     });
     Route::prefix('/edit/{id}')->group(function (){
         Route::get('/', [EditController::class, 'index']);

@@ -29,8 +29,7 @@ class Validation
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
                 'inventory_capacity_unit' => 'nullable|string|max:36',
                 'inventory_capacity_vol' => 'nullable|numeric|min:0|max:999999',
-                'is_favorite' => 'boolean',
-                'is_reminder' => 'boolean',
+                'is_favorite' => 'required|boolean'
             ]);
         } else if($type == 'update_layout'){
             return Validator::make($request->all(), [

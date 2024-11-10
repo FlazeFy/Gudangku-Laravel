@@ -14,6 +14,9 @@ use App\Helpers\Audit;
 use App\Helpers\Generator;
 use App\Helpers\Validation;
 
+// Jobs
+use App\Jobs\ProcessMailer;
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Dompdf\Canvas\Factory as CanvasFactory;
@@ -24,7 +27,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\FileUpload\InputFile;
-
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -477,12 +480,15 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $request->merge([
+                'is_favorite' => $request->is_favorite == 'off' ? 0 : 1
+            ]);
 
             $validator = Validation::getValidateInventory($request,'create');
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'result' => $validator->errors()
+                    'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {  
                 $is_exist = InventoryModel::selectRaw('1')
@@ -509,7 +515,7 @@ class Commands extends Controller
                         'inventory_capacity_unit' => $request->inventory_capacity_unit, 
                         'inventory_capacity_vol' => $request->inventory_capacity_vol, 
                         'is_favorite' => $request->is_favorite, 
-                        'is_reminder' => $request->is_reminder, 
+                        'is_reminder' => 0, 
                         'created_at' => date('Y-m-d H:i:s'), 
                         'created_by' => $user_id, 
                         'updated_at' => null, 
@@ -633,10 +639,14 @@ class Commands extends Controller
                                 ]);
                             $response = $messaging->send($fcm);
                         }
+                        // Send email
+                        $ctx = 'Create item';
+                        dispatch(new ProcessMailer($ctx, $res, $user->username, $user->email));
                         
                         return response()->json([
                             'status' => 'success',
                             'message' => $message,
+                            'data' => $res
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
@@ -654,7 +664,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -27,8 +27,14 @@
                     <option value="desc_name" <?= ($sorting == 'desc_name') ? 'selected':'' ?>>Descending by Name</option>
                     <option value="asc_name" <?= ($sorting == 'asc_name') ? 'selected':'' ?>>Ascending by Name</option>
                     <hr>
+                    <option value="desc_price" <?= ($sorting == 'desc_price') ? 'selected':'' ?>>Descending by Price</option>
+                    <option value="asc_price" <?= ($sorting == 'asc_price') ? 'selected':'' ?>>Ascending by Price</option>
+                    <hr>
                     <option value="desc_created" <?= ($sorting == 'desc_created') ? 'selected':'' ?>>Descending by Created Date</option>
                     <option value="asc_created" <?= ($sorting == 'asc_created') ? 'selected':'' ?>>Ascending by Created Date</option>
+                    <hr>
+                    <option value="desc_updated" <?= ($sorting == 'desc_updated') ? 'selected':'' ?>>Descending by Updated Date</option>
+                    <option value="asc_updated" <?= ($sorting == 'asc_updated') ? 'selected':'' ?>>Ascending by Updated Date</option>
                 </select>
             </div>
         </div>
