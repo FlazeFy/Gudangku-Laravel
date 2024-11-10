@@ -1,11 +1,15 @@
 @extends('components.layout')
 
 @section('content')
+    <!-- JS Collection -->
+    <script src="{{ asset('/usecases/fav_toogle_inventory_by_id_v1.0.0.js')}}"></script>
+
     <div class="content" style="width:1280px;">
         <h2 class="text-white fw-bold mb-4" style="font-size:36px;">Edit Inventory</h2>
         <div class='d-flex justify-content-between'>
             <div>
                 <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
+                <span id='btn-toogle-fav-holder'></span>
                 <a class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#modalAddReport" ><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Report</a>
                 <a class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#modalAddReminder" ><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Reminder</a>
                 <a class="btn btn-primary mb-3 me-2" href="/doc/inventory/{{$id}}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</a>

@@ -7,6 +7,9 @@
 @php($isMobile = Generator::isMobileDevice())  
 
 @section('content')
+    <!-- JS Collection -->
+    <script src="{{ asset('/usecases/fav_toogle_inventory_by_id_v1.0.0.js')}}"></script>
+
     <script>
         let search_key = `<?= $search_key ?>`
         let filter_category = `<?= $filter_category ?>`

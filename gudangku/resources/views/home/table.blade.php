@@ -237,12 +237,10 @@
                                 </div>
                                 <div class='row mt-2 mx-1'>
                                     <div class='col p-0 pe-1'>
-                                        <form action="/inventory/favToggleInventory/${el.id}" method="POST">
-                                            <input type="hidden" name="is_favorite" value="${el.is_favorite ? '0' : '1'}"/>
-                                            <button class="btn btn-danger w-100" type="submit" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
-                                                <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i>
-                                            </button>
-                                        </form>
+                                        <a class="btn btn-danger w-100" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '<?= session()->get("token_key"); ?>', 
+                                            ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
+                                            <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i>
+                                        </a>
                                     </div>
                                     <div class='col p-0 ps-1'>
                                         <input type="hidden" name="type_delete" value="${el.deleted_at ? "hard" : "soft"}">
@@ -348,7 +346,7 @@
             }
         });
     }
-    get_inventory(page,search_key,filter_category)
+    get_inventory(page,search_key,filter_category,sorting)
 
     function loadDatatableInventoryReminder(id){
         $(`#tb-inventory-name-${id}`).DataTable({
