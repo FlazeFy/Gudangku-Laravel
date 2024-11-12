@@ -9,8 +9,8 @@
         }
     ?>" name="toogle_edit"/>
     @if($selected == 'true')
-        <button class="btn btn-danger mb-3 me-2" type="submit" id="toogle_edit"><i class="fa-solid fa-xmark" style="font-size:var(--textXLG);"></i> Close Edit</button>
+        <button class="btn btn-danger btn-main bottom" type="submit" id="toogle_edit"><i class="fa-solid fa-xmark" style="font-size:var(--textXLG);"></i>@if(!$isMobile)  Close Edit @endif</button>
     @elseif($selected == 'false')
-        <button class="btn btn-primary mb-3 me-2" type="submit" id="toogle_edit"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Open Edit</button>
+        <button class="btn btn-primary btn-main bottom" type="submit" id="toogle_edit"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i>@if(!$isMobile)  Open Edit @endif</button>
     @endif
 </form>

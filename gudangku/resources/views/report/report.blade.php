@@ -49,10 +49,22 @@
                             ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
                                 <div class="d-flex justify-content-between mt-3">
                                     <div>
-                                        <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price : Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</h3>
+                                        ${
+                                            isMobile() ?
+                                                `<h3 class="fw-bold" style="font-size:var(--textLG);">Total Price</h3>
+                                                <h3 style="font-size:var(--textLG);">Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</h3>`
+                                            :
+                                                `<h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price : Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</h3>`
+                                        }
                                     </div>
                                     <div>
-                                        <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Item : ${el.total_item ?? '0'}</h3>
+                                        ${
+                                            isMobile() ?
+                                                `<h3 class="fw-bold" style="font-size:var(--textLG);">Total Item</h3>
+                                                <h3 style="font-size:var(--textLG);">${el.total_item ?? '0'}</h3>`
+                                            :
+                                                `<h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Item : ${el.total_item ?? '0'}</h3>`
+                                        }
                                     </div>
                                 </div>
                             ` : ''}

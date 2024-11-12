@@ -34,7 +34,7 @@
                 const tele_data = response.telegram_data
 
                 if(data.telegram_is_valid){
-                    $('#label-validate-holder').html(`<label class="mt-3 text-success" style="font-weight:600;"><i class="fa-solid fa-check"></i> Telegram ID is Validated!</label>`)
+                    $('#label-validate-holder').html(`<label class="mt-3 text-success" style="font-weight:600;"><i class="fa-solid fa-check"></i> Validated!</label>`)
                 } else {
                     if(tele_data){
                         $('#label-validate-holder').html(`

@@ -1,6 +1,13 @@
+<style>
+    #report_item_holder {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+</style>
+
 <div id="report_holder"></div>
 <div id="report_check_action"></div>
-<div id="report_item_holder">
+<div id="report_item_holder" class='table-holder'>
     <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
 </div>
 <div id="report_check_extra"></div>
@@ -28,9 +35,13 @@
             const data_item = response.data_item
             report_title = data.report_title
             let select_cat_el = ''
+            const created_at = getDateToContext(data.created_at,'calendar')
+            const updated_at = data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-'
 
-            $('#created_at').text(getDateToContext(data.created_at,'calendar'))
-            $('#updated_at').text(data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-')
+            if(!isMobile()){
+                $('#created_at').text(created_at)
+                $('#updated_at').text(updated_at)
+            }
             list_cat.forEach(el => {
                 select_cat_el += `<option value='${el}' ${el == data.report_category && 'selected'}>${el}</option>`
             });
@@ -45,35 +56,35 @@
                 $('#report_item_tb thead').html(`
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Item Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Qty</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Created At</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Remove</th>
+                        <th scope="col" style='min-width:140px;'>Item Name</th>
+                        <th scope="col" style='min-width:140px;'>Description</th>
+                        <th scope="col" style='min-width:60px;'>Qty</th>
+                        <th scope="col" style='min-width:140px;'>Price</th>
+                        <th scope="col" style='min-width:140px;'>Created At</th>
+                        <th scope="col" style='min-width:60px;'>Edit</th>
+                        <th scope="col" style='min-width:60px;'>Remove</th>
                     </tr>
                 `)
             } else {
                 $('#report_item_tb thead').html(`
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Item Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Qty</th>
-                        <th scope="col">Created At</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Remove</th>
+                        <th scope="col" style='min-width:140px;'>Item Name</th>
+                        <th scope="col" style='min-width:140px;'>Description</th>
+                        <th scope="col" style='min-width:60px;'>Qty</th>
+                        <th scope="col" style='min-width:140px;'>Created At</th>
+                        <th scope="col" style='min-width:60px;'>Edit</th>
+                        <th scope="col" style='min-width:60px;'>Remove</th>
                     </tr>
                 `)
             }
 
             $(`#${item_holder}`).html(`
-                <div class="d-flex justify-content-between mb-2">
+                <div class="${ !isMobile() && 'd-flex justify-content-between'} mb-2">
                     <div>
                         ${is_edit_mode ? 
                             `<label>Title</label>
-                            <input class='form-control' id='report_title' style='min-width:480px;' value='${data.report_title}'>`
+                            <input class='form-control' id='report_title' style='${ !isMobile() && 'min-width:480px;'}' value='${data.report_title}'>`
                             :
                             `<h3 style='font-weight:500; font-size:var(--textXJumbo);'>${data.report_title}</h3>`
                         }
@@ -90,6 +101,14 @@
                 ${is_edit_mode ? 
                     `<label>Description</label>
                     <textarea class='form-control' id='report_desc'>${data.report_desc}</textarea>
+                    ${
+                        isMobile() && `
+                            <div class='mt-4'>
+                                <h6 class='date-text'>Created At : ${created_at}</h6>
+                                <h6 class='date-text'>Last Updated : ${updated_at}</h6>
+                            </div>
+                        `
+                    }
                     <a class="btn btn-success my-3 me-2" id='save-edit-modal-btn' data-bs-toggle='modal' data-bs-target='#update-validation-modal'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
                     <div class="modal fade" id="update-validation-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">

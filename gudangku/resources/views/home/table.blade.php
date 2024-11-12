@@ -1,17 +1,26 @@
-<table class="table" id="inventory_tb">
-    <thead class="text-center">
-        <tr>
-            <th scope="col" style='width:260px;'>Name & Description</th>
-            <th scope="col" style='min-width:140px;'>Category & Merk</th>
-            <th scope="col" style='min-width:140px;'>Placement</th>
-            <th scope="col" style='min-width:110px;'>Price</th>
-            <th scope="col">Unit</th>
-            <th scope="col">Capacity</th>
-            <th scope="col" style='min-width:140px;'>Action</th>
-        </tr>
-    </thead>
-    <tbody id="inventory_tb_body"></tbody>
-</table>
+<style>
+    #inventory_holder {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+</style>
+
+<div id="inventory_holder">
+    <table class="table" id="inventory_tb">
+        <thead class="text-center">
+            <tr>
+                <th scope="col" style='width:260px;'>Name & Description</th>
+                <th scope="col" style='min-width:140px;'>Category & Merk</th>
+                <th scope="col" style='min-width:140px;'>Placement</th>
+                <th scope="col" style='min-width:110px;'>Price</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Capacity</th>
+                <th scope="col" style='min-width:140px;'>Action</th>
+            </tr>
+        </thead>
+        <tbody id="inventory_tb_body"></tbody>
+    </table>
+</div>
 <hr>
 
 <script>
