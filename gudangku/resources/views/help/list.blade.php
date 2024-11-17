@@ -124,6 +124,121 @@
     </ol>
 </div>
 
+<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Inventory Room</h1>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to See 2D Room Layout?</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you will see the <b>room layout</b> and the <b>inventory</b> found on it</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+        <li>In the landing page, press the <b>My Inventory</b> menu</li>
+        <li>It will takes you to My Inventory Page, find and click the <b>2D Room</b> button</li>
+        <li>You will see room layout (floor plan format) that interactable. You can find the <b>inventory in every storage</b> by just clicking on box of coordinate</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Toggle Room</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you can toggle what room you want to show the layout</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+        <li>In the landing page, press the <b>My Inventory</b> menu</li>
+        <li>It will takes you to My Inventory Page, find and click the <b>2D Room</b> button</li>
+        <li>You will see room layout (floor plan format) that interactable. At the top of the page, choose room to show in <b class='text-success'>Select Room</b></li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Print the 2D Room Layout</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you can print the document of <b>room layout</b>, <b>inventory</b>, and <b>storage / rack</b> in PDF format</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+        <li>In the landing page, press the <b>My Inventory</b> menu</li>
+        <li>It will takes you to My Inventory Page, find and click the <b>2D Room</b> button</li>
+        <li>You will see room layout (floor plan format) that interactable. At the bottom, press the button <b class="text-success">Print</b> to directly get the document and send it into your Telegram Chat</li>
+        <li>And If you want to modify the document first before export, you can press the button <b class="text-success">Custom Print</b>. And it will bring you to customization page</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Add Storage Layout</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you can <b>add a storage to floor layout</b>, or maybe expand it by giving <b>same name in different floor coordinate</b>. When you add new storage, you will need to provide the <b>Storage</b> name</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+        <li>In the landing page, press the <b>My Inventory</b> menu</li>
+        <li>It will takes you to My Inventory Page, find and click the <b>2D Room</b> button</li>
+        <li>You will see room layout (floor plan format) that interactable. At the bottom, press the floor with <b class='fst-italic'>transparent color</b></li>
+        <li>A popup of Add Storage will appear. Fill the mandatory field of <b>Storage</b> and you can provide the <b>Description</b> too</li>
+        <li>After that, press the button <b class='text-success'>Submit to Coordinate [...]</b> to finish the process</li>
+    </ol>
+</div>
+
+<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Report</h1>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Add Report?</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you must provide <b>Title</b>, <b>Category</b>, and choose at least one item from your inventory</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+        <li>In the landing page, press the <b>Report</b> menu</li>
+        <li>It will takes you to Report Page, find the <b>Add Report</b> button</li>
+        <li>In the Add Report popup, fill the mandatory field first like the <b>Title</b>, and <b>Category</b></li>
+        <li>After that you can fill the rest of the form for the optional field like the <b>Description</b> and choose the inventory to attached</li>
+        <li>To add a inventory, just select a item from the inventory list or you can choose another method to add inventory</li>
+        <li>If you choose a inventory instead of another method, some new field will show. Fill the item's <b>Description</b> if needed, and choose the <b>Qty</b> or <b>Price</b></li>
+        <li>After all of that, you can assign the inventory by clicking the <b>Add Item</b> button. You can see the assigned item at the bottom of <b>List Selected Item</b></li>
+        <li>Before submit the report. You can readjust the attached item or maybe delete it</li>
+        <li>Press the <b class="text-success">Submit</b> button to finish your report add process</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Browse your Report</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you will see all of your created report</h2>
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>Report</b> menu</li>
+        <li>It will takes you to Report Page, find a table at the <b>bottom of the section "Control Panel"</b></li>
+        <li>You <b class="text-success">will see</b> the <b>Report Title</b>, <b>Description</b>, <b>Category</b>, <b>Total Item</b>, <b>Total Price</b> if(the category is shopping cart or wishlist), <b>Attached Item</b>, and the <b>Properties</b>
+        . You can use the page nativator at the bottom of the page</li>
+        <li>If you want to edit or see more detail. Click the <b class='text-success fst-italic'>report box</b> and it will takes you to Detail Report Page</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Report using Title</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you will search report by providing the <b>Report Title</b></h2>
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>Report</b> menu</li>
+        <li>It will takes you to Report Page, find the section <b>"Control Panel"</b></li>
+        <li>Type the <b>Report Title</b> in the field <b>Search by Title</b>. <b class='text-success'>Escape or press enter</b> to submit</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Reset Report Search By Title</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you will reset the report search by <b>Title</b> and showing all the available report</h2>
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>Report</b> menu</li>
+        <li>It will takes you to Report Page, find the section <b>"Control Panel"</b></li>
+        <li>In the field <b>Search by Title</b>. Press the button with <b class="text-success fst-italic">X icon</b> to reset the title search</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Report using Category</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you will search report by providing the <b>Report Category</b></h2>
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>Report</b> menu</li>
+        <li>It will takes you to Report Page, find the section <b>"Control Panel"</b></li>
+        <li>Select the <b>Search by Category</b> and it will <b class='text-success'>auto refresh</b> the list</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Sorting your Report</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you will sorting report list by some context</h2>
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>Report</b> menu</li>
+        <li>It will takes you to Report Page, find the section <b>"Control Panel"</b></li>
+        <li>Select the <b>Sorting</b> and it will <b class='text-success'>auto refresh</b> the list</li>
+    </ol>
+</div>
+
 <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Stats</h1>
 <div class="container bordered mb-4">
     <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">See and Toggle Stats View</h1>

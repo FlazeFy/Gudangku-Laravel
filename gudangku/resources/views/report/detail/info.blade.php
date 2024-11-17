@@ -7,6 +7,7 @@
 
 <div id="report_holder"></div>
 <div id="report_check_action"></div>
+<h3 class='fw-bold' style="font-size:var(--textJumbo);">Attached Item</h3>
 <div id="report_item_holder" class='table-holder'>
     <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
 </div>
