@@ -19,6 +19,7 @@ use App\Http\Controllers\AnalyzeController;
 use App\Http\Controllers\ReportDetailController;
 use App\Http\Controllers\Room3DController;
 use App\Http\Controllers\Room2DController;
+use App\Http\Controllers\HelpController;
 
 ######################### Public Route #########################
 
@@ -27,6 +28,7 @@ Route::prefix('/')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::get('/register', [RegisterController::class, 'index'])->name('register');
     Route::get('/features', [FeaturesController::class, 'index']);
+    Route::get('/help', [HelpController::class, 'index']);
 
     Route::post('/login/validate', [LoginController::class, 'login_auth']);
 });
