@@ -5,18 +5,21 @@
     use App\Helpers\Generator;
 ?>  
 @php($isMobile = Generator::isMobileDevice())  
+@php($role = session()->get('role_key'))
 
 @section('content')
     <div class="content" style="max-width:1080px;">
-        @include('landing.dashboard')
+        @if($role == "user")
+            @include('landing.dashboard')
+        @endif
         <div class="row">
             <div class="col-lg-4 col-md-6 col-12">
                 <button class="btn-feature mb-3" onclick="location.href='/inventory';" id="nav_inventory_btn">
                     @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-warehouse me-2"></i> My Inventory</h2>
+                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-warehouse me-2"></i> @if($role == "user") My @endif Inventory</h2>
                     @else
                         <i class="fa-solid fa-warehouse" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">My Inventory</h2>
+                        <h2 class="mt-3" style="font-size:var(--textJumbo);">@if($role == "user") My @endif Inventory</h2>
                     @endif
                 </button>
             </div>
@@ -31,12 +34,12 @@
                 </button>
             </div>
             <div class="col-lg-4 col-md-6 col-12">
-                <button class="btn-feature mb-3" onclick="location.href='/calendar';">
+                <button class="btn-feature mb-3" onclick="location.href='/<?php if($role == 'user'){ echo 'calendar'; } else { echo 'user'; } ?>';">
                     @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-calendar me-2"></i> Calendar</h2>
+                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-<?php if($role == "user"){ echo "calendar"; } else { echo "user"; } ?> me-2"></i> @if($role == "user") Calendar @else User @endif</h2>
                     @else
-                        <i class="fa-solid fa-calendar" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">Calendar</h2>
+                        <i class="fa-solid fa-<?php if($role == "user"){ echo "calendar"; } else { echo "user"; } ?>" style="font-size:100px"></i>
+                        <h2 class="mt-3" style="font-size:var(--textJumbo);">@if($role == "user") Calendar @else User @endif</h2>
                     @endif
                 </button>
             </div>

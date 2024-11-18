@@ -145,4 +145,23 @@ class InventoryModel extends Model
 
         return count($res) > 0 ? $res : null;
     }
+
+    public static function getContextTotalStats($context,$type,$user_id){
+        function get_inventory_stats_view($type){
+            if($type == "price"){
+                return "CAST(SUM(inventory_price) as UNSIGNED)";
+            } else if($type == "item") {
+                return "COUNT(1)";
+            }
+        }
+
+        $res = InventoryModel::selectRaw("$context as context, ".get_inventory_stats_view($type)." as total")
+            ->where('created_by', $user_id)
+            ->groupby($context)
+            ->orderby('total','desc')
+            ->limit(7)
+            ->get();
+        
+        return count($res) > 0 ? $res : null;
+    }
 }

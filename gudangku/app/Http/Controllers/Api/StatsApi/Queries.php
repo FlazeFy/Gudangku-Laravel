@@ -84,12 +84,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::selectRaw("inventory_category as context, ".$this->get_inventory_stats_view($type)." as total")
-                ->where('created_by', $user_id)
-                ->groupby('inventory_category')
-                ->orderby('total','desc')
-                ->limit(7)
-                ->get();
+            $res = InventoryModel::getContextTotalStats('inventory_category',$type,$user_id);;
             
             if (count($res) > 0) {
                 return response()->json([
@@ -269,12 +264,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::selectRaw("inventory_room as context, ".$this->get_inventory_stats_view($type)." as total")
-                ->where('created_by', $user_id)
-                ->groupby('inventory_room')
-                ->orderby('total','desc')
-                ->limit(7)
-                ->get();
+            $res = InventoryModel::getContextTotalStats('inventory_room',$type,$user_id);
             
             if (count($res) > 0) {
                 return response()->json([
@@ -359,13 +349,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::selectRaw("inventory_merk as context, ".$this->get_inventory_stats_view($type)." as total")
-                ->where('created_by', $user_id)
-                ->whereNotNull('inventory_merk')
-                ->groupby('inventory_merk')
-                ->orderby('total','desc')
-                ->limit(7)
-                ->get();
+            $res = InventoryModel::getContextTotalStats('inventory_merk',$type,$user_id);
             
             if (count($res) > 0) {
                 return response()->json([
