@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Api\HistoryApi;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\HistoryModel;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Models\AdminModel;
 
 class Queries extends Controller
 {
@@ -68,11 +67,20 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+            $paginate = 12;
 
-            $res = HistoryModel::select('*')
-                ->where('created_by',$user_id)
-                ->orderby('created_at', 'DESC')
-                ->paginate(12);
+            if($check_admin){
+                $res = HistoryModel::selectRaw('history.id, username, history_type, history_context, history.created_at')
+                    ->join('users','users.id','=','history.created_by')
+                    ->orderby('history.created_at', 'DESC')
+                    ->paginate($paginate);
+            } else {
+                $res = HistoryModel::select('*')
+                    ->where('created_by',$user_id)
+                    ->orderby('created_at', 'DESC')
+                    ->paginate($paginate);
+            }
             
             if (count($res) > 0) {
                 return response()->json([
@@ -89,7 +97,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

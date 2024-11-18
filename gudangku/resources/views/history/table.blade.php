@@ -1,27 +1,26 @@
-<div id="user_holder">
+<div id="history_holder">
     <table class="table">
         <thead class="text-center">
             <tr>
                 <th scope="col" style='width:160px;'>Username</th>
-                <th scope="col" style='min-width:180px;'>Contact</th>
-                <th scope="col" style='min-width:60px;'>Timezone</th>
-                <th scope="col" style='min-width:110px;'>Joined At</th>
-                <th scope="col" style='min-width:110px;'>Last Updated</th>
+                <th scope="col" style='min-width:180px;'>History</th>
+                <th scope="col" style='min-width:110px;'>Created At</th>
                 <th scope="col" style='min-width:140px;'>Action</th>
             </tr>
         </thead>
-        <tbody id="user_tb_body"></tbody>
+        <tbody id="history_tb_body"></tbody>
     </table>
 </div>
 <hr>
 
 <script>
-    const get_all_user = () => {
+    let page = 1
+    const get_all_history = (page) => {
         Swal.showLoading()
-        const item_holder = 'user_tb_body'
-
+        const item_holder = 'history_tb_body'
+        $(`#${item_holder}`).empty()
         $.ajax({
-            url: `/api/v1/user`,
+            url: `/api/v1/history?page=${page}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
@@ -38,37 +37,28 @@
                     $(`#${item_holder}`).append(`
                         <tr>
                             <td class='text-center fw-bold'>${el.username}</td>
-                            <td>
-                                <h6 class='fw-bold'>Telegram User ID</h6> 
-                                <h6>${el.telegram_user_id ?? '-'}</h6>
-                                <h6 class='fw-bold mt-1'>Firebase FCM Token</h6> 
-                                <h6>${el.firebase_fcm_token ?? '-'}</h6> 
-                                <h6 class='fw-bold mt-1'>Line User ID</h6> 
-                                <h6>${el.line_user_id ?? '-'}</h6>    
-                            </td>
-                            <td class='text-center'>${el.timezone ?? '-'}</td>
+                            <td>${el.history_type} from item called ${el.history_context}</td>
                             <td class='text-center'>${getDateToContext(el.created_at,'calendar')}</td>
-                            <td class='text-center'>${el.updated_at ? getDateToContext(el.updated_at,'calendar') : '-'}</td>
                             <td></td>
                         </tr>
                     `);
                 });
 
-                generate_pagination(item_holder, get_all_user, total_page, current_page)
+                generate_pagination(item_holder, get_all_history, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
                     Swal.fire({
                         title: "Oops!",
-                        text: "Failed to get the user",
+                        text: "Failed to get the history",
                         icon: "error"
                     });
                 } else {
-                    template_alert_container(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
+                    template_alert_container(item_holder, 'no-data', "No history found to show", null, '<i class="fa-solid fa-scroll"></i>')
                 }
             }
         });
     }
-    get_all_user()
+    get_all_history(page)
 </script>
