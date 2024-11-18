@@ -123,6 +123,41 @@
         <li>It will takes you to My Inventory Page, at the top of the page click the <b class='text-success'>Save as CSV</b> button</li>
     </ol>
 </div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Delete Reminder From Inventory</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you will delete reminder from a inventory. The reminder will be deleted (not removed) so you need to make a new reminder if you have been delete the reminder</h2>
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>My Inventory</b> menu</li>
+        <li>It will takes you to My Inventory Page, choose inventory with attached reminder to delete. You can find reminder in <b>"Action"</b> column in the table</li>
+        <li>Click the button <b class="fst-italic">with trash icon</b>, and a popup confirmation will appear</li>
+        <li>Press the <b class="text-success">Yes, Delete</b> button to finish delete your reminder</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Edit Reminder Attached in Inventory</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you need to provide <b>Description</b>, <b>Type</b>, and <b>Context</b></h2>
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>My Inventory</b> menu</li>
+        <li>It will takes you to My Inventory Page, choose inventory with attached reminder to edit. You can find reminder in <b>"Action"</b> column in the table</li>
+        <li>Click the button <b class="fst-italic">with edit icon</b>, and a popup with editing form will appear</li>
+        <li>Fill the <b>Description</b>, <b>Type</b>, and <b>Context</b></li>
+        <li>Press the <b class="text-success">Save Changes</b> button to finish edit your reminder</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Copy Reminder to Another Inventory</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you will copy reminder from a inventory and attach to another inventory with same <b>Description</b>, <b>Type</b>, and <b>Context</b></h2>
+    <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>My Inventory</b> menu</li>
+        <li>It will takes you to My Inventory Page, choose inventory with attached reminder to copy. You can find reminder in <b>"Action"</b> column in the table</li>
+        <li>Click the button <b class="fst-italic">with copy icon</b>, and a popup of selection will appear</li>
+        <li>Select the inventory you want to attach the reminder</li>
+        <li>Press the <b class="text-success">Yes, Copy</b> button to finish copy your reminder</li>
+    </ol>
+</div>
 
 <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Inventory Room</h1>
 <div class="container bordered mb-4">
@@ -299,5 +334,30 @@
     <ol class="text-white ms-4" style="list-style-type: circle;">
         <li>In the landing page, press the <b>Calendar</b> menu</li>
         <li>It will takes you to Calendar Page, and you will see the <b class="text-success">calendar</b>. You can navigate using next and previous button at the top right of the calendar</li>
+    </ol>
+</div>
+
+<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Profile</h1>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Edit My Profile</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you must provide <b>Username</b> and <b>Email</b></h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>My Profile</b> menu</li>
+        <li>It will takes you to My Profile Page, at the profile form. Fill the <b>Username</b> and <b>Email</b></li>
+        <li>Press the <b class='text-success'>Save Changes</b> button to finish the update profile</li>
+    </ol>
+</div>
+<div class="container bordered mb-4">
+    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Change My Telegram ID</h1>
+    <h2 style="font-size:calc(var(--textLG));">In this section you must provide your <b>Telegram User ID</b>. You can find your ID from bot called <b>@username_to_id_bot</b></h2>
+    <ol class="text-white ms-4" style="list-style-type: circle;">
+        <li>In the landing page, press the <b>My Profile</b> menu</li>
+        <li>It will takes you to My Profile Page, at the profile form. Fill the <b>Telegram User ID</b></li>
+        <li>If you have input valid Telegram User ID, a button <b>Update Telegram ID</b> will appear at the right top of the field. Press the button</li>
+        <li>A popup confirmation will appear, click <b>I Agree</b></li>
+        <li>If success, a popup information tell you that <b>Token Validation</b> has sended to your Telegam Chat, click <b>OK</b></li>
+        <li>Open your Telegram account, and <b>search a chat from Bot with name GudangKu</b></li>
+        <li>See the <b>Token Validation</b>, copy and paste it into the previous form with title <b>"You have pending Token Validation. Please validate it!"</b>. You will find a field <b>Token Validation</b></li>
+        <li>Click <b class='text-success'>Validate Token</b> to finish the Telegram ID Change</li>
     </ol>
 </div>

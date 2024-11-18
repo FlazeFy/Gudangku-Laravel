@@ -14,6 +14,9 @@
             @include('profile.sign_out')
             <a class="btn btn-primary mb-3" href="/forgot"><i class="fa-solid fa-key" style="font-size:var(--textXLG);"></i> Change Password</a>
         </div>
+        <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Profile</h1>
         @include('profile.profile')
+        <hr class="mt-5"><h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Telegram Account</h1>
+        @include('profile.telegram')
     </div>
 @endsection

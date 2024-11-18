@@ -112,6 +112,7 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/user')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/my_profile', [QueriesUserController::class, 'get_my_profile']);
     Route::put('/update_telegram_id', [CommandsUserController::class, 'update_telegram_id']);
+    Route::put('/update_profile', [CommandsUserController::class, 'update_profile']);
     Route::put('/validate_telegram_id', [CommandsUserController::class, 'validate_telegram_id']);
     Route::put('/update_timezone_fcm', [CommandsUserController::class, 'update_timezone_fcm']);
 });
