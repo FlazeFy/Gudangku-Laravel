@@ -155,9 +155,11 @@ class InventoryModel extends Model
             }
         }
 
-        $res = InventoryModel::selectRaw("$context as context, ".get_inventory_stats_view($type)." as total")
-            ->where('created_by', $user_id)
-            ->groupby($context)
+        $res = InventoryModel::selectRaw("$context as context, ".get_inventory_stats_view($type)." as total");
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+        $res = $res->groupby($context)
             ->orderby('total','desc')
             ->limit(7)
             ->get();

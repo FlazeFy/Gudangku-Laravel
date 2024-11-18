@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Api\StatsApi;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Helpers\Generator;
 
 // Models
 use App\Models\InventoryModel;
 use App\Models\ReportModel;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Models\AdminModel;
 
 class Queries extends Controller
 {
@@ -83,8 +82,9 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::getContextTotalStats('inventory_category',$type,$user_id);;
+            $res = InventoryModel::getContextTotalStats('inventory_category',$type,!$check_admin ? $user_id:null);
             
             if (count($res) > 0) {
                 return response()->json([
@@ -263,8 +263,9 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::getContextTotalStats('inventory_room',$type,$user_id);
+            $res = InventoryModel::getContextTotalStats('inventory_room',$type,!$check_admin ? $user_id:null);
             
             if (count($res) > 0) {
                 return response()->json([
@@ -348,8 +349,9 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::getContextTotalStats('inventory_merk',$type,$user_id);
+            $res = InventoryModel::getContextTotalStats('inventory_merk',$type,!$check_admin ? $user_id:null);
             
             if (count($res) > 0) {
                 return response()->json([
@@ -433,11 +435,14 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
             $res = ReportModel::selectRaw("COUNT(DISTINCT report.id) as total_report, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context")
-                ->join('report_item','report_item.report_id','=','report.id')
-                ->where('report.created_by', $user_id)
-                ->whereRaw("YEAR(report.created_at) = '$year'")
+                ->join('report_item','report_item.report_id','=','report.id');
+                if(!$check_admin){
+                    $res = $res->where('report.created_by', $user_id);
+                }
+            $res = $res->whereRaw("YEAR(report.created_at) = '$year'")
                 ->groupByRaw('MONTH(report.created_at)')
                 ->get();
             
@@ -540,10 +545,13 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context")
-                ->where('created_by', $user_id)
-                ->whereRaw("YEAR(created_at) = '$year'")
+            $res = InventoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context");
+                if(!$check_admin){
+                    $res = $res->where('created_by', $user_id);
+                }
+            $res = $res->whereRaw("YEAR(created_at) = '$year'")
                 ->groupByRaw('MONTH(created_at)')
                 ->get();
             
@@ -645,11 +653,14 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
             $res = ReportModel::selectRaw("CAST(SUM(item_price) AS UNSIGNED) as total_price, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context")
-                ->join('report_item','report_item.report_id','=','report.id')
-                ->where('report.created_by', $user_id)
-                ->where('report_category','Shopping Cart')
+                ->join('report_item','report_item.report_id','=','report.id');
+                if(!$check_admin){
+                    $res = $res->where('report.created_by', $user_id);
+                }
+            $res = $res->where('report_category','Shopping Cart')
                 ->whereRaw("YEAR(report.created_at) = '$year'")
                 ->groupByRaw('MONTH(report.created_at)')
                 ->get();
@@ -754,15 +765,18 @@ class Queries extends Controller
     public function get_total_report_used_per_month(Request $request, $year){
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
             $res = ReportModel::selectRaw("
                     CAST(SUM(CASE WHEN report_category = 'Checkout' THEN 1 ELSE 0 END) AS UNSIGNED) as total_checkout,
                     CAST(SUM(CASE WHEN report_category = 'Wash List' THEN 1 ELSE 0 END) AS UNSIGNED) as total_washlist,
                     MONTH(report.created_at) as context
                 ")
-                ->join('report_item', 'report_item.report_id', '=', 'report.id')
-                ->where('report.created_by', $user_id)
-                ->whereIn('report_category', ['Checkout', 'Wash List'])
+                ->join('report_item', 'report_item.report_id', '=', 'report.id');
+                if(!$check_admin){
+                    $res = $res->where('report.created_by', $user_id);
+                }
+            $res = $res->whereIn('report_category', ['Checkout', 'Wash List'])
                 ->whereRaw("YEAR(report.created_at) = '$year'")
                 ->groupByRaw('MONTH(report.created_at)')
                 ->get();
@@ -863,6 +877,7 @@ class Queries extends Controller
     public function get_dashboard(Request $request){
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
             $total_item = InventoryModel::selectRaw('COUNT(1) AS total')
                 ->where('created_by', $user_id)

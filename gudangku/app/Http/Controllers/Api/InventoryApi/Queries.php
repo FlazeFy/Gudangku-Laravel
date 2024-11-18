@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 // Helpers
 use App\Helpers\Document;
@@ -15,9 +17,7 @@ use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
 use App\Models\ReminderModel;
 use App\Models\ReportModel;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Models\AdminModel;
 
 class Queries extends Controller
 {
@@ -94,13 +94,18 @@ class Queries extends Controller
         try{
             // Attribute
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
             $search_key = $request->query('search_key');
             $filter_category = $request->query('filter_category') ?? 'all';
             $sorting = $request->query('sorting') ?? 'desc_created';
 
             // Inventory fetch
-            $res = InventoryModel::select('*')
-                ->where('created_by',$user_id);
+            $res = InventoryModel::selectRaw($check_admin ? 'inventory.*,username' :'*');
+            if(!$check_admin){
+                $res->where('created_by',$user_id);
+            } else {
+                $res->join('users','users.id','=','inventory.created_by');
+            }
 
             // Searching
             if ($search_key && trim($search_key) != "") {
@@ -129,7 +134,7 @@ class Queries extends Controller
                 // Reminder fetch
                 $res_final = [];
                 foreach ($res as $idx => $dt) {
-                    $reminder = ReminderModel::getReminderByInventoryId($dt->id,$user_id);
+                    $reminder = ReminderModel::getReminderByInventoryId($dt->id,!$check_admin ? $user_id : $dt->created_by);
 
                     $dt->reminder = count($reminder) > 0 ? $reminder : null;
                     $res_final[] = $dt;
@@ -151,9 +156,9 @@ class Queries extends Controller
                 } else if ($sorting == 'asc_price') {
                     $collection = $collection->sortBy('inventory_price');
                 } else if ($sorting == 'desc_updated') {
-                    $collection = $collection->sortByDesc('updated_at');
+                    $collection = $collection->sortByDesc('inventory.updated_at');
                 } else if ($sorting == 'asc_updated') {
-                    $collection = $collection->sortBy('updated_at');
+                    $collection = $collection->sortBy('inventory.updated_at');
                 }
 
                 // Paginate
@@ -183,7 +188,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

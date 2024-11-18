@@ -36,7 +36,7 @@
                 data.forEach(el => {
                     $(`#${item_holder}`).append(`
                         <tr>
-                            <td class='text-center fw-bold'>${el.username}</td>
+                            <td class='text-center fw-bold'>@${el.username}</td>
                             <td>${el.history_type} from item called ${el.history_context}</td>
                             <td class='text-center'>${getDateToContext(el.created_at,'calendar')}</td>
                             <td></td>

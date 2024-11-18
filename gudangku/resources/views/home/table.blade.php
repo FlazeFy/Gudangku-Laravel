@@ -52,6 +52,7 @@
                 const current_page = response.data.current_page
                 const total_page = response.data.last_page
                 const total_item = response.data.total
+                const role = "<?php echo $role; ?>"; 
 
                 $('#total-item').text(total_item)
                 $(`#${item_holder}`).empty()
@@ -202,6 +203,10 @@
                                 <hr class='my-2'>
                                 <h6 class='fw-bold mt-2'>Description</h6>
                                 <h6>${el.inventory_desc || '-'}</h6>
+                                ${role !== "user" ? `
+                                    <h6 class='fw-bold mt-2'>Created By</h6>
+                                    <h6>@${el.username}</h6>
+                                ` : ''}
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 <h6 class='fw-bold'>Category</h6>
@@ -245,13 +250,15 @@
                                     </div>
                                 </div>
                                 <div class='row mt-2 mx-1'>
-                                    <div class='col p-0 pe-1'>
-                                        <a class="btn btn-danger w-100" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
-                                            ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
-                                            <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i>
-                                        </a>
-                                    </div>
-                                    <div class='col p-0 ps-1'>
+                                    ${role === "user" ? `
+                                        <div class='col p-0 pe-1'>
+                                            <a class="btn btn-danger w-100" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
+                                                ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
+                                                <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i>
+                                            </a>
+                                        </div>
+                                    ` : ''}
+                                    <div class='col p-0 ${role === 'user' && 'ps-1' }'>
                                         <input type="hidden" name="type_delete" value="${el.deleted_at ? "hard" : "soft"}">
                                         <button class="btn btn-danger modal-btn w-100" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}">
                                             <i class="fa-solid ${el.deleted_at ? "fa-fire" : "fa-trash"}" style="font-size:var(--textXLG);"></i>

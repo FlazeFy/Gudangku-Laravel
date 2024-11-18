@@ -37,7 +37,7 @@
                 data.forEach(el => {
                     $(`#${item_holder}`).append(`
                         <tr>
-                            <td class='text-center fw-bold'>${el.username}</td>
+                            <td class='text-center fw-bold'>@${el.username}</td>
                             <td>
                                 <h6 class='fw-bold'>Telegram User ID</h6> 
                                 <h6>${el.telegram_user_id ?? '-'}</h6>
