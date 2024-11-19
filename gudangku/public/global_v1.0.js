@@ -98,7 +98,11 @@ const generate_pagination = (items_holder, fetch_callback, total_page, current_p
     }
 
     $(`#pagination-${items_holder}`).remove()
-    $(`<div id='pagination-${items_holder}'><label>Page</label>${page_element}</div>`).insertAfter(`#${items_holder}`)
+    if ($('#'+items_holder).closest('table').length == 0) {
+        $(`<div id='pagination-${items_holder}' class='mb-2'><label>Page</label>${page_element}</div>`).insertAfter(`#${items_holder}`)
+    } else {
+        $(`<div id='pagination-${items_holder}' class='mb-2'><label>Page</label>${page_element}</div>`).insertAfter($(`#${items_holder}`).closest('table'))
+    }
     $(document).off('click', `#pagination-${items_holder} .btn-page`)
     $(document).on('click', `#pagination-${items_holder} .btn-page`, function() {
         const selectedPage = $(this).data('page')

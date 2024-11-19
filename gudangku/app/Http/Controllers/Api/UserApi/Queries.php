@@ -1,16 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Api\UserApi;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\UserModel;
 use App\Models\AdminModel;
 use App\Models\ValidateRequestModel;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class Queries extends Controller
 {
@@ -78,11 +76,21 @@ class Queries extends Controller
             $res = UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','created_at')
                 ->where('id',$user_id)
                 ->first();
+            if($res){
+                $res->role = 'user';
+            }
+            if(!$res){
+                $res = AdminModel::select('id','username','email','telegram_user_id','telegram_is_valid','created_at')
+                    ->where('id',$user_id)
+                    ->first();
+                if($res){
+                    $res->role = 'admin';
+                }
+            }
 
             $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
             
             if ($res) {
-                $res->role = 'user';
                 return response()->json([
                     'status' => 'success',
                     'message' => 'user fetched',

@@ -14,6 +14,7 @@ use App\Helpers\Validation;
 
 // Models
 use App\Models\ReportModel;
+use App\Models\AdminModel;
 use App\Models\ReportItemModel;
 
 class Queries extends Controller
@@ -86,12 +87,13 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
             $search_key = $request->query('search_key');
             $filter_category = $request->query('filter_category') ?? null;
             $sorting = $request->query('sorting') ?? 'desc_created';
 
             // Report fetching
-            $res = ReportModel::getMyReport($user_id,null,$search_key,null,$filter_category);
+            $res = ReportModel::getMyReport(!$check_admin ? $user_id : null,null,$search_key,null,$filter_category);
             
             if (count($res) > 0) {
                 $res_header = [];

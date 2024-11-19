@@ -37,14 +37,22 @@ class ReportModel extends Model
     protected $fillable = ['id', 'report_title', 'report_desc', 'report_category', 'is_reminder', 'remind_at', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
 
     public static function getMyReport($user_id, $search_item, $search_report_title, $id, $filter_category){
+        $extra = "";
+        if(!$user_id){
+            $extra = ", username";
+        }
         $res = ReportModel::selectRaw('
                 report.id, report_title, report_desc, report_category, report.is_reminder, remind_at, report.created_at, 
                 count(1) as total_variety, CAST(COALESCE(SUM(item_qty),0) AS UNSIGNED) as total_item, GROUP_CONCAT(item_name SEPARATOR ", ") as report_items,
-                CAST(SUM(item_price * item_qty) AS UNSIGNED) as item_price')
+                CAST(SUM(item_price * item_qty) AS UNSIGNED) as item_price'.$extra)
             ->leftjoin('report_item','report_item.report_id','=','report.id')
-            ->leftjoin('inventory','inventory.id','=','report_item.inventory_id')
-            ->where('report.created_by',$user_id)
-            ->whereNull('report.deleted_at')
+            ->leftjoin('inventory','inventory.id','=','report_item.inventory_id');
+            if($user_id){
+                $res->where('report.created_by',$user_id);
+            } else {
+                $res->join('users','users.id','=','report.created_by');
+            }
+        $res = $res->whereNull('report.deleted_at')
             ->groupby('report.id')
             ->orderby('report.created_at','desc');
 

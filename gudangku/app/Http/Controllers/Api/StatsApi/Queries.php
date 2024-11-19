@@ -168,15 +168,18 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
 
             $res = InventoryModel::selectRaw("
                     CASE 
                         WHEN is_favorite = 1 THEN 'Favorite' 
                         ELSE 'Normal Item' 
                     END AS context, 
-                    ".$this->get_inventory_stats_view($type)." as total")
-                ->where('created_by', $user_id)
-                ->groupby('is_favorite')
+                    ".$this->get_inventory_stats_view($type)." as total");
+            if(!$check_admin){
+                $res->where('created_by',$user_id);
+            }
+            $res = $res->groupby('is_favorite')
                 ->orderby('total','desc')
                 ->limit(7)
                 ->get();

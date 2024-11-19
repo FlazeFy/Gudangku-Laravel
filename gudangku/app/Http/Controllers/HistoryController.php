@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 
 // Helpers
@@ -10,6 +9,7 @@ use App\Helpers\Audit;
 
 // Models
 use App\Models\HistoryModel;
+use App\Models\AdminModel;
 
 // Exports
 use App\Exports\HistoryExport;
@@ -42,19 +42,22 @@ class HistoryController extends Controller
 
     public function save_as_csv(){
         $user_id = Generator::getUserId(session()->get('role_key'));
+        $check_admin = AdminModel::find($user_id);
 
-        $data = HistoryModel::select('*')
-            ->where('created_by', $user_id)
-            ->orderBy('created_at', 'DESC')
+        $res = HistoryModel::select('*');
+            if(!$check_admin){
+                $res->where('created_by',$user_id);
+            }
+        $res = $res->orderBy('created_at', 'DESC')
             ->get();
 
-        if($data->isNotEmpty()){
+        if($res->isNotEmpty()){
             try {
                 $file_name = date('l, j F Y \a\t H:i:s');
                 Audit::createHistory('Print item', 'History', $user_id);
 
                 session()->flash('success_message', 'Success generate data');
-                return Excel::download(new HistoryExport($data), "$file_name-History Data.xlsx");
+                return Excel::download(new HistoryExport($res), "$file_name-History Data.xlsx");
             } catch (\Exception $e) {
                 return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
             }

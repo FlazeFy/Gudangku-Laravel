@@ -74,14 +74,16 @@ input, textarea, select{
     background: transparent !important;
 }
 
-a, label, h1, h2, h3, h4, h5, h6, p, table, .dataTables_info {
+a, label, h1, h2, h3, h4, h5, h6, p, table {
     color: var(--whiteColor) !important;
 }
 
+button, .btn, tr, .btn-page {
+    -webkit-transition: all 0.3s !important;
+    -o-transition: all 0.3s !important;
+    transition: all 0.3s !important;
+}
 button, .btn {
-    -webkit-transition: all 0.4s !important;
-    -o-transition: all 0.4s !important;
-    transition: all 0.4s !important;
     cursor: pointer;
 }
 button:hover, .btn:hover {
@@ -138,10 +140,6 @@ hr {
     font-weight: 600;
 }
 
-/* Datatable */
-.dataTables_wrapper.dt-bootstrap5.no-footer .row:nth-child(3) {
-    margin-top: var(--spaceJumbo);
-}
 .paginate_button .page-link {
     background: transparent !important;
     border: 1.5px solid var(--primaryColor) !important;
@@ -291,6 +289,9 @@ table td {
 table th {
     font-size: var(--textLG) !important;
     font-weight: 600 !important;
+}
+table tr:hover {
+    background-color: rgba(131, 129, 129, 0.15);
 }
 
 li::marker {
