@@ -516,7 +516,7 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/search/by_room_storage/{room}/{storage}",
-     *     summary="Get list inventory",
+     *     summary="Get inventory in storage",
      *     description="This request is used to get all inventory data in layout page. This request is using MySql database, and has protected routes",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
@@ -592,6 +592,7 @@ class Queries extends Controller
                 ->where('created_by',$user_id)
                 ->where('inventory_storage',$storage)
                 ->where('inventory_room',$room)
+                ->orderby('inventory_name','ASC')
                 ->get();
             
             if (count($res) > 0) {

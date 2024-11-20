@@ -23,6 +23,7 @@ use Dompdf\Canvas\Factory as CanvasFactory;
 use Dompdf\Options as DompdfOptions;
 use Dompdf\Adapter\CPDF;
 use Kreait\Firebase\Factory;
+use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Telegram\Bot\Laravel\Facades\Telegram;
@@ -33,6 +34,16 @@ use Illuminate\Http\Response;
 
 class Commands extends Controller
 {
+    private $max_size_file;
+    private $allowed_file_type;
+    private $path_doc_storage;
+
+    public function __construct()
+    {
+        $this->max_size_file = 10000000; // 10 Mb
+        $this->allowed_file_type = ['jpg','jpeg','gif','png'];
+    }
+
     /**
      * @OA\DELETE(
      *     path="/api/v1/inventory/delete/{id}",
@@ -477,6 +488,7 @@ class Commands extends Controller
     public function post_inventory(Request $request)
     {
         try{
+            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
             $user_id = $request->user()->id;
             $request->merge([
                 'is_favorite' => $request->is_favorite == 'off' ? 0 : 1
@@ -488,7 +500,48 @@ class Commands extends Controller
                     'status' => 'error',
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
-            } else {  
+            } else {
+                $inventory_image = null;  
+                if($request->inventory_image){
+                    $inventory_image = $request->inventory_image;  
+                } 
+                if ($request->hasFile('file')) {
+                    $file = $request->file('file');
+                    if ($file->isValid()) {
+                        $file_ext = $file->getClientOriginalExtension();
+                        if (!in_array($file_ext, $this->allowed_file_type)) {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
+                            ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+                        if ($file->getSize() > $this->max_size_file) {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
+                            ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+
+                        $storage = $factory->createStorage();
+                        $bucket = $storage->getBucket();
+                        $uploadedFile = fopen($file->getRealPath(), 'r');
+                        $id = Generator::getUUID();
+                        $user = UserModel::find($user_id);
+                        
+                        $object = $bucket->upload($uploadedFile, [
+                            'name' => 'inventory/'.$user_id.'_'.$user->username.'/'.$id.'.'.$file_ext,
+                            'predefinedAcl' => 'publicRead',
+                            'contentType' => $file_ext, 
+                        ]);
+
+                        $object->update([
+                            'acl' => [],
+                        ]);
+
+                        $inventory_image = $object->info()['mediaLink'];
+                    }
+                }
+
                 $is_exist = InventoryModel::selectRaw('1')
                     ->where('inventory_name',$request->inventory_name)
                     ->where('created_by',$user_id)
@@ -507,7 +560,7 @@ class Commands extends Controller
                         'inventory_storage' => $request->inventory_storage, 
                         'inventory_rack' => $request->inventory_rack, 
                         'inventory_price' => $request->inventory_price, 
-                        'inventory_image' => $request->inventory_image, 
+                        'inventory_image' => $inventory_image, 
                         'inventory_unit' => $request->inventory_unit, 
                         'inventory_vol' => $request->inventory_vol, 
                         'inventory_capacity_unit' => $request->inventory_capacity_unit, 
@@ -532,6 +585,14 @@ class Commands extends Controller
                         $header_template = Generator::generateDocTemplate('header');
                         $style_template = Generator::generateDocTemplate('style');
                         $footer_template = Generator::generateDocTemplate('footer');
+                        $imageOnTableDoc = "";
+                        if($inventory_image){
+                            $imageOnTableDoc = "
+                            <tr>
+                                <th>Image</th>
+                                <td style='text-align:center'><img style='margin:10px; width:500px;' src='$inventory_image'></td>
+                            </tr>";
+                        }
                         $html = "
                             <html>
                                 <head>
@@ -600,6 +661,7 @@ class Commands extends Controller
                                                 <th>Is Reminder</th>
                                                 <td>" . ($request->is_reminder == 1 ? 'Yes' : 'No') . "</td>
                                             </tr>
+                                            $imageOnTableDoc
                                         </tbody>
                                     </table>
                                     $footer_template
@@ -628,7 +690,6 @@ class Commands extends Controller
                             unlink($pdfFilePath);
                         }
                         if($user->firebase_fcm_token){
-                            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
                             $messaging = $factory->createMessaging();
                             $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
                                 ->withNotification(Notification::create($message))
