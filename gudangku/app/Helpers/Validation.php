@@ -2,6 +2,7 @@
 namespace App\Helpers;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\ReportCategory;
+use App\Rules\DictionaryType;
 
 class Validation
 {
@@ -69,6 +70,19 @@ class Validation
                 'reminder_at' => 'nullable|datetime',
             ]);  
         } 
+    }
+
+    public static function getValidateDictionary($request,$type){
+        if($type == 'create'){
+            return Validator::make($request->all(), [
+                'dictionary_name' => 'required|string|max:75|min:2',
+                'dictionary_type' => ['required', new DictionaryType],
+            ]);  
+        } else if($type == 'delete'){
+            return Validator::make($request->all(), [
+                'id' => 'required|numeric|max:9',
+            ]); 
+        }
     }
 
     public static function getValidateTimezone($val){

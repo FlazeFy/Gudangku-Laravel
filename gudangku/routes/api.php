@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\UserApi\Queries as QueriesUserController;
 use App\Http\Controllers\Api\UserApi\Commands as CommandsUserController;
 use App\Http\Controllers\Api\ReminderApi\Commands as CommandsReminderController;
 use App\Http\Controllers\Api\DictionaryApi\Queries as QueriesDictionaryController;
+use App\Http\Controllers\Api\DictionaryApi\Commands as CommandsDictionaryController;
 
 ######################### Public Route #########################
 
@@ -88,6 +89,9 @@ Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/dictionary')->group(function () {
     Route::get('/type/{type}', [QueriesDictionaryController::class, 'get_dictionary_by_type']);
+
+    Route::post('/', [CommandsDictionaryController::class, 'post_dictionary'])->middleware(['auth:sanctum']);
+    Route::delete('/{id}', [CommandsDictionaryController::class, 'hard_delete_dictionary_by_id'])->middleware(['auth:sanctum']);
 });
 
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {

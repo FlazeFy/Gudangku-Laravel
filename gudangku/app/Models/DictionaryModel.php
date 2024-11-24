@@ -37,4 +37,13 @@ class DictionaryModel extends Model
         
         return $res;
     }
+
+    public static function isUsedName($name, $type){
+        $res = DictionaryModel::selectRaw('1')
+            ->whereRaw('LOWER(dictionary_name) = LOWER(?)', [$name])
+            ->whereRaw('LOWER(dictionary_type) = LOWER(?)', [$type])
+            ->first();
+
+        return $res ? true : false;
+    }
 }
