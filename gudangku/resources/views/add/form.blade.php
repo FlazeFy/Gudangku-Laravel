@@ -88,7 +88,6 @@
 
 <script>
     const submit_add = () => {
-        Swal.showLoading()
         const form = $('#add_inventory')[0]
         const formData = new FormData(form)
         $.ajax({
@@ -101,6 +100,7 @@
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                Swal.showLoading()
             },
             success: function(response) {
                 Swal.hideLoading()

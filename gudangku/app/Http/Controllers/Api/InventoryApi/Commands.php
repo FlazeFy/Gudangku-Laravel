@@ -124,7 +124,7 @@ class Commands extends Controller
 
     /**
      * @OA\PUT(
-     *     path="/api/v1/inventory/destroy/{id}",
+     *     path="/api/v1/inventory/edit_image/{id}",
      *     summary="Edit inventory image by id",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
@@ -170,29 +170,78 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
+            $inventory = InventoryModel::select('inventory_name','inventory_image')
+                ->where('id',$id)
+                ->where('created_by',$user_id)
+                ->first();
 
-            if($inventory->image == ""){
-                $inventory_image = null;
-            } else {
-                $inventory_image = $inventory->image;
-            }
-            $rows = InventoryModel::where('id', $id)
-                ->where('created_by', $user_id)
-                ->update([
-                    'inventory_image' => $inventory_image,
-                    'updated_at' => date('Y-m-d H:i:s'),
-            ]);
-            
+            if($inventory){
+                $inventory_image = $inventory->inventory_image;
+                if($inventory_image){
+                    if(Firebase::deleteFile($inventory_image)){
+                        $inventory_image = null;
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'inventory image not found',
+                        ], Response::HTTP_NOT_FOUND);
+                    }
+                } 
+                if ($request->hasFile('file')) {
+                    $file = $request->file('file');
+                    if ($file->isValid()) {
+                        $file_ext = $file->getClientOriginalExtension();
+                        // Validate file type
+                        if (!in_array($file_ext, $this->allowed_file_type)) {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
+                            ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+                        // Validate file size
+                        if ($file->getSize() > $this->max_size_file) {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
+                            ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+        
+                        // Helper: Upload inventory image
+                        try {
+                            $user = UserModel::find($user_id);
+                            $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
+                        } catch (\Exception $e) {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'Failed to upload the file',
+                            ], Response::Response::HTTP_INTERNAL_SERVER_ERROR);
+                        }
+                    }
+                } else {
+                    $inventory_image = null;
+                }
 
-            if($rows > 0){
-                // History
-                Audit::createHistory('Update Image', $inventory->inventory_name, $user_id);
-                
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'inventory image updated',
-                ], Response::HTTP_OK);
+                $rows = InventoryModel::where('id', $id)
+                    ->where('created_by', $user_id)
+                    ->update([
+                        'inventory_image' => $inventory_image,
+                        'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+
+                if($rows > 0){
+                    // History
+                    Audit::createHistory('Update Image', $inventory->inventory_name, $user_id);
+                    
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'inventory image updated',
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'inventory not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
             } else {
                 return response()->json([
                     'status' => 'failed',

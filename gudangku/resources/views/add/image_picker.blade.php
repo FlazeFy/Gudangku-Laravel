@@ -1,42 +1,4 @@
-<style>
-    .img-holder {
-        min-height: 260px;
-        border: 2px dashed var(--whiteColor);
-        width: 100%;
-        border-radius: var(--roundedMD);
-        padding: var(--textLG);
-        margin: var(--spaceMD) 0;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center; 
-        cursor: pointer;
-    }
-    .img-holder:hover {
-        transform: scale(1.01);
-    }
-    .img-holder a {
-        vertical-align:middle;
-    }
-    .image-upload{
-        position: absolute;
-        bottom: 3px;
-        right: 10px;
-    }
-    .image-upload>input {
-        display: none;
-    }
-    .btn-icon-reset-image{
-        position: absolute; 
-        bottom: 10px; 
-        left: 10px;
-        background: var(--dangerBG) !important;
-        color:var(--whiteColor) !important;
-        -webkit-transition: all 0.4s;
-        -o-transition: all 0.4s;
-        transition: all 0.4s;
-    }
-</style>
+<link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.0.css') }}"/>
 
 <div class="img-holder">
     <div class='no-image-picker' title='Change Image' id='image-picker'>
@@ -67,7 +29,7 @@
             const reader = new FileReader()
             reader.onload = function (e) {
                 $('#image-picker').addClass('d-none')
-                $('#no-image-picker').removeClass('d-none').html(`<img src="${e.target.result}" data-bs-toggle='modal' data-bs-target='#zoom_image'class='img-responsive img-zoomable-modal d-block mx-auto'>`)
+                $('#no-image-picker').removeClass('d-none').html(`<img src="${e.target.result}" data-bs-toggle='modal' data-bs-target='#zoom_image' class='img-responsive img-zoomable-modal d-block mx-auto'>`)
                 $('#inventory_image_toolbar').html(`
                     <a class="btn btn-danger px-2 shadow" title="Reset to default image" id='reset-image-btn'><i class="fa-solid fa-trash-can"></i> Reset Image</a>
                     <span id='status-select-image'></span>

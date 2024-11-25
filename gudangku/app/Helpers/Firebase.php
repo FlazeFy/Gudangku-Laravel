@@ -38,4 +38,25 @@ class Firebase
 
         return $fileUrl;
     }
+
+    public static function deleteFile($url){
+        self::init();
+        $storage = self::$factory->createStorage();
+        $bucket = $storage->getBucket();
+
+        $parsedUrl = parse_url($url);
+        if (!isset($parsedUrl['path'])) {
+            return false; 
+        }
+
+        $path = urldecode(substr($parsedUrl['path'], strpos($parsedUrl['path'], '/o/') + 3));
+        $object = $bucket->object($path);
+
+        if ($object->exists()) {
+            $object->delete();
+            return true; 
+        }
+
+        return false; 
+    }
 }
