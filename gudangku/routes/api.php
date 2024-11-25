@@ -38,7 +38,6 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::get('/room', [QueriesInventoryController::class, 'get_list_room']);
     Route::get('/calendar', [QueriesInventoryController::class, 'get_list_calendar']);
     Route::get('/analyze/{id}', [QueriesInventoryController::class, 'get_analyze_inventory']);
-
     Route::prefix('/layout/{room}')->group(function (){
         Route::get('/', [QueriesInventoryController::class, 'get_room_layout']);
         Route::get('/doc', [QueriesInventoryController::class, 'get_document']);
@@ -47,7 +46,6 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
         Route::get('/', [QueriesInventoryController::class, 'get_inventory_by_id']);
         Route::get('/doc', [QueriesInventoryController::class, 'get_document']);
     });
-
     Route::post('/', [CommandsInventoryController::class, 'post_inventory']);
     Route::post('/layout', [CommandsInventoryController::class, 'post_inventory_layout']);
     Route::delete('/delete_layout/{id}/{coor}', [CommandsInventoryController::class, 'hard_del_inventory_layout_by_id_coor']);
@@ -61,7 +59,6 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
 
 Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/dashboard', [QueriesStatsController::class, 'get_dashboard']);
-
     Route::prefix('/inventory')->group(function () {
         Route::get('/total_by_category/{type}', [QueriesStatsController::class, 'get_total_inventory_by_category']);
         Route::get('/total_by_favorite/{type}', [QueriesStatsController::class, 'get_total_inventory_by_favorite']);
@@ -83,13 +80,11 @@ Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesHistoryController::class, 'get_all_history']);
-    
     Route::delete('/destroy/{id}', [CommandsHistoryController::class, 'hard_delete_history_by_id']);
 });
 
 Route::prefix('/v1/dictionary')->group(function () {
     Route::get('/type/{type}', [QueriesDictionaryController::class, 'get_dictionary_by_type']);
-
     Route::post('/', [CommandsDictionaryController::class, 'post_dictionary'])->middleware(['auth:sanctum']);
     Route::delete('/{id}', [CommandsDictionaryController::class, 'hard_delete_dictionary_by_id'])->middleware(['auth:sanctum']);
 });
@@ -97,9 +92,7 @@ Route::prefix('/v1/dictionary')->group(function () {
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'get_my_report']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'get_my_report_by_inventory']);
-
     Route::post('/', [CommandsReportController::class, 'post_report']);
-
     Route::prefix('/detail/item/{id}')->group(function (){
         Route::get('/', [QueriesReportController::class, 'get_my_report_detail']);
         Route::get('/doc', [QueriesReportController::class, 'get_document']);

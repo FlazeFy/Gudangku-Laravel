@@ -1,0 +1,43 @@
+label {
+    margin: var(--spaceSM);
+}
+.input-msg{
+    font-style: italic;
+    font-weight: 600;
+    font-size: var(--textLG);
+}
+input, button, .btn, textarea, select{
+    padding: var(--spaceMD) !important;
+    background: transparent;
+    color: var(--whiteColor) !important;
+    border-radius: var(--roundedLG) !important;
+    border-width: 1.75px !important;
+}
+input, textarea, select{
+    background: transparent !important;
+}
+.error_input {
+    color: var(--dangerBG) !important;
+    font-size: var(--textMD);
+    text-decoration: none;
+    margin-top: var(--spaceSM);
+}
+.form-check-input {
+    border: 1.5px solid var(--primaryColor) !important;
+    cursor: pointer;
+}
+.form-check-input:checked {
+    background: var(--primaryColor) !important;
+}
+.form-check-input:checked::after {
+    content: "\2713"; 
+    display: block;
+    width: var(--spaceSM);
+    height: var(--spaceSM);
+    color: var(--whiteColor);
+    font-size: var(--textJumbo); 
+    line-height: 1; 
+    text-align: center;
+    margin-top: -10px;
+    margin-left: -10px;
+}

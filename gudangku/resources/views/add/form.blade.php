@@ -89,10 +89,14 @@
 <script>
     const submit_add = () => {
         Swal.showLoading()
+        const form = $('#add_inventory')[0]
+        const formData = new FormData(form)
         $.ajax({
             url: '/api/v1/inventory',
             type: 'POST',
-            data: $(`#add_inventory`).serialize(),
+            data: formData,
+            processData: false, 
+            contentType: false,
             dataType: 'json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")

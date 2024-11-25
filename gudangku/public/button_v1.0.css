@@ -1,0 +1,88 @@
+button, .btn {
+    cursor: pointer;
+}
+button:hover, .btn:hover {
+    transform: scale(1.05);
+}
+.btn-feature {
+    cursor: pointer;
+    text-align: center;
+    font-weight: 600;
+    padding: var(--spaceJumbo) !important;
+    border-radius: var(--roundedLG);
+    color: var(--whiteColor);
+    margin-right: var(--spaceLG) !important;
+    border: calc(var(--spaceMini) / 2) solid var(--primaryColor) !important;
+    width: 100%;
+}
+.btn-feature:hover {
+    border: var(--spaceMini) solid var(--primaryColor) !important;
+    transform: scale(1.05);
+    box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
+}
+/* Image */
+.btn-image {
+    padding: 0 !important;
+    border-radius: var(--roundedMD) !important;
+    border: 0 !important;
+    background: var(--primaryColor);
+    cursor: pointer;
+    min-width: 180px;
+    margin-bottom: var(--spaceSM);
+}
+.btn-image img {
+    margin: 0;
+    border-radius: var(--roundedMD) !important;
+}
+/* Pagination generator */
+.btn-page {
+    background: transparent !important;
+    border: 1.5px solid var(--primaryColor) !important;
+    cursor: pointer;
+    padding: var(--spaceSM) var(--spaceMD);
+    border-radius: var(--roundedMD);
+}
+.btn-page:hover, .btn-page.active{
+    background: var(--primaryColor) !important;
+}
+.btn-main {
+    margin-right: var(--spaceLG);
+    margin-bottom: var(--spaceLG);
+    background: var(--darkColor);
+}
+.btn-link {
+    text-decoration: none !important;
+    color: var(--primaryColor);
+}
+/* Pagination */
+.paginate_button .page-link {
+    background: transparent !important;
+    border: 1.5px solid var(--primaryColor) !important;
+    cursor: pointer;
+}
+.paginate_button .page-link:hover {
+    background: var(--primaryColor) !important;
+}
+
+/* Mobile & Tablet style */
+@media screen and (max-width: 1023px) {
+    .btn-main.top, .btn-main.bottom{
+        position: fixed;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        z-index: 996;
+    }
+    .btn-main.top {
+        top: calc(var(--spaceJumbo) + var(--spaceMD));
+        left: var(--spaceMD);
+    }
+    .btn-main.bottom {
+        bottom: var(--spaceMini);
+        right: var(--spaceMini);
+    }
+    .btn-feature {
+        padding: var(--spaceXMD) !important;   
+    }
+    .content {
+        padding: var(--spaceMD);
+    }
+}

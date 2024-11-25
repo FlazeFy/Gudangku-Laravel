@@ -1,0 +1,68 @@
+a, label, h1, h2, h3, h4, h5, h6, p, table {
+    color: var(--whiteColor) !important;
+}
+a.relative.inline-flex.items-center {
+    color: var(--whiteColor) !important;
+    background: transparent !important;
+}
+a.relative.inline-flex.items-center, span.relative.inline-flex.items-center {
+    margin-right: var(--spaceXXSM);
+    border-radius: var(--roundedMD);
+    padding-inline: var(--spaceMD) !important;
+}
+span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hover{
+    background: var(--primaryColor) !important;
+    border: 2px solid var(--primaryColor);
+    color: var(--whiteColor);
+}
+.date-text {
+    font-size: var(--textXMD);
+    color: var(--greyColor) !important;
+    font-style: italic;
+}
+.main-page-title {
+    color: var(--whiteColor);
+    font-weight: bold;
+    margin-bottom: var(--spaceJumbo);
+    font-size: calc(var(--textXJumbo)*1.75);
+}
+/* Table */
+table td {
+    font-size: var(--textXMD) !important;
+}
+table th {
+    font-size: var(--textLG) !important;
+    font-weight: 600 !important;
+}
+table tr:hover {
+    background-color: rgba(131, 129, 129, 0.15);
+}
+li::marker {
+    color: white !important;
+    font-size: 1.5em !important; 
+}
+/* Apexchart */
+.apexcharts-legend-text {
+    color: var(--whiteColor) !important;
+    font-size: var(--textXMD) !important;
+}
+.apexcharts-xaxis-label {
+    font-size: var(--textMD) !important;
+}
+.apexcharts-yaxis-label {
+    font-size: var(--textSM) !important;
+}
+.apexcharts-yaxis-label, .apexcharts-xaxis-label {
+    fill: var(--whiteColor) !important;
+}
+footer {
+    color: var(--whiteColor) !important;
+}
+
+/* Mobile & Tablet style */
+@media screen and (max-width: 1023px) {
+    .main-page-title {
+        margin-bottom: var(--spaceXXSM);
+        font-size: var(--textXJumbo);
+    }
+}
