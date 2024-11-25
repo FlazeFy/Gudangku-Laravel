@@ -13,6 +13,7 @@ use App\Models\UserModel;
 use App\Helpers\Audit;
 use App\Helpers\Generator;
 use App\Helpers\Validation;
+use App\Helpers\Firebase;
 
 // Jobs
 use App\Jobs\ProcessMailer;
@@ -36,7 +37,6 @@ class Commands extends Controller
 {
     private $max_size_file;
     private $allowed_file_type;
-    private $path_doc_storage;
 
     public function __construct()
     {
@@ -509,36 +509,31 @@ class Commands extends Controller
                     $file = $request->file('file');
                     if ($file->isValid()) {
                         $file_ext = $file->getClientOriginalExtension();
+                        // Validate file type
                         if (!in_array($file_ext, $this->allowed_file_type)) {
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
                             ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
+                        // Validate file size
                         if ($file->getSize() > $this->max_size_file) {
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
                             ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
-
-                        $storage = $factory->createStorage();
-                        $bucket = $storage->getBucket();
-                        $uploadedFile = fopen($file->getRealPath(), 'r');
-                        $id = Generator::getUUID();
-                        $user = UserModel::find($user_id);
-                        
-                        $object = $bucket->upload($uploadedFile, [
-                            'name' => 'inventory/'.$user_id.'_'.$user->username.'/'.$id.'.'.$file_ext,
-                            'predefinedAcl' => 'publicRead',
-                            'contentType' => $file_ext, 
-                        ]);
-
-                        $object->update([
-                            'acl' => [],
-                        ]);
-
-                        $inventory_image = $object->info()['mediaLink'];
+        
+                        // Helper: Upload report image
+                        try {
+                            $user = UserModel::find($user_id);
+                            $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
+                        } catch (\Exception $e) {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'Failed to upload the file',
+                            ], Response::Response::HTTP_INTERNAL_SERVER_ERROR);
+                        }
                     }
                 }
 

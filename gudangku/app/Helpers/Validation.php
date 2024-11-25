@@ -68,6 +68,7 @@ class Validation
                 'report_category' => ['required', new ReportCategory],
                 'is_reminder' => 'required|numeric|min:0|max:1',
                 'reminder_at' => 'nullable|datetime',
+                'report_item' => 'nullable|json',
             ]);  
         } 
     }

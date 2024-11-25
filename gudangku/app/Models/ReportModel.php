@@ -16,6 +16,7 @@ use App\Helpers\Generator;
  *     @OA\Property(property="report_title", type="string", description="Title of the report"),
  *     @OA\Property(property="report_desc", type="string", description="Description of the report"),
  *     @OA\Property(property="report_category", type="string", description="Category of the report"),
+ *     @OA\Property(property="report_image", type="string", description="Images of the report"),
  *     @OA\Property(property="is_reminder", type="string", description="Indicates if a reminder is set for the report"),
  * 
  *     @OA\Property(property="remind_at", type="string", format="date-time", description="Timestamp when the report remind to user"),
@@ -34,7 +35,7 @@ class ReportModel extends Model
 
     protected $table = 'report';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'report_title', 'report_desc', 'report_category', 'is_reminder', 'remind_at', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
+    protected $fillable = ['id', 'report_title', 'report_desc', 'report_category', 'report_image', 'is_reminder', 'remind_at', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
 
     public static function getMyReport($user_id, $search_item, $search_report_title, $id, $filter_category){
         $extra = "";

@@ -7,10 +7,12 @@ use App\Http\Controllers\Controller;
 // Models
 use App\Models\ReportItemModel;
 use App\Models\ReportModel;
+use App\Models\UserModel;
 
 // Helpers
 use App\Helpers\Audit;
 use App\Helpers\Validation;
+use App\Helpers\Firebase;
 use App\Helpers\Generator;
 
 use Illuminate\Http\Request;
@@ -18,6 +20,15 @@ use Illuminate\Http\Response;
 
 class Commands extends Controller
 {
+    private $max_size_file;
+    private $allowed_file_type;
+
+    public function __construct()
+    {
+        $this->max_size_file = 7500000; // 7.5 Mb
+        $this->allowed_file_type = ['jpg','jpeg','gif','png','pdf'];
+    }
+
     /**
      * @OA\DELETE(
      *     path="/api/v1/report/delete/item/{id}",
@@ -528,8 +539,142 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }   
+
+    public function post_report(Request $request){
+        try{
+            // Validator
+            $validator = Validation::getValidateReport($request,'create');
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'validation failed : '.$validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {   
+                $user_id = $request->user()->id;
+                $id_report = Generator::getUUID();
+                $validation_image_failed = "";
+
+                // Report image handling
+                $report_image = null;  
+                if($request->report_image){
+                    $report_image = $request->report_image;  
+                } 
+                if ($request->hasFile('file')) {
+                    $files = is_array($request->file('file')) ? $request->file('file') : [$request->file('file')];
+                    $user = UserModel::find($user_id);
+                
+                    $report_image = []; 
+                    foreach ($files as $idx => $file) {
+                        if ($file->isValid()) {
+                            $file_ext = $file->getClientOriginalExtension();
+                            // Validate file type
+                            if (!in_array($file_ext, $this->allowed_file_type)) {
+                                $validation_image_failed .= 'The '.$idx.'-th file must be a ' . implode(', ', $this->allowed_file_type) . ' file type, ';
+                                continue;
+                            }
+                            // Validate file size
+                            if ($file->getSize() > $this->max_size_file) {
+                                $validation_image_failed .= 'The '.$idx.'-th file size must be under ' . ($this->max_size_file / 1000000) . ' Mb, ';
+                                continue; 
+                            }
+                
+                            // Helper: Upload report image
+                            try {
+                                $fileUrl = Firebase::uploadFile('report', $user_id, $user->username, $file, $file_ext);
+                                $report_image[] = ['url' => $fileUrl]; 
+                            } catch (\Exception $e) {
+                                $validation_image_failed .= 'Failed to upload the '.$idx.'-th file';
+                            }
+                        }
+                    }
+                }
+
+                // Model : Create Report
+                $report = ReportModel::create([
+                    'id' => $id_report, 
+                    'report_title' => $request->report_title,  
+                    'report_desc' => $request->report_desc,  
+                    'report_category' => $request->report_category, 
+                    'report_image' => $report_image ? json_encode($report_image,true) : null,
+                    'is_reminder' => 0, 
+                    'remind_at' => null, 
+                    'created_at' => date('Y-m-d H:i:s'), 
+                    'created_by' => $user_id, 
+                    'updated_at' => null, 
+                    'deleted_at' => null
+                ]);
+
+                if($report){
+                    $success_exec = 0;
+                    $failed_exec = 0;
+
+                    if($request->report_item){
+                        $report_item = json_decode($request->report_item);
+                        $item_count = count($report_item);
+
+                        // Model : Create Report Item
+                        foreach ($report_item as $idx => $dt) {
+                            $res = ReportItemModel::create([
+                                'id' => Generator::getUUID(), 
+                                'inventory_id' => $dt->inventory_idi ?? null, 
+                                'report_id' => $id_report, 
+                                'item_name' => $dt->item_name, 
+                                'item_desc' => $dt->item_desc,  
+                                'item_qty' => $dt->item_qty, 
+                                'item_price' => $dt->item_price ?? null, 
+                                'created_at' => date('Y-m-d H:i:s'), 
+                                'created_by' => $user_id, 
+                            ]);
+
+                            if($res){
+                                $success_exec++;
+                            } else {
+                                $failed_exec++;
+                            }
+                        }
+                    }
+
+                    if($success_exec > 0 || $request->report_item == null){
+                        // History
+                        Audit::createHistory('Create', $report->report_title, $user_id);
+                    }
+
+                    // Respond
+                    if($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == ""){
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'report created and its item',
+                        ], Response::HTTP_OK);
+                    } else if($failed_exec > 0 && $success_exec > 0){
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => "report created and some item has been added: $success_exec. About $failed_exec inventory failed to add",
+                            'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'report created but failed to add item report',
+                            'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
+                        ], Response::HTTP_OK);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'something wrong. please contact admin',
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -15,7 +15,7 @@ class Commands extends Controller
      * @OA\DELETE(
      *     path="/api/v1/dictionary/destroy/{id}",
      *     summary="Delete dictionary by id",
-     *     tags={"dictionary"},
+     *     tags={"Dictionary"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
@@ -95,79 +95,69 @@ class Commands extends Controller
         }
     }
 
-    /**
-  * @OA\POST(
-  *     path="/api/v2/dictionary",
-  *     summary="Post dictionary",
-  *     description="Create a new dictionary using the given name and category. This request is using MongoDB database.",
-  *     tags={"Dictionary"},
-  *     security={{"bearerAuth":{}}},
-  *     requestBody={
-  *         @OA\JsonContent(
-  *             type="object",
-  *             required={"dictionary_name", "dictionary_type"},
-  *             @OA\Property(property="dictionary_name", type="string", example="Fashion"),
-  *             @OA\Property(property="dictionary_type", type="string", example="inventory_category")
-  *         ),
-  *         example={
-  *             "dictionary_name": "Fashion",
-  *             "dictionary_type": "inventory_category"
-  *         }
-  *     },
-  *     @OA\Response(
-  *         response=200,
-  *         description="Dictionary created successfully",
-  *         @OA\JsonContent(
-  *             type="object",
-  *             @OA\Property(property="status", type="string", example="success"),
-  *             @OA\Property(property="data", type="object",
-  *                 @OA\Property(property="dictionary_name", type="string", example="Check"),
-  *                 @OA\Property(property="dictionary_type", type="string", example="inventory_category"),
-  *                 @OA\Property(property="_id", type="string", example="674342a8b53aabe966070f3d"),
-  *                 @OA\Property(property="createdAt", type="string", format="date-time", example="2024-11-24T15:13:44.621Z"),
-  *                 @OA\Property(property="updatedAt", type="string", format="date-time", example="2024-11-24T15:13:44.621Z")
-  *             ),
-  *             @OA\Property(property="message", type="string", example="dictionary created")
-  *         )
-  *     ),
-  *     @OA\Response(
-  *         response=409,
-  *         description="Validation failed",
-  *         @OA\JsonContent(
-  *             oneOf={
-  *                 @OA\JsonContent(
-  *                     @OA\Property(property="status", type="string", example="failed"),
-  *                     @OA\Property(property="message", type="string", example="validation failed dictionary name must be at least 2 characters")
-  *                 ),
-  *                 @OA\JsonContent(
-  *                     @OA\Property(property="status", type="string", example="failed"),
-  *                     @OA\Property(property="message", type="string", example="validation failed dictionary type must be one of the following values inventory_category, inventory_unit, inventory_room, reminder_type, reminder_context, report_category")
-  *                 ),
-  *                 @OA\JsonContent(
-  *                     @OA\Property(property="status", type="string", example="failed"),
-  *                     @OA\Property(property="message", type="string", example="validation failed dictionary_name is a required field")
-  *                 )
-  *             }
-  *         )
-  *     ),
-  *     @OA\Response(
-  *         response=422,
-  *         description="Name has been used",
-  *         @OA\JsonContent(
-  *             @OA\Property(property="status", type="string", example="failed"),
-  *             @OA\Property(property="message", type="string", example="dictionary name has been used. try another")
-  *         )
-  *     ),
-  *     @OA\Response(
-  *         response=500,
-  *         description="Internal Server Error",
-  *         @OA\JsonContent(
-  *             @OA\Property(property="status", type="string", example="error"),
-  *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
-  *         )
-  *     )
-  * )
-  */
+   /**
+     * @OA\POST(
+     *     path="/api/v1/dictionary",
+     *     summary="Post dictionary",
+     *     description="Create a new dictionary using the given name and category. This request is using MySQL database.",
+     *     tags={"Dictionary"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=201,
+     *         description="Dictionary created successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", ref="#/components/schemas/DictionaryResponse"),
+     *             @OA\Property(property="message", type="string", example="dictionary created")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             oneOf={
+     *                 @OA\Schema(
+     *                     @OA\Property(property="status", type="string", example="failed"),
+     *                     @OA\Property(property="message", type="string", example="dictionary name must be at least 2 characters")
+     *                 ),
+     *                 @OA\Schema(
+     *                     @OA\Property(property="status", type="string", example="failed"),
+     *                     @OA\Property(property="message", type="string", example="dictionary type must be one of the following values inventory_category, inventory_unit, inventory_room, reminder_type, reminder_context, report_category")
+     *                 ),
+     *                 @OA\Schema(
+     *                     @OA\Property(property="status", type="string", example="failed"),
+     *                     @OA\Property(property="message", type="string", example="dictionary_name is a required field")
+     *                 ),
+     *                 @OA\Schema(
+     *                     @OA\Property(property="status", type="string", example="failed"),
+     *                     @OA\Property(property="message", type="string", example="dictionary name has been used. try another")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     )
+     * )
+     *
+     * @OA\Schema(
+     *     schema="DictionaryResponse",
+     *     type="object",
+     *     @OA\Property(property="dictionary_name", type="string", example="Check"),
+     *     @OA\Property(property="dictionary_type", type="string", example="inventory_category"),
+     *     @OA\Property(property="_id", type="string", example="674342a8b53aabe966070f3d"),
+     *     @OA\Property(property="createdAt", type="string", format="date-time", example="2024-11-24T15:13:44.621Z"),
+     *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2024-11-24T15:13:44.621Z")
+     * )
+     */
+
 
     public function post_dictionary(Request $request)
     {
