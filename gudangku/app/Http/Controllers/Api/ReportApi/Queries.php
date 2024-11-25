@@ -289,6 +289,7 @@ class Queries extends Controller
      *                 @OA\Property(property="report_title", type="string", example="Report A"),
      *                 @OA\Property(property="report_desc", type="string", example="This is a report description"),
      *                 @OA\Property(property="report_category", type="string", example="Shopping Cart"),
+     *                 @OA\Property(property="report_image", type="string", example="https://..."),
      *                 @OA\Property(property="is_reminder", type="integer", example="0"),
      *                 @OA\Property(property="reminder_at", type="string", nullable=true, example=null),
      *                 @OA\Property(property="total_item", type="integer", example=1),

@@ -178,25 +178,7 @@
                         <tr ${styletr}>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 ${el.inventory_image ? `
-                                    <button type="button" class="btn btn-image" data-bs-toggle="modal" data-bs-target="#zoom_image-${el.id}">
-                                        <img src="${el.inventory_image}" title="${el.inventory_name}">
-                                    </button>
-                                    <div class="modal fade" id="zoom_image-${el.id}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <div>
-                                                        <h4 class="modal-title fw-bold" id="staticBackdropLabel">${el.inventory_name}</h4>
-                                                        <h5 class="modal-title" id="staticBackdropLabel">${el.inventory_category}</h5>
-                                                    </div>
-                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <img class="img img-fluid" style="border-radius: var(--roundedMD);" src="${el.inventory_image}" title="${el.inventory_name}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <img src="${el.inventory_image}" data-bs-toggle='modal' data-bs-target='#zoom_image-${el.id}'class='img-responsive img-zoomable-modal mb-3' title="${el.inventory_name}">
                                 ` : ''}
                                 ${el.is_favorite ? `<span class='bg-success rounded-pill px-3 py-1'><i class="fa-solid fa-bookmark" title="Favorite"></i> Favorite</span>` : ''}
                                 <h6 class='mt-2' style='font-size:var(--textLG); font-weight:600;'>${el.inventory_name}</h6>
@@ -336,6 +318,7 @@
                     `)
                 })
 
+                zoomableModal()
                 generate_pagination(item_holder, get_inventory, total_page, current_page,sorting)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {

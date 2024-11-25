@@ -36,6 +36,9 @@ class ReportModel extends Model
     protected $table = 'report';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'report_title', 'report_desc', 'report_category', 'report_image', 'is_reminder', 'remind_at', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
+    protected $casts = [
+        'report_image' => 'array',
+    ];
 
     public static function getMyReport($user_id, $search_item, $search_report_title, $id, $filter_category){
         $extra = "";
@@ -79,7 +82,7 @@ class ReportModel extends Model
     }   
 
     public static function getReportDetail($user_id,$id,$type){
-        $res = ReportModel::selectRaw($type == 'data' ? '*' : 'id,report_title, report_desc, report_category, created_at')
+        $res = ReportModel::selectRaw($type == 'data' ? '*' : 'id,report_title, report_desc, report_category, report_image, created_at')
             ->where('id',$id);
 
         if($type == 'data'){

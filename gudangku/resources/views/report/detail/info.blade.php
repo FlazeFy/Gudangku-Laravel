@@ -7,7 +7,9 @@
 
 <div id="report_holder"></div>
 <div id="report_check_action"></div>
-<h3 class='fw-bold' style="font-size:var(--textJumbo);">Attached Item</h3>
+<h3 class='fw-bold' style="font-size:var(--textJumbo);">Attached Image</h3>
+<div id="report_img_holder" class='row'></div>
+<h3 class='fw-bold mt-2' style="font-size:var(--textJumbo);">Attached Item</h3>
 <div id="report_item_holder" class='table-holder'>
     <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
 </div>
@@ -77,6 +79,20 @@
                         <th scope="col" style='min-width:60px;'>Edit</th>
                         <th scope="col" style='min-width:60px;'>Remove</th>
                     </tr>
+                `)
+            }
+            if(data.report_image && data.report_image.length > 0){
+                $('#report_img_holder').empty()
+                data.report_image.forEach(el => {
+                    $('#report_img_holder').append(`
+                        <div class='col-lg-4 col-md-6 col-sm-12 col-12 p-2'>
+                            <img class='img img-responsive img-zoomable-modal mb-3' data-bs-toggle='modal' data-bs-target='#zoom_image-${data.id}' title='${el.url}' src='${el.url}'>
+                        </div>
+                    `)
+                });
+            } else {
+                $('#report_img_holder').html(`
+                    <div class='col p-2'><h6 class="text-center text-secondary fst-italic">- No image attached -</h6></div>
                 `)
             }
 
@@ -208,6 +224,8 @@
                 <a class='btn btn-primary me-2' onclick="check_all('.check-inventory','check'); checked_toggle_event();"><i class="fa-solid fa-check style="font-size:var(--textXLG);"></i> @if(!$isMobile) Check All @endif</a>
                 <a class='btn btn-danger me-2' onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();"><i class="fa-solid fa-xmark style="font-size:var(--textXLG);"></i> @if(!$isMobile) Uncheck All @endif</a>
             `)
+
+            zoomableModal()
         } catch (error) {
             Swal.close();
             Swal.fire({

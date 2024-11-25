@@ -230,6 +230,30 @@ const check_all = (target,type) => {
     });
 } 
 
+const zoomableModal = () => {
+    $('.img-zoomable-modal').each(function(idx, el) {
+        const id = $(this).attr('data-bs-target').replace('#', '')
+        const url = $(this).attr('src')
+
+        if (!$(`#${id}`).length) {
+            $(this).after(`
+                <div class="modal fade" id="${id}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <img class="img img-fluid d-block mx-auto" style="border-radius: var(--roundedMD);" src="${url}" title="${url}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+    })
+}
+
 const formValidation = () => {
     $(document).ready(function() {
         $('.form-validated').each(function(idx, el) {

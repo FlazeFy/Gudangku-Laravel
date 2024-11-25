@@ -177,6 +177,17 @@ hr {
     margin: 0;
     border-radius: var(--roundedMD) !important;
 }
+.img-responsive {
+    cursor: pointer;
+    -webkit-transition: all 0.3s !important;
+    -o-transition: all 0.3s !important;
+    transition: all 0.3s !important;
+    border-radius: var(--roundedLG);
+}
+.img-responsive:hover {
+    transform: scale(1.025);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
 
 .container, .container-fluid, .control-panel {
     border-radius: var(--roundedMD);
