@@ -19,6 +19,9 @@
 
         <!-- CSS Collection -->
         <link rel="stylesheet" href="{{ asset('/global_v1.0.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/button_v1.0.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/form_v1.0.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('/typography_v1.0.css') }}"/>
 
         <!-- Jquery -->
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>

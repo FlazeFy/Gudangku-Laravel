@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('report_item', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('inventory_id', 36);
+            $table->string('inventory_id', 36)->nullable();;
             $table->string('report_id', 36);
             $table->string('item_name', 75);
             $table->string('item_desc', 144)->nullable();

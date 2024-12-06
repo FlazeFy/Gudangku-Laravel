@@ -2,7 +2,7 @@
 namespace App\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
-
+use DateTime;
 use App\Models\UserModel;
 
 class Generator
@@ -165,4 +165,23 @@ class Generator
         $ran = mt_rand(0, count($storages)-1);
         return $storages[$ran];
     }
+
+    public static function getDateDiff($datetime){
+        $now = new DateTime();
+        $date = new DateTime($datetime);
+
+        $diff = $now->diff($date);
+        if ($diff->d > 0) {
+            $days = $diff->d;
+            $hours = $diff->h;
+            return ($days > 1 ? $days.' days' : '1 day').($hours > 0 ? ' and '.$hours.' hour'.($hours > 1 ? 's' : '') : '').' ago';
+        } elseif ($diff->h > 0) {
+            return $diff->h.' hour'.($diff->h > 1 ? 's' : '').' ago';
+        } elseif ($diff->i > 0) {
+            return $diff->i.' minute'.($diff->i > 1 ? 's' : '').' ago';
+        } else {
+            return 'Just now';
+        }
+    }
+
 }

@@ -573,7 +573,7 @@ class Commands extends Controller
                             ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
         
-                        // Helper: Upload report image
+                        // Helper: Upload inventory image
                         try {
                             $user = UserModel::find($user_id);
                             $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 

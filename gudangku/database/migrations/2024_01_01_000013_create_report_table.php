@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('report_title', 36   );
             $table->string('report_category', 36);
             $table->string('report_desc', 255)->nullable();
+            $table->string('report_image', 500)->nullable();
             $table->boolean('is_reminder');
             $table->dateTime('remind_at', $precision = 0)->nullable();
 

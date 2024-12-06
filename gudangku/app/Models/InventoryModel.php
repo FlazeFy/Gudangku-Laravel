@@ -166,4 +166,43 @@ class InventoryModel extends Model
         
         return count($res) > 0 ? $res : null;
     }
+
+    public static function getInventoryByNameSearch($search){
+        $search = explode(',', $search);
+        $query = InventoryModel::select('inventory_name','inventory_desc','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price','inventory_storage');
+        foreach ($search as $dt) {
+            $dt = trim($dt);
+            $query->orWhere('inventory_name', 'like', "%$dt%");
+        }
+        $res = $query->get();
+
+        $final_res = [];
+        foreach ($res as $dt) {
+            $status = 'similar'; 
+            foreach ($search as $sc) {
+                $sc = trim($sc);
+                if (strcasecmp($dt->inventory_name, $sc) === 0) {
+                    $status = 'matched';
+                    break;
+                }
+            }
+    
+            $final_res[] = [
+                'inventory_name' => $dt->inventory_name,
+                'inventory_desc' => $dt->inventory_desc,
+                'inventory_vol' => $dt->inventory_vol,
+                'inventory_unit' => $dt->inventory_unit,
+                'inventory_category' => $dt->inventory_category,
+                'inventory_price' => $dt->inventory_price,
+                'inventory_storage' => $dt->inventory_storage,
+                'status' => $status 
+            ];
+        }
+
+        usort($final_res, function($a, $b) {
+            return ($a['status'] === 'matched' && $b['status'] !== 'matched') ? -1 : 1;
+        });        
+
+        return count($final_res) > 0 ? $final_res : null;
+    }
 }

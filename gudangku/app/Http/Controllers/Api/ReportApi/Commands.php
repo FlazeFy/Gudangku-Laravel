@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\ReportApi;
 
 use App\Http\Controllers\Controller;
+use Smalot\PdfParser\Parser;
 
 // Models
 use App\Models\ReportItemModel;
 use App\Models\ReportModel;
 use App\Models\UserModel;
+use App\Models\InventoryModel;
 
 // Helpers
 use App\Helpers\Audit;
@@ -22,11 +24,15 @@ class Commands extends Controller
 {
     private $max_size_file;
     private $allowed_file_type;
+    private $max_size_analyze_file;
+    private $allowed_analyze_file_type;
 
     public function __construct()
     {
         $this->max_size_file = 7500000; // 7.5 Mb
         $this->allowed_file_type = ['jpg','jpeg','gif','png','pdf'];
+        $this->max_size_analyze_file = 15000000; // 15.0 Mb
+        $this->allowed_analyze_file_type = ['pdf'];
     }
 
     /**
@@ -674,6 +680,132 @@ class Commands extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'something wrong. please contact admin'.$e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function post_analyze_report(Request $request){
+        try{ 
+            $user_id = $request->user()->id;
+            $validation_image_failed = "";
+
+            // Report image handling
+            $report_doc = null;  
+            if ($request->hasFile('file') && $request->report_doc == null) {
+                $file = $request->file('file');
+                if ($file->isValid()) {
+                    $file_ext = $file->getClientOriginalExtension();
+                    // Validate file type
+                    if (!in_array($file_ext, $this->allowed_file_type)) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'The file must be a '.implode(', ', $this->allowed_analyze_file_type).' file type',
+                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    // Validate file size
+                    if ($file->getSize() > $this->max_size_analyze_file) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'The file size must be under '.($this->max_size_analyze_file/1000000).' Mb',
+                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+
+                    // Parse the PDF
+                    $parser = new Parser();
+                    $pdf = $parser->parseFile($file);
+                    $text = $pdf->getText();
+                    $lines = explode("\n", $text);
+                    $items = [];
+
+                    // Item - Inventory Mapping : Get List Item
+                    foreach ($lines as $lineIndex => $line) {
+                        $rawData[] = $line;
+    
+                        if ($lineIndex > 0 && preg_match('/\t/', $line)) {
+                            $columns = explode("\t", $line);
+                            $itemName = trim($columns[0]); 
+                            if (!empty($itemName) && $itemName !== "Item Name" && $itemName !== "Parts of FlazenApps") {
+                                $items[] = $itemName;
+                            }
+                        }
+                    }
+
+                    // Date Analyze
+                    $lastItem = end($lines);
+                    preg_match('/Generated at\s([0-9\-]+\s[0-9\:]+)/', $lastItem, $matches);
+                    $generated_date = isset($matches[1]) ? $matches[1] : null;
+                    $generated_date_diff = Generator::getDateDiff($generated_date);
+
+                    if (empty($items) && isset($lines[0])) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'Report analyzed : But no item found on the document',
+                            'data' => null,
+                        ], Response::HTTP_NOT_FOUND);
+                    } else {
+                        $search = implode(',', $items);
+                        // Query : Find Similar Inventory by List Item
+                        $mapping_inventory = InventoryModel::getInventoryByNameSearch($search);
+
+                        if($mapping_inventory){
+                            $category_count = [];
+
+                            // Analyze : Inventory Price
+                            $total_price = 0;
+                            $total_item = count($mapping_inventory);
+                            foreach ($mapping_inventory as $dt) {
+                                $total_price = $total_price + $dt['inventory_price'];
+
+                                // Analyze : Inventory Category
+                                $category = $dt['inventory_category'];
+                                if (!isset($category_count[$category])) {
+                                    $category_count[$category] = 0;
+                                }                        
+                                $category_count[$category]++;
+                            }
+                            $average_price = $total_price / $total_item;     
+                            
+                            // Analyze : Inventory Category
+                            $final_category_result = [];
+                            foreach ($category_count as $category => $total) {
+                                $final_category_result[] = (object)[
+                                    'context' => $category,
+                                    'total' => $total
+                                ];
+                            }
+
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => 'Report analyzed',
+                                'data' => [
+                                    'analyze_item' => $items,
+                                    'found_inventory_data' => $mapping_inventory,
+                                    'found_inventory_category' => $final_category_result,
+                                    'found_total_price' => $total_price,
+                                    'found_total_item' => $total_item,
+                                    'found_avg_price' => $average_price,
+                                    'generated_at' => $generated_date_diff
+                                ]
+                            ], Response::HTTP_OK);
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'Report analyzed : No similar inventory found based on the document item',
+                                'data' => null,
+                            ], Response::HTTP_NOT_FOUND);
+                        }
+                    }
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'you need to attached a file',
+                ], Response::HTTP_UNPROCESSABLE_CONTENT);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
