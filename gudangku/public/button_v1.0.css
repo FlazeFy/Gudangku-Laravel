@@ -15,10 +15,15 @@ button:hover, .btn:hover {
     border: calc(var(--spaceMini) / 2) solid var(--primaryColor) !important;
     width: 100%;
 }
-.btn-feature:hover {
+.btn-feature:not(.fixed):hover {
     border: var(--spaceMini) solid var(--primaryColor) !important;
     transform: scale(1.05);
     box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
+}
+.btn-feature.fixed:hover {
+    transform: none; 
+    box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
+    border: calc(var(--spaceMini) / 2) solid var(--primaryColor) !important;
 }
 /* Image */
 .btn-image {

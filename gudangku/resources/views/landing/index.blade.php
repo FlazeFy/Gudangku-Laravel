@@ -13,6 +13,9 @@
             @include('landing.dashboard')
         @endif
         <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                @include('landing.analyze')
+            </div>
             <div class="col-lg-4 col-md-6 col-12">
                 <button class="btn-feature mb-3" onclick="location.href='/inventory';" id="nav_inventory_btn">
                     @if($isMobile)

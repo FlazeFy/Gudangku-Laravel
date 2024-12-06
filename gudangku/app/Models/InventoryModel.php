@@ -169,7 +169,7 @@ class InventoryModel extends Model
 
     public static function getInventoryByNameSearch($search){
         $search = explode(',', $search);
-        $query = InventoryModel::select('inventory_name','inventory_desc','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price','inventory_storage');
+        $query = InventoryModel::select('id','inventory_name','inventory_desc','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price','inventory_storage','inventory_room');
         foreach ($search as $dt) {
             $dt = trim($dt);
             $query->orWhere('inventory_name', 'like', "%$dt%");
@@ -188,12 +188,14 @@ class InventoryModel extends Model
             }
     
             $final_res[] = [
+                'id' => $dt->id,
                 'inventory_name' => $dt->inventory_name,
                 'inventory_desc' => $dt->inventory_desc,
                 'inventory_vol' => $dt->inventory_vol,
                 'inventory_unit' => $dt->inventory_unit,
                 'inventory_category' => $dt->inventory_category,
                 'inventory_price' => $dt->inventory_price,
+                'inventory_room' => $dt->inventory_room,
                 'inventory_storage' => $dt->inventory_storage,
                 'status' => $status 
             ];
