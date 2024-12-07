@@ -92,29 +92,20 @@
             const reader = new FileReader()
             reader.onload = function (e) {
                 let filePreview = ''
-
+                let analyze_type = ''
                 if (file.type.startsWith('image/')) {
-                    filePreview = `
-                        <div style="font-size:var(--textLG);" class="bubble me">
-                            <img src="${e.target.result}" alt="Image Preview" class="img-thumbnail" style="max-width: 200px;" />
-                            <p>${file.name}</p>
-                        </div>`
+                    analyze_type = 'image'
+                    filePreview = `<img src="${e.target.result}" alt="Image Preview" class="img-thumbnail mb-2" style="max-width: 200px;" /><p>${file.name}</p>`
                 } else if (file.type === 'application/pdf') {
-                    filePreview = `
-                        <div style="font-size:var(--textLG);" class="bubble me">
-                            <embed src="${e.target.result}" type="${file.type}" style="width: 100%; height: 500px;" />
-                            <p>${file.name}</p>
-                        </div>`
+                    analyze_type = 'document'
+                    filePreview = `<embed src="${e.target.result}" type="${file.type}" style="width: 100%; height: 500px;" class="mb-2"/><p>${file.name}</p>`
                 } else if (file.type === 'text/csv') {
-                    filePreview = `
-                        <div style="font-size:var(--textLG);" class="bubble me">
-                            <p>Uploaded CSV File: <strong>${file.name}</strong></p>
-                        </div>`
+                    analyze_type = 'sheet'
+                    filePreview = `<p>Uploaded CSV File: <strong>${file.name}</strong></p>`
                 }
 
-                $('#chat-section').append(filePreview)
-                $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble bot">Okay, give me a minute to read the document and sync it with your data</div>`)
-
+                $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble me">Can you analyze this ${analyze_type}?<br><br>${filePreview}</div>`)
+                $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble bot">Okay, give me a minute to read the ${analyze_type} and sync it with your data</div>`)
                 analyze()
             };
 
@@ -130,7 +121,7 @@
         const form = $('#analyze_form')[0]
         const formData = new FormData(form)
         $.ajax({
-            url: '/api/v1/report/analyze',
+            url: '/api/v1/analyze/report',
             type: 'POST',
             data: formData,
             processData: false, 
@@ -142,8 +133,8 @@
                 Swal.showLoading()
             },
             success: function(response) {
-                Swal.hideLoading()
-                $('#upload-analyze-section').remove()
+                Swal.close()
+                $('#upload-analyze-section').addClass('d-none')
 
                 const data = response.data
                 const inventory = data.found_inventory_data
@@ -155,7 +146,7 @@
                                 <h2 class='fw-bold' style='font-size:var(--textXLG);'>${el.inventory_name}</h2>
                                 <div class='d-flex justify-content-between'>
                                     <span class='bg-success rounded-pill px-3 py-1 me-2'>${el.inventory_category}</span>
-                                    <span class='bg-danger rounded-pill px-3 py-1'>${ucFirst(el.status)}</span>
+                                    <span class='bg-primary rounded-pill px-3 py-1'>${ucFirst(el.status)}</span>
                                 </div>
                             </div>
                             <p>${el.inventory_desc ?? '<span class="text-secondary fst-italic">- No Description Provided -<span>'}</p>
@@ -182,6 +173,59 @@
                 $( document ).ready(function() {
                     generate_pie_chart(`Category Distribution`,'category_distribution',data.found_inventory_category)
                 });
+
+                $('#chat-section').append(`
+                    <div style="font-size:var(--textLG);" class="bubble bot">Is there any action do you want me to do with this document?</div>
+                    <div style="font-size:var(--textLG);" class="bubble me">
+                        Hmmm, I want to <span id='selected-action'>... <br></span>
+                        <div class="mt-2" id='action-list'>
+                            <button class="btn btn-primary py-0" onclick="make_report()">Make same Report</button>
+                        </div>
+                    </div>
+                `)
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                generate_api_error(response, true)
+            }
+        });
+    }
+
+    const make_report = () => {
+        $('#selected-action').empty().html('make same report')
+        $('#action-list').empty()
+        $('#chat-section').append(`
+            <div style="font-size:var(--textLG);" class="bubble bot">Okay, wait some moment</div>
+        `)
+        add_report()
+    }
+
+    const add_report = () => {
+        const form = $('#analyze_form')[0]
+        const formData = new FormData(form)
+        $.ajax({
+            url: '/api/v1/analyze/report/new',
+            type: 'POST',
+            data: formData,
+            processData: false, 
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                Swal.showLoading()
+            },
+            success: function(response) {
+                Swal.close()
+                const id = response.data.id
+
+                $('#chat-section').append(`
+                    <div style="font-size:var(--textLG);" class="bubble bot">
+                        The new report has been created, if you want to see it now you can click this button <br>
+                        <div class="mt-2">
+                            <a class="btn btn-primary py-0" href="/report/detail/${id}">See Detail</a>
+                        </div>
+                    </div>
+                `)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generate_api_error(response, true)

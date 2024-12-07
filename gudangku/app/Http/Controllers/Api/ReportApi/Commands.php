@@ -627,7 +627,7 @@ class Commands extends Controller
                         foreach ($report_item as $idx => $dt) {
                             $res = ReportItemModel::create([
                                 'id' => Generator::getUUID(), 
-                                'inventory_id' => $dt->inventory_idi ?? null, 
+                                'inventory_id' => $dt->inventory_id ?? null, 
                                 'report_id' => $id_report, 
                                 'item_name' => $dt->item_name, 
                                 'item_desc' => $dt->item_desc,  
@@ -689,7 +689,7 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $validation_image_failed = "";
 
-            // Report image handling
+            // Report file handling
             $report_doc = null;  
             if ($request->hasFile('file') && $request->report_doc == null) {
                 $file = $request->file('file');
@@ -806,6 +806,208 @@ class Commands extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function post_create_analyzed_report(Request $request){
+        try{ 
+            $user_id = $request->user()->id;
+            $validation_image_failed = "";
+
+            // Report file handling
+            $report_doc = null;  
+            if ($request->hasFile('file') && $request->report_doc == null) {
+                $file = $request->file('file');
+                if ($file->isValid()) {
+                    $file_ext = $file->getClientOriginalExtension();
+                    // Validate file type
+                    if (!in_array($file_ext, $this->allowed_file_type)) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'The file must be a '.implode(', ', $this->allowed_analyze_file_type).' file type',
+                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    // Validate file size
+                    if ($file->getSize() > $this->max_size_analyze_file) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'The file size must be under '.($this->max_size_analyze_file/1000000).' Mb',
+                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+
+                    // Parse the PDF
+                    $parser = new Parser();
+                    $pdf = $parser->parseFile($file);
+                    $text = $pdf->getText();
+                    $lines = explode("\n", $text);
+                    $items = [];
+
+                    // Report Config
+                    $raw_report_title = explode("Report : ",$lines[2]);
+                    $report_title = $raw_report_title[1];
+                    $raw_report_category = explode("Category : ",$lines[4]);
+                    $report_category = $raw_report_category[1];
+                    $extracted_desc = Generator::extractText("middle", implode("",$lines), "in this report come with some notes :", ". You can also import this document into GudangKu Apps");
+                    $report_desc = $extracted_desc["result"];
+
+                    // Item - Inventory Mapping : Get List Item
+                    foreach ($lines as $lineIndex => $line) {
+                        $rawData[] = $line;
+    
+                        if ($lineIndex > 0 && preg_match('/\t/', $line)) {
+                            $columns = explode("\t", $line);
+                            $itemName = trim($columns[0]); 
+                            if (!empty($itemName) && $itemName !== "Item Name" && $itemName !== "Parts of FlazenApps") {
+                                $items[] = $itemName;
+                            }
+                        }
+                    }
+
+                    // Date Analyze
+                    $lastItem = end($lines);
+                    preg_match('/Generated at\s([0-9\-]+\s[0-9\:]+)/', $lastItem, $matches);
+                    $generated_date = isset($matches[1]) ? $matches[1] : null;
+                    $generated_date_diff = Generator::getDateDiff($generated_date);
+
+                    if (empty($items) && isset($lines[0])) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'Report analyzed : But no item found on the document',
+                            'data' => null,
+                        ], Response::HTTP_NOT_FOUND);
+                    } else {
+                        $search = implode(',', $items);
+                        // Query : Find Similar Inventory by List Item
+                        $mapping_inventory = InventoryModel::getInventoryByNameSearch($search);
+
+                        if($mapping_inventory){
+                            $existing_inventory = []; 
+                            foreach ($items as $it) { 
+                                $is_exist = false;
+                                foreach ($mapping_inventory as $dt) {
+                                    if($dt['status'] == "matched" && $dt['inventory_name'] == $it){
+                                        $existing_inventory[] = [
+                                            'inventory_id' => $dt['id'],
+                                            'item_name' => $dt['inventory_name'],
+                                            'item_desc' => $dt['inventory_desc'],
+                                            'item_qty' => 1,
+                                            'item_price' => $dt['inventory_price'],
+                                        ];                                        
+                                        $is_exist = true;
+                                        break;
+                                    }
+                                }
+
+                                if(!$is_exist){
+                                    $existing_inventory[] = [
+                                        'inventory_id' => null,
+                                        'item_name' => $it,
+                                        'item_desc' => null,
+                                        'item_qty' => null,
+                                        'item_price' => null,
+                                    ];
+                                }
+                            }
+
+                            // Model : Create Report
+                            $id_report = Generator::getUUID();
+                            $report_image = null;
+                            $report = ReportModel::create([
+                                'id' => $id_report, 
+                                'report_title' => $report_title,  
+                                'report_desc' => $report_desc,  
+                                'report_category' => $report_category, 
+                                'report_image' => $report_image,
+                                'is_reminder' => 0, 
+                                'remind_at' => null, 
+                                'created_at' => date('Y-m-d H:i:s'), 
+                                'created_by' => $user_id, 
+                                'updated_at' => null, 
+                                'deleted_at' => null
+                            ]);
+
+                            if($report){
+                                $success_exec = 0;
+                                $failed_exec = 0;
+
+                                if($existing_inventory){
+                                    $item_count = count($existing_inventory);
+
+                                    // Model : Create Report Item
+                                    foreach ($existing_inventory as $idx => $dt) {
+                                        $res = ReportItemModel::create([
+                                            'id' => Generator::getUUID(), 
+                                            'inventory_id' => $dt['inventory_id'] ?? null, 
+                                            'report_id' => $id_report, 
+                                            'item_name' => $dt['item_name'], 
+                                            'item_desc' => $dt['item_desc'],  
+                                            'item_qty' => $dt['item_qty'], 
+                                            'item_price' => $dt['item_price'] ?? null, 
+                                            'created_at' => date('Y-m-d H:i:s'), 
+                                            'created_by' => $user_id, 
+                                        ]);
+
+                                        if($res){
+                                            $success_exec++;
+                                        } else {
+                                            $failed_exec++;
+                                        }
+                                    }
+                                }
+
+                                if($success_exec > 0 || $request->report_item == null){
+                                    // History
+                                    Audit::createHistory('Create', $report->report_title, $user_id);
+                                }
+
+                                // Respond
+                                if($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == ""){
+                                    return response()->json([
+                                        'status' => 'success',
+                                        'message' => 'report created and its item',
+                                        'data' => [
+                                            'id' => $id_report
+                                        ]
+                                    ], Response::HTTP_OK);
+                                } else if($failed_exec > 0 && $success_exec > 0){
+                                    return response()->json([
+                                        'status' => 'success',
+                                        'message' => "report created and some item has been added: $success_exec. About $failed_exec inventory failed to add",
+                                        'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
+                                    ], Response::HTTP_OK);
+                                } else {
+                                    return response()->json([
+                                        'status' => 'success',
+                                        'message' => 'report created but failed to add item report',
+                                        'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
+                                    ], Response::HTTP_OK);
+                                }
+                            } else {
+                                return response()->json([
+                                    'status' => 'error',
+                                    'message' => 'something wrong. please contact admin',
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'Report analyzed : No similar inventory found based on the document item',
+                                'data' => null,
+                            ], Response::HTTP_NOT_FOUND);
+                        }
+                    }
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'you need to attached a file',
+                ], Response::HTTP_UNPROCESSABLE_CONTENT);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

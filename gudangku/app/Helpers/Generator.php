@@ -184,4 +184,25 @@ class Generator
         }
     }
 
+    public static function extractText($pos, $text, $start_text, $end_text){
+        $start = strpos($text, $start_text);
+        $end = strpos($text, $end_text);
+
+        if ($start !== false && $end !== false) {
+            $start += strlen($start_text);
+            
+            $length = $end - $start;
+            $result = trim(substr($text, $start, $length));
+            return [
+                "result" => $result != "" ? $result : null,
+                "is_valid" => true
+            ]; 
+        } 
+
+        return [
+            "result" => null,
+            "is_valid" => false
+        ];
+    }
+
 }

@@ -78,6 +78,11 @@ Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('/{id}', [CommandsReminderController::class, 'delete_reminder_by_id']);
 });
 
+Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {
+    Route::post('/report', [CommandsReportController::class, 'post_analyze_report']);
+    Route::post('/report/new', [CommandsReportController::class, 'post_create_analyzed_report']);
+});
+
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesHistoryController::class, 'get_all_history']);
     Route::delete('/destroy/{id}', [CommandsHistoryController::class, 'hard_delete_history_by_id']);
@@ -93,7 +98,6 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'get_my_report']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'get_my_report_by_inventory']);
     Route::post('/', [CommandsReportController::class, 'post_report']);
-    Route::post('/analyze', [CommandsReportController::class, 'post_analyze_report']);
     Route::prefix('/detail/item/{id}')->group(function (){
         Route::get('/', [QueriesReportController::class, 'get_my_report_detail']);
         Route::get('/doc', [QueriesReportController::class, 'get_document']);
