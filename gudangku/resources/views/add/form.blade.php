@@ -87,6 +87,11 @@
 </form>
 
 <script>
+    const url = window.location.href
+    const urlParams = new URL(url).searchParams
+    const inventory_name = urlParams.get("inventory_name")
+    $('#inventory_name').val(inventory_name)
+
     const submit_add = () => {
         const form = $('#add_inventory')[0]
         const formData = new FormData(form)

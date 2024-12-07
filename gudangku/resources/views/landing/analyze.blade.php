@@ -17,10 +17,10 @@
         display: block;
         position: absolute;
         bottom: -30px;
-        left: 20px;
+        left: 0;
         border-width: 30px 0 0 30px;
         border-style: solid;
-        border-color: #e0e5ec transparent;
+        border-color: var(--warningBG) transparent;
         width: 2px;
         border-radius: 0 0 40px 0;
     }
@@ -33,10 +33,10 @@
         display: block;
         position: absolute;
         bottom: -30px;
-        right: 20px;
+        right: 0;
         border-width: 30px 30px 0 0;
         border-style: solid;
-        border-color: #e0e5ec transparent;
+        border-color: var(--successBG) transparent;
         width: 2px;
         border-radius: 0 0 0 40px;
     }
@@ -162,11 +162,19 @@
                         ${inventory_element}
                     </div>
                 `)
+
+                let not_found_item_element = ''
+                if(data.not_existing_item){
+                    const items = data.not_existing_item
+                    const not_existing_item = items.join(", ")
+                    not_found_item_element = `<br>Item not found ${items.length > 1 ? 'are':'is'} ${not_existing_item}`
+                }
+
                 $('#chat-section').append(`
                     <div style="font-size:var(--textLG);" class="bubble bot">
                         Also, from the inventory I found. The total price for all item is <b>Rp. ${number_format(data.found_total_price, 0, ',', '.')}</b>, and the average per item is <b>Rp. ${number_format(data.found_avg_price, 0, ',', '.')}</b>.
                         From the category, we got this distribution :\n<br>
-                        <div id='category_distribution'></div>
+                        <div id='category_distribution'></div>${not_found_item_element}
                     </div>
                 `)
                 
@@ -185,7 +193,44 @@
                 `)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                Swal.close()
+                $('#upload-analyze-section').addClass('d-none')
+
+                if (response.status === 422) {
+                    let msg = response.responseJSON.message
+                    
+                    if(typeof msg != 'string'){
+                        const allMsg = Object.values(msg).flat()
+                        if(is_list_format){
+                            msg = '<ol>'
+                            allMsg.forEach((dt) => {
+                                msg += `<li>- ${dt.replace('.','')}</li>`
+                            })
+                            msg += '</ol>'
+                        } else {
+                            msg = allMsg.join(', ').replace('.','')
+                        }
+                    }
+
+                    $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble bot">${msg}</div>`)
+                } else {
+                    $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble bot">${response.responseJSON?.message || "Something went wrong"}</div>`)
+                    if(response.status === 404){
+                        const items = response.responseJSON.data.not_existing_item
+                        const not_existing_item = items.join(", ")
+                        $('#chat-section').append(`
+                            <div style="font-size:var(--textLG);" class="bubble bot">Item not found ${items.length > 1 ? 'are':'is'} ${not_existing_item}</div>
+                            <div style="font-size:var(--textLG);" class="bubble bot">Is there any action do you want me to do with this document?</div>
+                            <div style="font-size:var(--textLG);" class="bubble me">
+                                Hmmm, I want to <span id='selected-action'>... <br></span>
+                                <div class="mt-2" id='action-list'>
+                                    <button class="btn btn-primary py-0 me-2" onclick="make_report()">Make same Report</button>
+                                    <button class="btn btn-primary py-0" onclick="add_inventory_via_url('${not_existing_item}')">Add Inventory</button>
+                                </div>
+                            </div>
+                        `)
+                    }
+                }
             }
         });
     }
@@ -230,6 +275,13 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generate_api_error(response, true)
             }
+        });
+    }
+
+    const add_inventory_via_url = (items) => {
+        const list_items = items.split(", ")
+        list_items.forEach(el => {
+            window.open(`/inventory/add?inventory_name=${el}`, "_blank")
         });
     }
 </script>

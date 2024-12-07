@@ -749,11 +749,16 @@ class Commands extends Controller
 
                         if($mapping_inventory){
                             $category_count = [];
+                            $total_matched = 0;
 
                             // Analyze : Inventory Price
                             $total_price = 0;
                             $total_item = count($mapping_inventory);
                             foreach ($mapping_inventory as $dt) {
+                                if($dt['status'] == 'matched'){
+                                    $total_matched++;
+                                }
+
                                 $total_price = $total_price + $dt['inventory_price'];
 
                                 // Analyze : Inventory Category
@@ -774,6 +779,20 @@ class Commands extends Controller
                                 ];
                             }
 
+                            // Analyze : Not Existing Items Mapping
+                            $not_existing_item = [];
+                            if(count($items) != $total_matched){
+                                foreach ($items as $dt) {
+                                    foreach ($mapping_inventory as $map) {
+                                        if($map->inventory_name == $dt){
+                                            $not_existing_item[] = $dt;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            $not_existing_item = count($not_existing_item) > 0 ? $not_existing_item : null;
+
                             return response()->json([
                                 'status' => 'success',
                                 'message' => 'Report analyzed',
@@ -784,14 +803,17 @@ class Commands extends Controller
                                     'found_total_price' => $total_price,
                                     'found_total_item' => $total_item,
                                     'found_avg_price' => $average_price,
-                                    'generated_at' => $generated_date_diff
+                                    'generated_at' => $generated_date_diff,
+                                    'not_existing_item' => $not_existing_item
                                 ]
                             ], Response::HTTP_OK);
                         } else {
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'Report analyzed : No similar inventory found based on the document item',
-                                'data' => null,
+                                'data' => [
+                                    'not_existing_item' => $items
+                                ],
                             ], Response::HTTP_NOT_FOUND);
                         }
                     }
@@ -805,7 +827,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
