@@ -205,4 +205,59 @@ class Generator
         ];
     }
 
+    public static function extractTextFromImage($filePath)
+    {
+        $apiKey = 'K81110450288957'; 
+        $url = 'https://api.ocr.space/parse/image';
+
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', $url, [
+                'headers' => [
+                    'apikey' => $apiKey,
+                ],
+                'multipart' => [
+                    [
+                        'name'     => 'file',
+                        'contents' => fopen($filePath, 'r'),
+                    ],
+                    [
+                        'name'     => 'language',
+                        'contents' => 'eng', 
+                    ],
+                ],
+            ]);
+
+            $responseBody = json_decode($response->getBody(), true);
+
+            if (!empty($responseBody['ParsedResults'][0]['ParsedText'])) {
+                return $responseBody['ParsedResults'][0]['ParsedText'];
+            } else {
+                return 'No text detected in the image.';
+            }
+        } catch (\Exception $e) {
+            return 'Error during OCR process: ' . $e->getMessage();
+        }
+    }
+
+    public static function checkPossiblePrice($arr){
+        // Check if start with number, have comma, have stop. or contain o or b
+        $res = []; 
+
+        foreach ($arr as $string) {
+            if (preg_match('/^\d.*[,.].*[ob]+/', $string) || preg_match('/^Rp\s*.*[,.].*/', $string)) { 
+                $string = str_replace('o', '0', $string);
+                $string = str_replace('O', '0', $string);
+                $string = str_replace('b', '6', $string);
+                $string = str_replace('z', '2', $string);
+                $string = str_replace('Z', '2', $string);
+                $string = str_replace('s', '5', $string);
+                $string = str_replace('S', '5', $string);
+            }
+
+            $res[] = $string;
+        }
+
+        return $res;
+    }
 }

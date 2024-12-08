@@ -19,6 +19,8 @@
         "maatwebsite/excel": "^3.1",
         "smalot/pdfparser": "^2.11",
         "spatie/browsershot": "^4.1",
+        "spatie/image-optimizer": "^1.8",
+        "thiagoalessio/tesseract_ocr": "^2.13",
         "twilio/sdk": "^8.0"
     },
     "require-dev": {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\ReportApi;
 
 use App\Http\Controllers\Controller;
 use Smalot\PdfParser\Parser;
+use thiagoalessio\TesseractOCR\TesseractOCR;
 
 // Models
 use App\Models\ReportItemModel;
@@ -1019,6 +1020,82 @@ class Commands extends Controller
                             ], Response::HTTP_NOT_FOUND);
                         }
                     }
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'you need to attached a file',
+                ], Response::HTTP_UNPROCESSABLE_CONTENT);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function post_analyze_image(Request $request){
+        try{ 
+            $user_id = $request->user()->id;
+            $validation_image_failed = "";
+
+            // Image file handling
+            $report_doc = null;  
+            if ($request->hasFile('file') && $request->report_doc == null) {
+                $file = $request->file('file');
+                if ($file->isValid()) {
+                    $file_ext = $file->getClientOriginalExtension();
+                    // Validate file type
+                    if (!in_array($file_ext, $this->allowed_file_type)) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
+                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    // Validate file size
+                    if ($file->getSize() > $this->max_size_file) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
+                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+
+                    // Get Text from Image
+                    $filePath = $file->store('temp', 'public');
+                    $fullPath = public_path("storage/{$filePath}");
+                    $text = Generator::extractTextFromImage($fullPath);
+                    \Storage::delete("public/{$filePath}");
+
+                    // Check price miss read
+                    $lines = explode("\r\n", $text);
+                    $lines = Generator::checkPossiblePrice($lines);
+                    $items_text = [];
+                    $items_num = [];
+
+                    foreach ($lines as $ln) {
+                        if (trim($ln) != "" && ((strpos($ln, ":") === false && strpos($ln, ";") === false))) {
+                            $ln = str_replace(", ", ",", $ln);
+                            if (preg_match('/^\d{1,3}(?:,\d{3})*(?:\.\d+)?$/', $ln) || preg_match('/Rp\s*\d{1,3}(?:,\d{3})*(?:\.\d+)?/', $ln)) { # Check if string is full numeric char, or have comma, or have currency
+                                $ln = str_replace('.','', $ln);
+                                $ln = str_replace(',','', $ln);
+                                $ln = str_replace('Rp','', $ln);
+                                $ln = str_replace(' ','', $ln);
+                                $items_num[] = (int)$ln;
+                            } else if(preg_match('/[a-zA-Z]/', $ln)){ // Check if string contain alphabet
+                                $items_text[] = $ln;
+                            }
+                        }
+                    }
+
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Image analyzed successfully',
+                        'data' => [
+                            'text' => $items_text,
+                            'number' => $items_num
+                        ]
+                    ], 200);
                 }
             } else {
                 return response()->json([
