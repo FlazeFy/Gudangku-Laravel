@@ -80,7 +80,7 @@ Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/report', [CommandsReportController::class, 'post_analyze_report']);
-    Route::post('/image', [CommandsReportController::class, 'post_analyze_image']);
+    Route::post('/bill', [CommandsReportController::class, 'post_analyze_bill']);
     Route::post('/report/new', [CommandsReportController::class, 'post_create_analyzed_report']);
 });
 

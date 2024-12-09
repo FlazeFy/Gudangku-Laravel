@@ -43,16 +43,14 @@
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <form action="/report" method="POST">
+                <form action="/report" id="report-form" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col">
                             <label>Title</label>
                             <input name="report_title" class="form-control" type="text" id="report_title" required>
-
                             <label>Description</label>
                             <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
-
                             <label>Category</label>
                             <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
                                 @foreach($dct_cat as $dct)
@@ -63,6 +61,9 @@
                             <label>Item</label>
                             <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
                             <div id="item_form"></div>
+                            <hr>
+                            <label>Upload Shopping Bills</label>
+                            <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv' required>
                             <button class="btn btn-success mt-4 w-100" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
                         </div>
                         <div class="col">
@@ -79,35 +80,114 @@
 </div>
 
 <script>
-    get_list_inventory()
-    function get_list_inventory() {
-        $.ajax({
-                url: "/api/v1/inventory/list",
-                datatype: "json",
-                type: "get",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Accept", "application/json");
-                    xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");
-                },
-            })
-            .done(function (response) {
-                let data =  response.data
-                $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
-
-                for (var i = 0; i < data.length; i++) {
-                    let optionText = `${data[i]['inventory_name']}` +
-                        (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '');
-                    $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`);
-                }
-
-                $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
-                $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
-            })
-            .fail(function (jqXHR, ajaxOptions, thrownError) {
-                // Do someting
-            });   
+    const clean_alert_item = () => {
+        if ($('#item_holder').find('div.alert').length) {
+            $('#item_holder').empty()
+        } 
     }
-    function browse_item(val){
+    const get_list_inventory = () => {
+        $.ajax({
+            url: "/api/v1/inventory/list",
+            datatype: "json",
+            type: "get",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json");
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");
+            },
+        })
+        .done(function (response) {
+            let data =  response.data
+            $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
+
+            for (var i = 0; i < data.length; i++) {
+                let optionText = `${data[i]['inventory_name']}` +
+                    (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '');
+                $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`);
+            }
+
+            $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
+            $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
+        })
+        .fail(function (jqXHR, ajaxOptions, thrownError) {
+            // Do someting
+        });   
+    }
+    const post_analyze_image = () => {
+        const form = $('#report-form')[0]
+        const formData = new FormData(form)
+        $.ajax({
+            url: '/api/v1/analyze/bill',
+            type: 'POST',
+            data: formData,
+            processData: false, 
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                Swal.showLoading()
+            },
+            success: function(response) {
+                Swal.close()
+                const data = response.data
+
+                clean_alert_item()
+                data.forEach(el => {
+                    $('#item_holder').append(`
+                        <div class="container-light mt-3 item-holder-div bill-item">
+                            <input hidden name="item_name[]" value="${el.item_name ?? ''}">
+                            <div class="d-flex justify-content-between">
+                                <span class="item_name_selected">${el.item_name ?? ''}</span>
+                                <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>
+                            </div>
+                            <div class="my-2">
+                                <label>Notes</label>
+                                <textarea class="form-control" name="item_desc[]" style="height: 100px"></textarea>
+                            </div>
+                            <div class="row extra-form">
+                                <div class="col-4">
+                                    <label>Qty</label>
+                                    <input class="item_qty_selected form-control w-100" name="item_qty[]" type="number" min="1" value="1">
+                                </div>
+                                <div class="col">
+                                    <label>Price (optional)</label>
+                                    <input type="number" class="form-control w-100" min="1" name="item_price[]" value="${el.item_price ?? ''}">
+                                </div>
+                            </div>
+                        </div>
+                    `)
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                generate_api_error(response, true)
+            }
+        });
+    }
+    $(document).on('input','#file',function(){
+        if($('.bill-item').length == 0){
+            post_analyze_image()
+        } else {
+            Swal.fire({
+                title: "Are you sure!",
+                text: "want to upload new bill? this will remove previous item!",
+                icon: "warning"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('.bill-item').remove()
+                    post_analyze_image()
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: "Cancelled!",
+                        text: "Your previous item is safe!",
+                        icon: "success"
+                    });
+                }
+            });
+        }
+    })
+
+    const browse_item = (val) => {
         if(val == 'add_ext'){
             $('#item_form').empty().append(`
                 <div class="row">
@@ -153,11 +233,8 @@
         }
         $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='add_item("${val}")'><i class="fa-solid fa-plus"></i> Add Item</a><hr>`)
     }
-
-    function add_item(val){
-        if ($('#item_holder').find('div.alert').length) {
-            $('#item_holder').empty()
-        } 
+    const add_item = (val) => {
+        clean_alert_item()
         let itemExists = false
         $('.item_name_selected').each(function(index) {
             if ($(this).text() == val || $(this).text() == $('#item_name').val()) {
@@ -256,6 +333,7 @@
     }
 
     $( document ).ready(function() {
+        get_list_inventory()
         $('#report_category').on('change', function() {
             if($(this).val() != "Shopping Cart" && $(this).val() != "Wishlist"){
                 $('.extra-form').empty()
@@ -270,7 +348,7 @@
         })
     })
 
-    function autocomplete(inp, arr) {
+    const autocomplete = (inp, arr) => {
         var currentFocus
 
         inp.addEventListener("input", function(e) {
@@ -319,22 +397,19 @@
                 }
             }
         })
-
-        function addActive(x) {
+        const addActive = (x) => {
             if (!x) return false
             removeActive(x)
             if (currentFocus >= x.length) currentFocus = 0
             if (currentFocus < 0) currentFocus = (x.length - 1)
             x[currentFocus].classList.add("autocomplete-active")
         }
-
-        function removeActive(x) {
+        const removeActive = (x) => {
             for (var i = 0; i < x.length; i++) {
                 x[i].classList.remove("autocomplete-active")
             }
         }
-
-        function closeAllLists(elmnt) {
+        const closeAllLists = (elmnt) => {
             var x = document.getElementsByClassName("autocomplete-items")
             for (var i = 0; i < x.length; i++) {
                 if (elmnt != x[i] && elmnt != inp) {
@@ -342,7 +417,6 @@
                 }
             }
         }
-
         document.addEventListener("click", function (e) {
             closeAllLists(e.target)
         })

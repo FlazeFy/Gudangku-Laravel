@@ -1035,7 +1035,7 @@ class Commands extends Controller
         }
     }
 
-    public function post_analyze_image(Request $request){
+    public function post_analyze_bill(Request $request){
         try{ 
             $user_id = $request->user()->id;
             $validation_image_failed = "";
@@ -1061,40 +1061,86 @@ class Commands extends Controller
                         ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
-                    // Get Text from Image
-                    $filePath = $file->store('temp', 'public');
-                    $fullPath = public_path("storage/{$filePath}");
-                    $text = Generator::extractTextFromImage($fullPath);
-                    \Storage::delete("public/{$filePath}");
+                    if($file_ext != "pdf"){
+                        // Get Text from Image
+                        $filePath = $file->store('temp', 'public');
+                        $fullPath = public_path("storage/{$filePath}");
+                        $text = Generator::extractTextFromImage($fullPath);
+                        \Storage::delete("public/{$filePath}");
 
-                    // Check price miss read
-                    $lines = explode("\r\n", $text);
-                    $lines = Generator::checkPossiblePrice($lines);
-                    $items_text = [];
-                    $items_num = [];
+                        // Check price miss read
+                        $lines = explode("\r\n", $text);
+                        $lines = Generator::checkPossiblePrice($lines);
+                        $items_text = [];
+                        $items_num = [];
 
-                    foreach ($lines as $ln) {
-                        if (trim($ln) != "" && ((strpos($ln, ":") === false && strpos($ln, ";") === false))) {
-                            $ln = str_replace(", ", ",", $ln);
-                            if (preg_match('/^\d{1,3}(?:,\d{3})*(?:\.\d+)?$/', $ln) || preg_match('/Rp\s*\d{1,3}(?:,\d{3})*(?:\.\d+)?/', $ln)) { # Check if string is full numeric char, or have comma, or have currency
-                                $ln = str_replace('.','', $ln);
-                                $ln = str_replace(',','', $ln);
-                                $ln = str_replace('Rp','', $ln);
-                                $ln = str_replace(' ','', $ln);
-                                $items_num[] = (int)$ln;
-                            } else if(preg_match('/[a-zA-Z]/', $ln)){ // Check if string contain alphabet
-                                $items_text[] = $ln;
+                        foreach ($lines as $ln) {
+                            if (trim($ln) != "" && ((strpos($ln, ":") === false && strpos($ln, ";") === false))) {
+                                $ln = str_replace(", ", ",", $ln);
+                                if (preg_match('/^\d{1,3}(?:,\d{3})*(?:\.\d+)?$/', $ln) || preg_match('/Rp\s*\d{1,3}(?:,\d{3})*(?:\.\d+)?/', $ln)) { # Check if string is full numeric char, or have comma, or have currency
+                                    $ln = str_replace('.','', $ln);
+                                    $ln = str_replace(',','', $ln);
+                                    $ln = str_replace('Rp','', $ln);
+                                    $ln = str_replace(' ','', $ln);
+                                    $items_num[] = (int)$ln;
+                                } else if(preg_match('/[a-zA-Z]/', $ln)){ // Check if string contain alphabet
+                                    $items_text[] = $ln;
+                                }
+                            }
+                        }
+
+                        $total_text = count($items_text);
+                        $total_num = count($items_num);
+                        $items =  $total_text > $total_num ? $items_text : $items_num;
+                        $itemQty = 1;
+                        $res = [];
+                        foreach ($items as $idx => $dt) {
+                            $res[] = (object)[
+                                "item_name" => $items_text[$idx] ?? null,
+                                "item_price" => $items_num[$idx] ?? null,
+                                "item_qty" => $itemQty
+                            ];
+                        }
+                    } else {
+                        // Parse the PDF
+                        $parser = new Parser();
+                        $pdf = $parser->parseFile($file);
+                        $text = $pdf->getText();
+                        $lines = explode("\n", $text);
+                        $res = [];
+
+                        foreach ($lines as $lineIndex => $line) {
+                            $rawData[] = $line;
+        
+                            if ($lineIndex > 0 && preg_match('/\t/', $line)) {
+                                $columns = explode("\t", $line);
+                                $itemName = trim($columns[0]); 
+                                if (!empty($itemName) && $itemName !== "Item Name" && $itemName !== "Parts of FlazenApps") {
+                                    $founded_price = null;
+                                    $itemQty = 1;
+
+                                    if(count($columns) > 2){
+                                        $itemPrice = trim($columns[2]); 
+                                        if (!empty($itemPrice) && $itemPrice !== "Description" && $itemPrice !== "Parts of FlazenApps") {
+                                            $founded_price_raw = explode(" Rp. ", $itemPrice);
+                                            $itemQty = (int)$founded_price_raw[0];
+                                            $founded_price = (int)str_replace(',','', $founded_price_raw[1]);
+                                        }
+                                    }
+                                    $res[] = [
+                                        "item_name" => $itemName,
+                                        "item_price" => $founded_price,
+                                        "item_qty" => $itemQty
+                                    ];
+                                }
                             }
                         }
                     }
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Image analyzed successfully',
-                        'data' => [
-                            'text' => $items_text,
-                            'number' => $items_num
-                        ]
+                        'message' => 'File analyzed successfully',
+                        'data' => $res
                     ], 200);
                 }
             } else {
