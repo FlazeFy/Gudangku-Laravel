@@ -551,6 +551,59 @@ class Commands extends Controller
         }
     }   
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/report",
+     *     summary="Create a new report",
+     *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="report_title", type="string", example="New Balance"),
+     *             @OA\Property(property="report_desc", type="string", example="Sepatu track"),
+     *             @OA\Property(property="report_category", type="string", example="Checkout"),
+     *             @OA\Property(property="report_item", type="string", example="[{'inventory_id': '0216dd75-8ea6-3779-2ea6-9121c1a8c447','item_name': 'New Balance','item_desc': 'Sepatu','item_qty': 1,'item_price': 2249000}]"),
+     *             @OA\Property(property="is_reminder", type="integer", example=1),
+     *             @OA\Property(property="remind_at", type="string", format="date-time", example="2024-12-01T12:00:00Z"),
+     *             @OA\Property(property="file", type="file", example="image.png")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully created report",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Report created and its item | Report created and some item has been added: item a, item b. About 1 inventory failed to add"),
+     *             @OA\Property(property="data", type="string", example="| Failed to upload the 2-th file"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Validation failed: {validation errors}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Authorization required",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="You need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Something went wrong. Please contact admin")
+     *         )
+     *     )
+     * )
+     */
     public function post_report(Request $request){
         try{
             // Validator
@@ -685,6 +738,109 @@ class Commands extends Controller
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/analyze/report",
+     *     summary="Analyze report",
+     *     tags={"Analyze"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="file", type="file", example="image.png")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully analyzed report",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Report analyzed"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="analyze_item",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="New Balance")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="found_inventory_data",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="string", example="d6ecca7c-bf04-f2a9-123a-378b6cb999de"),
+     *                         @OA\Property(property="inventory_name", type="string", example="New Balance"),
+     *                         @OA\Property(property="inventory_desc", type="string", example="Sepatu High"),
+     *                         @OA\Property(property="inventory_vol", type="integer", example=1),
+     *                         @OA\Property(property="inventory_unit", type="string", example="Kilogram"),
+     *                         @OA\Property(property="inventory_category", type="string", example="Food And Beverages"),
+     *                         @OA\Property(property="inventory_price", type="integer", example=2249000),
+     *                         @OA\Property(property="inventory_room", type="string", example="Bathroom"),
+     *                         @OA\Property(property="inventory_storage", type="string", example="Wardrobe"),
+     *                         @OA\Property(property="status", type="string", example="matched")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="found_inventory_category",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="context", type="string", example="Food And Beverages"),
+     *                         @OA\Property(property="total", type="integer", example=1)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="found_total_price", type="integer", example=9014000),
+     *                 @OA\Property(property="found_total_item", type="integer", example=5),
+     *                 @OA\Property(property="found_avg_price", type="integer", example=1802800),
+     *                 @OA\Property(property="generated_at", type="string", example="3 days and 8 hours ago"),
+     *                 @OA\Property(property="not_existing_item", type="string", example="Item L")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Validation failed: {validation errors}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Authorization required",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="You need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="Item not found",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="string", example="failed"),
+     *              @OA\Property(property="message", type="string", example="Report analyzed : No similar inventory found based on the document item"),
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="object",
+     *                  @OA\Property(
+     *                      property="not_existing_item",
+     *                      type="array",
+     *                      @OA\Items(type="string", example="Item L")
+     *                  )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Something went wrong. Please contact admin")
+     *         )
+     *     )
+     * )
+     */
     public function post_analyze_report(Request $request){
         try{ 
             $user_id = $request->user()->id;
@@ -701,14 +857,14 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'The file must be a '.implode(', ', $this->allowed_analyze_file_type).' file type',
-                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     // Validate file size
                     if ($file->getSize() > $this->max_size_analyze_file) {
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'The file size must be under '.($this->max_size_analyze_file/1000000).' Mb',
-                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     // Parse the PDF
@@ -833,6 +989,117 @@ class Commands extends Controller
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/analyze/report/new",
+     *     summary="Create Analyze report",
+     *     tags={"Analyze"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="file",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="File to be analyzed"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully analyzed report",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Report analyzed"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="analyze_item",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="New Balance")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="found_inventory_data",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="string", example="d6ecca7c-bf04-f2a9-123a-378b6cb999de"),
+     *                         @OA\Property(property="inventory_name", type="string", example="New Balance"),
+     *                         @OA\Property(property="inventory_desc", type="string", example="Sepatu High"),
+     *                         @OA\Property(property="inventory_vol", type="integer", example=1),
+     *                         @OA\Property(property="inventory_unit", type="string", example="Kilogram"),
+     *                         @OA\Property(property="inventory_category", type="string", example="Food And Beverages"),
+     *                         @OA\Property(property="inventory_price", type="integer", example=2249000),
+     *                         @OA\Property(property="inventory_room", type="string", example="Bathroom"),
+     *                         @OA\Property(property="inventory_storage", type="string", example="Wardrobe"),
+     *                         @OA\Property(property="status", type="string", example="matched")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="found_inventory_category",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="context", type="string", example="Food And Beverages"),
+     *                         @OA\Property(property="total", type="integer", example=1)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="found_total_price", type="integer", example=9014000),
+     *                 @OA\Property(property="found_total_item", type="integer", example=5),
+     *                 @OA\Property(property="found_avg_price", type="integer", example=1802800),
+     *                 @OA\Property(property="generated_at", type="string", example="3 days and 8 hours ago"),
+     *                 @OA\Property(property="not_existing_item", type="string", example="Item L")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Validation failed: {validation errors}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Authorization required",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="You need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Item not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Report analyzed: No similar inventory found based on the document item"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="not_existing_item",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="Item L")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Something went wrong. Please contact admin")
+     *         )
+     *     )
+     * )
+     */
     public function post_create_analyzed_report(Request $request){
         try{ 
             $user_id = $request->user()->id;
@@ -849,14 +1116,14 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'The file must be a '.implode(', ', $this->allowed_analyze_file_type).' file type',
-                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     // Validate file size
                     if ($file->getSize() > $this->max_size_analyze_file) {
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'The file size must be under '.($this->max_size_analyze_file/1000000).' Mb',
-                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     // Parse the PDF
@@ -1035,6 +1302,78 @@ class Commands extends Controller
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/analyze/report/bill",
+     *     summary="Analyze bill or receipt",
+     *     tags={"Analyze"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="file",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="Bill or receipt file to be analyzed"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="File successfully analyzed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="File analyzed successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="item_name", type="string", example="New Balance"),
+     *                     @OA\Property(property="item_price", type="integer", example=2249000),
+     *                     @OA\Property(property="item_qty", type="integer", example=1)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The file must be a jpg, jpeg, gif, png, or pdf file type | you need to attached a file")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Authorization required",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="You need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Item not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="No matching inventory items found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Something went wrong. Please contact admin")
+     *         )
+     *     )
+     * )
+     */
     public function post_analyze_bill(Request $request){
         try{ 
             $user_id = $request->user()->id;
@@ -1051,14 +1390,14 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
-                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     // Validate file size
                     if ($file->getSize() > $this->max_size_file) {
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
-                        ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     if($file_ext != "pdf"){
@@ -1141,7 +1480,7 @@ class Commands extends Controller
                         'status' => 'success',
                         'message' => 'File analyzed successfully',
                         'data' => $res
-                    ], 200);
+                    ], Response::HTTP_OK);
                 }
             } else {
                 return response()->json([

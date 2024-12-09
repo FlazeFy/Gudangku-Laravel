@@ -196,14 +196,14 @@ class Commands extends Controller
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
-                            ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         // Validate file size
                         if ($file->getSize() > $this->max_size_file) {
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
-                            ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
         
                         // Helper: Upload inventory image
@@ -214,7 +214,7 @@ class Commands extends Controller
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'Failed to upload the file',
-                            ], Response::Response::HTTP_INTERNAL_SERVER_ERROR);
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     }
                 } else {
@@ -563,14 +563,14 @@ class Commands extends Controller
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
-                            ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         // Validate file size
                         if ($file->getSize() > $this->max_size_file) {
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
-                            ], Response::Response::HTTP_UNPROCESSABLE_ENTITY);
+                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
         
                         // Helper: Upload inventory image
@@ -581,7 +581,7 @@ class Commands extends Controller
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'Failed to upload the file',
-                            ], Response::Response::HTTP_INTERNAL_SERVER_ERROR);
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     }
                 }
