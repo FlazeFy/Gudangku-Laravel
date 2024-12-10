@@ -28,11 +28,12 @@ class ApiTest extends TestCase
     public function test_post_login()
     {
         // Exec
+        $param = [
+            'username' => 'richardkyle',
+            'password' => 'nopass123'
+        ];
         $response = $this->httpClient->post("/api/v1/login", [
-            'json' => [
-                'username' => 'flazefy',
-                'password' => 'nopass123',
-            ]
+            'json' => $param
         ]);
 
         $data = json_decode($response->getBody(), true);
