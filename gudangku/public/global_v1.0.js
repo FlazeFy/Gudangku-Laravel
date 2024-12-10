@@ -254,6 +254,28 @@ const zoomableModal = () => {
     })
 }
 
+const setArrowCollapse = () => {
+    $(document).ready(function () {
+        $('[data-bs-toggle="collapse"]').each(function () {
+            const collapseElement = $(this).closest('div').find('.collapse')
+            const direction = collapseElement.hasClass('show') ? 'up' : 'down'
+            $(this).html(`<i class="fa-solid fa-circle-chevron-${direction}" style="transition: transform 0.3s;"></i> ${$(this).text()}`)
+
+            $(this).on('click', function () {
+                const icon = $(this).find('i')
+                const isOpen = collapseElement.hasClass('show')
+                closed_control = isOpen ? false : true
+
+                const currentRotation = icon.data('rotation') || 0
+                const newRotation = currentRotation + 180
+                icon.css({ transform: `rotate(${newRotation}deg)` })
+                icon.data('rotation', newRotation)
+            });
+        });
+    });
+};
+setArrowCollapse()
+
 const formValidation = () => {
     $(document).ready(function() {
         $('.form-validated').each(function(idx, el) {

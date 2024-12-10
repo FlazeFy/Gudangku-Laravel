@@ -7,6 +7,7 @@
 @php($isMobile = Generator::isMobileDevice())  
 
 @section('content')
+    <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
     <script>
         const year = new Date().getFullYear()
     </script>

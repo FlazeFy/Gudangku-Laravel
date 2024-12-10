@@ -59,7 +59,8 @@
     background: var(--darkColor) !important;
 }
 
-button, .btn, tr, .btn-page, .img-responsive, .img-holder, .btn-feature {
+button, .btn, tr, .btn-page, .img-responsive, .img-holder, .btn-feature, i,
+#col-analyze, #total-holder {
     -webkit-transition: all 0.3s !important;
     -o-transition: all 0.3s !important;
     transition: all 0.3s !important;

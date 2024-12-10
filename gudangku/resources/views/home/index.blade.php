@@ -14,6 +14,7 @@
     @endif
     <script src="{{ asset('/usecases/delete_inventory_by_id_v1.0.0.js')}}"></script>
     <script src="{{ asset('/usecases/recover_inventory_by_id_v1.0.0.js')}}"></script>
+    <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
 
     <script>
         let search_key = `<?= $search_key ?>`

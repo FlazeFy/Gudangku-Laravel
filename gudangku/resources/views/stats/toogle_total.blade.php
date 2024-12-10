@@ -1,6 +1,6 @@
 <div class='control-panel <?php if(!$isMobile){ echo 'position-sticky'; } ?>' style='<?php if(!$isMobile){ echo 'top:var(--spaceMD);'; } ?>'>
-    <h4 class="fw-bold" style='font-size:var(--textXJumbo);'>Control Panel</h4>
-    <div class="mt-1 mb-2 row">
+    <a class="fw-bold" style='font-size:var(--textXJumbo);' data-bs-toggle="collapse" href="#collapseControl">Control Panel<a>
+    <div class="mt-1 mb-2 row collapse show" id="collapseControl">
         <div class="col-lg-4 col-md-6 col-sm-12">
             <form action="/stats/toogleView" method="POST" id="toogle_view_stats_select">
                 @csrf

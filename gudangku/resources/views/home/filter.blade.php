@@ -1,46 +1,50 @@
 <div class='control-panel <?php if(!$isMobile){ echo 'position-sticky'; } ?>' style='<?php if(!$isMobile){ echo 'top:var(--spaceMD)'; } ?>'>
-    <h4 class="fw-bold" style='font-size:var(--textXJumbo);'>Control Panel</h4>
-    <div class="mt-1 mb-2 row">
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <label>Search by Name or Merk</label>
-            <div class="position-relative">
-                <input class="form-control" id="search_by_name_merk" value="<?= $search_key ?>">
-                <span id='reset_search_btn_holder'></span>
+    <div class="position-relative py-2">
+        <a class="fw-bold" style='font-size:var(--textXJumbo);' data-bs-toggle="collapse" href="#collapseControl">Control Panel</a>
+        <div class="mt-1 mb-2 row collapse show" id="collapseControl">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <label>Search by Name or Merk</label>
+                <div class="position-relative">
+                    <input class="form-control" id="search_by_name_merk" value="<?= $search_key ?>">
+                    <span id='reset_search_btn_holder'></span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <label>Search by Category</label>
+                <div class="position-relative">
+                    <select class="form-select" aria-label="Default select example" id='search_by_category'>
+                        <option value="all" <?= ($filter_category == 'all') ? 'selected':'' ?>>All</option>
+                        <option value="deleted" <?= ($filter_category == 'deleted') ? 'selected':'' ?>>Deleted</option>
+                        <option value="favorite" <?= ($filter_category == 'favorite') ? 'selected':'' ?>>Favorite</option>
+                        <option value="reminder" <?= ($filter_category == 'reminder') ? 'selected':'' ?>>Reminder</option>
+                        <hr>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <label>Sorting</label>
+                <div class="position-relative">
+                    <select class="form-select" aria-label="Default select example" id='sorting'>
+                        <option value="desc_name" <?= ($sorting == 'desc_name') ? 'selected':'' ?>>Descending by Name</option>
+                        <option value="asc_name" <?= ($sorting == 'asc_name') ? 'selected':'' ?>>Ascending by Name</option>
+                        <hr>
+                        <option value="desc_price" <?= ($sorting == 'desc_price') ? 'selected':'' ?>>Descending by Price</option>
+                        <option value="asc_price" <?= ($sorting == 'asc_price') ? 'selected':'' ?>>Ascending by Price</option>
+                        <hr>
+                        <option value="desc_created" <?= ($sorting == 'desc_created') ? 'selected':'' ?>>Descending by Created Date</option>
+                        <option value="asc_created" <?= ($sorting == 'asc_created') ? 'selected':'' ?>>Ascending by Created Date</option>
+                        <hr>
+                        <option value="desc_updated" <?= ($sorting == 'desc_updated') ? 'selected':'' ?>>Descending by Updated Date</option>
+                        <option value="asc_updated" <?= ($sorting == 'asc_updated') ? 'selected':'' ?>>Ascending by Updated Date</option>
+                    </select>
+                </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <label>Search by Category</label>
-            <div class="position-relative">
-                <select class="form-select" aria-label="Default select example" id='search_by_category'>
-                    <option value="all" <?= ($filter_category == 'all') ? 'selected':'' ?>>All</option>
-                    <option value="deleted" <?= ($filter_category == 'deleted') ? 'selected':'' ?>>Deleted</option>
-                    <option value="favorite" <?= ($filter_category == 'favorite') ? 'selected':'' ?>>Favorite</option>
-                    <option value="reminder" <?= ($filter_category == 'reminder') ? 'selected':'' ?>>Reminder</option>
-                    <hr>
-                </select>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <label>Sorting</label>
-            <div class="position-relative">
-                <select class="form-select" aria-label="Default select example" id='sorting'>
-                    <option value="desc_name" <?= ($sorting == 'desc_name') ? 'selected':'' ?>>Descending by Name</option>
-                    <option value="asc_name" <?= ($sorting == 'asc_name') ? 'selected':'' ?>>Ascending by Name</option>
-                    <hr>
-                    <option value="desc_price" <?= ($sorting == 'desc_price') ? 'selected':'' ?>>Descending by Price</option>
-                    <option value="asc_price" <?= ($sorting == 'asc_price') ? 'selected':'' ?>>Ascending by Price</option>
-                    <hr>
-                    <option value="desc_created" <?= ($sorting == 'desc_created') ? 'selected':'' ?>>Descending by Created Date</option>
-                    <option value="asc_created" <?= ($sorting == 'asc_created') ? 'selected':'' ?>>Ascending by Created Date</option>
-                    <hr>
-                    <option value="desc_updated" <?= ($sorting == 'desc_updated') ? 'selected':'' ?>>Descending by Updated Date</option>
-                    <option value="asc_updated" <?= ($sorting == 'asc_updated') ? 'selected':'' ?>>Ascending by Updated Date</option>
-                </select>
-            </div>
+        <div id="total-holder">
+            <h5 class='fw-bold' style='font-size:var(--textXLG);'>Showing</h5>
+            <h2 class='text-primary fw-bold' style='font-size:calc(var(--textXLG)*2);'><span id='total-item'>0</span> Items</h2>
         </div>
     </div>
-    <h5 class='fw-bold' style='font-size:var(--textXLG);'>Showing</h5>
-    <h2 class='text-primary fw-bold' style='font-size:calc(var(--textXLG)*2);'><span id='total-item'>0</span> Items</h2>
 </div>
 
 <script>

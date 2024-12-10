@@ -13,10 +13,10 @@
             @include('landing.dashboard')
         @endif
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-12">
+            <div class="col-lg-4 col-md-6 col-12 mx-auto" id="col-analyze">
                 @include('landing.analyze')
             </div>
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/inventory';" id="nav_inventory_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-warehouse me-2"></i> @if($role == "user") My @endif Inventory</h2>
@@ -26,7 +26,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/stats';" id="nav_stats_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-pie-chart me-2"></i> Stats</h2>
@@ -36,7 +36,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/<?php if($role == 'user'){ echo 'calendar'; } else { echo 'user'; } ?>';">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-<?php if($role == "user"){ echo "calendar"; } else { echo "user"; } ?> me-2"></i> @if($role == "user") Calendar @else User @endif</h2>
@@ -46,7 +46,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/report';">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-scroll me-2"></i> Report</h2>
@@ -56,7 +56,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/history';" id="nav_history_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-clock-rotate-left me-2"></i> History</h2>
@@ -66,7 +66,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/profile';" id="nav_profile_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-user me-2"></i> My Profile</h2>

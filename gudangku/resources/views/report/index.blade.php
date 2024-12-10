@@ -12,6 +12,7 @@
 </script>
 
 @section('content')
+    <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
     <script>
         let page = 1
         let search_key = `<?= $search_key ?>`
