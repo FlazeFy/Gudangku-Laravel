@@ -684,7 +684,7 @@ class Queries extends Controller
                         'context' => Generator::generateMonthName($i,'short'),
                         'total_price' => $total_price,
                         'total_item' => $total_item,
-                        'average_price_per_item' => $total_item > 0 ? ceil($total_price / $total_item * 100) / 100 : 0
+                        'average_price_per_item' => $total_item > 0 ? (int)ceil($total_price / $total_item * 100) / 100 : 0
                     ]);
                 }
 
