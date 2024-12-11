@@ -17,7 +17,7 @@ class StatsTest extends TestCase
     {
         parent::setUp();
         $this->httpClient = new Client([
-            'base_uri' => 'http://127.0.0.1:8000/',
+            'base_uri' => 'http://127.0.0.1:8000/api/v1/stats/',
             'http_errors' => false
         ]);
     }
@@ -26,7 +26,7 @@ class StatsTest extends TestCase
     {
         // Exec
         $token = $this->login_trait();
-        $response = $this->httpClient->get("/api/v1/stats/inventory/total_by_category/price", [
+        $response = $this->httpClient->get("inventory/total_by_category/price", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
@@ -61,7 +61,7 @@ class StatsTest extends TestCase
     {
         // Exec
         $token = $this->login_trait();
-        $response = $this->httpClient->get("/api/v1/stats/inventory/total_by_room/price", [
+        $response = $this->httpClient->get("inventory/total_by_room/price", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
@@ -96,7 +96,7 @@ class StatsTest extends TestCase
     {
         // Exec
         $token = $this->login_trait();
-        $response = $this->httpClient->get("/api/v1/stats/inventory/total_by_favorite/price", [
+        $response = $this->httpClient->get("inventory/total_by_favorite/price", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
@@ -131,7 +131,7 @@ class StatsTest extends TestCase
     {
         // Exec
         $token = $this->login_trait();
-        $response = $this->httpClient->get("/api/v1/stats/report/total_created_per_month/2024", [
+        $response = $this->httpClient->get("report/total_created_per_month/2024", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
@@ -172,7 +172,7 @@ class StatsTest extends TestCase
     {
         // Exec
         $token = $this->login_trait();
-        $response = $this->httpClient->get("/api/v1/stats/report/total_spending_per_month/2024", [
+        $response = $this->httpClient->get("report/total_spending_per_month/2024", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
@@ -225,7 +225,7 @@ class StatsTest extends TestCase
     {
         // Exec
         $token = $this->login_trait();
-        $response = $this->httpClient->get("/api/v1/stats/report/total_used_per_month/2024", [
+        $response = $this->httpClient->get("report/total_used_per_month/2024", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]

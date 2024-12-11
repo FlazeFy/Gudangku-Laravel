@@ -76,7 +76,7 @@
                         <li class="nav-item"><a href="/features" class="nav-link px-2">Features</a></li>
                         <li class="nav-item"><a href="#" class="nav-link px-2">FAQs</a></li>
                         <li class="nav-item"><a href="/help" class="nav-link px-2">Help</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link px-2">About</a></li>
+                        <li class="nav-item"><a data-bs-toggle="modal" data-bs-target="#aboutModal" class="nav-link px-2">About</a></li>
                     </ul>
                     <p class="text-center">© 2024 Part Of FlazenApps</p>
                 </footer>
@@ -86,6 +86,7 @@
     
     <!--Modal-->
     @include('components.modal.success')
+    @include('components.modal.about')
     @include('components.modal.success_mini')
     @include('components.modal.failed')
 </html>

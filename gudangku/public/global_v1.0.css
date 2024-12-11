@@ -66,6 +66,10 @@ button, .btn, tr, .btn-page, .img-responsive, .img-holder, .btn-feature, i,
     transition: all 0.3s !important;
 }
 
+.bordered {
+    border: 1.5px solid var(--whiteColor);
+}
+
 hr {
     color: var(--whiteColor) !important;
     margin-top: var(--spaceXLG) !important;

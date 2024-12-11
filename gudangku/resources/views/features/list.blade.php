@@ -86,4 +86,23 @@
     </div>
 </div>
 <br><br>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+        <h1>Cross Platform Accessibility</h1>
+        <p>Experience the convenience of <b>GudangKu</b> across multiple platforms. Our app is available on the <b>Web</b>, <b>Mobile</b> devices, and popular messaging platforms like <b>Telegram</b>, <b>LINE</b>, and <b>Discord</b>. 
+        Whether you're managing inventory from your desktop, staying organized on the go, or integrating your workflow with chatbots, <b>GudangKu</b> ensures seamless access anytime, anywhere. 
+        Enjoy flexibility and efficiency in your inventory management with a platform that adapts to your needs.</p>
+        <p class="mb-0 mt-3 fw-bold" style="font-size:var(--textJumbo);">Get All Our Apps Now!</p>
+        <div style="font-size:calc(var(--textLG)*1.5);" class="mt-2 text-center">
+            <a href="https://gudangku.leonardhors.com/" class="me-3"><i class="fa-solid fa-globe"></i></a>
+            <a href="" class="me-3"><i class="fa-solid fa-mobile-screen-button"></i></a>
+            <a href="" class="me-3"><i class="fa-brands fa-line"></i></a>
+            <a href="https://t.me/GudangKuAppsBot"><i class="fa-brands fa-telegram"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+        <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/platform.png')}}" style="max-height:360px;">
+    </div>
+</div>
+<br><br>
 <h6 class='text-primary fst-italic text-center fw-bold' style='font-size:var(--textJumbo);'>- Smart Inventory, Easy Life -</h6>
