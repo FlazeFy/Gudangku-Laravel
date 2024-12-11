@@ -81,7 +81,7 @@ class Validation
             ]);  
         } else if($type == 'delete'){
             return Validator::make($request->all(), [
-                'id' => 'required|numeric|max:9',
+                'id' => 'required|numeric|max:999',
             ]); 
         }
     }
