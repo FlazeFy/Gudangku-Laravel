@@ -12,6 +12,7 @@ class DictionaryTest extends TestCase
 {
     protected $httpClient;
     use LoginHelperTrait;
+    use WithFaker;
 
     protected function setUp(): void
     {
@@ -79,5 +80,33 @@ class DictionaryTest extends TestCase
 
         Audit::auditRecordText("Test - Hard Delete Dictionary By Id", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Hard Delete Dictionary By Id", "TC-XXX", 'TC-XXX test_hard_delete_dictionary_by_id', json_encode($data));
+    }
+
+    public function test_post_dictionary(): void
+    {
+        // Exec
+        $token = $this->login_trait();
+        $body = [
+            "dictionary_type" => "inventory_category",
+            "dictionary_name" => $this->faker->word
+        ];
+        $response = $this->httpClient->post("", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('dictionary created',$data['message']);
+
+        Audit::auditRecordText("Test - Post Dictionary", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Dictionary", "TC-XXX", 'TC-XXX test_post_dictionary', json_encode($data));
     }
 }
