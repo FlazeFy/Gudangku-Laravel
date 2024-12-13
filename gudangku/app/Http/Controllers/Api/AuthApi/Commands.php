@@ -85,6 +85,7 @@ class Commands extends Controller
                     ], Response::HTTP_UNAUTHORIZED);
                 } else {
                     $token = $user->createToken('login')->plainTextToken;
+                    unset($user->password);
 
                     return response()->json([
                         'status' => 'success',

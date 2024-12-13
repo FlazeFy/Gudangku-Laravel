@@ -8,11 +8,8 @@ use GuzzleHttp\Client;
 use Tests\TestCase;
 use App\Helpers\Audit;
 
-class ApiTest extends TestCase
+class AuthTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
     protected $httpClient;
 
     protected function setUp(): void
@@ -42,6 +39,25 @@ class ApiTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertArrayHasKey('token', $data);
         $this->assertArrayHasKey('role', $data);
+        $this->assertArrayHasKey('result', $data);
+
+        $check_object = ['id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at'];
+        foreach ($check_object as $col) {
+            $this->assertArrayHasKey($col, $data['result']);
+        }
+
+        $check_not_null_str = ['id','username','email','created_at'];
+        foreach ($check_not_null_str as $col) {
+            $this->assertNotNull($col, $data['result'][$col]);
+            $this->assertIsString($col, $data['result'][$col]);
+        }
+
+        $check_nullable_str = ['telegram_user_id','firebase_fcm_token','line_user_id','phone','timezone','updated_at'];
+        foreach ($check_nullable_str as $col) {
+            if(!is_null($data['result'][$col])){
+                $this->assertIsString($col, $data['result'][$col]);
+            }
+        }
 
         Audit::auditRecordText("Test - Post Login", "TC-001", "Token : ".$data['token']);
         Audit::auditRecordSheet("Test - Post Login", "TC-001", json_encode($param), $data['token']);

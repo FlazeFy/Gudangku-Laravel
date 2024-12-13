@@ -124,7 +124,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'reminder created',
-                    ], Response::HTTP_OK);
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',
