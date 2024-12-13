@@ -2536,19 +2536,19 @@
                 ]
             }
         },
-        "/api/v1/inventory/layout/{room}/doc": {
+        "/api/v1/inventory/detail/{room}/doc": {
             "get": {
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get room layout html format by id",
-                "description": "This request is used to get room layout html format for document generate. This request is using MySQL database, and has protected routes.",
-                "operationId": "97a8e2908b11f7372e0b0b0c51e26dd0",
+                "summary": "Get inventory detail html format by id",
+                "description": "This request is used to get inventory detail html format for document generate. This request is using MySQL database, and has protected routes.",
+                "operationId": "dd517c5b730e9e366d890e2331f93648",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Room",
+                        "description": "Inventory ID",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2614,6 +2614,119 @@
                                         "message": {
                                             "type": "string",
                                             "example": "inventory detail not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/inventory/layout/{room}/doc": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get room layout html format by id",
+                "description": "This request is used to get room layout html format for document generate. This request is using MySQL database, and has protected routes.",
+                "operationId": "e18d00f2d972674816715f288776385b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Room",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Main%20Room"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "room document generated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "room generated"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": "<p>Ini document</p>"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "room document failed to generated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "room not found"
                                         }
                                     },
                                     "type": "object"
@@ -4629,7 +4742,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "The file must be a PNG, JPG, or PDF file type"
+                                            "example": "The file must be a jpg, jpeg, gif, png, or pdf file type | you need to attached a file"
                                         }
                                     },
                                     "type": "object"

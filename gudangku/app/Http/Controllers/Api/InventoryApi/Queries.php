@@ -740,9 +740,9 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/v1/inventory/layout/{room}/doc",
-     *     summary="Get room layout html format by id",
-     *     description="This request is used to get room layout html format for document generate. This request is using MySQL database, and has protected routes.",
+     *     path="/api/v1/inventory/detail/{room}/doc",
+     *     summary="Get inventory detail html format by id",
+     *     description="This request is used to get inventory detail html format for document generate. This request is using MySQL database, and has protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -750,7 +750,7 @@ class Queries extends Controller
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="string"),
-     *         description="Room",
+     *         description="Inventory ID",
      *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
      *     ),
      *     @OA\Response(
@@ -788,7 +788,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_document(Request $request,$id)
+    public function get_inventory_document(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
@@ -812,7 +812,86 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/layout/{room}/doc",
+     *     summary="Get room layout html format by id",
+     *     description="This request is used to get room layout html format for document generate. This request is using MySQL database, and has protected routes.",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Room",
+     *         example="Main%20Room",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="room document generated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="room generated"),
+     *             @OA\Property(property="data", type="string", example="<p>Ini document</p>"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="room document failed to generated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="room not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     )
+     * )
+     */
+    public function get_room_document(Request $request,$room)
+    {
+        try{
+            $user_id = $request->user()->id;
+            $inventory = InventoryModel::getInventoryByRoom($room,$user_id);
+            $layout = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
+
+            if (is_array($inventory) ? count($inventory) > 0 : $inventory && $layout) {    
+                $html = Document::documentTemplateLayout(null,null,null,$layout,$inventory,$room);
+     
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'inventory detail generated',
+                    'data' => $html
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'inventory detail not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -989,7 +1068,7 @@ class Queries extends Controller
                     'inventory_room_analyze' => $res_room,
                     'inventory_unit_analyze' => $res_unit,
                     'inventory_history_analyze' => $res_history,
-                    'inventory_report' => $res_report,
+                    'inventory_report' => count($res_report) > 0 ? $res_report : null,
                     'inventory_in_monthly_report' => $res_montly_in_report,
                     'inventory_layout' => $res_layout
                 ]);

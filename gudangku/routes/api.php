@@ -40,11 +40,11 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::get('/analyze/{id}', [QueriesInventoryController::class, 'get_analyze_inventory']);
     Route::prefix('/layout/{room}')->group(function (){
         Route::get('/', [QueriesInventoryController::class, 'get_room_layout']);
-        Route::get('/doc', [QueriesInventoryController::class, 'get_document']);
+        Route::get('/doc', [QueriesInventoryController::class, 'get_room_document']);
     });
     Route::prefix('/detail/{id}')->group(function (){
         Route::get('/', [QueriesInventoryController::class, 'get_inventory_by_id']);
-        Route::get('/doc', [QueriesInventoryController::class, 'get_document']);
+        Route::get('/doc', [QueriesInventoryController::class, 'get_inventory_document']);
     });
     Route::post('/', [CommandsInventoryController::class, 'post_inventory']);
     Route::post('/layout', [CommandsInventoryController::class, 'post_inventory_layout']);
