@@ -25,7 +25,7 @@ class ReminderTest extends TestCase
     public function test_post_reminder(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $body = [
             "inventory_id" => "83ce75db-4016-d87c-2c3c-db1e222d0001",
             "reminder_desc" => "Restock at https://tokopedia.link/rBfBm3vVDIbBeli 2 boleh",
@@ -56,7 +56,7 @@ class ReminderTest extends TestCase
     public function test_delete_reminder_by_id(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $id = "935265fc-29d7-fe3f-3b04-061c674ea69c";
         $response = $this->httpClient->post("/$id", [
             'headers' => [

@@ -25,7 +25,7 @@ class StatsTest extends TestCase
     public function test_get_total_inventory_by_category(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/total_by_category/price", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -60,7 +60,7 @@ class StatsTest extends TestCase
     public function test_get_total_inventory_by_room(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/total_by_room/price", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -95,7 +95,7 @@ class StatsTest extends TestCase
     public function test_get_total_inventory_by_favorite(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/total_by_favorite/price", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -130,7 +130,7 @@ class StatsTest extends TestCase
     public function test_get_total_report_created_at_month(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("report/total_created_per_month/2024", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -171,7 +171,7 @@ class StatsTest extends TestCase
     public function test_get_total_report_spending_by_month(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("report/total_spending_per_month/2024", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -224,7 +224,7 @@ class StatsTest extends TestCase
     public function test_get_total_report_used_by_month(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("report/total_used_per_month/2024", [
             'headers' => [
                 'Authorization' => "Bearer $token"

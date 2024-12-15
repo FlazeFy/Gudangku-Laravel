@@ -25,7 +25,7 @@ class UserTest extends TestCase
     public function test_get_my_profile(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("my_profile", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -62,7 +62,7 @@ class UserTest extends TestCase
     public function test_put_timezone_fcm(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $body = [
             "timezone" => "+02:00",
             "firebase_fcm_token" => "ddLEuWR2Q_isCmzHTM8UR4:APA91bEmY8TDmH3ZJtKgXw95wFDKLr53FGA2JArDTiN4jzSWxiGzf9VUECYN2oeqYV__c7Yz9kj8kPqykIP_6N-LaVRUhDXJX3ludLcMSGq36Hn2uh7onMgzDFvaXo3yG37LIWFLdr6f"
@@ -87,10 +87,64 @@ class UserTest extends TestCase
         Audit::auditRecordSheet("Test - Put Timezone FCM", "TC-XXX", 'TC-XXX test_put_timezone_fcm', json_encode($data));
     }
 
+    public function test_put_telegram_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $body = [
+            "telegram_user_id" => "1317625977",
+        ];
+        $response = $this->httpClient->put("update_telegram_id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('telegram id updated! and validation has been sended to you',$data['message']);
+
+        Audit::auditRecordText("Test - Put Telegram ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Telegram ID", "TC-XXX", 'TC-XXX test_put_telegram_id', json_encode($data));
+    }
+
+    public function test_put_validate_telegram_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $body = [
+            "request_context" => "IHSF0Z",
+        ];
+        $response = $this->httpClient->put("validate_telegram_id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('telegram id has been validated',$data['message']);
+
+        Audit::auditRecordText("Test - Put Validate Telegram ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Validate Telegram ID", "TC-XXX", 'TC-XXX test_put_validate_telegram_id', json_encode($data));
+    }
+
     public function test_put_update_profile(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $body = [
             "email" => "flazen.edu@gmail.com",
             "username" => "flazefy"
@@ -113,5 +167,51 @@ class UserTest extends TestCase
 
         Audit::auditRecordText("Test - Put Update Profile", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Put Update Profile", "TC-XXX", 'TC-XXX test_put_update_profile', json_encode($data));
+    }
+
+    public function test_get_all_user(): void
+    {
+        // Exec
+        $token = $this->login_trait("admin");
+        $response = $this->httpClient->get("", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data);
+
+        foreach ($data['data']['data'] as $dt) {
+            $check_object = ['id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at'];
+            foreach ($check_object as $col) {
+                $this->assertArrayHasKey($col, $dt);
+            }
+
+            $check_not_null_str = ['id','username','email','created_at'];
+            foreach ($check_not_null_str as $col) {
+                $this->assertNotNull($dt[$col]);
+                $this->assertIsString($dt[$col]);
+            }
+
+            $check_nullable_str = ['telegram_user_id','firebase_fcm_token','line_user_id','phone','timezone','updated_at'];
+            foreach ($check_nullable_str as $col) {
+                if(!is_null($dt[$col])){
+                    $this->assertNotNull($dt[$col]);
+                    $this->assertIsString($dt[$col]);
+                }
+            }
+
+            $this->assertContains($dt['telegram_is_valid'], [0, 1]);
+        }
+
+        Audit::auditRecordText("Test - Get All User", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get All User", "TC-XXX", 'TC-XXX test_get_all_user', json_encode($data));
     }
 }

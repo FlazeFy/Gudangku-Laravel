@@ -170,7 +170,7 @@ class Queries extends Controller
             $check_admin = AdminModel::find($user_id);
 
             if($check_admin){
-                $res = UserModel::selectRaw('*')
+                $res = UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at')
                     ->orderby('created_at','desc')
                     ->paginate(12);
                 

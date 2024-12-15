@@ -31,7 +31,7 @@ class InventoryTest extends TestCase
     public function test_get_inventory_list(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("list", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -73,7 +73,7 @@ class InventoryTest extends TestCase
     public function test_get_inventory_by_room(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("layout/$this->room", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -118,7 +118,7 @@ class InventoryTest extends TestCase
     public function test_get_inventory_by_storage(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("search/by_room_storage/$this->room/$this->storage", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -163,7 +163,7 @@ class InventoryTest extends TestCase
     public function test_get_inventory_calendar(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("calendar", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -203,7 +203,7 @@ class InventoryTest extends TestCase
     public function test_get_all_inventory(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -281,7 +281,7 @@ class InventoryTest extends TestCase
     public function test_get_analyze_inventory_by_id(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $id = "09397f65-211e-3598-2fa5-b50cdba5183c";
         $response = $this->httpClient->get("analyze/$id", [
             'headers' => [
@@ -425,7 +425,7 @@ class InventoryTest extends TestCase
     public function test_get_layout_room_doc(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("layout/$this->room/doc", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -449,7 +449,7 @@ class InventoryTest extends TestCase
     public function test_get_inventory_detail_doc(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $id = "09397f65-211e-3598-2fa5-b50cdba5183c";
         $response = $this->httpClient->get("detail/$id/doc", [
             'headers' => [

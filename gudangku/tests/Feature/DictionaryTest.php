@@ -26,7 +26,7 @@ class DictionaryTest extends TestCase
     public function test_get_all_dictionary_by_type(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $type = "inventory_unit,inventory_room";
         $response = $this->httpClient->get("type/$type", [
             'headers' => [
@@ -61,7 +61,7 @@ class DictionaryTest extends TestCase
     public function test_hard_delete_dictionary_by_id(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $id = "25";
         $response = $this->httpClient->delete("$id", [
             'headers' => [
@@ -85,7 +85,7 @@ class DictionaryTest extends TestCase
     public function test_post_dictionary(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $body = [
             "dictionary_type" => "inventory_category",
             "dictionary_name" => $this->faker->word

@@ -29,7 +29,7 @@ class ReportTest extends TestCase
     public function test_get_report_detail_doc_format_by_id(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $id = "9f8b26ed-750a-ba92-3100-bb0b4b3ffb4b";
         $response = $this->httpClient->get("detail/item/$id/doc", [
             'headers' => [
@@ -53,7 +53,7 @@ class ReportTest extends TestCase
     public function test_get_report_detail_by_id(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $id = "9f8b26ed-750a-ba92-3100-bb0b4b3ffb4b";
         $response = $this->httpClient->get("detail/item/$id", [
             'headers' => [
@@ -149,7 +149,7 @@ class ReportTest extends TestCase
     public function test_get_all_report(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("", [
             'headers' => [
                 'Authorization' => "Bearer $token"

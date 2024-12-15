@@ -25,7 +25,7 @@ class HistoryTest extends TestCase
     public function test_get_all_history(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $response = $this->httpClient->get("", [
             'headers' => [
                 'Authorization' => "Bearer $token"
@@ -73,7 +73,7 @@ class HistoryTest extends TestCase
     public function test_hard_delete_history_by_id(): void
     {
         // Exec
-        $token = $this->login_trait();
+        $token = $this->login_trait("user");
         $id = "69dc1f34-9d1d-674e-1d7b-1ccfc3880a0c";
         $response = $this->httpClient->delete("destroy/$id", [
             'headers' => [

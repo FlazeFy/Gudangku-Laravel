@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 
 trait LoginHelperTrait
 {
-    public function login_trait(): string
+    public function login_trait($role): string
     {
         $httpClient = new Client([
             'base_uri' => 'http://127.0.0.1:8000/',
@@ -14,7 +14,7 @@ trait LoginHelperTrait
         ]);
 
         $param = [
-            'username' => 'flazefy',
+            'username' => $role == "user" ? 'flazefy' : 'testeradmin',
             'password' => 'nopass123'
         ];
         $response = $httpClient->post("/api/v1/login", [
