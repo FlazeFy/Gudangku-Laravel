@@ -63,7 +63,7 @@
                             <div id="item_form"></div>
                             <hr>
                             <label>Upload Shopping Bills</label>
-                            <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv' required>
+                            <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv'>
                             <button class="btn btn-success mt-4 w-100" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
                         </div>
                         <div class="col">
@@ -151,7 +151,7 @@
                                 </div>
                                 <div class="col">
                                     <label>Price (optional)</label>
-                                    <input type="number" class="form-control w-100" min="1" name="item_price[]" value="${el.item_price ?? ''}">
+                                    <input type="number" class="form-control w-100" min="0" name="item_price[]" value="${el.item_price ?? ''}">
                                 </div>
                             </div>
                         </div>
@@ -250,7 +250,7 @@
                 priceInput = `
                     <div class="col">
                         <label>Price (optional)</label>
-                        <input type="number" class="form-control w-100" min="1" name="item_price[]" value="0">
+                        <input type="number" class="form-control w-100" min="0" name="item_price[]" value="0">
                     </div>
                 `
             }

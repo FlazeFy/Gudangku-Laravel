@@ -96,7 +96,7 @@ Route::prefix('/v1/dictionary')->group(function () {
 });
 
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/', [QueriesReportController::class, 'get_my_report']);
+    Route::get('/', [QueriesReportController::class, 'get_all_report']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'get_my_report_by_inventory']);
     Route::post('/', [CommandsReportController::class, 'post_report']);
     Route::prefix('/detail/item/{id}')->group(function (){

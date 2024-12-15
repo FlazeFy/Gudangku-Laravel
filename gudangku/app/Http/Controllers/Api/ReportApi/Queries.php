@@ -83,7 +83,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_my_report(Request $request)
+    public function get_all_report(Request $request)
     {
         try{
             $user_id = $request->user()->id;
