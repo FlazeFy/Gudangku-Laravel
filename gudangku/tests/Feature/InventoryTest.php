@@ -470,4 +470,52 @@ class InventoryTest extends TestCase
         Audit::auditRecordText("Test - Get Inventory Detail Doc", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Get Inventory Detail Doc", "TC-XXX", 'TC-XXX test_get_inventory_detail_doc', json_encode($data));
     }
+
+    public function test_soft_delete_inventory_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "16d91674-a1d0-1d25-1db2-3837f3d35e21";
+        $response = $this->httpClient->delete("delete/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('inventory deleted',$data['message']);
+
+        Audit::auditRecordText("Test - Soft Delete Inventory By ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Soft Delete Inventory By ID", "TC-XXX", 'TC-XXX test_soft_delete_inventory_by_id', json_encode($data));
+    }
+
+    public function test_hard_delete_inventory_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "16d91674-a1d0-1d25-1db2-3837f3d35e21";
+        $response = $this->httpClient->delete("destroy/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('inventory permentally deleted',$data['message']);
+
+        Audit::auditRecordText("Test - Hard Delete Inventory By ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Hard Delete Inventory By ID", "TC-XXX", 'TC-XXX test_hard_delete_inventory_by_id', json_encode($data));
+    }
 }

@@ -345,4 +345,67 @@ class ReportTest extends TestCase
         Audit::auditRecordText("Test - Put Update Report By Id", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Put Update Report By Id", "TC-XXX", 'TC-XXX test_put_update_report_by_id', json_encode($data));
     }
+
+    public function test_put_update_report_item_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "695e8eea-0c00-3888-085e-ed2fab3c090b";
+        $body = [
+            "item_name" => 'Product A',
+            "item_desc" => 'Test Update Item',
+            "item_qty" => 2,
+            "item_price" => 19000
+        ];
+        $response = $this->httpClient->put("update/report_item/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('report item updated',$data['message']);
+
+        Audit::auditRecordText("Test - Put Update Report Item By Id", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Update Report Item By Id", "TC-XXX", 'TC-XXX test_put_update_report_item_by_id', json_encode($data));
+    }
+
+    public function test_put_update_split_report_item_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "8207a8a5-f344-4a49-155d-7ec5aa64c343";
+        $body = [
+            "list_id" => "29bfadc5-7b4c-df51-0337-12e966ce2f5d,633eaba9-9175-38f9-3b43-0ccd9267cf02",
+            "report_title" => "Test Split Report A",
+            "report_desc" => "Test Split Report",
+            "report_category" => "Checkout",
+            "is_reminder" => 0
+        ];
+        $response = $this->httpClient->put("update/report_split/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertStringContainsString('report items updated',$data['message']);
+
+        Audit::auditRecordText("Test - Put Update Report Item By Id", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Update Report Item By Id", "TC-XXX", 'TC-XXX test_put_update_split_report_item_by_id', json_encode($data));
+    }
 }
