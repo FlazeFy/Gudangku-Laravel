@@ -518,4 +518,120 @@ class InventoryTest extends TestCase
         Audit::auditRecordText("Test - Hard Delete Inventory By ID", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Hard Delete Inventory By ID", "TC-XXX", 'TC-XXX test_hard_delete_inventory_by_id', json_encode($data));
     }
+
+    public function test_put_fav_toogle_inventory_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "09397f65-211e-3598-2fa5-b50cdba5183c";
+        $body = [
+            "is_favorite" => 1
+        ];
+        $response = $this->httpClient->put("fav_toggle/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('inventory updated',$data['message']);
+
+        Audit::auditRecordText("Test - Put Fav Toogle Inventory By ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Fav Toogle Inventory By ID", "TC-XXX", 'TC-XXX test_put_fav_toogle_inventory_by_id', json_encode($data));
+    }
+
+    public function test_put_recover_inventory_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "09397f65-211e-3598-2fa5-b50cdba5183c";
+        $response = $this->httpClient->put("recover/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('inventory recovered',$data['message']);
+
+        Audit::auditRecordText("Test - Put Recover Inventory By ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Recover Inventory By ID", "TC-XXX", 'TC-XXX test_put_recover_inventory_by_id', json_encode($data));
+    }
+
+    public function test_put_edit_image_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "09397f65-211e-3598-2fa5-b50cdba5183c";
+        $filePath = public_path('images/Success.png'); 
+
+        $this->assertFileExists($filePath, "The file does not exist at the specified path: $filePath");
+
+        $response = $this->httpClient->put("edit_image/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token",
+            ],
+            'multipart' => [
+                [
+                    'name' => 'file', 
+                    'contents' => fopen($filePath, 'r'), 
+                    'filename' => basename($filePath), 
+                ],
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('inventory image updated',$data['message']);
+
+        Audit::auditRecordText("Test - Put Edit Image By ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Edit Image By ID", "TC-XXX", 'TC-XXX test_put_edit_image_by_id', json_encode($data));
+    }
+
+    public function test_put_edit_layout_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "64741fe2-4982-131a-1332-59df765cdb30";
+        $body = [
+            "inventory_storage" => "Fridge Small",
+            "storage_desc" => "Store frozen food & drink"
+        ];
+        $response = $this->httpClient->put("edit_layout/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertTrue(str_contains($data['message'], 'inventory layout updated and impacted to') || $data['message'] === 'nothing has change');
+
+        Audit::auditRecordText("Test - Put Edit Layout By ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Edit Layout By ID", "TC-XXX", 'TC-XXX test_put_edit_layout_by_id', json_encode($data));
+    }
 }

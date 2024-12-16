@@ -860,7 +860,7 @@ class Commands extends Controller
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
-                            'status' => 'failed',
+                            'status' => 'success',
                             'message' => 'nothing has change',
                         ], Response::HTTP_OK);
                     }
