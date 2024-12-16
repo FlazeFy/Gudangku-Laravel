@@ -788,7 +788,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_inventory_document(Request $request,$id)
+    public function get_inventory_detail_document(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;

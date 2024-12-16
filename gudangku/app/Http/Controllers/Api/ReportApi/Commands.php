@@ -709,19 +709,19 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => 'report created and its item',
-                        ], Response::HTTP_OK);
+                        ], Response::HTTP_CREATED);
                     } else if($failed_exec > 0 && $success_exec > 0){
                         return response()->json([
                             'status' => 'success',
                             'message' => "report created and some item has been added: $success_exec. About $failed_exec inventory failed to add",
                             'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
-                        ], Response::HTTP_OK);
+                        ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'success',
                             'message' => 'report created but failed to add item report',
                             'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
-                        ], Response::HTTP_OK);
+                        ], Response::HTTP_CREATED);
                     }
                 } else {
                     return response()->json([
@@ -733,7 +733,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => 'something wrong. please contact admin',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

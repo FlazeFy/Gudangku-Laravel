@@ -408,4 +408,42 @@ class ReportTest extends TestCase
         Audit::auditRecordText("Test - Put Update Report Item By Id", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Put Update Report Item By Id", "TC-XXX", 'TC-XXX test_put_update_split_report_item_by_id', json_encode($data));
     }
+
+    public function test_post_report(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $body = [
+            "report_title" => "Test Add Report A",
+            "report_desc" => "Test Add Report",
+            "report_category" => "Checkout",
+            "is_reminder" => 1,
+            "report_image" => null,
+            "report_item" => json_encode([
+                "inventory_id" => "09397f65-211e-3598-2fa5-b50cdba5183c",
+                "item_name" => "Kris Air Friyer",
+                "item_desc" => "penggorengan elektrik",
+                "item_qty" => 1,
+                "item_price" => 650000,
+            ]),
+        ];
+        $response = $this->httpClient->post("", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('report created', $data['message']);
+
+        Audit::auditRecordText("Test - Post Report", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Report", "TC-XXX", 'TC-XXX test_post_report', json_encode($data));
+    }
 }
