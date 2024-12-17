@@ -524,7 +524,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "you need to include the authorization token from login"
+                                            "example": "you need to include the authorization token from login | only admin can use this request"
                                         }
                                     },
                                     "type": "object"
@@ -2679,14 +2679,14 @@
                 ]
             }
         },
-        "/api/v1/inventory/detail/{room}/doc": {
+        "/api/v1/inventory/detail/{id}/doc": {
             "get": {
                 "tags": [
                     "Inventory"
                 ],
                 "summary": "Get inventory detail html format by id",
                 "description": "This request is used to get inventory detail html format for document generate. This request is using MySQL database, and has protected routes.",
-                "operationId": "00179737f78545d96e7e3fe696be1180",
+                "operationId": "5dee1199250f2019993360b86e3955dd",
                 "parameters": [
                     {
                         "name": "id",
@@ -3312,6 +3312,102 @@
                 ]
             }
         },
+        "/api/v1/reminder/re_remind": {
+            "post": {
+                "tags": [
+                    "Reminder"
+                ],
+                "summary": "Create a reminder",
+                "operationId": "14e3b1365d2e58696172944e27165623",
+                "responses": {
+                    "201": {
+                        "description": "reminder re-executed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder re-executed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login | only admin can use this request"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "reminder not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/reminder/{id}": {
             "delete": {
                 "tags": [
@@ -3508,7 +3604,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "you need to include the authorization token from login"
+                                            "example": "you need to include the authorization token from login | only admin can use this request"
                                         }
                                     },
                                     "type": "object"
@@ -7282,7 +7378,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "you need to include the authorization token from login"
+                                            "example": "you need to include the authorization token from login | only admin can use this request"
                                         }
                                     },
                                     "type": "object"

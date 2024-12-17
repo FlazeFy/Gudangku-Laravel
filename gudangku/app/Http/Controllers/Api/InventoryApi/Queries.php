@@ -740,7 +740,7 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/v1/inventory/detail/{room}/doc",
+     *     path="/api/v1/inventory/detail/{id}/doc",
      *     summary="Get inventory detail html format by id",
      *     description="This request is used to get inventory detail html format for document generate. This request is using MySQL database, and has protected routes.",
      *     tags={"Inventory"},

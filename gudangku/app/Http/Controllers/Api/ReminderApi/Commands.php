@@ -3,23 +3,25 @@
 namespace App\Http\Controllers\Api\ReminderApi;
 
 use App\Http\Controllers\Controller;
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Telegram\Bot\FileUpload\InputFile;
 
 // Models
 use App\Models\ReminderModel;
+use App\Models\ScheduleMarkModel;
 use App\Models\InventoryModel;
 use App\Models\UserModel;
+use App\Models\AdminModel;
 
 // Helpers
 use App\Helpers\Audit;
 use App\Helpers\Generator;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification;
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Telegram\Bot\FileUpload\InputFile;
+use App\Helpers\LineMessage;
 
 class Commands extends Controller
 {
@@ -136,6 +138,119 @@ class Commands extends Controller
                     'status' => 'failed',
                     'message' => 'reminder with same type and context has been used',
                 ], Response::HTTP_CONFLICT);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'something wrong. please contact admin',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\POST(
+     *     path="/api/v1/reminder/re_remind",
+     *     summary="Create a reminder",
+     *     tags={"Reminder"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=201,
+     *         description="reminder re-executed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="reminder re-executed")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | only admin can use this request")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="reminder not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="reminder not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function post_re_remind(Request $request)
+    {
+        try{
+            $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+
+            if($check_admin){
+                $id = $request->reminder_id;
+                $reminder = ReminderModel::getReminderJob($id);
+
+                if($reminder){
+                    $deleted = ScheduleMarkModel::where('reminder_id',$id)->delete();
+
+                    if($deleted > 0){
+                        ScheduleMarkModel::create([
+                            'id' => Generator::getUUID(), 
+                            'reminder_id' => $id,
+                            'last_execute' => date('Y-m-d H:i:s'), 
+                        ]);
+
+                        $message = "Hello $reminder->username, your inventory $reminder->inventory_name has remind $reminder->reminder_desc";
+
+                        if($reminder->telegram_user_id){
+                            $response = Telegram::sendMessage([
+                                'chat_id' => $reminder->telegram_user_id,
+                                'text' => $message,
+                                'parse_mode' => 'HTML'
+                            ]);
+                        }
+                        if($reminder->line_user_id){
+                            LineMessage::sendMessage('text',$message,$reminder->line_user_id);
+                        }
+                        if($reminder->firebase_fcm_token){
+                            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                            $messaging = $factory->createMessaging();
+                            $message = CloudMessage::withTarget('token', $reminder->firebase_fcm_token)
+                                ->withNotification(Notification::create($message, $id))
+                                ->withData([
+                                    'id_context' => $id,
+                                ]);
+                            $response = $messaging->send($message);
+                        }
+
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'reminder re-executed',
+                        ], Response::HTTP_CREATED);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'reminder not found',
+                        ], Response::HTTP_NOT_FOUND);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'reminder not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'only admin can use this request',
+                ], Response::HTTP_UNAUTHORIZED);
             }
         } catch(\Exception $e) {
             return response()->json([

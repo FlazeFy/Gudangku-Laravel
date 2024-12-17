@@ -4,26 +4,22 @@ namespace App\Schedule;
 
 use Carbon\Carbon;
 use DateTime;
-
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use App\Service\FirebaseRealtime;
 use App\Helpers\LineMessage;
 use App\Helpers\Generator;
 
 use App\Models\ReminderModel;
 use App\Models\ScheduleMarkModel;
 
-use App\Mail\ScheduleEmail;
-use Illuminate\Support\Facades\Mail;
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification;
-use App\Service\FirebaseRealtime;
-
 class ReminderSchedule
 {
     public static function remind_inventory()
     {
-        $summary = ReminderModel::getReminderJob();
+        $summary = ReminderModel::getReminderJob(null);
         
         if($summary){
             $firebaseRealtime = new FirebaseRealtime();
@@ -143,7 +139,7 @@ class ReminderSchedule
                             'last_execute' => date('Y-m-d H:i:s'), 
                         ]);
 
-                        $message = (int)$server_day." Hello $dt->username, your inventory $dt->inventory_name has remind $dt->reminder_desc";
+                        $message = "Hello $dt->username, your inventory $dt->inventory_name has remind $dt->reminder_desc";
 
                         if($dt->telegram_user_id){
                             $response = Telegram::sendMessage([

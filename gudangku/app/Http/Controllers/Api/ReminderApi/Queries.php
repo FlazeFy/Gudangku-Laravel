@@ -45,7 +45,7 @@ class Queries extends Controller
      *         description="protected route need to include sign in token as authorization bearer",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | only admin can use this request")
      *         )
      *     ),
      *     @OA\Response(
@@ -90,7 +90,7 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'only admin can use this request',
-                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                ], Response::HTTP_UNAUTHORIZED);
             }
         } catch(\Exception $e) {
             return response()->json([

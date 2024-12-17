@@ -31,12 +31,16 @@ class ReminderModel extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_id', 'reminder_desc', 'reminder_type', 'reminder_context', 'created_at', 'created_by', 'updated_at'];
 
-    public static function getReminderJob(){
+    public static function getReminderJob($id){
         $res = ReminderModel::select('reminder.id','username','email','telegram_user_id','firebase_fcm_token','line_user_id','inventory_name','reminder_desc','reminder_type','reminder_context','timezone')
             ->join('inventory','inventory.id','=','reminder.inventory_id')
             ->join('users','users.id','=','reminder.created_by');
 
-        return $res->get();
+        if($id){
+            $res = $res->where('reminder.id',$id);
+        }
+
+        return $id ? $res->first() : $res->get();
     }
 
     public static function getReminderByInventoryId($id,$user_id){
