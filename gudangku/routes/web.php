@@ -22,6 +22,7 @@ use App\Http\Controllers\Room2DController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\ReminderController;
 
 ######################### Public Route #########################
 
@@ -81,6 +82,10 @@ Route::prefix('/user')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/error')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ErrorController::class, 'index']);
+});
+
+Route::prefix('/reminder')->middleware(['auth_v2:sanctum'])->group(function () {
+    Route::get('/', [ReminderController::class, 'index']);
 });
 
 Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {

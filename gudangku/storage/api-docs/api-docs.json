@@ -3420,6 +3420,150 @@
                 ]
             }
         },
+        "/api/v1/reminder/mark": {
+            "get": {
+                "tags": [
+                    "Reminder"
+                ],
+                "summary": "Get all reminder scheduler mark",
+                "description": "This request is used to get all executed reminder mark. This request is using MySql database, have a protected routes, and have template pagination.",
+                "operationId": "d84b6728220b2eda4272f27320dc36b8",
+                "responses": {
+                    "200": {
+                        "description": "reminder mark fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder mark fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "inventory_name": {
+                                                                "type": "string",
+                                                                "example": "Skintific Mugwort Clay Mask"
+                                                            },
+                                                            "inventory_category": {
+                                                                "type": "string",
+                                                                "example": "Skin & Body Care"
+                                                            },
+                                                            "reminder_desc": {
+                                                                "type": "string",
+                                                                "example": "Restock at https://tokopedia.link/rBfBm3vVDIb\\r\\nBeli 2 boleh"
+                                                            },
+                                                            "reminder_type": {
+                                                                "type": "string",
+                                                                "example": "Every Month"
+                                                            },
+                                                            "reminder_context": {
+                                                                "type": "string",
+                                                                "example": "Every 19"
+                                                            },
+                                                            "last_executed": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-09-20 22:53:47"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-09-20 22:53:47"
+                                                            },
+                                                            "username": {
+                                                                "type": "string",
+                                                                "example": "flazefy"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "reminder mark failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder mark not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/report/delete/item/{id}": {
             "delete": {
                 "tags": [

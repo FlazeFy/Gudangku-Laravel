@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\ReportApi\Commands as CommandsReportController;
 use App\Http\Controllers\Api\UserApi\Queries as QueriesUserController;
 use App\Http\Controllers\Api\UserApi\Commands as CommandsUserController;
 use App\Http\Controllers\Api\ReminderApi\Commands as CommandsReminderController;
+use App\Http\Controllers\Api\ReminderApi\Queries as QueriesReminderController;
 use App\Http\Controllers\Api\DictionaryApi\Queries as QueriesDictionaryController;
 use App\Http\Controllers\Api\DictionaryApi\Commands as CommandsDictionaryController;
 use App\Http\Controllers\Api\ErrorApi\Queries as QueriesErrorController;
@@ -75,6 +76,7 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/mark', [QueriesReminderController::class, 'get_reminder_mark']);
     Route::post('/', [CommandsReminderController::class, 'post_reminder']);
     Route::delete('/{id}', [CommandsReminderController::class, 'delete_reminder_by_id']);
 });

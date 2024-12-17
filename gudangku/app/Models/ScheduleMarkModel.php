@@ -27,4 +27,15 @@ class ScheduleMarkModel extends Model
     protected $table = 'schedule_mark';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'reminder_id', 'last_execute'];
+
+    public static function getAllReminderMark(){
+        $res = ScheduleMarkModel::select('inventory_name','inventory_category','reminder_desc','reminder_type','reminder_context','reminder.created_at','last_execute','username')
+            ->join('reminder','reminder.id','=','schedule_mark.reminder_id')
+            ->join('inventory','reminder.inventory_id','=','inventory.id')
+            ->join('users','reminder.created_by','=','users.id')
+            ->orderby('last_execute','DESC')
+            ->paginate(12);
+        
+        return $res;
+    }
 }
