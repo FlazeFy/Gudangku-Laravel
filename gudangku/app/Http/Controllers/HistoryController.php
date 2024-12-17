@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 // Helpers
 use App\Helpers\Generator;
 use App\Helpers\Audit;
+use App\Exports\HistoryExport;
 
 // Models
 use App\Models\HistoryModel;
 use App\Models\AdminModel;
-
-// Exports
-use App\Exports\HistoryExport;
-
-use Maatwebsite\Excel\Facades\Excel;
 
 class HistoryController extends Controller
 {
