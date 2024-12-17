@@ -13,9 +13,11 @@
             @include('landing.dashboard')
         @endif
         <div class="row">
+            @if(session()->get('role_key') == "user")
             <div class="col-lg-4 col-md-6 col-12 mx-auto" id="col-analyze">
                 @include('landing.analyze')
             </div>
+            @endif
             <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/inventory';" id="nav_inventory_btn">
                     @if($isMobile)
@@ -76,6 +78,18 @@
                     @endif
                 </button>
             </div>
+            @if(session()->get('role_key') != "user")
+            <div class="col-lg-4 col-md-6 col-12 mx-auto">
+                <button class="btn-feature mb-3" onclick="location.href='/error';" id="nav_error_history_btn">
+                    @if($isMobile)
+                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-triangle-exclamation me-2"></i> Error History</h2>
+                    @else
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size:100px"></i>
+                        <h2 class="mt-3" style="font-size:var(--textJumbo);">Error History</h2>
+                    @endif
+                </button>
+            </div>
+            @endif
         </div> 
     </div>
 @endsection

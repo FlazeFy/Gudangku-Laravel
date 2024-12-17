@@ -27,11 +27,12 @@ class ReminderSchedule
         
         if($summary){
             $firebaseRealtime = new FirebaseRealtime();
-            $server_datetime = new DateTime();
 
             foreach($summary as $index => $dt){
+                $server_datetime = new DateTime();
+
                 // User time config
-                $user_timezone = $dt->timezone;
+                $user_timezone = $dt->timezone ?? "+07:00";
                 $status_time_tz = $user_timezone[0];
                 $split = explode(':',str_replace('+','',str_replace('-','',$user_timezone)));
                 $hour_tz = $split[0];

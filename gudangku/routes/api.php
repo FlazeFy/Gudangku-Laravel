@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\UserApi\Commands as CommandsUserController;
 use App\Http\Controllers\Api\ReminderApi\Commands as CommandsReminderController;
 use App\Http\Controllers\Api\DictionaryApi\Queries as QueriesDictionaryController;
 use App\Http\Controllers\Api\DictionaryApi\Commands as CommandsDictionaryController;
+use App\Http\Controllers\Api\ErrorApi\Queries as QueriesErrorController;
 
 ######################### Public Route #########################
 
@@ -87,6 +88,10 @@ Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesHistoryController::class, 'get_all_history']);
     Route::delete('/destroy/{id}', [CommandsHistoryController::class, 'hard_delete_history_by_id']);
+});
+
+Route::prefix('/v1/error')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [QueriesErrorController::class, 'get_all_error']);
 });
 
 Route::prefix('/v1/dictionary')->group(function () {

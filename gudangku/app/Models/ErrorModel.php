@@ -31,4 +31,12 @@ class ErrorModel extends Model
     protected $table = 'errors';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'message', 'stack_trace', 'file', 'line', 'faced_by','is_fixed','created_at'];
+
+    public static function getAllError(){
+        $res = ErrorModel::select('*')
+            ->orderby('created_at','DESC')
+            ->paginate(12);
+        
+        return $res;
+    }
 }

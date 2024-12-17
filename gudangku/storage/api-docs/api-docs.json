@@ -437,6 +437,149 @@
                 }
             }
         },
+        "/api/v1/error": {
+            "get": {
+                "tags": [
+                    "Error"
+                ],
+                "summary": "Get all error history",
+                "description": "This request is used to get all error history recorded. This request is using MySql database, have a protected routes, and have template pagination.",
+                "operationId": "bf33aba81463d0c5fa3c23cfacc409aa",
+                "responses": {
+                    "200": {
+                        "description": "history fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "error history fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": 25
+                                                            },
+                                                            "message": {
+                                                                "type": "string",
+                                                                "example": "count(): Argument #1 ($value) must be of type Countable|array, null given"
+                                                            },
+                                                            "stack_trace": {
+                                                                "type": "string",
+                                                                "example": "... require_once('/Users/leonardh...')\\n#41 {main}"
+                                                            },
+                                                            "file": {
+                                                                "type": "string",
+                                                                "example": "ErrorApi/Queries.php"
+                                                            },
+                                                            "line": {
+                                                                "type": "number",
+                                                                "example": 20
+                                                            },
+                                                            "is_fixed": {
+                                                                "type": "boolean",
+                                                                "example": "0"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-09-20 22:53:47"
+                                                            },
+                                                            "faced_by": {
+                                                                "type": "string",
+                                                                "example": "2d98f524-de02-11ed-b5ea-0242ac120002"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "history failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "error history not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/history/destroy/{id}": {
             "delete": {
                 "tags": [
@@ -2543,7 +2686,7 @@
                 ],
                 "summary": "Get inventory detail html format by id",
                 "description": "This request is used to get inventory detail html format for document generate. This request is using MySQL database, and has protected routes.",
-                "operationId": "dd517c5b730e9e366d890e2331f93648",
+                "operationId": "00179737f78545d96e7e3fe696be1180",
                 "parameters": [
                     {
                         "name": "id",
@@ -3881,7 +4024,7 @@
                 ],
                 "summary": "Get all report",
                 "description": "This request is used to get all report. This request is using MySql database, have a protected routes, and have template pagination.",
-                "operationId": "b9cea5856eb0fcc283d94fd5ae6255b7",
+                "operationId": "d029cd8980b4c01c157b8677b1b61621",
                 "responses": {
                     "200": {
                         "description": "report fetched",
@@ -7798,6 +7941,10 @@
         {
             "name": "Dictionary",
             "description": "Dictionary"
+        },
+        {
+            "name": "Error",
+            "description": "Error"
         },
         {
             "name": "History",

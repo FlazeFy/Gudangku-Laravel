@@ -1,37 +1,40 @@
 <?php
 
-namespace App\Http\Controllers\Api\HistoryApi;
+namespace App\Http\Controllers\Api\ErrorApi;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 // Models
-use App\Models\HistoryModel;
+use App\Models\ErrorModel;
 use App\Models\AdminModel;
 
 class Queries extends Controller
 {
     /**
      * @OA\GET(
-     *     path="/api/v1/history",
-     *     summary="Get all history",
-     *     description="This request is used to get all history when user use the App. This request is using MySql database, have a protected routes, and have template pagination.",
-     *     tags={"History"},
+     *     path="/api/v1/error",
+     *     summary="Get all error history",
+     *     description="This request is used to get all error history recorded. This request is using MySql database, have a protected routes, and have template pagination.",
+     *     tags={"Error"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="history fetched",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="history fetched"),
+     *             @OA\Property(property="message", type="string", example="error history fetched"),
      *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="data", type="array",
      *                     @OA\Items(
-     *                         @OA\Property(property="id", type="string", example="6f59235e-c398-8a83-2f95-3f1fbe95ca6e"),
-     *                         @OA\Property(property="history_type", type="string", example="Create"),
-     *                         @OA\Property(property="history_context", type="string", example="Barang bawaan"),
+     *                         @OA\Property(property="id", type="string", example=25),
+     *                         @OA\Property(property="message", type="string", example="count(): Argument #1 ($value) must be of type Countable|array, null given"),
+     *                         @OA\Property(property="stack_trace", type="string", example="... require_once('/Users/leonardh...')\n#41 {main}"),
+     *                         @OA\Property(property="file", type="string", example="ErrorApi/Queries.php"),
+     *                         @OA\Property(property="line", type="number", example=20),
+     *                         @OA\Property(property="is_fixed", type="boolean", example="0"),
      *                         @OA\Property(property="created_at", type="string", format="date-time", example="2024-09-20 22:53:47"),
-     *                         @OA\Property(property="created_by", type="string", example="2d98f524-de02-11ed-b5ea-0242ac120002")
+     *                         @OA\Property(property="faced_by", type="string", example="2d98f524-de02-11ed-b5ea-0242ac120002")
      *                     )
      *                 ),
      *             )
@@ -50,7 +53,7 @@ class Queries extends Controller
      *         description="history failed to fetched",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="history not found")
+     *             @OA\Property(property="message", type="string", example="error history not found")
      *         )
      *     ),
      *     @OA\Response(
@@ -63,36 +66,31 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_all_history(Request $request)
+    public function get_all_error(Request $request)
     {
         try{
             $user_id = $request->user()->id;
+            $res = ErrorModel::getAllError();
             $check_admin = AdminModel::find($user_id);
-            $paginate = 12;
-
-            if($check_admin){
-                $res = HistoryModel::selectRaw('history.id, username, history_type, history_context, history.created_at')
-                    ->join('users','users.id','=','history.created_by')
-                    ->orderby('history.created_at', 'DESC')
-                    ->paginate($paginate);
-            } else {
-                $res = HistoryModel::select('*')
-                    ->where('created_by',$user_id)
-                    ->orderby('created_at', 'DESC')
-                    ->paginate($paginate);
-            }
             
-            if (count($res) > 0) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'history fetched',
-                    'data' => $res
-                ], Response::HTTP_OK);
+            if($check_admin){
+                if ($res) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'error history fetched',
+                        'data' => $res
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'error history not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'history not found',
-                ], Response::HTTP_NOT_FOUND);
+                    'message' => 'only admin can use this request',
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $e) {
             return response()->json([
