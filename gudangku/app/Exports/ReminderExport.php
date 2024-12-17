@@ -2,20 +2,19 @@
 
 namespace App\Exports;
 
-use App\Models\InventoryModel;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
-class InventoryExport implements FromCollection
+class ReminderExport implements FromCollection
 {
-    private $inventory;
+    private $reminder;
 
-    public function __construct($inventory)
+    public function __construct($reminder)
     {
-        $this->inventory = $inventory;
+        $this->inventory = $reminder;
     }
 
     public function collection()
     {
-        return $this->inventory;
+        return $this->reminder;
     }
 }

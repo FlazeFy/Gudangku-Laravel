@@ -82,6 +82,8 @@ Route::prefix('/user')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/error')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ErrorController::class, 'index']);
+
+    Route::post('/saveAsCsv', [ErrorController::class, 'save_as_csv']);
 });
 
 Route::prefix('/reminder')->middleware(['auth_v2:sanctum'])->group(function () {
