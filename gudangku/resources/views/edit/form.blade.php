@@ -231,6 +231,19 @@
                         text: "Something wrong. Please contact admin",
                         icon: "error"
                     });
+                } else {
+                    Swal.fire({
+                        title: "Failed!",
+                        text: response.responseJSON.message,
+                        icon: "error",
+                        allowOutsideClick: false, 
+                        allowEscapeKey: false, 
+                        confirmButtonText: "Back to Inventory", 
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/inventory'
+                        }
+                    });
                 }
             }
         });

@@ -8,12 +8,12 @@
 @php($role = session()->get('role_key'))
 
 @section('content')
-    <div class="content" style="max-width:1080px;">
-        @if($role == "user")
+    <div class="content">
+        @if($role == 0)
             @include('landing.dashboard')
         @endif
         <div class="row">
-            @if(session()->get('role_key') == "user")
+            @if($role == 0)
             <div class="col-lg-4 col-md-6 col-12 mx-auto" id="col-analyze">
                 @include('landing.analyze')
             </div>
@@ -21,10 +21,10 @@
             <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/inventory';" id="nav_inventory_btn">
                     @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-warehouse me-2"></i> @if($role == "user") My @endif Inventory</h2>
+                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-warehouse me-2"></i> @if($role == 0) My @endif Inventory</h2>
                     @else
                         <i class="fa-solid fa-warehouse" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">@if($role == "user") My @endif Inventory</h2>
+                        <h2 class="mt-3" style="font-size:var(--textJumbo);">@if($role == 0) My @endif Inventory</h2>
                     @endif
                 </button>
             </div>
@@ -39,12 +39,12 @@
                 </button>
             </div>
             <div class="col-lg-4 col-md-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/<?php if($role == 'user'){ echo 'calendar'; } else { echo 'user'; } ?>';">
+                <button class="btn-feature mb-3" onclick="location.href='/<?php if($role == 0){ echo 'calendar'; } else { echo 'user'; } ?>';">
                     @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-<?php if($role == "user"){ echo "calendar"; } else { echo "user"; } ?> me-2"></i> @if($role == "user") Calendar @else User @endif</h2>
+                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-<?php if($role == 0){ echo "calendar"; } else { echo "user"; } ?> me-2"></i> @if($role == 0) Calendar @else User @endif</h2>
                     @else
-                        <i class="fa-solid fa-<?php if($role == "user"){ echo "calendar"; } else { echo "user"; } ?>" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">@if($role == "user") Calendar @else User @endif</h2>
+                        <i class="fa-solid fa-<?php if($role == 0){ echo "calendar"; } else { echo "user"; } ?>" style="font-size:100px"></i>
+                        <h2 class="mt-3" style="font-size:var(--textJumbo);">@if($role == 0) Calendar @else User @endif</h2>
                     @endif
                 </button>
             </div>
@@ -78,7 +78,7 @@
                     @endif
                 </button>
             </div>
-            @if(session()->get('role_key') != "user")
+            @if($role == 1)
             <div class="col-lg-4 col-md-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/error';" id="nav_error_history_btn">
                     @if($isMobile)

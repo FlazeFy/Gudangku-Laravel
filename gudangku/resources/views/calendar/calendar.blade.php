@@ -231,7 +231,7 @@
             dayMaxEvents: 4,
             events: [],
             eventClick: function(info) {
-                window.location.href = "http://127.0.0.1:8000/event/detail/" + info.event.extendedProps.id;
+                window.location.href = "/inventory/edit/" + info.event.groupId;
             },
         });
         calendar.render()

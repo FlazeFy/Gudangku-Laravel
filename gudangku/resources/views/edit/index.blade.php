@@ -4,7 +4,8 @@
     <!-- JS Collection -->
     <script src="{{ asset('/usecases/fav_toogle_inventory_by_id_v1.0.0.js')}}"></script>
 
-    <div class="content" style="width:1280px;">
+    <div class="content">
+        @include('others.profile')
         <h2 class="text-white fw-bold mb-4" style="font-size:36px;">Edit Inventory</h2>
         <div class='d-flex justify-content-between'>
             <div>

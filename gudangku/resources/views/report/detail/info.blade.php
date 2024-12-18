@@ -146,7 +146,7 @@
                     `${data.report_desc ? `<p class="mt-2">${data.report_desc}</p>` : `<p class="text-secondary fst-italic mt-2">- No Description Provided -</p>`}`
                 }
                 <br>
-                ${(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist') && `
+                ${(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist') ? `
                     <div class="d-flex justify-content-between mt-3">
                         <div>
                             <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price: Rp. ${number_format(data.total_price, 0, ',', '.')}</h3>
@@ -155,83 +155,98 @@
                             <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Item: ${data.total_item}</h3>
                         </div>
                     </div>
-                `}
+                ` : ''}
             `)
 
             $('#report_item_tb tbody').empty()
-            data_item.forEach(dt => {
+            if(data_item.length > 0){
+                data_item.forEach(dt => {
+                    $('#report_item_tb tbody').append(`
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input check-inventory" type="checkbox" value="${dt.id}_${dt.item_name}_${dt.inventory_id}">
+                                </div>
+                            </td>
+                            <td>${dt.item_name}</td>
+                            <td>${dt.item_desc ?? '<span class="fst-italic text-secondary">- No Description Provided -</span>'}</td>
+                            <td>${dt.item_qty}</td>
+                            ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td>Rp. ${number_format(dt.item_price, 0, ',', '.')}</td>` : ''}
+                            <td>${getDateToContext(dt.created_at,'calendar')}</td>
+                            <td><button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit_${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button>
+                                <div class="modal fade" id="modalEdit_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h2 class="modal-title fw-bold" id="exampleModalLabel">Update Report Item : ${dt.item_name}</h2>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id='edit-report-item-${dt.id}'>
+                                                    <label>Name</label>
+                                                    <input class="form-control" type="text" name="item_name" value="${dt.item_name}">
+                                                    <label>Description</label>
+                                                    <textarea class="form-control mt-2" name="item_desc">${dt.item_desc ?? ''}</textarea>
+                                                    <label>Qty</label>
+                                                    <input class="form-control" type="number" name="item_qty" value="${dt.item_qty}" min="1">
+                                                    ${
+                                                        data.report_category.includes('Shopping Cart','Wishlist') ? `
+                                                        <label>Price</label>
+                                                        <input class="form-control" name="item_price" type="number" value="${dt.item_price}" min="1">` :''
+                                                    }
+                                                    <a class="btn btn-success mt-3 w-100 border-0" onclick="update_report_item('${dt.id}')" style="background:var(--successBG) !important;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_${dt.id}"><i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i></button>
+                                <div class="modal fade" id="modalDelete_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h2>Remove this item "${dt.item_name}" from report "${data.report_title}"?</h2>
+                                                <a class="btn btn-danger mt-4" onclick="delete_item('${dt.id}')">Yes, Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `)
+                });
+                $('#report_check_extra').html(`
+                    <a class='btn btn-primary me-2' onclick="check_all('.check-inventory','check'); checked_toggle_event();"><i class="fa-solid fa-check style="font-size:var(--textXLG);"></i> @if(!$isMobile) Check All @endif</a>
+                    <a class='btn btn-danger me-2' onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();"><i class="fa-solid fa-xmark style="font-size:var(--textXLG);"></i> @if(!$isMobile) Uncheck All @endif</a>
+                `)
+            } else {
                 $('#report_item_tb tbody').append(`
                     <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input check-inventory" type="checkbox" value="${dt.id}_${dt.item_name}_${dt.inventory_id}">
-                            </div>
-                        </td>
-                        <td>${dt.item_name}</td>
-                        <td>${dt.item_desc ?? '<span class="fst-italic text-secondary">- No Description Provided -</span>'}</td>
-                        <td>${dt.item_qty}</td>
-                        ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td>Rp. ${number_format(dt.item_price, 0, ',', '.')}</td>` : ''}
-                        <td>${getDateToContext(dt.created_at,'calendar')}</td>
-                        <td><button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit_${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button>
-                            <div class="modal fade" id="modalEdit_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Update Report Item : ${dt.item_name}</h2>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form id='edit-report-item-${dt.id}'>
-                                                <label>Name</label>
-                                                <input class="form-control" type="text" name="item_name" value="${dt.item_name}">
-                                                <label>Description</label>
-                                                <textarea class="form-control mt-2" name="item_desc">${dt.item_desc ?? ''}</textarea>
-                                                <label>Qty</label>
-                                                <input class="form-control" type="number" name="item_qty" value="${dt.item_qty}" min="1">
-                                                ${
-                                                    data.report_category.includes('Shopping Cart','Wishlist') ? `
-                                                    <label>Price</label>
-                                                    <input class="form-control" name="item_price" type="number" value="${dt.item_price}" min="1">` :''
-                                                }
-                                                <a class="btn btn-success mt-3 w-100 border-0" onclick="update_report_item('${dt.id}')" style="background:var(--successBG) !important;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_${dt.id}"><i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i></button>
-                            <div class="modal fade" id="modalDelete_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
-                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <h2>Remove this item "${dt.item_name}" from report "${data.report_title}"?</h2>
-                                            <a class="btn btn-danger mt-4" onclick="delete_item('${dt.id}')">Yes, Delete</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
+                        <td colspan='7'><p class="text-secondary fst-italic mt-2 text-center">- No Item Attached -</p></td>
                     </tr>
                 `)
-            });
-            $('#report_check_extra').html(`
-                <a class='btn btn-primary me-2' onclick="check_all('.check-inventory','check'); checked_toggle_event();"><i class="fa-solid fa-check style="font-size:var(--textXLG);"></i> @if(!$isMobile) Check All @endif</a>
-                <a class='btn btn-danger me-2' onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();"><i class="fa-solid fa-xmark style="font-size:var(--textXLG);"></i> @if(!$isMobile) Uncheck All @endif</a>
-            `)
+            }
 
             zoomableModal()
         } catch (error) {
             Swal.close();
             Swal.fire({
-                title: "Oops!",
-                text: "Failed to get the report",
-                icon: "error"
+                title: "Failed!",
+                text: "Something is wrong. Please try again",
+                icon: "error",
+                allowOutsideClick: false, 
+                allowEscapeKey: false, 
+                confirmButtonText: "Back to Report", 
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/report'
+                }
             });
         }
     };

@@ -288,6 +288,7 @@ class Queries extends Controller
      *             @OA\Property(property="message", type="string", example="inventory fetched"),
      *             @OA\Property(property="data", type="array",
      *                  @OA\Items(
+     *                      @OA\Property(property="id", type="string", example="6f59235e-c398-8a83-2f95-3f1fbe95ca6e"),
      *                      @OA\Property(property="inventory_name", type="string", example="Nike Air Force 1 High By You"),
      *                      @OA\Property(property="inventory_price", type="number", example=2249000),
      *                      @OA\Property(property="created_at", type="string", format="date-time", example="2024-03-19 02:37:58")
@@ -326,7 +327,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::select('inventory_name','inventory_price','created_at')
+            $res = InventoryModel::select('id','inventory_name','inventory_price','created_at')
                 ->where('created_by',$user_id)
                 ->whereNull('deleted_at')
                 ->get();

@@ -180,17 +180,18 @@ class InventoryTest extends TestCase
         $this->assertArrayHasKey('data', $data);
 
         foreach ($data['data'] as $dt) {
-            $check_object = ['inventory_name','inventory_price','created_at'];
+            $check_object = ['id','inventory_name','inventory_price','created_at'];
             foreach ($check_object as $col) {
                 $this->assertArrayHasKey($col, $dt);
             }
 
-            $check_not_null_str = ['inventory_name','created_at'];
+            $check_not_null_str = ['id','inventory_name','created_at'];
             foreach ($check_not_null_str as $col) {
                 $this->assertNotNull($dt[$col]);
                 $this->assertIsString($dt[$col]);
             }
 
+            $this->assertEquals(36,strlen($dt['id']));
             $this->assertNotNull($dt['inventory_price']);
             $this->assertIsInt($dt['inventory_price']);
             $this->assertGreaterThanOrEqual(0, $dt['inventory_price']);

@@ -1965,6 +1965,10 @@
                                             "type": "array",
                                             "items": {
                                                 "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                    },
                                                     "inventory_name": {
                                                         "type": "string",
                                                         "example": "Nike Air Force 1 High By You"

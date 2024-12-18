@@ -1,4 +1,4 @@
-@if($role == 'user')
+@if($role == 0)
     <div id="report_holder"></div>
 @else 
     <table class="table">
@@ -50,7 +50,7 @@
                 })
 
                 data.forEach(el => {
-                    if(role == 'user'){
+                    if(role == 0){
                         $(`#${item_holder}`).append(`
                             <button class="report-box mt-2" onclick="window.location.href='/report/detail/${el.id}'">
                                 <div class="d-flex justify-content-between mb-2">
@@ -88,7 +88,7 @@
                                     </div>
                                 ` : ''}
                                 <h6 class='date-text mt-2'>Created At : ${getDateToContext(el.created_at,'calendar')}</h6>
-                                ${ role != 'user' ? `<h6 class='date-text mt-2'>Created By : @${el.username}</h6>` : ''}
+                                ${ role == 1 ? `<h6 class='date-text mt-2'>Created By : @${el.username}</h6>` : ''}
                             </button>
                         `);
                     } else {

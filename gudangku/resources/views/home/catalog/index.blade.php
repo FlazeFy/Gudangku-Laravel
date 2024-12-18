@@ -51,7 +51,7 @@
     </head>
     <body class="antialiased">
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div class="content" style="width:1440px;;">
+            <div class="content">
                 @include('others.profile')
                 <h2 class="text-white fw-bold mb-4" style="font-size:36px;">My Inventory</h2>
                 <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
