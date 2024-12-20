@@ -6,6 +6,7 @@
 
     <div class="content">
         @include('others.profile')
+        @include('others.notification')
         <h2 class="text-white fw-bold mb-4" style="font-size:36px;">Edit Inventory</h2>
         <div class='d-flex justify-content-between'>
             <div>

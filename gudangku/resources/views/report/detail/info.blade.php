@@ -117,14 +117,14 @@
                 </div>
                 ${is_edit_mode ? 
                     `<label>Description</label>
-                    <textarea class='form-control' id='report_desc'>${data.report_desc}</textarea>
+                    <textarea class='form-control' id='report_desc'>${data.report_desc ?? ''}</textarea>
                     ${
-                        isMobile() && `
+                        isMobile() ? `
                             <div class='mt-4'>
                                 <h6 class='date-text'>Created At : ${created_at}</h6>
                                 <h6 class='date-text'>Last Updated : ${updated_at}</h6>
                             </div>
-                        `
+                        ` : ''
                     }
                     <a class="btn btn-success my-3 me-2" id='save-edit-modal-btn' data-bs-toggle='modal' data-bs-target='#update-validation-modal'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
                     <div class="modal fade" id="update-validation-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

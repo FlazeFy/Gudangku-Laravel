@@ -76,12 +76,23 @@ hr {
 }
 
 /* Modal */
-.modal-content, .swal2-popup {
+.modal-content, .swal2-popup, .popover {
     border-radius: var(--roundedJumbo) !important;
     background: var(--darkColor);
     border: 1.75px solid var(--primaryColor);
     color: var(--whiteColor);
     box-shadow: rgba(59, 130, 246, 0.35) 0px 6px 17px;
+}
+.popover{
+    max-width: 360px !important;
+}
+.popover .popover-header {
+    background: transparent;
+    margin-top: var(--spaceMD);
+    margin-bottom: 0 !important;
+    font-weight: bold;
+    padding-bottom: 0;
+    font-size: var(--spaceXMD);
 }
 .modal-content h2 {
     font-weight: 600;

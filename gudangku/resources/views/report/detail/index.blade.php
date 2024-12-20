@@ -9,6 +9,7 @@
 @section('content')
     <div class="content">
         @include('others.profile')
+        @include('others.notification')
         <h2 class="main-page-title">Report Detail</h2>
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-<?php if(!$isMobile){ echo "start"; } else { echo "end"; } ?>">

@@ -37,4 +37,13 @@ class ScheduleMarkModel extends Model
         
         return $is_paginate ? $res->paginate(12) : $res->get();
     }
+
+    public static function getAllReminderHistory($user_id,$is_paginate){
+        $res = ScheduleMarkModel::select('inventory.id','inventory_name','reminder_desc','reminder_type','reminder_context','last_execute')
+            ->join('reminder','reminder.id','=','schedule_mark.reminder_id')
+            ->join('inventory','reminder.inventory_id','=','inventory.id')
+            ->orderby('last_execute','DESC');
+        
+        return $is_paginate ? $res->paginate(12) : $res->get();
+    }
 }

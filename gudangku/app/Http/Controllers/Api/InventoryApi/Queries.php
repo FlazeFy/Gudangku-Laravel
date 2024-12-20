@@ -330,6 +330,7 @@ class Queries extends Controller
             $res = InventoryModel::select('id','inventory_name','inventory_price','created_at')
                 ->where('created_by',$user_id)
                 ->whereNull('deleted_at')
+                ->orderby('created_at','DESC')
                 ->get();
             
             if (count($res) > 0) {

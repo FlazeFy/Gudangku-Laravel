@@ -222,11 +222,11 @@
                                             </div>
                                             <div class="modal-body">
                                                 <h6 class='fw-bold'>Created At</h6>
-                                                <h6>${el.created_at}</h6>
+                                                <h6>${getDateToContext(el.created_at,'calendar')}</h6>
                                                 <h6 class='fw-bold mt-2'>Updated At</h6>
-                                                <h6>${el.updated_at || '-'}</h6>
+                                                <h6>${el.updated_at ? getDateToContext(el.updated_at,'calendar') : '-'}</h6>
                                                 <h6 class='fw-bold mt-2'>Deleted At</h6>
-                                                <h6>${el.deleted_at || '-'}</h6>
+                                                <h6>${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</h6>
                                             </div>
                                         </div>
                                     </div>
