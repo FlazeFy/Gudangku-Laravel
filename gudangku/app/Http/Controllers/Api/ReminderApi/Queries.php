@@ -159,7 +159,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $res = ScheduleMarkModel::getAllReminderHistory($user_id,true);
             
-            if ($res) {
+            if ($res['data']) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'reminder history fetched',

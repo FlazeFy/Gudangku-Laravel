@@ -48,6 +48,7 @@
                     <br>
                     @include('analyze.inventory_unit_vol')
                     @include('analyze.inventory_room')
+                    @include('analyze.inventory_merk')
                 </div>
             </div><br><br>
             @include('analyze.inventory_history')
@@ -74,6 +75,7 @@
                     $('.inventory_room').text(data.inventory_room)
                     $('.inventory_unit').text(data.inventory_unit)
                     $('.inventory_vol').text(data.inventory_vol)
+                    $('.inventory_merk').text(data.inventory_merk)
                     $('#created_at').text(getDateToContext(data.created_at,'calendar'))
                     $('#days_exist').text(count_time(data.created_at,null,'day'))
 
@@ -145,7 +147,9 @@
                     $('#diff_price_ammount').text(`Rp. ${number_format(Math.abs(data.inventory_price_analyze.diff_ammount_average_to_price), 0, ',', '.')}`)
                     $('#inventory_price_avg').text(`Rp. ${number_format(data.inventory_price_analyze.average_inventory_price, 0, ',', '.')}`)
                     $('#inventory_price_avg_category').text(`Rp. ${number_format(data.inventory_category_analyze.average_price, 0, ',', '.')}`)
+                    $('#inventory_price_avg_merk').text(`Rp. ${number_format(data.inventory_merk_analyze.average_price, 0, ',', '.')}`)
                     $('#total_inventory_category').text(data.inventory_category_analyze.total)
+                    $('#total_inventory_merk').text(data.inventory_merk_analyze.total)
                     $('#inventory_storage_rack').html(`${data.inventory_storage && `storage <span class='text-primary'>${data.inventory_storage}</span>`}${data.inventory_rack && `, rack <span class='text-primary'>${data.inventory_rack}</span>`}`)
                     $('#total_inventory_room').text(data.inventory_room_analyze.total)
                     $('#inventory_price_avg_room').text(`Rp. ${number_format(data.inventory_room_analyze.average_price, 0, ',', '.')}`)
@@ -166,7 +170,7 @@
                     generate_bar_chart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
 
                     $('#layout-holder').html(`
-                        <h3>6. The Room Layout</h3>
+                        <h3>7. The Room Layout</h3>
                         <p>You can find <span class='text-primary'>${data.inventory_name}</span> at storage <span class='text-primary'>${data.inventory_storage}</span>, layout <span class='text-primary'>${data.inventory_layout.layout}</span>.
                         This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about ${count_time(data.inventory_layout.created_at,null,'day')} days ago.
                         </p>

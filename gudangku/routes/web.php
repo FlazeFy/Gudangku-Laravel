@@ -65,7 +65,6 @@ Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HistoryController::class, 'index']);
-    Route::post('/delete/{id}', [HistoryController::class, 'hard_delete']);
     Route::post('/saveAsCsv', [HistoryController::class, 'save_as_csv']);
 });
 

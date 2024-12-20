@@ -1037,13 +1037,10 @@ class Queries extends Controller
                 $diff_price_avg = $res_price->average_inventory_price - $inventory->inventory_price;
                 $res_price->diff_ammount_average_to_price = $diff_price_avg;
                 $res_price->diff_status_average_to_price = $diff_price_avg < 0 ? 'More Exspensive' : 'More Cheaper';
-
                 $res_category = InventoryModel::getAnalyzeContext($user_id, 'inventory_category',$inventory->inventory_category);
-
                 $res_room = InventoryModel::getAnalyzeContext($user_id, 'inventory_room',$inventory->inventory_room);
-
+                $res_merk = InventoryModel::getAnalyzeContext($user_id, 'inventory_merk',$inventory->inventory_merk);
                 $res_unit = InventoryModel::getAnalyzeContext($user_id, 'inventory_unit',$inventory->inventory_unit);
-
                 $res_history = InventoryModel::getAnalyzeHistory($user_id,$inventory->id);
                 $res_report = ReportModel::getLastFoundInventoryReport($user_id,$inventory->id);
                 $res_montly_in_report = ReportModel::getInventoryMonthlyInReport($user_id,$inventory->id,$year);
@@ -1054,6 +1051,7 @@ class Queries extends Controller
                     'inventory_price' => $inventory->inventory_price,
                     'inventory_category' => $inventory->inventory_category,
                     'inventory_room' => $inventory->inventory_room,
+                    'inventory_merk' => $inventory->inventory_merk,
                     'inventory_storage' => $inventory->inventory_storage,
                     'inventory_rack' => $inventory->inventory_rack,
                     'inventory_unit' => $inventory->inventory_unit,
@@ -1066,6 +1064,7 @@ class Queries extends Controller
 
                 $res = (object) array_merge($res_info, [
                     'inventory_price_analyze' => $res_price,
+                    'inventory_merk_analyze' => $res_merk,
                     'inventory_category_analyze' => $res_category,
                     'inventory_room_analyze' => $res_room,
                     'inventory_unit_analyze' => $res_unit,
