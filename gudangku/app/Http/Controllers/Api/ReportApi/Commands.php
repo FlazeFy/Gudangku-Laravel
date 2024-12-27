@@ -102,7 +102,7 @@ class Commands extends Controller
                 }
                 return response()->json([
                     'status' => 'success',
-                    'message' => $extra." report item deleted",
+                    'message' => Generator::getMessageTemplate("delete", $extra." report item"),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -186,7 +186,7 @@ class Commands extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'report deleted',
+                    'message' => Generator::getMessageTemplate("delete", 'report'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -269,7 +269,7 @@ class Commands extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'report updated',
+                    'message' => Generator::getMessageTemplate("update", 'report'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -361,7 +361,7 @@ class Commands extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'report item updated',
+                        'message' => Generator::getMessageTemplate("update", 'report item'),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -1476,14 +1476,14 @@ class Commands extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'File analyzed successfully',
+                        'message' => Generator::getMessageTemplate("analyze", 'file'),
                         'data' => $res
                     ], Response::HTTP_OK);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'you need to attached a file',
+                    'message' => Generator::getMessageTemplate("custom", 'you need to attach a file'),
                 ], Response::HTTP_UNPROCESSABLE_CONTENT);
             }
         } catch(\Exception $e) {

@@ -760,7 +760,7 @@ class Queries extends Controller
      *         description="inventory detail document generated",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="inventory detail generated"),
+     *             @OA\Property(property="message", type="string", example="inventory detail document generated"),
      *             @OA\Property(property="data", type="string", example="<p>Ini document</p>"),
      *         )
      *     ),
@@ -802,7 +802,7 @@ class Queries extends Controller
      
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory detail generated',
+                    'message' => Generator::getMessageTemplate("generate", "inventory detail document"),
                     'data' => $html
                 ], Response::HTTP_OK);
             } else {
@@ -839,7 +839,7 @@ class Queries extends Controller
      *         description="room document generated",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="room generated"),
+     *             @OA\Property(property="message", type="string", example="inventory room document generated"),
      *             @OA\Property(property="data", type="string", example="<p>Ini document</p>"),
      *         )
      *     ),
@@ -881,7 +881,7 @@ class Queries extends Controller
      
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory detail generated',
+                    'message' => Generator::getMessageTemplate("generate", "inventory room document"),
                     'data' => $html
                 ], Response::HTTP_OK);
             } else {
@@ -1075,7 +1075,7 @@ class Queries extends Controller
                 ]);
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory analyzed',
+                    'message' => Generator::getMessageTemplate("analyze", "inventory"),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {

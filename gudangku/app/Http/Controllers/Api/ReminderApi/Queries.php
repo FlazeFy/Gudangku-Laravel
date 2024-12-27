@@ -80,7 +80,7 @@ class Queries extends Controller
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'reminder mark fetched',
+                        'message' => Generator::getMessageTemplate("fetch", 'reminder mark'),
                         'data' => $res
                     ], Response::HTTP_OK);
                 } else {
@@ -165,7 +165,7 @@ class Queries extends Controller
             if ($res->isNotEmpty()) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'reminder history fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'reminder history'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {

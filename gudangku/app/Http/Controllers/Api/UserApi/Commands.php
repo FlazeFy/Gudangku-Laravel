@@ -133,7 +133,7 @@ class Commands extends Controller
      *         description="profile updated",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="profile has been updated")
+     *             @OA\Property(property="message", type="string", example="profile updated")
      *         )
      *     ),
      *     @OA\Response(
@@ -195,7 +195,7 @@ class Commands extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'profile has been updated',
+                        'message' => Generator::getMessageTemplate("update", 'profile'),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([

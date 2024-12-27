@@ -71,7 +71,7 @@ class Commands extends Controller
             if($rows > 0){
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'history permentally deleted',
+                    'message' => Generator::getMessageTemplate("permentally delete", 'history'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

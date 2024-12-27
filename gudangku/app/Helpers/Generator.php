@@ -262,7 +262,7 @@ class Generator
     }
 
     public static function getMessageTemplate($type, $ctx){
-        if (in_array($type, ['create', 'update', 'delete', 'permentally delete', 'fetch'])) {
+        if (in_array($type, ['create', 'update', 'delete', 'permentally delete', 'fetch','recover','analyze','generate'])) {
             $res = "$ctx ".$type."ed";            
         } else if($type == "not_found"){
             $res = "$ctx not found";

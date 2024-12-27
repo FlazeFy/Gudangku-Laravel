@@ -327,7 +327,7 @@ class Commands extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'reminder deleted',
+                    'message' => Generator::getMessageTemplate("permentally delete", 'reminder'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

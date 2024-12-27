@@ -104,7 +104,7 @@ class Commands extends Controller
                 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory deleted',
+                    'message' => Generator::getMessageTemplate("delete", 'inventory'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -193,14 +193,14 @@ class Commands extends Controller
                         if (!in_array($file_ext, $this->allowed_file_type)) {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
+                                'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
                             ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         // Validate file size
                         if ($file->getSize() > $this->max_size_file) {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
+                                'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
                             ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
         
@@ -211,7 +211,7 @@ class Commands extends Controller
                         } catch (\Exception $e) {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'Failed to upload the file',
+                                'message' => Generator::getMessageTemplate("unknown_error", null),
                             ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     }
@@ -232,7 +232,7 @@ class Commands extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'inventory image updated',
+                        'message' => Generator::getMessageTemplate("update", 'inventory image'),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -312,7 +312,7 @@ class Commands extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory permentally deleted',
+                    'message' => Generator::getMessageTemplate("permentally delete", 'inventory'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -394,7 +394,7 @@ class Commands extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory updated',
+                    'message' => Generator::getMessageTemplate("update", 'inventory'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -472,7 +472,7 @@ class Commands extends Controller
                 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory recovered',
+                    'message' => Generator::getMessageTemplate("recover", 'inventory'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -560,14 +560,14 @@ class Commands extends Controller
                         if (!in_array($file_ext, $this->allowed_file_type)) {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
+                                'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
                             ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
                         // Validate file size
                         if ($file->getSize() > $this->max_size_file) {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
+                                'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
                             ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
         
@@ -577,8 +577,8 @@ class Commands extends Controller
                             $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
                         } catch (\Exception $e) {
                             return response()->json([
-                                'status' => 'failed',
-                                'message' => 'Failed to upload the file',
+                                'status' => 'error',
+                                'message' => Generator::getMessageTemplate("unknown_error", null),
                             ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     }
@@ -758,7 +758,7 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'inventory is already exist',
+                        'message' => Generator::getMessageTemplate("conflict", "inventory name"),
                     ], Response::HTTP_CONFLICT);
                 }
             }
@@ -854,12 +854,12 @@ class Commands extends Controller
                         Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
                         return response()->json([
                             'status' => 'success',
-                            'message' => "inventory layout updated and impacted to $rows_inventory inventory",
+                            'message' => Generator::getMessageTemplate("custom", "inventory layout updated and impacted to $rows_inventory inventory"),
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'nothing has change',
+                            'message' => Generator::getMessageTemplate("custom", "inventory layout updated. but nothing has changed"),
                         ], Response::HTTP_OK);
                     }
                 } else {
@@ -933,7 +933,7 @@ class Commands extends Controller
                 if($rows){
                     return response()->json([
                         'status' => 'success',
-                        'message' => "inventory layout has been used",
+                        'message' => Generator::getMessageTemplate("conflict", "inventory layout"),
                     ], Response::HTTP_CONFLICT);
                 } else {
                     $is_success = false;
@@ -1068,7 +1068,7 @@ class Commands extends Controller
                 }
             } else {
                 $rows_layout = InventoryLayoutModel::destroy($id);
-                $msg = "$storage is deleted";
+                $msg = Generator::getMessageTemplate("delete", $storage);
                 if($rows_layout > 0){
                     $is_success = true;
                     Audit::createHistory('Delete Storage', $msg, $user_id);
@@ -1108,7 +1108,7 @@ class Commands extends Controller
             if($is_success){
                 return response()->json([
                     'status' => 'success',
-                    'message' => "inventory layout coordinate deleted$extra_msg",
+                    'message' => Generator::getMessageTemplate("custom", "inventory layout coordinate deleted$extra_msg"),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

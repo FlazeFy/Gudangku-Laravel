@@ -132,7 +132,7 @@ class Queries extends Controller
                 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'report fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'report'),
                     'data' => $res,
                     'report_header' => $res_header
                 ], Response::HTTP_OK);
@@ -247,7 +247,7 @@ class Queries extends Controller
                 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'report fetched',
+                    'message' =>  Generator::getMessageTemplate("fetch", 'report'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
@@ -437,7 +437,7 @@ class Queries extends Controller
                 if(Validation::getValidateUUID($filter_in)){
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Validation Failed : Selected item not valid',
+                        'message' =>  Generator::getMessageTemplate("custom", 'selected item not valid'),
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }
@@ -448,7 +448,7 @@ class Queries extends Controller
      
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'report generated',
+                    'message' => Generator::getMessageTemplate("generate", 'report'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
