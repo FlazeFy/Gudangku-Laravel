@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Api\DictionaryApi;
-
 use App\Http\Controllers\Controller;
-
-// Models
-use App\Models\DictionaryModel;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+
+// Model
+use App\Models\DictionaryModel;
+
+// Helper
+use App\Helpers\Generator;
 
 class Queries extends Controller
 {
@@ -77,19 +78,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'dictionary fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'dictionary'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'dictionary not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'dictionary'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

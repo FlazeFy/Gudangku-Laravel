@@ -11,6 +11,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 // Helpers
 use App\Helpers\Document;
 use App\Helpers\Validation;
+use App\Helpers\Generator;
 
 // Models
 use App\Models\ReportModel;
@@ -138,13 +139,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'report'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -252,13 +253,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'report'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -357,20 +358,20 @@ class Queries extends Controller
                    
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'report fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'report'),
                     'data' => $res,
                     'data_item' => $res_item
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'report'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -453,13 +454,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'report'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

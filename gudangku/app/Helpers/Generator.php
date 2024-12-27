@@ -236,7 +236,7 @@ class Generator
                 return 'No text detected in the image.';
             }
         } catch (\Exception $e) {
-            return 'Error during OCR process: ' . $e->getMessage();
+            return 'Error during OCR process:';
         }
     }
 
@@ -256,6 +256,26 @@ class Generator
             }
 
             $res[] = $string;
+        }
+
+        return $res;
+    }
+
+    public static function getMessageTemplate($type, $ctx){
+        if (in_array($type, ['create', 'update', 'delete', 'permentally delete', 'fetch'])) {
+            $res = "$ctx ".$type."ed";            
+        } else if($type == "not_found"){
+            $res = "$ctx not found";
+        } else if($type == "unknown_error"){
+            $res = "something wrong. please contact admin";
+        } else if($type == "conflict"){
+            $res = "$ctx has been used. try another";
+        } else if($type == "custom"){
+            $res = "$ctx";
+        } else if($type == "permission"){
+            $res = "permission denied. only $ctx can use this feature";
+        } else {
+            $res = "failed to get respond message";
         }
 
         return $res;

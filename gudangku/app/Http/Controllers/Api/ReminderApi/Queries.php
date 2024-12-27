@@ -9,6 +9,9 @@ use App\Http\Controllers\Controller;
 use App\Models\ScheduleMarkModel;
 use App\Models\AdminModel;
 
+// Helper
+use App\Helpers\Generator;
+
 class Queries extends Controller
 {
     /**
@@ -45,7 +48,7 @@ class Queries extends Controller
      *         description="protected route need to include sign in token as authorization bearer",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | only admin can use this request")
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | permission denied. only admin can use this request")
      *         )
      *     ),
      *     @OA\Response(
@@ -83,19 +86,19 @@ class Queries extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'reminder mark not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'reminder mark'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'only admin can use this request',
+                    'message' => Generator::getMessageTemplate("permission", 'admin'),
                 ], Response::HTTP_UNAUTHORIZED);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -159,7 +162,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $res = ScheduleMarkModel::getAllReminderHistory($user_id,true);
             
-            if ($res['data']) {
+            if ($res->isNotEmpty()) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'reminder history fetched',
@@ -168,13 +171,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'reminder history not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'reminder history'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

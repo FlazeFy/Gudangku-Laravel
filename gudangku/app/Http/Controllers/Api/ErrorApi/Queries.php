@@ -5,7 +5,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
-// Models
+// Helper
+use App\Helpers\Generator;
+
+// Model
 use App\Models\ErrorModel;
 use App\Models\AdminModel;
 
@@ -45,7 +48,7 @@ class Queries extends Controller
      *         description="protected route need to include sign in token as authorization bearer",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | only admin can use this request")
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | permission denied. only admin can use this feature")
      *         )
      *     ),
      *     @OA\Response(
@@ -77,25 +80,25 @@ class Queries extends Controller
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'error history fetched',
+                        'message' => Generator::getMessageTemplate("fetch", 'error history'),
                         'data' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'error history not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'error history'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'only admin can use this request',
+                    'message' => Generator::getMessageTemplate("permission", 'admin'),
                 ], Response::HTTP_UNAUTHORIZED);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -89,19 +89,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'stats fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats failed to fetched',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -187,19 +187,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'stats fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
-                'status' => $e->getMessage(),
-                'message' => 'something wrong. please contact admin',
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -273,19 +273,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'stats fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -359,19 +359,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'stats fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats failed to fetched',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -470,19 +470,19 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'stats fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -576,19 +576,19 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'stats fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -690,19 +690,19 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'stats fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -805,19 +805,19 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'stats fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'stats not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -913,7 +913,7 @@ class Queries extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'stats fetched',
+                'message' => Generator::getMessageTemplate("fetch", 'stats'),
                 'data' => [
                     'total_item' => $total_item ? $total_item->total : null,
                     'total_fav' => $total_fav ? $total_fav->total : null,
@@ -926,7 +926,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

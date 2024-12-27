@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Api\ReportApi;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Smalot\PdfParser\Parser;
 use thiagoalessio\TesseractOCR\TesseractOCR;
@@ -17,9 +18,6 @@ use App\Helpers\Audit;
 use App\Helpers\Validation;
 use App\Helpers\Firebase;
 use App\Helpers\Generator;
-
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class Commands extends Controller
 {
@@ -109,13 +107,13 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report item not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'report item'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -193,13 +191,13 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'report'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -276,13 +274,13 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'report not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'report'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -368,14 +366,14 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'report item not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'report item'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -527,26 +525,26 @@ class Commands extends Controller
                         } else {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'report item not found',
+                                'message' => Generator::getMessageTemplate("not_found", 'report item'),
                             ], Response::HTTP_NOT_FOUND);
                         }
                     } else {
                         return response()->json([
                             'status' => 'error',
-                            'message' => 'something wrong. please contact admin',
+                            'message' => Generator::getMessageTemplate("unknown_error", null),
                         ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'report not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'report'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }   
@@ -726,14 +724,14 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'something wrong. please contact admin',
+                        'message' => Generator::getMessageTemplate("unknown_error", null),
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -984,7 +982,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -1276,7 +1274,7 @@ class Commands extends Controller
                             } else {
                                 return response()->json([
                                     'status' => 'error',
-                                    'message' => 'something wrong. please contact admin',
+                                    'message' => Generator::getMessageTemplate("unknown_error", null),
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
                         } else {
@@ -1297,7 +1295,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -1491,7 +1489,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

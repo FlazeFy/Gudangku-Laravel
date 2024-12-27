@@ -81,21 +81,21 @@
                 var allMsg = null
                 var icon = `<i class='fa-solid fa-triangle-exclamation'></i> `
 
-                if (response && response.responseJSON && response.responseJSON.hasOwnProperty('result')) {   
+                if (response && response.responseJSON && response.responseJSON.hasOwnProperty('message')) {   
                     //Error validation
-                    if(typeof response.responseJSON.result === "string"){
-                        allMsg = response.responseJSON.result
+                    if(typeof response.responseJSON.message === "string"){
+                        allMsg = response.responseJSON.message
                     } else {
-                        if(response.responseJSON.result.hasOwnProperty('username')){
-                            usernameMsg = response.responseJSON.result.username[0]
+                        if(response.responseJSON.message.hasOwnProperty('username')){
+                            usernameMsg = response.responseJSON.message.username[0]
                         }
-                        if(response.responseJSON.result.hasOwnProperty('password')){
-                            passMsg = response.responseJSON.result.password[0]
+                        if(response.responseJSON.message.hasOwnProperty('password')){
+                            passMsg = response.responseJSON.message.password[0]
                         }
                     }
                     
                 } else if(response && response.responseJSON && response.responseJSON.hasOwnProperty('errors')){
-                    allMsg = response.responseJSON.errors.result[0]
+                    allMsg = response.responseJSON.errors.message[0]
                 } else {
                     allMsg = errorMessage
                 }

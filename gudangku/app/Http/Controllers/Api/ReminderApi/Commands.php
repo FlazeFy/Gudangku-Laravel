@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api\ReminderApi;
-
 use App\Http\Controllers\Controller;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Kreait\Firebase\Factory;
@@ -49,10 +48,10 @@ class Commands extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="inventory not found",
+     *         description="reminder not found",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="inventory not found")
+     *             @OA\Property(property="message", type="string", example="reminder not found")
      *         )
      *     ),
      *     @OA\Response(
@@ -125,12 +124,12 @@ class Commands extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'reminder created',
+                        'message' => Generator::getMessageTemplate("create", 'reminder'),
                     ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'inventory not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'reminder'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
@@ -142,7 +141,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -166,7 +165,7 @@ class Commands extends Controller
      *         description="protected route need to include sign in token as authorization bearer",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | only admin can use this request")
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | permission denied. only admin can use this request")
      *         )
      *     ),
      *     @OA\Response(
@@ -237,25 +236,25 @@ class Commands extends Controller
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'reminder not found',
+                            'message' => Generator::getMessageTemplate("not_found", 'reminder'),
                         ], Response::HTTP_NOT_FOUND);
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'reminder not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'reminder'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'only admin can use this request',
+                    'message' => Generator::getMessageTemplate("permission", 'admin'),
                 ], Response::HTTP_UNAUTHORIZED);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -333,13 +332,13 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'reminder not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'reminder'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

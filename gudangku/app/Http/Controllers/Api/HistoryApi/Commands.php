@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Api\HistoryApi;
-
 use App\Http\Controllers\Controller;
-
-// Models
-use App\Models\HistoryModel;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+
+// Model
+use App\Models\HistoryModel;
+
+// Helper
+use App\Helpers\Generator;
 
 class Commands extends Controller
 {
@@ -75,13 +76,13 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'history not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'history'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

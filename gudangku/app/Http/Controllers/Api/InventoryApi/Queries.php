@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api\InventoryApi;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -11,6 +10,7 @@ use Illuminate\Http\Response;
 
 // Helpers
 use App\Helpers\Document;
+use App\Helpers\Generator;
 
 // Models
 use App\Models\InventoryModel;
@@ -176,19 +176,19 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -256,19 +256,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -336,19 +336,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -412,19 +412,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -498,19 +498,19 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory layout fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'inventory layout'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory layout not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory layout'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -607,20 +607,20 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
                     'data' => $res,
                     'stats' => $stats
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -722,20 +722,20 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'inventory fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
                     'data' => $res,
                     'reminder' => count($reminder) > 0 ? $reminder : null
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -777,7 +777,7 @@ class Queries extends Controller
      *         description="inventory detail document failed to generated",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="inventory detail not found")
+     *             @OA\Property(property="message", type="string", example="inventory not found")
      *         )
      *     ),
      *     @OA\Response(
@@ -808,13 +808,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory detail not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -856,7 +856,7 @@ class Queries extends Controller
      *         description="room document failed to generated",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="room not found")
+     *             @OA\Property(property="message", type="string", example="inventory not found")
      *         )
      *     ),
      *     @OA\Response(
@@ -887,13 +887,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory detail not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -1081,13 +1081,13 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'inventory not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

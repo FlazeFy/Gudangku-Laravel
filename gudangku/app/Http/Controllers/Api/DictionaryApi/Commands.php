@@ -5,9 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
-// Models
-use App\Models\dictionaryModel;
+// Model
+use App\Models\DictionaryModel;
+
+// Helper
 use App\Helpers\Validation;
+use App\Helpers\Generator;
 
 class Commands extends Controller
 {
@@ -78,19 +81,19 @@ class Commands extends Controller
                 if($rows > 0){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'dictionary permentally deleted',
+                        'message' => Generator::getMessageTemplate("permentally delete", 'dictionary'),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'dictionary not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'dictionary'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } 
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -178,7 +181,7 @@ class Commands extends Controller
                 if($isUsedName){
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'dictionary name has been used. try another',
+                        'message' => Generator::getMessageTemplate("conflict", 'dictionary name'),
                     ], Response::HTTP_CONFLICT);
                 } else {
                     // Service : Create
@@ -191,12 +194,12 @@ class Commands extends Controller
                     if($rows){
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'dictionary created',
+                            'message' => Generator::getMessageTemplate("create", 'dictionary'),
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'error',
-                            'message' => 'something wrong. please contact admin',
+                            'message' => Generator::getMessageTemplate("unknown_error", null),
                         ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 }
@@ -204,7 +207,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
