@@ -1,4 +1,4 @@
-<form action="/report/detail/{{$id}}/toogleEdit" method="POST" class="d-inline">
+<form action="/report/detail/{{$id}}/toogle_edit" method="POST" class="d-inline">
     @csrf
     @php($selected = session()->get('toogle_edit_report'))
     <input hidden value="<?php 

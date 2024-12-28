@@ -341,7 +341,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'validation failed : '.$validator->errors()
+                    'message' => Generator::getMessageTemplate("validation_failed", $validator->errors())
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {   
                 $user_id = $request->user()->id;
@@ -452,7 +452,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'validation failed : '.$validator->errors()
+                    'message' => Generator::getMessageTemplate("validation_failed", $validator->errors())
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {   
                 $user_id = $request->user()->id;
@@ -464,7 +464,7 @@ class Commands extends Controller
                     if (Validation::getValidateUUID($request->list_id)) {
                         return response()->json([
                             'status' => 'error',
-                            'message' => 'Validation failed: list item ID is not a valid UUID'
+                            'message' => Generator::getMessageTemplate("validation_failed", 'list item ID is not a valid UUID')
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
@@ -610,7 +610,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'validation failed : '.$validator->errors()
+                    'message' => Generator::getMessageTemplate("validation_failed", $validator->errors())
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {   
                 $user_id = $request->user()->id;
@@ -706,18 +706,18 @@ class Commands extends Controller
                     if($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == ""){
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'report created and its item',
+                            'message' => Generator::getMessageTemplate("create", 'report'),
                         ], Response::HTTP_CREATED);
                     } else if($failed_exec > 0 && $success_exec > 0){
                         return response()->json([
                             'status' => 'success',
-                            'message' => "report created and some item has been added: $success_exec. About $failed_exec inventory failed to add",
+                            'message' => Generator::getMessageTemplate("custom", "report created and some item has been added: $success_exec. about $failed_exec inventory failed to add"),
                             'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'report created but failed to add item report',
+                            'message' => Generator::getMessageTemplate("custom", 'report created but failed to add item report'),
                             'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
                         ], Response::HTTP_CREATED);
                     }
@@ -854,14 +854,14 @@ class Commands extends Controller
                     if (!in_array($file_ext, $this->allowed_file_type)) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'The file must be a '.implode(', ', $this->allowed_analyze_file_type).' file type',
+                            'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_analyze_file_type).' file type'),
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     // Validate file size
                     if ($file->getSize() > $this->max_size_analyze_file) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'The file size must be under '.($this->max_size_analyze_file/1000000).' Mb',
+                            'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_analyze_file/1000000).' Mb'),
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
@@ -894,7 +894,7 @@ class Commands extends Controller
                     if (empty($items) && isset($lines[0])) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'Report analyzed : But no item found on the document',
+                            'message' => Generator::getMessageTemplate("custom", 'report analyzed : but no item found on the document'),
                             'data' => null,
                         ], Response::HTTP_NOT_FOUND);
                     } else {
@@ -950,7 +950,7 @@ class Commands extends Controller
 
                             return response()->json([
                                 'status' => 'success',
-                                'message' => 'Report analyzed',
+                                'message' => Generator::getMessageTemplate("analyze", 'report'),
                                 'data' => [
                                     'analyze_item' => $items,
                                     'found_inventory_data' => $mapping_inventory,
@@ -965,7 +965,7 @@ class Commands extends Controller
                         } else {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'Report analyzed : No similar inventory found based on the document item',
+                                'message' => Generator::getMessageTemplate("custom", 'Report analyzed : No similar inventory found based on the document item'),
                                 'data' => [
                                     'not_existing_item' => $items
                                 ],
@@ -976,7 +976,7 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'you need to attached a file',
+                    'message' => Generator::getMessageTemplate("custom", 'you need to attach a file'),
                 ], Response::HTTP_UNPROCESSABLE_CONTENT);
             }
         } catch(\Exception $e) {
@@ -1113,14 +1113,14 @@ class Commands extends Controller
                     if (!in_array($file_ext, $this->allowed_file_type)) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'The file must be a '.implode(', ', $this->allowed_analyze_file_type).' file type',
+                            'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_analyze_file_type).' file type'),
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     // Validate file size
                     if ($file->getSize() > $this->max_size_analyze_file) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'The file size must be under '.($this->max_size_analyze_file/1000000).' Mb',
+                            'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_analyze_file/1000000).' Mb'),
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
@@ -1161,7 +1161,7 @@ class Commands extends Controller
                     if (empty($items) && isset($lines[0])) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'Report analyzed : But no item found on the document',
+                            'message' => Generator::getMessageTemplate("custom", 'report analyzed : but no item found on the document'),
                             'data' => null,
                         ], Response::HTTP_NOT_FOUND);
                     } else {
@@ -1253,7 +1253,7 @@ class Commands extends Controller
                                 if($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == ""){
                                     return response()->json([
                                         'status' => 'success',
-                                        'message' => 'report created and its item',
+                                        'message' => Generator::getMessageTemplate("create", 'report'),
                                         'data' => [
                                             'id' => $id_report
                                         ]
@@ -1261,13 +1261,13 @@ class Commands extends Controller
                                 } else if($failed_exec > 0 && $success_exec > 0){
                                     return response()->json([
                                         'status' => 'success',
-                                        'message' => "report created and some item has been added: $success_exec. About $failed_exec inventory failed to add",
+                                        'message' => Generator::getMessageTemplate("custom", "report created and some item has been added: $success_exec. About $failed_exec inventory failed to add"),
                                         'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
                                     ], Response::HTTP_OK);
                                 } else {
                                     return response()->json([
                                         'status' => 'success',
-                                        'message' => 'report created but failed to add item report',
+                                        'message' => Generator::getMessageTemplate("custom", 'report created but failed to add item report'),
                                         'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
                                     ], Response::HTTP_OK);
                                 }
@@ -1280,7 +1280,7 @@ class Commands extends Controller
                         } else {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'Report analyzed : No similar inventory found based on the document item',
+                                'message' => Generator::getMessageTemplate("custom", 'Report analyzed : No similar inventory found based on the document item'),
                                 'data' => null,
                             ], Response::HTTP_NOT_FOUND);
                         }
@@ -1289,7 +1289,7 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'you need to attached a file',
+                    'message' => Generator::getMessageTemplate("custom", 'you need to attach a file'),
                 ], Response::HTTP_UNPROCESSABLE_CONTENT);
             }
         } catch(\Exception $e) {
@@ -1387,14 +1387,14 @@ class Commands extends Controller
                     if (!in_array($file_ext, $this->allowed_file_type)) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'The file must be a '.implode(', ', $this->allowed_file_type).' file type',
+                            'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                     // Validate file size
                     if ($file->getSize() > $this->max_size_file) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'The file size must be under '.($this->max_size_file/1000000).' Mb',
+                            'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 

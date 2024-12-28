@@ -274,7 +274,7 @@ class Commands extends Controller
      *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
      *     ),
      *     @OA\Response(
-     *         response=201,
+     *         response=200,
      *         description="reminder deleted",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),

@@ -18,16 +18,135 @@
                 "operationId": "26ae6f7a2668f358293a502309985206",
                 "responses": {
                     "200": {
-                        "description": "{user_data}"
+                        "description": "Inventory details fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "83ce75db-4016-d87c-2c3c-db1e222d0001"
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "flazefy"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "flazen.edu@gmail.com"
+                                                },
+                                                "telegram_user_id": {
+                                                    "type": "string",
+                                                    "example": "123456789"
+                                                },
+                                                "telegram_is_valid": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "firebase_fcm_token": {
+                                                    "type": "string",
+                                                    "example": "ddLEuWR2Q_isCmzHTM8UR4:APA91bEmY8TDmH3ZJtKgXw95wFDKLr53FGA2JArDTiN4jzSWxiGzf9VUECYN2oeqYV"
+                                                },
+                                                "line_user_id": {
+                                                    "type": "string",
+                                                    "example": "U3356dbe737f22z278e2ba81c71ec5"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "+628123456789"
+                                                },
+                                                "timezone": {
+                                                    "type": "string",
+                                                    "example": "+07:00"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-03-14 02:28:37"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-10-25 09:37:20"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "{validation_msg}"
+                        "description": "{validation_msg}",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "{field validation message}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Wrong username or password"
+                        "description": "account is not found or have wrong password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "wrong username or password"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -524,7 +643,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "you need to include the authorization token from login | only admin can use this request"
+                                            "example": "you need to include the authorization token from login | permission denied. only admin can use this feature"
                                         }
                                     },
                                     "type": "object"
@@ -840,7 +959,24 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "inventory deleted"
+                        "description": "inventory deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -931,7 +1067,24 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "inventory image updated"
+                        "description": "inventory image updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory image updated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -1022,7 +1175,24 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "inventory permentally deleted"
+                        "description": "inventory permentally deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory permentally deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -1113,7 +1283,24 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "inventory updated"
+                        "description": "inventory updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory updated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -1204,7 +1391,24 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "inventory recovered"
+                        "description": "inventory recovered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory recovered"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -1478,7 +1682,24 @@
                 "operationId": "1331e3da20b1fb761c3225c7c994df88",
                 "responses": {
                     "201": {
-                        "description": "inventory created"
+                        "description": "inventory created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory created, its called product A"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "409": {
                         "description": "Data is already exist",
@@ -1589,7 +1810,24 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "inventory layout updated"
+                        "description": "inventory layout updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory layout updated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -1688,7 +1926,24 @@
                 "operationId": "301030d32cd3c3ee9b3a5ec047594e5e",
                 "responses": {
                     "201": {
-                        "description": "inventory layout coordinate created"
+                        "description": "inventory layout coordinate created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory layout coordinate created"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -1767,7 +2022,24 @@
                 "operationId": "ae80b67dad513d00fbb6277ca9ad5095",
                 "responses": {
                     "200": {
-                        "description": "inventory layout coordinate deleted"
+                        "description": "inventory layout coordinate deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory layout coordinate deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -2716,7 +2988,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "inventory detail generated"
+                                            "example": "inventory detail document generated"
                                         },
                                         "data": {
                                             "type": "string",
@@ -2760,7 +3032,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "inventory detail not found"
+                                            "example": "inventory not found"
                                         }
                                     },
                                     "type": "object"
@@ -2829,7 +3101,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "room generated"
+                                            "example": "inventory room document generated"
                                         },
                                         "data": {
                                             "type": "string",
@@ -2873,7 +3145,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "room not found"
+                                            "example": "inventory not found"
                                         }
                                     },
                                     "type": "object"
@@ -3249,7 +3521,7 @@
                         }
                     },
                     "404": {
-                        "description": "inventory not found",
+                        "description": "reminder not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3260,7 +3532,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "inventory not found"
+                                            "example": "reminder not found"
                                         }
                                     },
                                     "type": "object"
@@ -3356,7 +3628,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "you need to include the authorization token from login | only admin can use this request"
+                                            "example": "you need to include the authorization token from login | permission denied. only admin can use this request"
                                         }
                                     },
                                     "type": "object"
@@ -3432,7 +3704,7 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "reminder deleted",
                         "content": {
                             "application/json": {
@@ -3608,7 +3880,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "you need to include the authorization token from login | only admin can use this request"
+                                            "example": "you need to include the authorization token from login | permission denied. only admin can use this request"
                                         }
                                     },
                                     "type": "object"
@@ -7051,7 +7323,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "telegram user id has been used"
+                                            "example": "telegram ID has been used. try another"
                                         }
                                     },
                                     "type": "object"
@@ -7107,7 +7379,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "profile has been updated"
+                                            "example": "profile updated"
                                         }
                                     },
                                     "type": "object"
@@ -7147,7 +7419,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "username / email has been used"
+                                            "example": "username or email has been used. try another"
                                         }
                                     },
                                     "type": "object"
@@ -7192,13 +7464,64 @@
                 "operationId": "f9a08af4b40b9ac720ec6222bb337c0f",
                 "responses": {
                     "200": {
-                        "description": "the validation token has been sended to {email} email account"
+                        "description": "the validation token has been sended to {email} email account",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "the validation token has been sended to flazen.edu@gmail.com email account"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "409": {
-                        "description": "there already a request with same username / username already being used"
+                        "description": "there already a request with same username / username has been used. try another",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "there already a request with same username"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -7212,16 +7535,92 @@
                 "operationId": "29226b21d6a5a79d2e87ade3dfed667f",
                 "responses": {
                     "200": {
-                        "description": "account is registered"
+                        "description": "account is registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "account is registered"
+                                        },
+                                        "is_signed_in": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "123456ABCD"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Token is invalid"
+                        "description": "Token is invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "token is invalid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "409": {
-                        "description": "username already used"
+                        "description": "username already used",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "username has been used. try another"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -7235,13 +7634,64 @@
                 "operationId": "de83a252f4cbd7f245743ba8e36c2da2",
                 "responses": {
                     "200": {
-                        "description": "the validation token has been sended to {email} email account"
+                        "description": "the validation token has been sended to {email} email account",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "the validation token has been sended to flazen.edu@gmail.com email account"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "request not found"
+                        "description": "request not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "the validation token has been sended to flazen.edu@gmail.com email account"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -7255,13 +7705,64 @@
                 "operationId": "a8507903e83d7a4e0cc32bc26c47889f",
                 "responses": {
                     "200": {
-                        "description": "firebase message token / timezone has been updated"
+                        "description": "firebase message token / timezone has been updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "timezone has been updated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Timezone is invalid"
+                        "description": "Timezone is invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "timezone is invalid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -7281,7 +7782,24 @@
                         "description": "validation token is not valid"
                     },
                     "500": {
-                        "description": "Internal Server Error"
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -7517,7 +8035,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "you need to include the authorization token from login | only admin can use this request"
+                                            "example": "you need to include the authorization token from login | permission denied. only admin can use this request"
                                         }
                                     },
                                     "type": "object"

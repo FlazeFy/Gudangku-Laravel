@@ -45,7 +45,7 @@ Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () 
     Route::post('/copyReminder/{id}', [HomeController::class, 'copy_reminder']);
     Route::post('/editReminder/{id}', [HomeController::class, 'edit_reminder']);
     Route::post('/toogleView', [HomeController::class, 'toogle_view']);
-    Route::post('/saveAsCsv', [HomeController::class, 'save_as_csv']);
+    Route::post('/save_as_csv', [HomeController::class, 'save_as_csv']);
 
     Route::prefix('/add')->group(function (){
         Route::get('/', [AddController::class, 'index']);
@@ -65,7 +65,7 @@ Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HistoryController::class, 'index']);
-    Route::post('/saveAsCsv', [HistoryController::class, 'save_as_csv']);
+    Route::post('/save_as_csv', [HistoryController::class, 'save_as_csv']);
 });
 
 Route::prefix('/profile')->middleware(['auth_v2:sanctum'])->group(function () {
@@ -82,13 +82,13 @@ Route::prefix('/user')->middleware(['auth_v2:sanctum'])->group(function () {
 Route::prefix('/error')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ErrorController::class, 'index']);
 
-    Route::post('/saveAsCsv', [ErrorController::class, 'save_as_csv']);
+    Route::post('/save_as_csv', [ErrorController::class, 'save_as_csv']);
 });
 
 Route::prefix('/reminder')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ReminderController::class, 'index']);
 
-    Route::post('/saveAsCsv', [ReminderController::class, 'save_as_csv']);
+    Route::post('/save_as_csv', [ReminderController::class, 'save_as_csv']);
 });
 
 Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
@@ -101,14 +101,14 @@ Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
 
     Route::prefix('/detail/{id}')->group(function (){
         Route::get('/', [ReportDetailController::class, 'index']);
-        Route::post('/toogleEdit', [ReportDetailController::class, 'toogle_edit']);    
+        Route::post('/toogle_edit', [ReportDetailController::class, 'toogle_edit']);    
     });
 });
 
 Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/3d', [Room3DController::class, 'index']);
     Route::get('/2d', [Room2DController::class, 'index']);
-    Route::post('/selectRoom', [Room2DController::class, 'select_room']);
+    Route::post('/select_room', [Room2DController::class, 'select_room']);
 });
 
 Route::prefix('/doc')->group(function () {

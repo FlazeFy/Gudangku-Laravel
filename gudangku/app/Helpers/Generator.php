@@ -272,6 +272,8 @@ class Generator
             $res = "$ctx has been used. try another";
         } else if($type == "custom"){
             $res = "$ctx";
+        } else if($type == "validation_failed"){
+            $res = "validation failed : $ctx";
         } else if($type == "permission"){
             $res = "permission denied. only $ctx can use this feature";
         } else {

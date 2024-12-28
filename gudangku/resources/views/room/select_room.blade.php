@@ -1,4 +1,4 @@
-<form action="/room/selectRoom" method="POST" id="toogle_total_view_select">
+<form action="/room/select_room" method="POST" id="toogle_total_view_select">
     @csrf
     <div class="form-floating">
         <select class="form-select" id="select_room" name="select_room" style='width:200;' onchange="this.form.submit()"></select>

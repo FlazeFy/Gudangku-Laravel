@@ -48,7 +48,7 @@ class Commands extends Controller
      *         description="telegram user id has been used",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="telegram user id has been used")
+     *             @OA\Property(property="message", type="string", example="telegram ID has been used. try another")
      *         )
      *     ),
      *     @OA\Response(
@@ -100,7 +100,7 @@ class Commands extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'telegram id updated! and validation has been sended to you',
+                        'message' => Generator::getMessageTemplate("custom", 'telegram id updated! and validation has been sended to you'),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -111,13 +111,13 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'telegram user id has been used',
+                    'message' => Generator::getMessageTemplate("conflict", 'telegram ID'),
                 ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin ',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -149,7 +149,7 @@ class Commands extends Controller
      *         description="username / email has been used",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
-     *             @OA\Property(property="message", type="string", example="username / email has been used")
+     *             @OA\Property(property="message", type="string", example="username or email has been used. try another")
      *         )
      *     ),
      *     @OA\Response(
@@ -206,7 +206,7 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'email or username has been used',
+                    'message' => Generator::getMessageTemplate("conflict", 'email or username'),
                 ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {
@@ -224,15 +224,27 @@ class Commands extends Controller
      *     tags={"User"},
      *     @OA\Response(
      *         response=200,
-     *         description="the validation token has been sended to {email} email account"
+     *         description="the validation token has been sended to {email} email account",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="the validation token has been sended to flazen.edu@gmail.com email account")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=409,
-     *         description="there already a request with same username / username already being used"
+     *         description="there already a request with same username / username has been used. try another",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="there already a request with same username")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -272,7 +284,7 @@ class Commands extends Controller
 
                         return response()->json([
                             'status' => 'success',
-                            'message' => "the validation token has been sended to $email email account",
+                            'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
@@ -283,13 +295,13 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'there already a request with same username',
+                        'message' => Generator::getMessageTemplate("custom", 'there already a request with same username'),
                     ], Response::HTTP_CONFLICT);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'username already being used',
+                    'message' => Generator::getMessageTemplate("conflict", 'username'),
                 ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {
@@ -307,19 +319,37 @@ class Commands extends Controller
      *     tags={"User"},
      *     @OA\Response(
      *         response=200,
-     *         description="account is registered"
+     *         description="account is registered",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="account is registered"),
+     *             @OA\Property(property="is_signed_in", type="bool", example=true),
+     *             @OA\Property(property="token", type="string", example="123456ABCD")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Token is invalid"
+     *         description="Token is invalid",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="token is invalid")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=409,
-     *         description="username already used"
+     *         description="username already used",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="username has been used. try another")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -368,13 +398,13 @@ class Commands extends Controller
                                 'is_signed_in' => true,
                                 'token' => $token,
                                 'status' => 'success',
-                                'message' => "account is registered",
+                                'message' => Generator::getMessageTemplate("custom", "account is registered"),
                             ], Response::HTTP_OK);   
                         } else {
                             return response()->json([
                                 'is_signed_in' => false,
                                 'status' => 'success',
-                                'message' => "account is registered",
+                                'message' => Generator::getMessageTemplate("custom", "account is registered"),
                             ], Response::HTTP_OK);   
                         }
                     } else {
@@ -386,13 +416,13 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'username already used',
+                        'message' => Generator::getMessageTemplate("conflict", 'username'),
                     ], Response::HTTP_CONFLICT);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Token is invalid',
+                    'message' => Generator::getMessageTemplate("custom", 'token is invalid'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -410,15 +440,27 @@ class Commands extends Controller
      *     tags={"User"},
      *     @OA\Response(
      *         response=200,
-     *         description="the validation token has been sended to {email} email account"
+     *         description="the validation token has been sended to {email} email account",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="the validation token has been sended to flazen.edu@gmail.com email account")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="request not found"
+     *         description="request not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="the validation token has been sended to flazen.edu@gmail.com email account")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -456,7 +498,7 @@ class Commands extends Controller
 
                         return response()->json([
                             'status' => 'success',
-                            'message' => "the validation token has been sended to $email email account",
+                            'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
@@ -490,7 +532,7 @@ class Commands extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => "the validation token has been sended to $email email account",
+                        'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -514,15 +556,27 @@ class Commands extends Controller
      *     tags={"User"},
      *     @OA\Response(
      *         response=200,
-     *         description="firebase message token / timezone has been updated"
+     *         description="firebase message token / timezone has been updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="timezone has been updated")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Timezone is invalid"
+     *         description="Timezone is invalid",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="timezone is invalid")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -552,7 +606,7 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("custom", "Timezone is invalid"),
+                    'message' => Generator::getMessageTemplate("custom", "timezone is invalid"),
                 ], Response::HTTP_BAD_REQUEST);
             }
         } catch(\Exception $e) {
@@ -578,7 +632,11 @@ class Commands extends Controller
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -615,7 +673,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin ',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

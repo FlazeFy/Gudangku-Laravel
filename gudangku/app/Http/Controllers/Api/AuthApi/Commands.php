@@ -42,19 +42,50 @@ class Commands extends Controller
      *     tags={"Auth"},
      *     @OA\Response(
      *         response=200,
-     *         description="{user_data}"
+     *         description="Inventory details fetched successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory fetched"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="string", example="83ce75db-4016-d87c-2c3c-db1e222d0001"),
+     *                 @OA\Property(property="username", type="string", example="flazefy"),
+     *                 @OA\Property(property="email", type="string", example="flazen.edu@gmail.com"),
+     *                 @OA\Property(property="telegram_user_id", type="string", example="123456789"),
+     *                 @OA\Property(property="telegram_is_valid", type="integer", example=1),
+     *                 @OA\Property(property="firebase_fcm_token", type="string", example="ddLEuWR2Q_isCmzHTM8UR4:APA91bEmY8TDmH3ZJtKgXw95wFDKLr53FGA2JArDTiN4jzSWxiGzf9VUECYN2oeqYV"),
+     *                 @OA\Property(property="line_user_id", type="string", example="U3356dbe737f22z278e2ba81c71ec5"),
+     *                 @OA\Property(property="phone", type="string", example="+628123456789"),
+     *                 @OA\Property(property="timezone", type="string", example="+07:00"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-03-14 02:28:37"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-10-25 09:37:20"),
+     *             ),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="{validation_msg}"
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="Wrong username or password"
+     *         description="account is not found or have wrong password",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="wrong username or password")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */

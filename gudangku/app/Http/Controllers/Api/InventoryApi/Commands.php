@@ -58,7 +58,11 @@ class Commands extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="inventory deleted"
+     *         description="inventory deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory deleted")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -136,7 +140,11 @@ class Commands extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="inventory image updated"
+     *         description="inventory image updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory image updated")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -270,7 +278,11 @@ class Commands extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="inventory permentally deleted"
+     *         description="inventory permentally deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory permentally deleted")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -344,7 +356,11 @@ class Commands extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="inventory updated"
+     *         description="inventory updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory updated")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -426,7 +442,11 @@ class Commands extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="inventory recovered"
+     *         description="inventory recovered",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory recovered")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -496,7 +516,11 @@ class Commands extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=201,
-     *         description="inventory created"
+     *         description="inventory created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory created, its called product A")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=409,
@@ -786,7 +810,11 @@ class Commands extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="inventory layout updated"
+     *         description="inventory layout updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory layout updated")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -885,7 +913,11 @@ class Commands extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=201,
-     *         description="inventory layout coordinate created"
+     *         description="inventory layout coordinate created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory layout coordinate created")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -1016,7 +1048,11 @@ class Commands extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="inventory layout coordinate deleted"
+     *         description="inventory layout coordinate deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory layout coordinate deleted")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
