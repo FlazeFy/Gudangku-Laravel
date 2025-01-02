@@ -14,7 +14,15 @@ use App\Helpers\Validation;
 
 // Models
 use App\Models\UserModel;
+use App\Models\HistoryModel;
+use App\Models\InventoryModel;
+use App\Models\InventoryLayoutModel;
+use App\Models\ReportModel;
+use App\Models\ReportItemModel;
+use App\Models\AdminModel;
+use App\Models\ReminderModel;
 use App\Models\ValidateRequestModel;
+use App\Models\PersonalAccessToken;
 
 // Mailer
 use App\Jobs\UserMailer;
@@ -669,6 +677,95 @@ class Commands extends Controller
                     'status' => 'failed',
                     'message' => Generator::getMessageTemplate("custom", 'validation token is not valid'),
                 ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/user/{id}",
+     *     summary="Delete User By Id",
+     *     tags={"User"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="User ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="user deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="user deleted")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login | permission denied. only admin can use this request")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="user not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="user not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function hard_delete_user_by_id(Request $request, $id)
+    {
+        try{
+            $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+
+            if($check_admin){
+                $res = UserModel::where('id',$id)->delete();
+                
+                if ($res) {
+                    InventoryModel::where('created_by',$id)->delete();
+                    InventoryLayoutModel::where('created_by',$id)->delete();
+                    ReportModel::where('created_by',$id)->delete();
+                    ReportItemModel::where('created_by',$id)->delete();
+                    HistoryModel::where('created_by',$id)->delete();
+                    ReminderModel::where('created_by',$id)->delete();
+                    PersonalAccessToken::where('tokenable_id',$id)->delete();
+
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("delete", 'user'),
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("not_found", 'user'),
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => Generator::getMessageTemplate("permission", 'admin'),
+                ], Response::HTTP_UNAUTHORIZED);
             }
         } catch(\Exception $e) {
             return response()->json([

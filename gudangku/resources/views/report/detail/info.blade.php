@@ -92,7 +92,7 @@
                 });
             } else {
                 $('#report_img_holder').html(`
-                    <div class='col p-2'><h6 class="text-center text-secondary fst-italic">- No image attached -</h6></div>
+                    <div class='col p-2'><h6 class="text-center text-secondary fst-italic">- No Image Attached -</h6></div>
                 `)
             }
 
@@ -528,7 +528,6 @@
             `)
         } else {
             $(report_action_holder).empty()
-            $(report_check_extra).empty()
         }
     }
     $(document).on('change','.check-inventory', function(){

@@ -4,7 +4,7 @@
             <tr>
                 <th scope="col" style='width:160px;'>Username</th>
                 <th scope="col" style='min-width:180px;'>Contact</th>
-                <th scope="col" style='min-width:60px;'>Timezone</th>
+                <th scope="col" style='min-width:100px;'>Timezone</th>
                 <th scope="col" style='min-width:110px;'>Joined At</th>
                 <th scope="col" style='min-width:110px;'>Last Updated</th>
                 <th scope="col" style='min-width:140px;'>Action</th>
@@ -42,7 +42,7 @@
                                 <h6 class='fw-bold'>Telegram User ID</h6> 
                                 <h6>${el.telegram_user_id ?? '-'}</h6>
                                 <h6 class='fw-bold mt-1'>Firebase FCM Token</h6> 
-                                <h6>${el.firebase_fcm_token ?? '-'}</h6> 
+                                <p>${el.firebase_fcm_token ?? '-'}</p> 
                                 <h6 class='fw-bold mt-1'>Line User ID</h6> 
                                 <h6>${el.line_user_id ?? '-'}</h6>    
                             </td>

@@ -46,7 +46,7 @@
                 <form id="report-item-form">
                     @csrf
                     <div class="row">
-                        <div class="col">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                             <label>Item</label>
                             <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
                             <div id="item_form"></div>
@@ -55,7 +55,7 @@
                             <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv'>
                             <a class="btn btn-success mt-4 w-100" onclick="post_report_item('<?= $id ?>')"><i class="fa-solid fa-floppy-disk"></i> Save</a>
                         </div>
-                        <div class="col">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                             <h5>List Selected Item</h5>
                             <div id="item_holder">
                                 <div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>

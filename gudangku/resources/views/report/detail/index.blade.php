@@ -26,6 +26,12 @@
                 </div>
             @endif
         </div>
+        @if($isMobile)
+            <div>
+                <h6 class='date-text'>Created At : <span id='created_at'></span></h6>
+                <h6 class='date-text'>Last Updated : <span id='updated_at'></span></h6>
+            </div>
+        @endif
         @include('report.detail.info')  
     </div>
 @endsection

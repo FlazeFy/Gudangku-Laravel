@@ -46,7 +46,7 @@
                 <form action="/report" id="report-form" method="POST">
                     @csrf
                     <div class="row">
-                        <div class="col">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                             <label>Title</label>
                             <input name="report_title" class="form-control" type="text" id="report_title" required>
                             <label>Description</label>
@@ -66,7 +66,7 @@
                             <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv'>
                             <button class="btn btn-success mt-4 w-100" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
                         </div>
-                        <div class="col">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                             <h5>List Selected Item</h5>
                             <div id="item_holder">
                                 <div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>

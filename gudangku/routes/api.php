@@ -131,4 +131,5 @@ Route::prefix('/v1/user')->middleware(['auth:sanctum'])->group(function () {
     Route::put('/update_profile', [CommandsUserController::class, 'update_profile']);
     Route::put('/validate_telegram_id', [CommandsUserController::class, 'validate_telegram_id']);
     Route::put('/update_timezone_fcm', [CommandsUserController::class, 'update_timezone_fcm']);
+    Route::delete('/{id}', [CommandsUserController::class, 'hard_delete_user_by_id']);
 });

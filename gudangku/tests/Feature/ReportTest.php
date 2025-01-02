@@ -446,4 +446,39 @@ class ReportTest extends TestCase
         Audit::auditRecordText("Test - Post Report", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Post Report", "TC-XXX", 'TC-XXX test_post_report', json_encode($data));
     }
+
+    public function test_post_report_item(): void
+    {
+        // Exec
+        $id = "3dd6f961-acb0-821c-220d-7ea14c9200e5";
+        $token = $this->login_trait("user");
+        $body = [
+            "report_item" => json_encode([
+                "inventory_id" => "0216dd75-8ea6-3779-2ea6-9121c1a8c447",
+                "item_name" => "Kris Air Friyer",
+                "item_desc" => "penggorengan elektrik",
+                "item_qty" => 1,
+                "item_price" => 650000,
+            ]),
+        ];
+        $response = $this->httpClient->post("item/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+        print($response->getBody());
+
+        // Test Parameter
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('report created', $data['message']);
+
+        Audit::auditRecordText("Test - Post Report Item", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Report Item", "TC-XXX", 'TC-XXX test_post_report_item', json_encode($data));
+    }
 }

@@ -75,6 +75,10 @@ hr {
     margin-top: var(--spaceXLG) !important;
 }
 
+table tr {
+    word-break: break-word;
+}
+
 /* Modal */
 .modal-content, .swal2-popup, .popover {
     border-radius: var(--roundedJumbo) !important;
