@@ -52,7 +52,14 @@
                 </div>
             </div><br><br>
             @include('analyze.inventory_history')
-            <div id='layout-holder'></div>
+            <div class="row">
+                <div class="col-lg-5 col-md-6 col-sm-12 col-12">
+                    @include('analyze.inventory_activity')
+                </div>
+                <div class="col-lg-7 col-md-6 col-sm-12 col-12">
+                    <div id='layout-holder'></div>
+                </div>
+            </div>
         </div>
         <div id="work_area" class='d-none'></div>
     </div>
@@ -170,7 +177,7 @@
                     generate_bar_chart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
 
                     $('#layout-holder').html(`
-                        <h3>7. The Room Layout</h3>
+                        <h3>8. The Room Layout</h3>
                         <p>You can find <span class='text-primary'>${data.inventory_name}</span> at storage <span class='text-primary'>${data.inventory_storage}</span>, layout <span class='text-primary'>${data.inventory_layout.layout}</span>.
                         This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about ${count_time(data.inventory_layout.created_at,null,'day')} days ago.
                         </p>
@@ -178,6 +185,16 @@
                         <br>
                     `)
                     generate_map_room('#room_layout_map',[data.inventory_layout],false,data.inventory_room)
+
+                    const data_inventory_activity_report = data.inventory_activity_report
+                    const days = ["Sun","Sat","Fri","Thu","Wed","Tue","Mon"]
+                    let data_heatmap_inventory_activity = []
+                    days.forEach(dy => {
+                        data_heatmap_inventory_activity.push(
+                            { name: dy, data: data_inventory_activity_report.filter(el => el.day === dy).map(el => ({ x: el.context, y: el.total })) }
+                        )
+                    });
+                    generate_heatmap_inventory_activity(data_heatmap_inventory_activity)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()

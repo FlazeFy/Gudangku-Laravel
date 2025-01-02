@@ -161,7 +161,6 @@ class Commands extends Controller
      * )
      */
 
-
     public function post_dictionary(Request $request)
     {
         try{

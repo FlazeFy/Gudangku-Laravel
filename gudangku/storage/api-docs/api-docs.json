@@ -18,7 +18,7 @@
                 "operationId": "26ae6f7a2668f358293a502309985206",
                 "responses": {
                     "200": {
-                        "description": "Inventory details fetched successfully",
+                        "description": "login successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -27,11 +27,15 @@
                                             "type": "string",
                                             "example": "success"
                                         },
-                                        "message": {
+                                        "token": {
                                             "type": "string",
-                                            "example": "inventory fetched"
+                                            "example": "286|L5fqrLCDDCzPRLKngtm2FM9wq1IU2xFZSVAm10yp874a1a85"
                                         },
-                                        "data": {
+                                        "role": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "result": {
                                             "properties": {
                                                 "id": {
                                                     "type": "string",
@@ -3394,6 +3398,26 @@
                                                         }
                                                     },
                                                     "type": "object"
+                                                },
+                                                "inventory_activity_report": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "context": {
+                                                                "type": "string",
+                                                                "example": "2024-12-02"
+                                                            },
+                                                            "total": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            },
+                                                            "day": {
+                                                                "type": "string",
+                                                                "example": "Monday"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"

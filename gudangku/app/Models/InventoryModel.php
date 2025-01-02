@@ -210,4 +210,59 @@ class InventoryModel extends Model
 
         return count($final_res) > 0 ? $final_res : null;
     }
+
+    public static function getAnalyzeActivityInReport($user_id,$id){
+        $start_date = Carbon::now()->subDays(31)->startOfDay();
+        $end_date = Carbon::now()->startOfDay();
+
+        $date_res = [];
+        for ($date = $start_date; $date->lte($end_date); $date->addDay()) {
+            $date_res[] = [
+                'total' => 0,
+                'context' => $date->format('Y-m-d')
+            ];
+        }
+        
+        $query_res = InventoryModel::selectRaw("COUNT(1) as total, DATE(report.created_at) as context")
+            ->join('report_item','report_item.inventory_id','=','inventory.id')
+            ->join('report','report.id','=','report_item.report_id')
+            ->where('report_item.created_by',$user_id)
+            ->where('report_item.inventory_id',$id)
+            ->whereBetween('report.created_at', [Carbon::now()->subDays(31), Carbon::now()])
+            ->groupbyRaw('DATE(report.created_at)')
+            ->orderby('total','desc')
+            ->get();
+
+        if(count($query_res) > 0){
+            $final_res = [];
+            foreach ($date_res as $dt_date) {
+                $found = false;
+                $day_name = (new DateTime($dt_date['context']))->format('D');
+
+                foreach ($query_res as $dt_query) {
+                    if($dt_date['context'] == $dt_query->context){
+                        $found = true;
+                        $final_res[] = [
+                            'total' => $dt_query->total,
+                            'context' => $dt_date['context'],
+                            'day' => $day_name
+                        ];
+                        break;
+                    }
+                }
+
+                if(!$found){
+                    $final_res[] = [
+                        'total' => $dt_date['total'],
+                        'context' => $dt_date['context'],
+                        'day' => $day_name
+                    ];
+                }
+            }
+        } else {
+            $final_res = $date_res;
+        }
+
+        return $final_res;
+    }
 }
