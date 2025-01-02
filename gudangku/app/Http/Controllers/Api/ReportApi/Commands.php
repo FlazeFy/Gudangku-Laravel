@@ -738,6 +738,117 @@ class Commands extends Controller
 
     /**
      * @OA\POST(
+     *     path="/api/v1/report/item/{id}",
+     *     summary="Create a new report item",
+     *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="report_item", type="string", example="[{'inventory_id': '0216dd75-8ea6-3779-2ea6-9121c1a8c447','item_name': 'New Balance','item_desc': 'Sepatu','item_qty': 1,'item_price': 2249000}]"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully created report",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Report item created"),
+     *             @OA\Property(property="data", type="string", example="| Failed to upload the 2-th file"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Validation failed: {validation errors}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Authorization required",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="You need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Something went wrong. Please contact admin")
+     *         )
+     *     )
+     * )
+     */
+    public function post_report_item(Request $request,$id){
+        try{
+            // Validator
+            $validator = Validation::getValidateReportItem($request,'create');
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => Generator::getMessageTemplate("validation_failed", $validator->errors())
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {   
+                $user_id = $request->user()->id;
+                $report_item = json_decode($request->report_item);
+                $item_count = count($report_item);
+                $success_exec = 0;
+                $failed_exec = 0;
+
+                // Model : Create Report Item
+                foreach ($report_item as $idx => $dt) {
+                    $res = ReportItemModel::create([
+                        'id' => Generator::getUUID(), 
+                        'inventory_id' => $dt->inventory_id ?? null, 
+                        'report_id' => $id, 
+                        'item_name' => $dt->item_name, 
+                        'item_desc' => $dt->item_desc,  
+                        'item_qty' => $dt->item_qty, 
+                        'item_price' => $dt->item_price ?? null, 
+                        'created_at' => date('Y-m-d H:i:s'), 
+                        'created_by' => $user_id, 
+                    ]);
+
+                    if($res){
+                        $success_exec++;
+                    } else {
+                        $failed_exec++;
+                    }
+                }
+
+                // Respond
+                if($failed_exec == 0 && $success_exec == $item_count){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("create", 'report item'),
+                    ], Response::HTTP_CREATED);
+                } else if($failed_exec > 0 && $success_exec > 0){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("custom", "some item has been added: $success_exec. about $failed_exec inventory failed to add"),
+                    ], Response::HTTP_CREATED);
+                } else {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("custom", 'failed to add item report'),
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\POST(
      *     path="/api/v1/analyze/report",
      *     summary="Analyze report",
      *     tags={"Analyze"},

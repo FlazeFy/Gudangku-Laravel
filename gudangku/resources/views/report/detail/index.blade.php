@@ -16,7 +16,8 @@
                 <a class="btn btn-danger btn-main top" href="/report"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
                 <div id="btn-doc-preview-holder"></div>
                 @include('report.detail.toogle_edit')  
-                @include('report.detail.delete')  
+                @include('report.detail.delete')
+                @include('report.detail.add')    
             </div>
             @if(!$isMobile)
                 <div>

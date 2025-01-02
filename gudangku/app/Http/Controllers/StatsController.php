@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Helpers\Generator;
-
 use Illuminate\Http\Request;
+
+// Helpers
+use App\Helpers\Generator;
 
 class StatsController extends Controller
 {

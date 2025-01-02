@@ -108,6 +108,7 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'get_all_report']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'get_my_report_by_inventory']);
     Route::post('/', [CommandsReportController::class, 'post_report']);
+    Route::post('/item/{id}', [CommandsReportController::class, 'post_report_item']);
     Route::prefix('/detail/item/{id}')->group(function (){
         Route::get('/', [QueriesReportController::class, 'get_my_report_detail']);
         Route::get('/doc', [QueriesReportController::class, 'get_document']);

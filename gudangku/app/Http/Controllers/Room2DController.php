@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 
+// Models
 use App\Models\InventoryModel;
 
+// Helpers
 use App\Helpers\Generator;
-
-use Illuminate\Http\Request;
 
 class Room2DController extends Controller
 {

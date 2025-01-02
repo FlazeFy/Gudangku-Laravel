@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
+// Models
 use App\Models\InventoryModel;
 use App\Models\DictionaryModel;
 use App\Models\ReminderModel;
 use App\Models\UserModel;
 use App\Models\AdminModel;
 
+// Helpers
 use App\Helpers\Generator;
 use App\Helpers\Audit;
 
+// Export
 use App\Exports\InventoryExport;
-
-use Maatwebsite\Excel\Facades\Excel;
 
 class HomeController extends Controller
 {

@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+// Helpers
 use App\Helpers\Generator;
-
-use App\Models\InventoryModel;
 
 class LandingController extends Controller
 {

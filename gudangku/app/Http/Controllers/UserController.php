@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+// Helpers
 use App\Helpers\Generator;
+
+// Models
 use App\Models\AdminModel;
 
 class UserController extends Controller

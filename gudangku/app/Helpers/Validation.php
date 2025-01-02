@@ -49,7 +49,9 @@ class Validation
 
     public static function getValidateReportItem($request,$type){
         if($type == 'create'){
-            
+            return Validator::make($request->all(), [
+                'report_item' => 'required|json',
+            ]); 
         } else if($type == 'update'){
             return Validator::make($request->all(), [
                 'item_name' => 'required|string|max:75|min:2',

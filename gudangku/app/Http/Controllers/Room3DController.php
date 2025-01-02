@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InventoryModel;
-
+// Helpers
 use App\Helpers\Generator;
-
-use Illuminate\Http\Request;
 
 class Room3DController extends Controller
 {

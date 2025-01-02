@@ -224,11 +224,15 @@
                 $('#report_check_extra').html(`
                     <a class='btn btn-primary me-2' onclick="check_all('.check-inventory','check'); checked_toggle_event();"><i class="fa-solid fa-check style="font-size:var(--textXLG);"></i> @if(!$isMobile) Check All @endif</a>
                     <a class='btn btn-danger me-2' onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();"><i class="fa-solid fa-xmark style="font-size:var(--textXLG);"></i> @if(!$isMobile) Uncheck All @endif</a>
+                    <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddReport" style="font-size:var(--textXMD);"><i class="fa-solid fa-plus"></i> Add Item</a>
                 `)
             } else {
+                $('#report_check_extra').html(`
+                    <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddReport" style="font-size:var(--textXMD);"><i class="fa-solid fa-plus"></i> Add Item</a>
+                `)
                 $('#report_item_tb tbody').append(`
                     <tr>
-                        <td colspan='7'><p class="text-secondary fst-italic mt-2 text-center">- No Item Attached -</p></td>
+                        <td colspan='7' class="text-center"><p class="text-secondary fst-italic mt-2">- No Item Attached -</p></td>
                     </tr>
                 `)
             }

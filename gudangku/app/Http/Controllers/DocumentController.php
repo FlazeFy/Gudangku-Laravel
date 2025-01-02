@@ -1,27 +1,26 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Dompdf\Canvas\Factory as CanvasFactory;
+use Dompdf\Options as DompdfOptions;
+use Dompdf\Adapter\CPDF;
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\FileUpload\InputFile;
 
+// Helpers
 use App\Helpers\Generator;
 use App\Helpers\Document;
 
-use Illuminate\Http\Request;
-
+// Models
 use App\Models\ReportModel;
 use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
 use App\Models\UserModel;
 use App\Models\ReminderModel;
 use App\Models\ReportItemModel;
-
-use Dompdf\Dompdf;
-use Dompdf\Options;
-use Dompdf\Canvas\Factory as CanvasFactory;
-use Dompdf\Options as DompdfOptions;
-use Dompdf\Adapter\CPDF;
-
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Telegram\Bot\FileUpload\InputFile;
 
 class DocumentController extends Controller
 {

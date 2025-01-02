@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 
+// Helpers
 use App\Helpers\Generator;
 use App\Helpers\Audit;
 
+// Models
 use App\Models\ReportModel;
 use App\Models\ReportItemModel;
 use App\Models\DictionaryModel;
-
-use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {

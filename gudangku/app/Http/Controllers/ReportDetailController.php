@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 
+// Helpers
 use App\Helpers\Generator;
 use App\Helpers\Audit;
 
-use Illuminate\Http\Request;
+// Models
+use App\Models\DictionaryModel;
 
 class ReportDetailController extends Controller
 {
@@ -14,8 +17,12 @@ class ReportDetailController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
+            $dct_cat = DictionaryModel::where('dictionary_type', 'report_category')
+                ->get();
+
             return view('report.detail.index')
-                ->with('id',$id);
+                ->with('id',$id)
+                ->with('dct_cat',$dct_cat);
         } else {
             return redirect("/login");
         }

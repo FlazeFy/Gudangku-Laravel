@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Helpers\Generator;
-
-use App\Models\UserModel;
-use App\Models\ValidateRequestModel;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Telegram\Bot\Laravel\Facades\Telegram;
+
+// Helpers
+use App\Helpers\Generator;
+
+// Models
+use App\Models\UserModel;
+use App\Models\ValidateRequestModel;
 
 class ProfileController extends Controller
 {

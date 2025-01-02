@@ -1,13 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Exports\ErrorExport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Helpers\Generator;
 
+// Models
 use App\Models\AdminModel;
 use App\Models\ErrorModel;
+
+// Helpers
 use App\Helpers\Audit;
+use App\Helpers\Generator;
+
+// Export
+use App\Exports\ErrorExport;
 
 class ErrorController extends Controller
 {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+// Helpers
 use App\Helpers\Generator;
 
+// Models
 use App\Models\DictionaryModel;
 
 class AddController extends Controller

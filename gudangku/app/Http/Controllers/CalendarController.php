@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
+// Helpers
 use App\Helpers\Generator;
-
-use App\Models\InventoryModel;
-
-use Illuminate\Http\Request;
 
 class CalendarController extends Controller
 {
