@@ -214,4 +214,28 @@ class UserTest extends TestCase
         Audit::auditRecordText("Test - Get All User", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Get All User", "TC-XXX", 'TC-XXX test_get_all_user', json_encode($data));
     }
+
+    public function test_hard_delete_user_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("admin");
+        $id = "17223858-9771-11ee-8f4a-3216422910r4";
+        $response = $this->httpClient->delete("$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('user deleted',$data['message']);
+
+        Audit::auditRecordText("Test - Hard Delete User By Id", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Hard Delete User By Id", "TC-XXX", 'TC-XXX test_hard_delete_user_by_id', json_encode($data));
+    }
 }

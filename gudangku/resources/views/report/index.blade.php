@@ -13,6 +13,9 @@
 
 @section('content')
     <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
+    @if($role == 1)
+        <script src="{{ asset('/usecases/destroy_report_by_id_v1.0.js')}}"></script>
+    @endif
     <script>
         let page = 1
         let search_key = `<?= $search_key ?>`

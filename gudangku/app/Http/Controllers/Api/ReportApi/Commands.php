@@ -12,6 +12,7 @@ use App\Models\ReportItemModel;
 use App\Models\ReportModel;
 use App\Models\UserModel;
 use App\Models\InventoryModel;
+use App\Models\AdminModel;
 
 // Helpers
 use App\Helpers\Audit;
@@ -170,11 +171,14 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $report = ReportModel::select('report_title')->where('id', $id)->first();
+            $check_admin = AdminModel::find($user_id);
 
-            $rows = ReportModel::where('id', $id)
-                ->where('created_by', $user_id)
-                ->delete();
+            $report = ReportModel::select('report_title')->where('id', $id)->first();
+            $rows = ReportModel::where('id', $id);
+            if(!$check_admin){
+                $rows = $rows->where('created_by', $user_id);
+            }
+            $rows = $rows->delete();
 
             if($rows > 0){
                 // History

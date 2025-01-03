@@ -10,7 +10,7 @@
                 <th scope="col" style='min-width:140px;'>Items</th>
                 <th scope="col" style='min-width:140px;'>Price</th>
                 <th scope="col">Props</th>
-                <th scope="col" style='min-width:140px;'>Action</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody id="report_holder"></tbody>
@@ -23,13 +23,14 @@
         let search_key_url = name ? `&search_key=${name}`:''
         let filter_cat_url = category ? `&filter_category=${category}`:''
         let sorting_url = sort ? `&sorting=${sort}`:''
+        const token = '<?= session()->get("token_key"); ?>'
 
         $.ajax({
             url: `/api/v1/report?page=${page}${search_key_url}${filter_cat_url}${sorting_url}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()
@@ -99,11 +100,34 @@
                                 <td>${el.report_desc ?? '<span class="text-secondary fst-italic mt-2">- No Description Provided -</span>'}</td>
                                 <td>${el.report_items ?? '<span class="text-secondary fst-italic mt-2">- No items found -</span>'}</td>
                                 <td>Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</td>
-                                <td class='text-center'>${getDateToContext(el.created_at,'calendar')}</td>
                                 <td>
-                                    <a class="btn btn-warning me-2" href="/report/detail/${el.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
-                                        <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i>
+                                    <b>Created By</b>
+                                    <a>@${el.username}</a><br><br>
+                                    <b>Created At</b>
+                                    ${getDateToContext(el.created_at,'calendar')}
+                                </td>
+                                <td style="width:120px;">
+                                    <a class="btn btn-warning me-2" href="/report/detail/${el.id}">
+                                        <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
+                                    <a class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                    <div class="modal fade" id="modalDelete_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h2><span class="text-danger">Permanently Delete</span> this report "${el.report_title}" from user @${el.username}?</h2>
+                                                    <a class="btn btn-danger mt-4" onclick="destroy_report_by_id('${el.id}', '${token}', 
+                                                    ()=>get_my_report_all(${page},'${search_key}','${filter_category}','${sorting}'))">Yes, Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
                                 </td>
                             </tr>
                         `);

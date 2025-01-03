@@ -19,6 +19,7 @@
     const get_all_user = () => {
         Swal.showLoading()
         const item_holder = 'user_tb_body'
+        $(`#${item_holder}`).empty()
 
         $.ajax({
             url: `/api/v1/user`,
@@ -49,7 +50,23 @@
                             <td class='text-center'>${el.timezone ?? '-'}</td>
                             <td class='text-center'>${getDateToContext(el.created_at,'calendar')}</td>
                             <td class='text-center'>${el.updated_at ? getDateToContext(el.updated_at,'calendar') : '-'}</td>
-                            <td></td>
+                            <td>
+                                <a class="btn btn-danger px-2 shadow" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}"><i class="fa-solid fa-trash-can"></i></a>
+                                <div class="modal fade" id="modalDelete_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h2><span class="text-danger">Permanently Delete</span> this user "@${el.username}"?</h2>
+                                                <a class="btn btn-danger mt-4" onclick="destroy_history_by_id('${el.id}')">Yes, Delete</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </td>
                         </tr>
                     `);
                 });
@@ -71,4 +88,32 @@
         });
     }
     get_all_user()
+
+    const destroy_history_by_id = (id) => {
+        Swal.showLoading()
+        $.ajax({
+            url: `/api/v1/user/${id}`,
+            type: 'DELETE',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.hideLoading()
+                Swal.fire({
+                    title: "Success!",
+                    text: `${response.message}`,
+                    icon: "success",
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        get_all_user()
+                    } 
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                generate_api_error(response, true)
+            }
+        });
+    }
 </script>
