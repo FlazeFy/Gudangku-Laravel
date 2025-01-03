@@ -5,7 +5,7 @@
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <label>Search by Title</label>
                 <div class="position-relative">
-                    <input class="form-control" id="search_by_title" value="<?= $search_key ?>">
+                    <input class="form-control" id="search_by_title" value="<?= $search_key ?>" onkeydown="return submitOnEnter(event)">
                     <span id='reset_search_btn_holder'></span>
                 </div>
             </div>
@@ -57,19 +57,38 @@
     place_reset_btn()
     fetch_dct()
 
-    $(document).on('blur', '#search_by_title',function(){
-        if($(this).val() != null && $(this).val().trim() != "" ){
-            const url = new URL(window.location)
-            const search_val = $(this).val().trim()
+    const search_by_title = (val) => {
+        const url = new URL(window.location)
+        const curr_page = url.href.replace(url.origin, "")
+
+        if(val != null && val.trim() != "" ){
+            const search_val = val.trim()
             url.searchParams.set('search_key', search_val)
             search_key = search_val
             window.history.pushState({ path: url.href }, '', url.href)
             place_reset_btn()
         } else {
-            window.location.href = '/report'
+            if(curr_page != "/report"){
+                window.location.href = '/report'
+            }
         }
-        get_my_report_all(page,search_key,filter_category,sorting)
+
+        if((curr_page != "/report" && (val == null || val.trim() == "")) || (val != null && val.trim() != "")){
+            get_my_report_all(page,search_key,filter_category,sorting)
+        }
+    }
+    const submitOnEnter = (event) => {
+        if (event.keyCode === 13) { 
+            event.preventDefault() 
+            search_by_title($('#search_by_title').val())
+            return false 
+        }
+        return true 
+    }
+    $(document).on('blur', '#search_by_title',function(){
+        search_by_title($(this).val())
     })
+
     $(document).on('change', '#search_by_category',function(){
         if($(this).val() != 'all'){
             const url = new URL(window.location)

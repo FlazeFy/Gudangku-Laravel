@@ -3,13 +3,13 @@
     <div class="text-start">
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label text-white">Email / Username</label>
-            <input type="text" name="username" id="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <input type="text" name="username" id="username" class="form-control" id="exampleInputEmail1" onkeydown="return submitOnEnter(event)" aria-describedby="emailHelp">
             <div id="emailHelp" class="form-text">We'll never share your email with anyone else</div>
             <a class="error_input" id="username_msg"></a>
         </div>
         <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label text-white">Password</label>
-            <input type="password" name="password" id="password" class="form-control" id="exampleInputPassword1">
+            <input type="password" name="password" id="password" class="form-control" onkeydown="return submitOnEnter(event)" id="exampleInputPassword1">
             <a class="error_input" id="pass_msg"></a>
         </div>
         <a class="error_input" id="all_msg"></a><br>
@@ -153,7 +153,7 @@
     }
     auto_login()
 
-    function submitOnEnter(event) {
+    const submitOnEnter = (event) => {
         if (event.keyCode === 13) { 
             event.preventDefault() 
             login()

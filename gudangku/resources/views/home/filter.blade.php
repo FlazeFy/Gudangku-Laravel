@@ -5,7 +5,7 @@
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <label>Search by Name or Merk</label>
                 <div class="position-relative">
-                    <input class="form-control" id="search_by_name_merk" value="<?= $search_key ?>">
+                    <input class="form-control" id="search_by_name_merk" value="<?= $search_key ?>" onkeydown="return submitOnEnter(event)">
                     <span id='reset_search_btn_holder'></span>
                 </div>
             </div>
@@ -66,19 +66,38 @@
     place_reset_btn()
     fetch_dct()
 
-    $(document).on('blur', '#search_by_name_merk',function(){
-        if($(this).val() != null && $(this).val().trim() != "" ){
-            const url = new URL(window.location)
-            const search_val = $(this).val().trim()
+    const search_by_name_merk = (val) => {
+        const url = new URL(window.location)
+        const curr_page = url.href.replace(url.origin, "")
+
+        if(val != null && val.trim() != "" ){
+            const search_val = val.trim()
             url.searchParams.set('search_key', search_val)
             search_key = search_val
             window.history.pushState({ path: url.href }, '', url.href)
             place_reset_btn()
         } else {
-            window.location.href = '/inventory'
+            if(curr_page != "/inventory"){
+                window.location.href = '/inventory'
+            }
         }
-        get_inventory(page,search_key,filter_category,sorting)
+
+        if((curr_page != "/inventory" && (val == null || val.trim() == "")) || (val != null && val.trim() != "")){
+            get_inventory(page,search_key,filter_category,sorting)
+        }
+    }
+    const submitOnEnter = (event) => {
+        if (event.keyCode === 13) { 
+            event.preventDefault() 
+            search_by_name_merk($('#search_by_name_merk').val())
+            return false 
+        }
+        return true 
+    }
+    $(document).on('blur', '#search_by_name_merk',function(){
+        search_by_name_merk($(this).val())
     })
+
     $(document).on('change', '#search_by_category',function(){
         if($(this).val() != 'all'){
             const url = new URL(window.location)

@@ -1,8 +1,8 @@
 <form id="profile-form">
     <label>Username</label>
-    <input type="text" name="username" id="username_input" class="form-control mt-2"/><br>
+    <input type="text" name="username" id="username_input" onkeydown="return submitOnEnter(event)" class="form-control mt-2"/><br>
     <label>Email</label>
-    <input type="email" name="email" id="email_input" class="form-control mt-2"/><br>
+    <input type="email" name="email" id="email_input" onkeydown="return submitOnEnter(event)" class="form-control mt-2"/><br>
     <div class="d-flex justify-content-between">
         <label class="fst-italic">Joined since <span id="created_at_holder"></span></label>
         <a class='btn btn-success' onclick='update_profile()'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
@@ -120,5 +120,13 @@
                 icon: "error"
             });
         }
+    }
+    const submitOnEnter = (event) => {
+        if (event.keyCode === 13) { 
+            event.preventDefault() 
+            update_profile()
+            return false 
+        }
+        return true 
     }
 </script>
