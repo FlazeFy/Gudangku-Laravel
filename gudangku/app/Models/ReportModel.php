@@ -141,4 +141,44 @@ class ReportModel extends Model
 
         return $res_final;
     }
+
+    public static function getTotalReportCreatedOrSpendingPerMonth($user_id, $year, $is_admin, $type){
+        if($type == "created"){
+            $select_query = "COUNT(DISTINCT report.id) as total_report, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context";
+        } else if($type == "spending"){
+            $select_query = "CAST(SUM(item_price) AS UNSIGNED) as total_price, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context";
+        }
+
+        $res = ReportModel::selectRaw($select_query)
+            ->join('report_item','report_item.report_id','=','report.id');
+        if(!$is_admin){
+            $res = $res->where('report.created_by', $user_id);
+        }
+        if($type == "spending") {
+            $res = $res->where('report_category','Shopping Cart');
+        }
+        $res = $res->whereRaw("YEAR(report.created_at) = '$year'")
+            ->groupByRaw('MONTH(report.created_at)')
+            ->get();
+
+        return $res;
+    }
+
+    public static function getTotalReportUsedPerMonth($user_id, $year, $is_admin){
+        $res = ReportModel::selectRaw("
+                CAST(SUM(CASE WHEN report_category = 'Checkout' THEN 1 ELSE 0 END) AS UNSIGNED) as total_checkout,
+                CAST(SUM(CASE WHEN report_category = 'Wash List' THEN 1 ELSE 0 END) AS UNSIGNED) as total_washlist,
+                MONTH(report.created_at) as context
+            ")
+            ->join('report_item', 'report_item.report_id', '=', 'report.id');
+        if(!$is_admin){
+            $res = $res->where('report.created_by', $user_id);
+        }
+        $res = $res->whereIn('report_category', ['Checkout', 'Wash List'])
+            ->whereRaw("YEAR(report.created_at) = '$year'")
+            ->groupByRaw('MONTH(report.created_at)')
+            ->get();
+
+        return $res;
+    }
 }

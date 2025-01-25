@@ -67,6 +67,27 @@ class InventoryModel extends Model
         return $res->get();
     }
 
+    public static function getInventoryByStorage($storage,$room,$user_id){
+        $res = InventoryModel::select('id','inventory_name','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price')
+            ->where('created_by',$user_id)
+            ->where('inventory_storage',$storage)
+            ->where('inventory_room',$room)
+            ->orderby('inventory_name','ASC');
+
+        return $res->get();
+    }
+
+    public static function getInventoryStatsByStorage($storage,$room,$user_id){
+        $res = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
+            ->where('created_by',$user_id)
+            ->where('inventory_storage',$storage)
+            ->where('inventory_room',$room)
+            ->groupby('inventory_category')
+            ->get();
+
+        return $res->get();
+    }
+
     public static function getInventoryDetail($id,$user_id){
         if (strpos($id, ',') == null) {
             $res = InventoryModel::select('id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'updated_at')
@@ -264,5 +285,62 @@ class InventoryModel extends Model
         }
 
         return $final_res;
+    }
+
+    public static function getTotalInventoryCreatedPerMonth($user_id, $year, $is_admin){
+        $res = InventoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context");
+            if(!$is_admin){
+                $res = $res->where('created_by', $user_id);
+            }
+        $res = $res->whereRaw("YEAR(created_at) = '$year'")
+            ->groupByRaw('MONTH(created_at)')
+            ->get();
+
+        return $res;
+    }
+
+    public static function getTotalInventory($user_id,$type){
+        $res = InventoryModel::selectRaw('COUNT(1) AS total')
+            ->where('created_by', $user_id);
+
+        if($type == "favorite"){
+            $res = $res->where('is_favorite','1');
+        } else if($type == "low"){
+            $res = $res->where('inventory_capacity_unit','percentage')
+                ->where('inventory_capacity_vol','<=',30);
+        }
+       
+        return $res->first();
+    }
+
+    public static function getLastAddedInventory($user_id){
+        $res = InventoryModel::select('inventory_name')
+            ->whereNull('deleted_at')
+            ->where('created_by', $user_id)
+            ->orderBy('created_at','DESC')
+            ->first();
+
+        return $res;
+    }
+
+    public static function getMostCategoryInventory($user_id){
+        $res = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
+            ->whereNull('deleted_at')
+            ->where('created_by', $user_id)
+            ->groupBy('inventory_category')
+            ->orderBy('total','DESC')
+            ->first();
+
+        return $res;
+    }
+
+    public static function getHighestPriceInventory($user_id){
+        $res = InventoryModel::select('inventory_name', 'inventory_price')
+            ->whereNull('deleted_at')
+            ->where('created_by', $user_id)
+            ->orderBy('inventory_price','DESC')
+            ->first();
+
+        return $res;
     }
 }

@@ -590,20 +590,10 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::select('id','inventory_name','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price')
-                ->where('created_by',$user_id)
-                ->where('inventory_storage',$storage)
-                ->where('inventory_room',$room)
-                ->orderby('inventory_name','ASC')
-                ->get();
+            $res = InventoryModel::getInventoryByStorage($storage,$room,$user_id);
             
             if (count($res) > 0) {
-                $stats = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
-                    ->where('created_by',$user_id)
-                    ->where('inventory_storage',$storage)
-                    ->where('inventory_room',$room)
-                    ->groupby('inventory_category')
-                    ->get();
+                $stats = InventoryModel::getInventoryStatsByStorage($storage,$room,$user_id);
 
                 return response()->json([
                     'status' => 'success',

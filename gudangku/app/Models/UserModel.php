@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\AdminModel;
 
 /**
  * @OA\Schema(
@@ -56,6 +57,35 @@ class UserModel extends Authenticatable
             $res = null;
         }
         
+        return $res;
+    }
+
+    public static function getUserById($user_id){
+        $select_query = 'id,username,email,telegram_user_id,telegram_is_valid,created_at';
+
+        $res = UserModel::selectRaw($select_query)
+            ->where('id',$user_id)
+            ->first();
+        if($res){
+            $res->role = 'user';
+        }
+        if(!$res){
+            $res = AdminModel::selectRaw($select_query)
+                ->where('id',$user_id)
+                ->first();
+            if($res){
+                $res->role = 'admin';
+            }
+        }
+
+        return $res;
+    }
+
+    public static function getAllUser($paginate){
+        $res = UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at')
+            ->orderby('created_at','desc')
+            ->paginate($paginate);
+
         return $res;
     }
 }

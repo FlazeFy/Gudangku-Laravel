@@ -76,21 +76,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','created_at')
-                ->where('id',$user_id)
-                ->first();
-            if($res){
-                $res->role = 'user';
-            }
-            if(!$res){
-                $res = AdminModel::select('id','username','email','telegram_user_id','telegram_is_valid','created_at')
-                    ->where('id',$user_id)
-                    ->first();
-                if($res){
-                    $res->role = 'admin';
-                }
-            }
-
+            $res = UserModel::getUserById($user_id); // with admin too
             $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
             
             if ($res) {
@@ -171,11 +157,10 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
             $check_admin = AdminModel::find($user_id);
+            $paginate = 12;
 
             if($check_admin){
-                $res = UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at')
-                    ->orderby('created_at','desc')
-                    ->paginate(12);
+                $res = UserModel::getAllUser($paginate);
                 
                 if ($res) {
                     return response()->json([

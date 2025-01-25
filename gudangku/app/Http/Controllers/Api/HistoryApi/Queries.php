@@ -74,15 +74,9 @@ class Queries extends Controller
             $paginate = 12;
 
             if($check_admin){
-                $res = HistoryModel::selectRaw('history.id, username, history_type, history_context, history.created_at')
-                    ->join('users','users.id','=','history.created_by')
-                    ->orderby('history.created_at', 'DESC')
-                    ->paginate($paginate);
+                $res = HistoryModel::getAllHistory('admin', null, $paginate);
             } else {
-                $res = HistoryModel::select('*')
-                    ->where('created_by',$user_id)
-                    ->orderby('created_at', 'DESC')
-                    ->paginate($paginate);
+                $res = HistoryModel::getAllHistory('user', $user_id, $paginate);
             }
             
             if (count($res) > 0) {

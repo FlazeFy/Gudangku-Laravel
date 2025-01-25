@@ -440,14 +440,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $check_admin = AdminModel::find($user_id);
 
-            $res = ReportModel::selectRaw("COUNT(DISTINCT report.id) as total_report, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context")
-                ->join('report_item','report_item.report_id','=','report.id');
-                if(!$check_admin){
-                    $res = $res->where('report.created_by', $user_id);
-                }
-            $res = $res->whereRaw("YEAR(report.created_at) = '$year'")
-                ->groupByRaw('MONTH(report.created_at)')
-                ->get();
+            $res = ReportModel::getTotalReportCreatedOrSpendingPerMonth($check_admin ? null : $user_id, $year, $check_admin ? true : false, 'created');
             
             if (count($res) > 0) {
                 $res_final = [];
@@ -550,13 +543,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context");
-                if(!$check_admin){
-                    $res = $res->where('created_by', $user_id);
-                }
-            $res = $res->whereRaw("YEAR(created_at) = '$year'")
-                ->groupByRaw('MONTH(created_at)')
-                ->get();
+            $res = InventoryModel::getTotalInventoryCreatedPerMonth($check_admin ? null : $user_id, $year, $check_admin ? true : false);
             
             if (count($res) > 0) {
                 $res_final = [];
@@ -658,15 +645,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $check_admin = AdminModel::find($user_id);
 
-            $res = ReportModel::selectRaw("CAST(SUM(item_price) AS UNSIGNED) as total_price, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context")
-                ->join('report_item','report_item.report_id','=','report.id');
-                if(!$check_admin){
-                    $res = $res->where('report.created_by', $user_id);
-                }
-            $res = $res->where('report_category','Shopping Cart')
-                ->whereRaw("YEAR(report.created_at) = '$year'")
-                ->groupByRaw('MONTH(report.created_at)')
-                ->get();
+            $res = ReportModel::getTotalReportCreatedOrSpendingPerMonth($check_admin ? null : $user_id, $year, $check_admin ? true : false, 'spending');
             
             if (count($res) > 0) {
                 $res_final = [];
@@ -770,19 +749,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $check_admin = AdminModel::find($user_id);
 
-            $res = ReportModel::selectRaw("
-                    CAST(SUM(CASE WHEN report_category = 'Checkout' THEN 1 ELSE 0 END) AS UNSIGNED) as total_checkout,
-                    CAST(SUM(CASE WHEN report_category = 'Wash List' THEN 1 ELSE 0 END) AS UNSIGNED) as total_washlist,
-                    MONTH(report.created_at) as context
-                ")
-                ->join('report_item', 'report_item.report_id', '=', 'report.id');
-                if(!$check_admin){
-                    $res = $res->where('report.created_by', $user_id);
-                }
-            $res = $res->whereIn('report_category', ['Checkout', 'Wash List'])
-                ->whereRaw("YEAR(report.created_at) = '$year'")
-                ->groupByRaw('MONTH(report.created_at)')
-                ->get();
+            $res = ReportModel::getTotalReportUsedPerMonth($check_admin ? null : $user_id, $year, $check_admin ? true : false);
             
             if (count($res) > 0) {
                 $res_final = [];
@@ -880,36 +847,12 @@ class Queries extends Controller
     public function get_dashboard(Request $request){
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
-
-            $total_item = InventoryModel::selectRaw('COUNT(1) AS total')
-                ->where('created_by', $user_id)
-                ->first();
-            $total_fav = InventoryModel::selectRaw('COUNT(1) AS total')
-                ->where('is_favorite','1')
-                ->where('created_by', $user_id)
-                ->first();
-            $total_low = InventoryModel::selectRaw('COUNT(1) AS total')
-                ->where('inventory_capacity_unit','percentage')
-                ->where('inventory_capacity_vol','<=',30)
-                ->where('created_by', $user_id)
-                ->first();
-            $last_added = InventoryModel::select('inventory_name')
-                ->whereNull('deleted_at')
-                ->where('created_by', $user_id)
-                ->orderBy('created_at','DESC')
-                ->first();
-            $most_category = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
-                ->whereNull('deleted_at')
-                ->where('created_by', $user_id)
-                ->groupBy('inventory_category')
-                ->orderBy('total','DESC')
-                ->first();
-            $highest_price = InventoryModel::select('inventory_name', 'inventory_price')
-                ->whereNull('deleted_at')
-                ->where('created_by', $user_id)
-                ->orderBy('inventory_price','DESC')
-                ->first();
+            $total_item = InventoryModel::getTotalInventory($user_id,'item');
+            $total_fav = InventoryModel::getTotalInventory($user_id,'favorite');
+            $total_low = InventoryModel::getTotalInventory($user_id,'low');
+            $last_added = InventoryModel::getLastAddedInventory($user_id);
+            $most_category = InventoryModel::getMostCategoryInventory($user_id);
+            $highest_price = InventoryModel::getHighestPriceInventory($user_id);
 
             return response()->json([
                 'status' => 'success',
