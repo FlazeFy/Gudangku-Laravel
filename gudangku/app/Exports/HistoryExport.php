@@ -2,10 +2,11 @@
 
 namespace App\Exports;
 
-use App\Models\HistoryModel;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class HistoryExport implements FromCollection
+class HistoryExport implements FromCollection, WithHeadings, WithTitle
 {
     private $history;
 
@@ -13,9 +14,16 @@ class HistoryExport implements FromCollection
     {
         $this->history = $history;
     }
-
     public function collection()
     {
         return $this->history;
+    }
+    public function headings(): array
+    {
+        return ['id', 'history_type', 'history_context', 'created_at', 'created_by'];
+    }
+    public function title(): string
+    {
+        return "History";
     }
 }

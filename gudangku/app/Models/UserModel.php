@@ -42,9 +42,15 @@ class UserModel extends Authenticatable
     protected $fillable = ['id', 'username', 'password','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email','phone','timezone','created_at', 'updated_at'];
 
     public static function getSocial($id){
-        $res = UserModel::select('telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
+        $res = UserModel::select('username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
             ->where('id',$id)
             ->first();
+
+        if($res == null){
+            $res = AdminModel::select('username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
+                ->where('id',$id)
+                ->first();
+        }
 
         return $res;
     }

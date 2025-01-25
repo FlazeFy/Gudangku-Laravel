@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\FileUpload\InputFile;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 // Helpers
 use App\Helpers\Generator;
@@ -11,6 +14,7 @@ use App\Exports\HistoryExport;
 // Models
 use App\Models\HistoryModel;
 use App\Models\AdminModel;
+use App\Models\UserModel;
 
 class HistoryController extends Controller
 {
@@ -49,11 +53,51 @@ class HistoryController extends Controller
 
         if($res->isNotEmpty()){
             try {
-                $file_name = date('l, j F Y \a\t H:i:s');
+                $datetime = date('l, j F Y \a\t H:i:s');
+                $user = UserModel::getSocial($user_id);
+                $username = "";
+                if(!$check_admin){
+                    $username = "-$user->username";
+                }
+                $file_name = "History Data$username-$datetime.xlsx";
+
                 Audit::createHistory('Print item', 'History', $user_id);
 
                 session()->flash('success_message', 'Success generate data');
-                return Excel::download(new HistoryExport($res), "$file_name-History Data.xlsx");
+                
+                Excel::store(new class($res) implements WithMultipleSheets {
+                    private $res;
+        
+                    public function __construct($res)
+                    {
+                        $this->res = $res;
+                    }
+        
+                    public function sheets(): array
+                    {
+                        return [new HistoryExport($this->res)];
+                    }
+                }, $file_name, 'public');
+
+                $storagePath = storage_path("app/public/$file_name");
+                $publicPath = public_path($file_name);
+                if (!file_exists($storagePath)) {
+                    throw new \Exception("File not found: $storagePath");
+                }
+                copy($storagePath, $publicPath);
+        
+                if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
+                    $inputFile = InputFile::create($publicPath, $file_name);
+        
+                    Telegram::sendDocument([
+                        'chat_id' => $user->telegram_user_id,
+                        'document' => $inputFile,
+                        'caption' => "[ADMIN] History export is ready",
+                        'parse_mode' => 'HTML',
+                    ]);
+                }
+
+                return response()->download($publicPath)->deleteFileAfterSend(true);
             } catch (\Exception $e) {
                 return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
             }
