@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\FileUpload\InputFile;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 // Models
 use App\Models\InventoryModel;
@@ -16,7 +19,8 @@ use App\Helpers\Generator;
 use App\Helpers\Audit;
 
 // Export
-use App\Exports\InventoryExport;
+use App\Exports\ActiveInventoryExport;
+use App\Exports\DeletedInventoryExport;
 
 class HomeController extends Controller
 {
@@ -131,21 +135,54 @@ class HomeController extends Controller
     public function save_as_csv(){
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check_admin = AdminModel::find($user_id);
+        
+        $res_active = InventoryModel::getInventoryExport($check_admin ? null : $user_id, $check_admin ? true : false, 'active');
+        $res_deleted = InventoryModel::getInventoryExport($check_admin ? null : $user_id, $check_admin ? true : false, 'deleted');
 
-        $res = InventoryModel::select('*');
-            if(!$check_admin){
-                $res->where('created_by',$user_id);
-            }
-        $res = $res->orderBy('created_at', 'DESC')
-            ->get();
-
-        if($res->isNotEmpty()){
+        if($res_active->isNotEmpty()){
             try {
-                $file_name = date('l, j F Y \a\t H:i:s');
+                $user = UserModel::getSocial($user_id);
+                $datetime = date('l, j F Y \a\t H:i:s');
+                $file_name = "Inventory Data-$user->username-$datetime.xlsx";
+
                 Audit::createHistory('Print item', 'Inventory', $user_id);
 
                 session()->flash('success_message', 'Success generate data');
-                return Excel::download(new InventoryExport($res), "$file_name-Inventory Data.xlsx");
+                Excel::store(new class($res_active, $res_deleted) implements WithMultipleSheets {
+                    private $activeInventory;
+                    private $deletedInventory;
+        
+                    public function __construct($activeInventory, $deletedInventory)
+                    {
+                        $this->activeInventory = $activeInventory;
+                        $this->deletedInventory = $deletedInventory;
+                    }
+        
+                    public function sheets(): array
+                    {
+                        return [new ActiveInventoryExport($this->activeInventory), new DeletedInventoryExport($this->deletedInventory)];
+                    }
+                }, $file_name, 'public');
+
+                $storagePath = storage_path("app/public/$file_name");
+                $publicPath = public_path($file_name);
+                if (!file_exists($storagePath)) {
+                    throw new \Exception("File not found: $storagePath");
+                }
+                copy($storagePath, $publicPath);
+        
+                if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
+                    $inputFile = InputFile::create($publicPath, $file_name);
+        
+                    Telegram::sendDocument([
+                        'chat_id' => $user->telegram_user_id,
+                        'document' => $inputFile,
+                        'caption' => "Your inventory export is ready",
+                        'parse_mode' => 'HTML',
+                    ]);
+                }
+
+                return response()->download($publicPath)->deleteFileAfterSend(true);
             } catch (\Exception $e) {
                 return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
             }

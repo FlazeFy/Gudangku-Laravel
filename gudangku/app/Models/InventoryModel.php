@@ -343,4 +343,25 @@ class InventoryModel extends Model
 
         return $res;
     }
+
+    public static function getInventoryExport($user_id, $is_admin, $type){
+        $extra_col = "";
+        if($type == "deleted"){
+            $extra_col = ",deleted_at";
+        }
+        $res = InventoryModel::selectRaw("inventory_name,inventory_category,inventory_desc,inventory_merk,inventory_color,inventory_room,inventory_storage,inventory_rack,inventory_price,inventory_image,inventory_unit,inventory_vol,inventory_capacity_unit,inventory_capacity_vol,is_favorite,is_reminder,created_at,updated_at$extra_col");
+        if(!$is_admin){
+            $res = $res->where('created_by',$user_id);
+        }
+        if($type == "deleted"){
+            $res = $res->whereNotNull('deleted_at')
+                ->orderBy('deleted_at', 'DESC')
+                ->orderBy('created_at', 'DESC');
+        } else if($type == "active"){
+            $res = $res->whereNull('deleted_at')
+                ->orderBy('created_at', 'DESC');
+        }
+
+        return $res->get();
+    }
 }
