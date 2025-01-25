@@ -24,6 +24,10 @@
             <label>Price</label>
             <input type="number" name="inventory_price" id="inventory_price" class="form-control mt-2"/>
         </div>
+        <div class="col-lg-6 py-2">
+            <label>Created At</label>
+            <input class='form-control' type='datetime-local' id='created_at_edit' name='created_at_edit'>
+        </div>
     </div><hr>
 
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Standard Capacity</h6>
@@ -69,10 +73,23 @@
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Reminder</h6>
     <div id='reminder_holder'></div>
 
-    <button type="submit" class="btn btn-success mt-3 w-100 border-0" style="background:var(--successBG) !important;"><i class="fa-solid fa-floppy-disk"></i> Submit</button>
+    <a id="save_changes" class="btn btn-success mt-3 w-100 border-0" style="background:var(--successBG) !important;"><i class="fa-solid fa-floppy-disk"></i> Submit</a>
 </form>
 
 <script>
+    $(document).on('click','#save_changes',function(){
+        const convertToOppositeTimezone = (datetime) => {
+            const localDate = new Date(datetime)
+            const offsetHr = getUTCHourOffset()
+            const oppositeOffsetHr = -offsetHr + offsetHr
+            const oppositeDate = new Date(localDate.getTime() + oppositeOffsetHr * 60 * 60 * 1000)
+            return oppositeDate.toISOString().slice(0, 16)
+        }
+        const createdAtOpposite = convertToOppositeTimezone($('#created_at_edit').val())
+        $('#created_at_edit').val(createdAtOpposite)
+
+        $('#form_edit_inventory').submit()
+    })
     const get_detail_inventory = (id) => {
         const item_holder = 'report_holder'
         Swal.showLoading()
@@ -210,6 +227,7 @@
                 $('#reminder_context').val(data.reminder_context)
                 $('#reminder_desc').text(data.reminder_desc)
                 $('#created_at').text(getDateToContext(data.created_at,'calendar'))
+                $('#created_at_edit').val(getDateToContext(data.created_at,'calendar'))
                 $('#updated_at').text(data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-')
                 
                 $('#inventory_name_add_report').val(data.inventory_name)

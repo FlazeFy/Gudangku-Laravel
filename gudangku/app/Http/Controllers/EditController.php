@@ -59,6 +59,7 @@ class EditController extends Controller
                 'inventory_vol' => $request->inventory_vol, 
                 'inventory_capacity_unit' => $inventory_capacity_unit, 
                 'inventory_capacity_vol' => $inventory_capacity_vol, 
+                'created_at' => $request->created_at_edit,
                 'updated_at' => date("Y-m-d H:i:s")
             ];
 

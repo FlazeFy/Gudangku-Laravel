@@ -264,7 +264,8 @@ class Commands extends Controller
                 ->update([
                     'report_title' => $request->report_title,
                     'report_desc' => $request->report_desc,
-                    'report_category' => $request->report_category
+                    'report_category' => $request->report_category,
+                    'created_at' => $request->created_at
                 ]);
 
             if($rows > 0){

@@ -108,6 +108,11 @@
                     </div>
                     <div>
                         ${is_edit_mode ? 
+                            `<label>Created At</label>
+                            <input class='form-control' type='datetime-local' id='created_at_edit' style='${ !isMobile() && 'min-width:480px;'}' value='${created_at}'>` : ''}
+                    </div>
+                    <div>
+                        ${is_edit_mode ? 
                             `<label>Category</label>
                             <select class='form-select' id='report_category' value='${data.report_category}'>${select_cat_el}</select>`
                             :
@@ -324,6 +329,15 @@
 
     const update_report = (id) => {
         Swal.showLoading()
+        const convertToOppositeTimezone = (datetime) => {
+            const localDate = new Date(datetime)
+            const offsetHr = getUTCHourOffset()
+            const oppositeOffsetHr = -offsetHr + offsetHr
+            const oppositeDate = new Date(localDate.getTime() + oppositeOffsetHr * 60 * 60 * 1000)
+            return oppositeDate.toISOString().slice(0, 16)
+        }
+        const createdAtOpposite = convertToOppositeTimezone($('#created_at_edit').val())
+        
         $.ajax({
             url: `/api/v1/report/update/report/${id}`,
             type: 'PUT',
@@ -332,6 +346,7 @@
                 report_title: $('#report_title').val(),
                 report_desc: $('#report_desc').val(),
                 report_category: $('#report_category').val(),
+                created_at: createdAtOpposite
             }),
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
