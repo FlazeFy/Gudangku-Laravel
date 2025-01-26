@@ -66,7 +66,8 @@
     <script>
         const get_analyze = (id) => {
             Swal.showLoading()
-            const year = new Date().getFullYear()
+            const year_sess = <?= session()->get('toogle_select_year') ?>;
+            const year = year_sess ?? new Date().getFullYear()
             $.ajax({
                 url: `/api/v1/inventory/analyze/${id}?year=${year}`,
                 type: 'GET',
@@ -176,15 +177,23 @@
                     generate_line_column_chart(`Average Price Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_line_chart,60)
                     generate_bar_chart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
 
-                    $('#layout-holder').html(`
-                        <h3>8. The Room Layout</h3>
-                        <p>You can find <span class='text-primary'>${data.inventory_name}</span> at storage <span class='text-primary'>${data.inventory_storage}</span>, layout <span class='text-primary'>${data.inventory_layout.layout}</span>.
-                        This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about ${count_time(data.inventory_layout.created_at,null,'day')} days ago.
-                        </p>
-                        <div id='room_layout_map' class='mx-3 mt-2'></div>
-                        <br>
-                    `)
-                    generate_map_room('#room_layout_map',[data.inventory_layout],false,data.inventory_room)
+                    if(data.inventory_layout){
+                        $('#layout-holder').html(`
+                            <h3>8. The Room Layout</h3>
+                            <p>You can find <span class='text-primary'>${data.inventory_name}</span> at storage <span class='text-primary'>${data.inventory_storage}</span>, layout <span class='text-primary'>${data.inventory_layout.layout}</span>.
+                            This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about ${count_time(data.inventory_layout.created_at,null,'day')} days ago.
+                            </p>
+                            <div id='room_layout_map' class='mx-3 mt-2'></div>
+                            <br>
+                        `)
+                        generate_map_room('#room_layout_map',[data.inventory_layout],false,data.inventory_room)
+                    } else {
+                        $('#layout-holder').html(`
+                            <h3>8. The Room Layout</h3>
+                            <p class='text-secondary fst-italic'>- This inventory is not assigned to room storage or the storage may not valid -</p>
+                            <br>
+                        `)
+                    }
 
                     const data_inventory_activity_report = data.inventory_activity_report
                     const days = ["Sun","Sat","Fri","Thu","Wed","Tue","Mon"]

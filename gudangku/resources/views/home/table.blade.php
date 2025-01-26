@@ -227,6 +227,10 @@
                                                 <h6>${el.updated_at ? getDateToContext(el.updated_at,'calendar') : '-'}</h6>
                                                 <h6 class='fw-bold mt-2'>Deleted At</h6>
                                                 <h6>${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</h6>
+                                                <div class="alert alert-primary mt-3" role="alert">
+                                                    <h6 class='fw-bold' style="font-size:var(--textXLG);"><i class="fa-solid fa-circle-info"></i> For Your Information</h6>
+                                                    <h6 class='mt-2'><b class="text-primary">${el.inventory_name}</b> is been existed in your inventory for about <b>${count_time(el.created_at,null,'day')}</b> days ago.</h6>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

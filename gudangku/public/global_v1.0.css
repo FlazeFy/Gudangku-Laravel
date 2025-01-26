@@ -41,7 +41,7 @@
     --successBG : #00C363;
     --dangerBG : #DD0022;
     --warningBG : #FFC352;
-    --infoBG : #009FF9;
+    --infoBG : #1ba6f7;
     --infoLightBG : #E7F4FE;
     --hoverBG : #F2F2F2;
 
@@ -160,6 +160,15 @@ table tr {
     text-align: center;
     font-size: var(--spaceLG);
     margin-bottom: var(--spaceMD);
+}
+
+.alert {
+    border-radius: var(--roundedLG);
+    margin: 0;
+    border: calc(var(--spaceMini) * 0.7) solid var(--whiteColor);
+}
+.alert-primary {
+    background: var(--infoBG);
 }
 
 /* Desktop style */

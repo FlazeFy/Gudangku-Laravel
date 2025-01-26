@@ -6,6 +6,11 @@
 
         <title>GudangKu</title>
         <link rel="icon" type="image/png" href="{{asset('images/logo.png')}}"/>
+        
+        @php
+            $fullUrl = url()->current(); // Get the full current URL
+            $cleanedUrl = str_replace("http://127.0.0.1:8000/", "", $fullUrl);
+        @endphp
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -26,40 +31,45 @@
         <!-- Jquery -->
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
-        <!-- Jquery DataTables -->
-        <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.5.1/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- Bootstrap Bundle JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.5.1/js/bootstrap.bundle.min.js"></script>
 
-        <!--Apex Chart-->
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <?php if(preg_match('(stats|analyze)', $cleanedUrl)): ?>
+            <!--Apex Chart-->
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <?php endif; ?>
 
-        <!-- Bootstrap dataTables Javascript -->
-        <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-
-        <!--Full calendar.-->
-        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+        <?php if(preg_match('(calendar)', $cleanedUrl)): ?>
+            <!--Full calendar.-->
+            <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+        <?php endif; ?>
 
         <!-- Swal -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <!-- Tenserflow -->
-        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+        <?php if(preg_match('(inventory/add|inventory/edit)', $cleanedUrl)): ?>
+            <!-- Tenserflow -->
+            <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+        <?php endif; ?>
 
         <!-- JS Collection -->
         <script src="{{ asset('/global_v1.0.js')}}"></script>
-        <script src="{{ asset('/chart_v1.0.js')}}"></script>
         <script src="{{ asset('/template_v1.0.js')}}"></script>
 
-        <!-- Richtext -->
-        <link rel="stylesheet" href="{{ asset('/richtexteditor/rte_theme_default.css')}}" />
-        <script type="text/javascript" src="{{ asset('/richtexteditor/rte.js')}}"></script>
-        <script type="text/javascript" src="{{ asset('/richtexteditor/rte-upload.js')}}"></script>
-        <script type="text/javascript" src="{{ asset('/richtexteditor/plugins/all_plugins.js')}}"></script>
+        <?php if(preg_match('(stats|analyze)', $cleanedUrl)): ?>
+            <script src="{{ asset('/chart_v1.0.js')}}"></script>
+        <?php endif; ?>
+
+        <?php if(preg_match('(doc)', $cleanedUrl)): ?>
+            <!-- Richtext -->
+            <link rel="stylesheet" href="{{ asset('/richtexteditor/rte_theme_default.css')}}" />
+            <script type="text/javascript" src="{{ asset('/richtexteditor/rte.js')}}"></script>
+            <script type="text/javascript" src="{{ asset('/richtexteditor/rte-upload.js')}}"></script>
+            <script type="text/javascript" src="{{ asset('/richtexteditor/plugins/all_plugins.js')}}"></script>
+        <?php endif; ?>
 
         <!-- Styles -->
         <style>
