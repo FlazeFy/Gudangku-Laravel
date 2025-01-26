@@ -102,7 +102,8 @@ Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
 
     Route::prefix('/detail/{id}')->group(function (){
         Route::get('/', [ReportDetailController::class, 'index']);
-        Route::post('/toogle_edit', [ReportDetailController::class, 'toogle_edit']);    
+        Route::post('/toogle_edit', [ReportDetailController::class, 'toogle_edit']);  
+        Route::post('/save_as_csv', [ReportDetailController::class, 'save_as_csv']);  
     });
 });
 

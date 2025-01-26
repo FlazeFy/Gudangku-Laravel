@@ -51,4 +51,17 @@ class ReportItemModel extends Model
 
         return $res->get();
     }  
+
+    public static function getReportInventoryDetailExport($user_id, $is_admin, $report_id){
+        $res = ReportItemModel::selectRaw("inventory_name,inventory_category,inventory_desc,inventory_merk,inventory_color,inventory_room,inventory_storage,inventory_rack,inventory_price,inventory_image,inventory_unit,inventory_vol,inventory_capacity_unit,inventory_capacity_vol,is_favorite,is_reminder,inventory.created_at,inventory.updated_at")
+            ->join('inventory','inventory.id','=','report_item.inventory_id');
+        if(!$is_admin){
+            $res = $res->where('inventory.created_by',$user_id);
+        }
+        $res = $res->where('report_item.report_id',$report_id)
+            ->whereNull('deleted_at')
+            ->orderBy('report_item.created_at', 'DESC');
+
+        return $res->get();
+    }
 }
