@@ -187,4 +187,30 @@ class Queries extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function get_content_year(Request $request){
+        try{
+            $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+            $res = UserModel::getAvailableYear($check_admin ? null : $user_id, $check_admin ? true : false);
+
+            if ($res) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => Generator::getMessageTemplate("fetch", 'user year'),
+                    'data' => $res,
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => Generator::getMessageTemplate("not_found", 'user year'),
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

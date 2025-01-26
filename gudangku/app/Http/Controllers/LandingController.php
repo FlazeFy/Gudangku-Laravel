@@ -27,6 +27,9 @@ class LandingController extends Controller
             if(!session()->get('toogle_view_stats')){
                 session()->put('toogle_view_stats', 'top chart');
             }
+            if(!session()->get('toogle_select_year')){
+                session()->put('toogle_select_year', date('Y'));
+            }
 
             return view('landing.index');
         } else {

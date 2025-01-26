@@ -32,4 +32,11 @@ class StatsController extends Controller
 
         return redirect()->back();
     }
+
+    public function toogle_year(Request $request)
+    {
+        $request->session()->put('toogle_select_year', $request->toogle_year);
+
+        return redirect()->back();
+    }
 }

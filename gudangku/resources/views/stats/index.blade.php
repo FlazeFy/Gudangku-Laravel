@@ -9,7 +9,8 @@
 @section('content')
     <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
     <script>
-        const year = new Date().getFullYear()
+        const year_sess = <?= session()->get('toogle_select_year') ?>;
+        const year = year_sess ?? new Date().getFullYear()
     </script>
     <div class="content">
         @include('others.profile')

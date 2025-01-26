@@ -61,6 +61,7 @@ Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [StatsController::class, 'index']);
     Route::post('/toogleTotal', [StatsController::class, 'toogle_total']);
     Route::post('/toogleView', [StatsController::class, 'toogle_view']);
+    Route::post('/toogleYear', [StatsController::class, 'toogle_year']);
 });
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {

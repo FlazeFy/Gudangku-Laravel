@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\AdminModel;
+use App\Models\InventoryModel;
+use App\Models\ReportModel;
 
 /**
  * @OA\Schema(
@@ -91,6 +93,29 @@ class UserModel extends Authenticatable
         $res = UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at')
             ->orderby('created_at','desc')
             ->paginate($paginate);
+
+        return $res;
+    }
+
+    public static function getAvailableYear($user_id, $is_admin){
+        $res_inventory = InventoryModel::selectRaw('YEAR(created_at) as year');
+        if (!$is_admin) {
+            $res_inventory = $res_inventory->where('created_by', $user_id);
+        }
+        $res_inventory = $res_inventory->groupBy('year')
+            ->get();
+    
+        $res_report = ReportModel::selectRaw('YEAR(created_at) as year');
+        if (!$is_admin) {
+            $res_report = $res_report->where('created_by', $user_id);
+        }
+        $res_report = $res_report->groupBy('year')
+            ->get();
+    
+        $res = $res_inventory->concat($res_report)
+            ->unique('year') 
+            ->sortBy('year')
+            ->values(); 
 
         return $res;
     }
