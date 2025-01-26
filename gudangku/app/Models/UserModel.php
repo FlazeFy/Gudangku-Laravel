@@ -119,4 +119,17 @@ class UserModel extends Authenticatable
 
         return $res;
     }
+
+    public static function getUserExport(){
+        $res = UserModel::selectRaw("users.id,username,telegram_user_id,telegram_is_valid,firebase_fcm_token,line_user_id,email,phone,timezone,users.created_at,users.updated_at, 
+            CAST(COALESCE(SUM(CASE WHEN inventory.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS UNSIGNED) as total_inventory,
+            CAST(COALESCE(SUM(CASE WHEN report.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS UNSIGNED) as total_report")
+            ->leftjoin('inventory','users.id','=','inventory.created_by')
+            ->leftjoin('report','users.id','=','report.created_by')
+            ->groupby('users.id')
+            ->orderby('users.created_at')
+            ->get();
+
+        return $res;
+    }
 }

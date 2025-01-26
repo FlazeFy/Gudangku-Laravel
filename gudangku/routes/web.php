@@ -78,6 +78,7 @@ Route::prefix('/profile')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/user')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [UserController::class, 'index']);
+    Route::post('/save_as_csv', [UserController::class, 'save_as_csv']);
 });
 
 Route::prefix('/error')->middleware(['auth_v2:sanctum'])->group(function () {
