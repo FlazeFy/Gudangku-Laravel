@@ -56,19 +56,21 @@
                             <button class="report-box mt-2" onclick="window.location.href='/report/detail/${el.id}'">
                                 <div class="d-flex justify-content-between mb-2">
                                     <div>
-                                        <h3 style="font-weight:500; font-size:var(--textJumbo);">${el.report_title}</h3>
+                                        <h2 style="font-weight:500; font-size:var(--textJumbo);">${el.report_title}</h2>
                                     </div>
                                     <div>
-                                        <span class="bg-success text-white rounded-pill px-3 py-2">${el.report_category}</span>
+                                        <span class="bg-success text-white rounded-pill px-3 py-2 report-category">${el.report_category}</span>
                                     </div>
                                 </div>
+                                <div class="report-desc">
                                 ${el.report_desc ? `<p class="mt-2">${el.report_desc}</p>` : `<p class="text-secondary fst-italic mt-2">- No Description Provided -</p>`}
+                                </div>
                                 <br>
                                 <h3 class='fw-bold'>Items : </h3>
-                                <div class='d-flex justify-content-start mt-2'>${el.report_items ?? '<span class="text-secondary fst-italic mt-2">- No items found -</span>'}</div>
+                                <div class='d-flex justify-content-start mt-2 report-items'>${el.report_items ?? '<span class="text-secondary fst-italic mt-2">- No Items Found -</span>'}</div>
                                 ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
                                     <div class="d-flex justify-content-between mt-3">
-                                        <div>
+                                        <div class='total-price'>
                                             ${
                                                 isMobile() ?
                                                     `<h3 class="fw-bold" style="font-size:var(--textLG);">Total Price</h3>
@@ -77,7 +79,7 @@
                                                     `<h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price : Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</h3>`
                                             }
                                         </div>
-                                        <div>
+                                        <div class='total-item'>
                                             ${
                                                 isMobile() ?
                                                     `<h3 class="fw-bold" style="font-size:var(--textLG);">Total Item</h3>

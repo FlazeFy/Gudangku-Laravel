@@ -1,7 +1,7 @@
 <div class='control-panel <?php if(!$isMobile){ echo 'position-sticky'; } ?>' style='<?php if(!$isMobile){ echo 'top:var(--spaceMD);'; } ?>'>
     <a class="fw-bold" style='font-size:var(--textXJumbo);' data-bs-toggle="collapse" href="#collapseControl">Control Panel<a>
     <div class="mt-1 mb-2 row collapse show" id="collapseControl">
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
             <form action="/stats/toogleView" method="POST" id="toogle_view_stats_select">
                 @csrf
                 <label>Chart Type</label>
@@ -12,7 +12,7 @@
                 </select>
             </form>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
             <form action="/stats/toogleTotal" method="POST" id="toogle_total_view_select">
                 @csrf
                 <label>Toogle Total</label>
@@ -24,7 +24,7 @@
             </form>
         </div>
         @if(session()->get('toogle_view_stats') == "periodic chart")
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12">
             <form action="/stats/toogleYear" method="POST" id="toogle_year_select">
                 @csrf
                 <label>Select Year</label>

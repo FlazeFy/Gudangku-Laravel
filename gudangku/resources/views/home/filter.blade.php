@@ -2,14 +2,14 @@
     <div class="position-relative py-2">
         <a class="fw-bold" style='font-size:var(--textXJumbo);' data-bs-toggle="collapse" href="#collapseControl">Control Panel</a>
         <div class="mt-1 mb-2 row collapse show" id="collapseControl">
-            <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <label>Search by Name or Merk</label>
                 <div class="position-relative">
                     <input class="form-control" id="search_by_name_merk" value="<?= $search_key ?>" onkeydown="return submitOnEnter(event)">
                     <span id='reset_search_btn_holder'></span>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <label>Search by Category</label>
                 <div class="position-relative">
                     <select class="form-select" aria-label="Default select example" id='search_by_category'>
@@ -21,7 +21,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <label>Sorting</label>
                 <div class="position-relative">
                     <select class="form-select" aria-label="Default select example" id='sorting'>

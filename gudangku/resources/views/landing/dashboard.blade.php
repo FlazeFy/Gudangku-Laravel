@@ -13,25 +13,25 @@
 </style>
 
 <div class="row mb-3">
-    <div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="col-lg-4 col-md-6 col-sm-12" id='total_item-section'>
         <h1 class="dashboard-title"><span id='total_item'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Item</span> @endif</h1>
         @if(!$isMobile)
             <h2 class="dashboard-subtitle">Item</h2>
         @endif
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="col-lg-4 col-md-6 col-sm-12" id='total_fav-section'>
         <h1 class="dashboard-title"><span id='total_fav'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Favorite Item</span> @endif</h1>
         @if(!$isMobile)
             <h2 class="dashboard-subtitle">Favorite Item</h2>
         @endif
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="col-lg-4 col-md-6 col-sm-12" id='total_low-section'>
         <h1 class="dashboard-title"><span id='total_low'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Low Capacity</span> @endif</h1>
         @if(!$isMobile)
             <h2 class="dashboard-subtitle">Low Capacity</h2>
         @endif
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4">
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4" id='last_added-section'>
         @if($isMobile)
             <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Last Added</h6>
         @endif
@@ -40,7 +40,7 @@
             <h2 class="dashboard-subtitle">Last Added</h2>
         @endif
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4">
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4" id='most_category_total-section'>
         @if($isMobile)
             <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Most Category</h6>
         @endif
@@ -49,7 +49,7 @@
             <h2 class="dashboard-subtitle">Most Category</h2>
         @endif
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4">
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4" id='highest_price_name-section'>
         @if($isMobile)
             <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">The Highest Price</h6>
         @endif

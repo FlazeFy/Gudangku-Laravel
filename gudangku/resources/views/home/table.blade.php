@@ -8,7 +8,7 @@
 <div id="inventory_holder">
     <table class="table" id="inventory_tb">
         <thead class="text-center">
-            <tr>
+            <tr class="tr-header">
                 <th scope="col" style='width:260px;'>Name & Description</th>
                 <th scope="col" style='min-width:140px;'>Category & Merk</th>
                 <th scope="col" style='min-width:140px;'>Placement</th>
@@ -175,16 +175,16 @@
                     }
                     
                     $(`#${item_holder}`).append(`
-                        <tr ${styletr}>
+                        <tr ${styletr} class='inventory-tr'>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 ${el.inventory_image ? `
                                     <img src="${el.inventory_image}" data-bs-toggle='modal' data-bs-target='#zoom_image-${el.id}'class='img-responsive img-zoomable-modal mb-3' title="${el.inventory_name}">
                                 ` : ''}
                                 ${el.is_favorite ? `<span class='bg-success rounded-pill px-3 py-1'><i class="fa-solid fa-bookmark" title="Favorite"></i> Favorite</span>` : ''}
-                                <h6 class='mt-2' style='font-size:var(--textLG); font-weight:600;'>${el.inventory_name}</h6>
+                                <h6 class='mt-2 inventory-name' style='font-size:var(--textLG); font-weight:600;'>${el.inventory_name}</h6>
                                 <hr class='my-2'>
                                 <h6 class='fw-bold mt-2'>Description</h6>
-                                <h6>${el.inventory_desc || '-'}</h6>
+                                <h6 class='inventory-desc'>${el.inventory_desc || '-'}</h6>
                                 ${role == 1 ? `
                                     <h6 class='fw-bold mt-2'>Created By</h6>
                                     <h6>@${el.username}</h6>
@@ -192,17 +192,17 @@
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 <h6 class='fw-bold'>Category</h6>
-                                <h6>${el.inventory_category}</h6>
+                                <h6 class='inventory-category'>${el.inventory_category}</h6>
                                 <h6 class='fw-bold mt-2'>Merk</h6>
-                                <h6>${el.inventory_merk || '-'}</h6>
+                                <h6 class='inventory-merk'>${el.inventory_merk || '-'}</h6>
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 <h6 class='fw-bold'>Room</h6>
-                                <h6>${el.inventory_room}</h6>
+                                <h6 class='inventory-room'>${el.inventory_room}</h6>
                                 <h6 class='fw-bold mt-2'>Storage</h6>
-                                <h6>${el.inventory_storage ?? '-'}</h6>
+                                <h6 class='inventory-storage'>${el.inventory_storage ?? '-'}</h6>
                                 <h6 class='fw-bold mt-2'>Rack</h6>
-                                <h6>${el.inventory_rack ?? '-'}</h6>
+                                <h6 class='inventory-rack'>${el.inventory_rack ?? '-'}</h6>
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>Rp. ${number_format(el.inventory_price, 0, ',', '.')}</td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>${el.inventory_vol} ${el.inventory_unit}</td>
@@ -210,7 +210,7 @@
                                 ${el.inventory_capacity_unit === 'percentage' ? `${el.inventory_capacity_vol}%` : '-'}
                             </td>
                             <td>
-                                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalInfoProps_${el.id}">
+                                <button class="btn btn-primary w-100 btn-props" data-bs-toggle="modal" data-bs-target="#modalInfoProps_${el.id}">
                                     <i class="fa-solid fa-circle-info" style="font-size:var(--textXLG);"></i> Properties
                                 </button>
                                 <div class="modal fade" id="modalInfoProps_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -238,7 +238,7 @@
                                 <div class='row mt-2 mx-1'>
                                     ${role === 0 ? `
                                         <div class='col p-0 pe-1'>
-                                            <a class="btn btn-danger w-100" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
+                                            <a class="btn btn-danger w-100 btn-like" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
                                                 ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
                                                 <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i>
                                             </a>
@@ -246,7 +246,7 @@
                                     ` : ''}
                                     <div class='col p-0 ${role === 0 && 'ps-1' }'>
                                         <input type="hidden" name="type_delete" value="${el.deleted_at ? "hard" : "soft"}">
-                                        <button class="btn btn-danger modal-btn w-100" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}">
+                                        <button class="btn btn-danger modal-btn w-100 btn-delete" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}">
                                             <i class="fa-solid ${el.deleted_at ? "fa-fire" : "fa-trash"}" style="font-size:var(--textXLG);"></i>
                                         </button>
                                         <div class="modal fade" id="modalDelete_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -270,7 +270,7 @@
                                 <div class='row mt-2 mx-1'>
                                     <div class='col p-0 pe-1'>
                                         <input type="hidden" name="is_editable" value="${el.deleted_at ? "false" : "true"}">
-                                        <a class="btn btn-warning modal-btn w-100 "
+                                        <a class="btn btn-warning modal-btn w-100 btn-manage"
                                             ${el.deleted_at 
                                                 ? `data-bs-toggle="modal" data-bs-target="#modalRecover_${el.id}"` 
                                                 : `href="/inventory/edit/${el.id}"`
@@ -296,7 +296,7 @@
                                         </div>` : ''}
                                     </div>
                                     <div class='col p-0 ps-1'>
-                                        <button class="btn btn-success ${el.reminder && "bg-success border-0"} w-100">
+                                        <button class="btn btn-success ${el.reminder && "bg-success border-0"} w-100 btn-reminder">
                                             <i class="fa-solid ${el.reminder ? "fa-bell" : "fa-bell-slash"}" style="font-size:var(--textXLG);"></i>
                                         </button>
                                         ${reminders}

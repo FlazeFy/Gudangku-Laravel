@@ -1,7 +1,7 @@
 <form id="add_inventory">
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
     <div class="row">
-        <div class="col-lg-6 py-2">
+        <div class="col-lg-6 col-md-6 py-2">
             <input type="text" name="inventory_name" id='inventory_name' class="form-control form-validated my-2" maxlength="75"/>
 
             <label>Category</label>
@@ -14,16 +14,16 @@
             <label>Color</label>
             <input type="text" name="inventory_color" id="inventory_color" class="form-control my-2" readonly/>
         </div>
-        <div class="col-lg-6 py-2">
+        <div class="col-lg-6 col-md-6 d-flex align-items-center py-2">
             @include('add.image_picker')
         </div>
         <div class="col-lg-12 py-2">
             <textarea name="inventory_desc" id="inventory_desc" class="form-control mt-2 form-validated" maxlength="255"></textarea>
         </div>
-        <div class="col-lg-6 py-2">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-12 py-2">
             <input type="text" name="inventory_merk" id="inventory_merk" class="form-control mt-2 form-validated" maxlength="75"/>
         </div>
-        <div class="col-lg-6 py-2">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-12 py-2">
             <input type="number" name="inventory_price" id="inventory_price" class="form-control mt-2 form-validated" min="0"/>
         </div>
     </div>
@@ -35,10 +35,10 @@
 
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Standard Capacity</h6>
     <div class="row">
-        <div class="col-lg-6 py-2">
+        <div class="col-md-3 col-sm-4 col-4 py-2">
             <input type="number" name="inventory_vol" id="inventory_vol" class="form-control mt-2 form-validated" max="9999" min="0"/>
         </div>
-        <div class="col-lg-6 py-2">
+        <div class="col-md-9 col-sm-8 col-8 py-2">
             <label>Unit</label>
             <select class="form-select mt-2" name="inventory_unit" aria-label="Default select example">
                 @foreach($dct_unit as $dct)
@@ -50,10 +50,10 @@
 
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Remaining Capacity</h6>
     <div class="row">
-        <div class="col-lg-6 py-2">
+        <div class="col-md-3 col-sm-4 col-4 py-2">
             <input type="number" name="inventory_capacity_vol" id='inventory_capacity_vol' class="form-control mt-2 form-validated"/>
         </div>
-        <div class="col-lg-6 py-2">
+        <div class="col-md-9 col-sm-8 col-8 py-2">
             <label>Unit</label>
             <select class="form-select mt-2" name="inventory_capacity_unit" aria-label="Default select example">
                 <option value='-' selected>-</option>
@@ -67,7 +67,7 @@
 
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Placement</h6>
     <div class="row">
-        <div class="col-lg-6 py-2">
+        <div class="col-md-4 col-sm-6 col-6 py-2">
             <label>Room</label>
             <select class="form-select mt-2" name="inventory_room" aria-label="Default select example">
                 @foreach($dct_room as $dct)
@@ -75,15 +75,17 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-lg-6 py-2">
+        <div class="col-md-4 col-sm-6 col-6 py-2">
             <input type="text" name="inventory_storage" id="inventory_storage" class="form-control mt-2 form-validated" maxlength="36"/>
         </div>
-        <div class="col-lg-6 py-2">
+        <div class="col-md-4 col-sm-12 col-12 py-2">
             <input type="text" name="inventory_rack" id="inventory_rack" class="form-control mt-2 form-validated" maxlength="36"/>
         </div>
     </div>
 
-    <a class="btn btn-success mt-3 w-100 border-0" onclick="submit_add()" style="background:var(--successBG) !important;"><i class="fa-solid fa-floppy-disk"></i> Submit</a>
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-success mt-3 border-0" onclick="submit_add()" style="background:var(--successBG) !important; min-width:160px;"><i class="fa-solid fa-floppy-disk"></i> Submit</a>
+    </div>
 </form>
 
 <script>

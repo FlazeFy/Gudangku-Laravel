@@ -18,7 +18,7 @@
                 @include('landing.analyze')
             </div>
             @endif
-            <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/inventory';" id="nav_inventory_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-warehouse me-2"></i> @if($role == 0) My @endif Inventory</h2>
@@ -28,7 +28,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/stats';" id="nav_stats_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-pie-chart me-2"></i> Stats</h2>
@@ -38,7 +38,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/<?php if($role == 0){ echo 'calendar'; } else { echo 'user'; } ?>';">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-<?php if($role == 0){ echo "calendar"; } else { echo "user"; } ?> me-2"></i> @if($role == 0) Calendar @else User @endif</h2>
@@ -48,8 +48,8 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/report';">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
+                <button class="btn-feature mb-3" onclick="location.href='/report';" id="nav_report_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-scroll me-2"></i> Report</h2>
                     @else
@@ -58,7 +58,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/history';" id="nav_history_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-clock-rotate-left me-2"></i> History</h2>
@@ -68,7 +68,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/profile';" id="nav_profile_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-user me-2"></i> My Profile</h2>
@@ -79,7 +79,7 @@
                 </button>
             </div>
             @if($role == 1)
-            <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/error';" id="nav_error_history_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-triangle-exclamation me-2"></i> Error History</h2>
@@ -89,7 +89,7 @@
                     @endif
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
                 <button class="btn-feature mb-3" onclick="location.href='/reminder';" id="nav_error_history_btn">
                     @if($isMobile)
                         <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-bell me-2"></i> Reminder Mark</h2>

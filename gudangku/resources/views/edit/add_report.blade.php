@@ -60,11 +60,11 @@
                     <label>Item Notes</label>
                     <textarea class="form-control" name="item_desc" id="item_desc" style="height: 100px"></textarea>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-sm-3 col-4">
                             <label>Qty</label>
                             <input class="item_qty_selected form-control w-100" name="item_qty" type="number" min="1" value="1">
                         </div>
-                        <div class="col-8" id="item-extra-form">
+                        <div class="col-sm-9 col-8" id="item-extra-form">
                             <div id="item-price-holder">
                                 <label>Price (optional)</label>
                                 <input class="item_qty_selected form-control w-100" name="item_price" type="number" min="1">

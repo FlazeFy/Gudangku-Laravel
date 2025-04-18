@@ -1,5 +1,6 @@
-button, .btn {
+button, .btn, a {
     cursor: pointer;
+    background: var(--darkColor) !important;
 }
 button:hover, .btn:hover {
     transform: scale(1.05);
@@ -41,7 +42,6 @@ button:hover, .btn:hover {
 }
 /* Pagination generator */
 .btn-page {
-    background: transparent !important;
     border: 1.5px solid var(--primaryColor) !important;
     cursor: pointer;
     padding: var(--spaceSM) var(--spaceMD);

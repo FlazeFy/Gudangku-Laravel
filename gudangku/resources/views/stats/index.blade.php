@@ -22,29 +22,29 @@
         @include('stats.toogle_total')
         <div class="row">
             @if(session()->get('toogle_view_stats') == 'top chart')
-                <div class="col-lg-4 col-md-6 col-sm-12 mx-auto">
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mx-auto">
                     @include('stats.get_total_inventory_by_category')
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-12 mx-auto">
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mx-auto">
                     @include('stats.get_total_inventory_by_room')
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-12 mx-auto">
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mx-auto">
                     @include('stats.get_total_inventory_by_fav')
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-12 mx-auto">
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mx-auto">
                     @include('stats.get_total_inventory_by_merk')
                 </div>
             @elseif(session()->get('toogle_view_stats') == 'periodic chart')
-                <div class="col-lg-6 col-md-6 col-sm-12 mx-auto">
+                <div class="col-lg-6 col-md-12 mx-auto">
                     @include('stats.get_total_inventory_created_per_month')
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 mx-auto">
+                <div class="col-lg-6 col-md-12 mx-auto">
                     @include('stats.get_total_report_created_per_month')
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 mx-auto">
+                <div class="col-lg-6 col-md-12 mx-auto">
                     @include('stats.get_total_report_spending_per_month')
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 mx-auto">
+                <div class="col-lg-6 col-md-12 mx-auto">
                     @include('stats.get_total_report_used_per_month')
                 </div>
             @endif

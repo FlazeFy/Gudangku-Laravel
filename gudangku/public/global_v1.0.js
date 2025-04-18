@@ -190,15 +190,17 @@ const number_format = (number, decimals, dec_point, thousands_sep) => {
 const check_filling_status = (list) => {
     return list.some((dt) => {
         const el = $(`#${dt}`)
-        const tag = el.prop("tagName").toLowerCase()
-        const type = el.attr("type") || null
-        
-        if (tag === 'input') {
-            if ((type === 'text' || type === 'email' || type === 'password') && el.val().trim() !== '') {
-                return true
-            }
-            if (type === 'checkbox' && el.is(":checked")) {
-                return true
+        if(el && el.length > 0){
+            const tag = el.prop("tagName").toLowerCase()
+            const type = el.attr("type") || null
+            
+            if (tag === 'input') {
+                if ((type === 'text' || type === 'email' || type === 'password') && el.val().trim() !== '') {
+                    return true
+                }
+                if (type === 'checkbox' && el.is(":checked")) {
+                    return true
+                }
             }
         }
         return false
