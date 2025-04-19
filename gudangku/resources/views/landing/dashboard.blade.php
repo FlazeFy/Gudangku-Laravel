@@ -31,32 +31,40 @@
             <h2 class="dashboard-subtitle">Low Capacity</h2>
         @endif
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4" id='last_added-section'>
-        @if($isMobile)
-            <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Last Added</h6>
-        @endif
-        <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;"><span id='last_added'></span></h2>
-        @if(!$isMobile)
-            <h2 class="dashboard-subtitle">Last Added</h2>
-        @endif
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center" id='last_added-section'>
+        <div>
+            @if($isMobile)
+                <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Last Added</h6>
+            @endif
+            <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;"><span id='last_added'></span></h2>
+            @if(!$isMobile)
+                <h2 class="dashboard-subtitle">Last Added</h2>
+            @endif
+        </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4" id='most_category_total-section'>
-        @if($isMobile)
-            <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Most Category</h6>
-        @endif
-        <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;">(<span id='most_category_total'></span>) <span id='most_category_context'></span></h2>
-        @if(!$isMobile)
-            <h2 class="dashboard-subtitle">Most Category</h2>
-        @endif
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 py-2 d-flex align-items-center justify-content-center text-center" id='most_category_total-section'>
+        <div>
+            @if($isMobile)
+                <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Most Category</h6>
+            @endif
+            <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;">
+                (<span id='most_category_total'></span>) <span id='most_category_context'></span>
+            </h2>
+            @if(!$isMobile)
+                <h2 class="dashboard-subtitle">Most Category</h2>
+            @endif
+        </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4" id='highest_price_name-section'>
-        @if($isMobile)
-            <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">The Highest Price</h6>
-        @endif
-        <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;">(<span id='highest_price_name'></span>) <span id='highest_price'></span> </h2>
-        @if(!$isMobile)
-            <h2 class="dashboard-subtitle">The Highest Price</h2>
-        @endif
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center" id='highest_price_name-section'>
+        <div>
+            @if($isMobile)
+                <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">The Highest Price</h6>
+            @endif
+            <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;">(<span id='highest_price_name'></span>) <span id='highest_price'></span> </h2>
+            @if(!$isMobile)
+                <h2 class="dashboard-subtitle">The Highest Price</h2>
+            @endif
+        </div>
     </div>
 </div><br>
 

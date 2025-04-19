@@ -147,8 +147,7 @@
                         icon: "error"
                     });
                 } else {
-                    template_alert_container(item_holder, 'no-data', "No report found to show", 'add a report', '<i class="fa-solid fa-scroll"></i>')
-                    $(`#${item_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
+                    template_alert_container(item_holder, 'no-data', "No report found to show", null, '<i class="fa-solid fa-scroll"></i>','')
                 }
             }
         });

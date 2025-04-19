@@ -85,17 +85,22 @@
             $('#item_holder').empty()
         } 
     }
+    $(document).on('click','#add_report-btn', function(){
+        get_list_inventory()
+    })
     const get_list_inventory = () => {
         $.ajax({
             url: "/api/v1/inventory/list",
             datatype: "json",
             type: "get",
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json");
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");
             },
         })
         .done(function (response) {
+            Swal.hideLoading()
             let data =  response.data
             $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
 
@@ -108,8 +113,25 @@
             $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
             $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
         })
-        .fail(function (jqXHR, ajaxOptions, thrownError) {
-            // Do someting
+        .fail(function (xhr, ajaxOptions, thrownError) {
+            Swal.hideLoading()
+            $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
+            $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
+            $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
+            
+            if (xhr.status === 404) {
+                Swal.fire({
+                    title: "Oops!",
+                    text: xhr.responseJSON?.message,
+                    icon: "warning"
+                })
+            } else {
+                Swal.fire({
+                    title: "Oops!",                    
+                    text: "Something went wrong on the server. Please try again later.",
+                    icon: "error"
+                })
+            }
         });   
     }
     const post_analyze_image = () => {
@@ -333,7 +355,6 @@
     }
 
     $( document ).ready(function() {
-        get_list_inventory()
         $('#report_category').on('change', function() {
             if($(this).val() != "Shopping Cart" && $(this).val() != "Wishlist"){
                 $('.extra-form').empty()

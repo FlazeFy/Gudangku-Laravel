@@ -86,7 +86,7 @@ class Queries extends Controller
 
             $res = InventoryModel::getContextTotalStats('inventory_category',$type,!$check_admin ? $user_id:null);
             
-            if (count($res) > 0) {
+            if ($res) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'stats'),
@@ -270,7 +270,7 @@ class Queries extends Controller
 
             $res = InventoryModel::getContextTotalStats('inventory_room',$type,!$check_admin ? $user_id:null);
             
-            if (count($res) > 0) {
+            if ($res) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'stats'),
@@ -356,7 +356,7 @@ class Queries extends Controller
 
             $res = InventoryModel::getContextTotalStats('inventory_merk',$type,!$check_admin ? $user_id:null);
             
-            if (count($res) > 0) {
+            if ($res) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'stats'),

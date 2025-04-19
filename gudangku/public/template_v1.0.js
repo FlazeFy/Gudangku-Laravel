@@ -1,7 +1,7 @@
 const template_alert_container = (target, type, msg, btn_title, icon, href) => {
     $(`#${target}`).html(`
         <div class="container p-3" style="${type == 'no-data'? 'background-color:rgba(59, 131, 246, 0.2);':''}">
-            <div class="d-flex justify-content-start">
+            <div class="d-flex justify-content-start align-items-center">
                 <div class="me-3">
                     <h1 style="font-size: 70px;">${icon}</h1>
                 </div>

@@ -6,7 +6,7 @@
 <input type="password" name="password" id="password" class="form-control mt-2"/><br>
 <label>Re-Type Password</label>
 <input type="password" name="password_validation" id="password_validation" class="form-control mt-2"/><br>
-<a class="btn btn-success w-100" id="btn-register-acc"><i class="fa-solid fa-paper-plane"></i> Register Account</a>
+<a class="btn btn-success w-100" id="btn-register-acc"><i class="fa-solid fa-paper-plane"></i> Register Account</a><br>
 <div class="text-center mt-3 d-none section-form" id="token-section">
     <h2>Validate</h2><br>
     <h1 class="my-2 fw-bold" style="font-size:var(--textJumbo);" id="timer">15:00</h1>
@@ -118,10 +118,7 @@
                 email: $('#email').val(),
                 password: $('#password').val(),
                 token: token
-            }), 
-            beforeSend: function (xhr) {
-                // ...
-            }
+            })
         })
         .done(function (response) {            
             const data = response
@@ -129,9 +126,10 @@
 
             $('#start-browsing-holder-btn').html(`<a class='btn btn-success ms-1 mb-1' href='/'><i class="fa-solid fa-arrow-right"></i> Start Browsing</a>`)
             $('#token-section').html(`
-                <h6 class="text-center">Account is validated. Welcome to GudangKu</h6>
+                <h6 class="text-center mb-4">Account is validated. Welcome to GudangKu</h6>
                 <a class='btn btn-success ms-1 mb-1' href='/'><i class="fa-solid fa-arrow-right"></i> Start Browsing</a>
-            `)
+            `).attr('style', 'height: auto !important; min-height: auto !important;')
+
             $('#service_section').css({
                 "display":"block"
             })
@@ -148,14 +146,21 @@
                 icon: "success"
             });
         })
-        .error(function (xhr, ajaxOptions, thrownError) {
+        .fail(function (xhr, ajaxOptions, thrownError) {
             Swal.hideLoading()
-            Swal.fire({
-                title: "Oops!",
-                text: "Something error! Please call admin",
-                icon: "error"
-            });
-
+            if (xhr.status === 404) {
+                Swal.fire({
+                    title: "Oops!",
+                    text: xhr.responseJSON?.message,
+                    icon: "warning"
+                })
+            } else {
+                Swal.fire({
+                    title: "Oops!",                    
+                    text: "Something went wrong on the server. Please try again later.",
+                    icon: "error"
+                })
+            }
             var pins = pin_holder.querySelectorAll('input')
             var is_empty = false
 
@@ -243,56 +248,65 @@
         })
 
         $('#btn-register-acc').on('click', function(){
-            if(validateInput('text', 'username', 36, 6) && validateInput('text', 'password', 36, 6) && validateInput('text', 'email', 255, 10) && $('#password').val() == $('#password_validation').val()){
-                if($('#email').val().includes("gmail")){
-                    Swal.showLoading()
-                    $.ajax({
-                        url: `/api/v1/register/token`,
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            username:$('#username').val(),
-                            email:$('#email').val()
-                        }), 
-                        type: "POST",
-                        success: function(response) {
-                            $('#checkTerm').attr('disabled', true)
-                            $('#username, #email, #password, #password_validation').attr('readonly',true)
-                            $('#token-section').removeClass('d-none')
-                            $(this).attr('disabled', true)
-                            startTimer(900)
-                            $('html, body').animate({
-                                scrollTop: $('#token-section').offset().top
-                            }, []);
+            if(validateInput('text', 'username', 36, 6) && validateInput('text', 'password', 36, 6) && validateInput('text', 'email', 255, 10)){
+                if($('#password').val() == $('#password_validation').val()){
+                    if($('#email').val().includes("gmail")){
+                        Swal.showLoading()
+                        $.ajax({
+                            url: `/api/v1/register/token`,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                username:$('#username').val(),
+                                email:$('#email').val()
+                            }), 
+                            type: "POST",
+                            success: function(response) {
+                                $('#checkTerm').attr('disabled', true)
+                                $('#username, #email, #password, #password_validation').attr('readonly',true)
+                                $('#token-section').removeClass('d-none')
+                                $('#btn-register-acc').remove()
+                                $(this).attr('disabled', true)
+                                startTimer(900)
+                                $('html, body').animate({
+                                    scrollTop: $('#token-section').offset().top
+                                }, []);
 
-                            let data = response
-                            Swal.hideLoading()
-                            Swal.fire({
-                                title: `Token ${data.status}`,
-                                text: data.message,
-                                icon: data.status
-                            });
-                        },
-                        error: function(response, jqXHR, textStatus, errorThrown) {
-                            if(response.status != 404 && response.status != 409){
+                                let data = response
+                                Swal.hideLoading()
                                 Swal.fire({
-                                    title: "Oops!",
-                                    text: `Something error please call admin`,
-                                    icon: "error"
+                                    title: `Token ${data.status}`,
+                                    text: data.message,
+                                    icon: data.status
                                 });
-                            } else {
-                                Swal.fire({
-                                    title: "Oops!",
-                                    text: response.responseJSON.message,
-                                    icon: "error"
-                                });
+                            },
+                            error: function(response, jqXHR, textStatus, errorThrown) {
+                                if(response.status != 404 && response.status != 409){
+                                    Swal.fire({
+                                        title: "Oops!",
+                                        text: `Something error please call admin`,
+                                        icon: "error"
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: "Oops!",
+                                        text: response.responseJSON.message,
+                                        icon: "error"
+                                    });
+                                }
                             }
-                        }
-                    })
+                        })
+                    } else {
+                        Swal.fire({
+                            title: "Oops!",
+                            text: 'Email must be at @gmail format',
+                            icon: "error"
+                        });
+                    }
                 } else {
                     Swal.fire({
                         title: "Oops!",
-                        text: 'Email must be at @gmail format',
+                        text: `Your password validation is not same`,
                         icon: "error"
                     });
                 }

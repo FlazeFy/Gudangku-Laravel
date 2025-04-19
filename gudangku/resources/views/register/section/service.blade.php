@@ -1,25 +1,24 @@
 <div>
-    <div class='position-relative'>
+    <div class='position-relative container bordered mb-4'>
         <input type='text' class='form-control form-validated' name='telegram_user_id' id='telegram_user_id' maxlength='36'>
     </div>
-    <div class='position-relative'>
+    <div class='position-relative container bordered mb-4'>
         <input type='text' class='form-control form-validated' name='line_user_id' id='line_user_id' maxlength='145'>
     </div>
-    <label>Discord</label>
 </div>
 
 <script>
     $( document ).ready(function() {
         $(document).on('input','#telegram_user_id', function(){
             if($(this).val().length == 10){
-                $(this).after(`<a class='btn btn-success position-absolute' style='bottom:var(--spaceXSM); right:var(--spaceXSM); padding:var(--spaceXXSM) var(--spaceMD) !important; font-size:var(--textXMD); font-weight:600;' id='validate-telegram-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
+                $(this).after(`<a class='btn btn-success position-absolute' style='bottom:var(--spaceXLG); right:var(--spaceXLG); padding:var(--spaceXXSM) var(--spaceMD) !important; font-size:var(--textXMD); font-weight:600;' id='validate-telegram-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
             } else {
                 $('#validate-telegram-id-btn').remove()
             }
         })
         $(document).on('input','#line_user_id', function(){
             if($(this).val().length == 144){
-                $(this).after(`<a class='btn btn-success position-absolute' style='bottom:var(--spaceXSM); right:var(--spaceXSM); padding:var(--spaceXXSM) var(--spaceMD) !important; font-size:var(--textXMD); font-weight:600;' id='validate-line-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
+                $(this).after(`<a class='btn btn-success position-absolute' style='bottom:var(--spaceXLG); right:var(--spaceXLG); padding:var(--spaceXXSM) var(--spaceMD) !important; font-size:var(--textXMD); font-weight:600;' id='validate-line-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
             } else {
                 $('#validate-line-id-btn').remove()
             }
@@ -34,6 +33,7 @@
                 },
                 dataType: 'json',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json");
                     xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
                 },
@@ -48,7 +48,13 @@
                         if (result.isConfirmed) {
                             $('#telegram_user_id').attr('readonly',true)
                             $('#validate-telegram-id-btn').remove()
-                            $('#telegram_user_id').after(`<label>Token Validation</label><input type='text' class='form-control mt-2' name=telegram_token_validation' id='telegram_token_validation' maxlength='7'>`)
+                            $('#telegram_user_id').after(`
+                                <div class="box-danger mt-3" id="telegram-validation-box">
+                                    <h6 class="fw-bold">You have pending Token Validation. Please validate it!</h6>
+                                    <label>Token Validation</label>
+                                    <input type='text' class='form-control' name=telegram_token_validation' id='telegram_token_validation' maxlength='7'>
+                                </div>
+                            `)
                         }
                     });
                 },
@@ -81,6 +87,7 @@
                     },
                     dataType: 'json',
                     beforeSend: function (xhr) {
+                        Swal.showLoading()
                         xhr.setRequestHeader("Accept", "application/json");
                         xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
                     },
@@ -93,7 +100,7 @@
                             allowOutsideClick: false
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                $('#telegram_token_validation').remove()
+                                $('#telegram-validation-box').removeClass('box-danger').html(`<span class='text-success'><i class="fa-solid fa-check"></i> Telegram is validated!</span>`)
                             }
                         });
                     },

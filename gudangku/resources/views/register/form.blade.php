@@ -106,10 +106,12 @@
     }
 </style>
 <div class="row w-100 h-100">
-    <div class="col-lg-5">
+    <div class="col-lg-5 col-md-5 col-sm-2 col-12">
         <div style="top:5vh; position:sticky;">
-            <a class='btn btn-danger mb-1' href='/login'><i class="fa-solid fa-arrow-left"></i> Back to Login</a>
-            <div id='start-browsing-holder-btn'></div>
+            <div class="d-flex d-inline-block">
+                <a class='btn btn-danger me-2' href='/login'><i class="fa-solid fa-arrow-left"></i> Back to Login</a>
+                <div id='start-browsing-holder-btn'></div>
+            </div>
             <hr>
             <h2 class="text-white fw-bold my-4" style="font-size:36px;">Register</h2>
             <div class="step step-active" id="indicator-tnc">
@@ -136,21 +138,12 @@
                 </div>
                 <div>
                     <div class="title">Stay Updated!</div>
-                    <div class="caption">Sync your account to another Platform. Like Telegram, Line, and Discord</div>
+                    <div class="caption">Sync your account to another Platform. Like Telegram and Line</div>
                 </div>
             </div>
             <div class="step">
                 <div>
                     <div class="circle">4</div>
-                </div>
-                <div>
-                    <div class="title">Add your First Item (Optional)</div>
-                    <div class="caption">Try to manage your inventory, Now!</div>
-                </div>
-            </div>
-            <div class="step">
-                <div>
-                    <div class="circle">5</div>
                 </div>
                 <div>
                     <div class="title">Finish</div>
@@ -163,7 +156,7 @@
             </div>
         </div>
     </div>
-    <div class="col">
+    <div class="col-lg-7 col-md-7 col-sm-10 col-12">
         <div id="tnc_section" class="section-form border-0 pt-0">
             <h2>Terms & Condition</h2>
             <div class="py-3 mb-3">

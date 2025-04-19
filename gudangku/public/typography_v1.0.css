@@ -26,6 +26,9 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
     margin-bottom: var(--spaceJumbo);
     font-size: calc(var(--textXJumbo)*1.75);
 }
+.text-secondary, .form-text {
+    color: var(--greyColor) !important;
+}
 /* Table */
 table td {
     font-size: var(--textXMD) !important;

@@ -30,7 +30,7 @@
         <div class="d-flex justify-content-<?php if(!$isMobile){ echo "start"; } else { echo "end"; } ?>">
             <a class="btn btn-danger btn-main top" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i>@if(!$isMobile)  Back @endif</a>
             @if($role == 0)
-                <a class="btn btn-primary mb-3 me-2 btn-main bottom" data-bs-toggle="modal" data-bs-target="#modalAddReport" ><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i>@if(!$isMobile)  Add Report @endif</a>
+                <a class="btn btn-primary mb-3 me-2 btn-main bottom" id="add_report-btn" data-bs-toggle="modal" data-bs-target="#modalAddReport" ><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i>@if(!$isMobile)  Add Report @endif</a>
             @endif
             @include('report.add')  
         </div>
