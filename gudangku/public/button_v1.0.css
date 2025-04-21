@@ -1,6 +1,6 @@
 button, .btn, a {
     cursor: pointer;
-    background: var(--darkColor) !important;
+    background: var(--darkColor);
 }
 button:hover, .btn:hover {
     transform: scale(1.05);

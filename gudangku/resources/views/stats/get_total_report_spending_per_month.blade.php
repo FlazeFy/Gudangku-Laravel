@@ -4,7 +4,7 @@
 <script>
     const get_total_report_spending_per_month = (year) => {
         Swal.showLoading()
-        const title = 'Total Report Spending Per Month'
+        const title = `Total Report Spending Per Month (${year})`
         const ctx = 'total_report_spending_per_month_temp'
         const ctx_holder = "stats_total_report_spending_per_month"
 

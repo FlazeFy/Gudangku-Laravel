@@ -4,7 +4,7 @@
 <script>
     const get_total_inventory_created_per_month = (year) => {
         Swal.showLoading()
-        const title = 'Total inventory Created Per Month'
+        const title = `Total inventory Created Per Month (${year})`
         const ctx = 'total_inventory_created_per_month_temp'
         const ctx_holder = "stats_total_inventory_created_per_month"
 

@@ -162,6 +162,42 @@ class StatsTest extends TestCase
         Audit::auditRecordSheet("Test - Get Total Inventory By Favorite", "TC-XXX", 'TC-XXX test_get_total_inventory_by_favorite', json_encode($data));
     }
 
+    public function test_get_most_expensive_inventory_per_context(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $context = "inventory_category";
+        $response = $this->httpClient->get("inventory/most_expensive/$context", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data);
+
+        foreach ($data['data'] as $dt) {
+            $this->assertArrayHasKey('context', $dt);
+            $this->assertArrayHasKey('total', $dt);
+
+            $this->assertNotNull($dt['context']);
+            $this->assertIsString($dt['context']);
+    
+            $this->assertNotNull($dt['total']);
+            $this->assertIsInt($dt['total']);
+            $this->assertGreaterThanOrEqual(0, $dt['total']);
+        }
+
+        Audit::auditRecordText("Test - Get Most Expensive Inventory Per Context", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Most Expensive Inventory Per Context", "TC-XXX", 'TC-XXX test_get_most_expensive_inventory_per_context', json_encode($data));
+    }
+
     public function test_get_total_report_created_at_month(): void
     {
         // Exec

@@ -191,6 +191,19 @@ class InventoryModel extends Model
         return count($res) > 0 ? $res : null;
     }
 
+    public static function getMostExpensiveInventoryPerContext($user_id,$context){
+        $res = InventoryModel::selectRaw("CONCAT($context,' (',inventory_name,')') as context, inventory_price as total");
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+        $res = $res->groupby($context)
+            ->orderby('inventory_price','desc')
+            ->limit(14)
+            ->get();
+
+        return count($res) > 0 ? $res : null;
+    }
+
     public static function getInventoryByNameSearch($search){
         $search = explode(',', $search);
         $query = InventoryModel::select('id','inventory_name','inventory_desc','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price','inventory_storage','inventory_room');

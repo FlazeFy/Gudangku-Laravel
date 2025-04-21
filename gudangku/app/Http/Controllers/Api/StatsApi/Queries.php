@@ -108,6 +108,88 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
+     *     path="/api/v1/stats/inventory/category/most_expensive",
+     *     summary="Get most expensive inventory per context",
+     *     description="This request is used to get most expensive inventory for each category. This request is using MySql database, and have a protected routes.",
+     *     tags={"Stats"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="stats fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="stats fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Fashion (Shirt A)"),
+     *                          @OA\Property(property="total", type="integer", example=200000)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="stats failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="stats not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function get_most_expensive_inventory_per_context(Request $request, $context)
+    {
+        try{
+            if(in_array($context, ['inventory_category','inventory_merk','inventory_room','inventory_storage'])){
+                $user_id = $request->user()->id;
+                $check_admin = AdminModel::find($user_id);
+
+                $res = InventoryModel::getMostExpensiveInventoryPerContext(!$check_admin ? $user_id:null, $context);
+                
+                if ($res) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                        'data' => $res
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => Generator::getMessageTemplate("validation_failed", 'context must be inventory_category, inventory_merk, inventory_room, or inventory_storage'),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
      *     path="/api/v1/stats/inventory/total_by_favorite/{type}",
      *     summary="Get total inventory by favorite",
      *     description="This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",

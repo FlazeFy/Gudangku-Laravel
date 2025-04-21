@@ -9,9 +9,11 @@
                     @php($selected = session()->get('toogle_view_stats'))
                     <option value="top chart" <?php if($selected == 'top chart'){ echo 'selected'; }?>>Top Chart</option>
                     <option value="periodic chart" <?php if($selected == 'periodic chart'){ echo 'selected'; }?>>Periodic Chart</option>
+                    <option value="tree map" <?php if($selected == 'tree map'){ echo 'selected'; }?>>Tree Map</option>
                 </select>
             </form>
         </div>
+        @if(session()->get('toogle_view_stats') == "top chart")
         <div class="col-lg-4 col-md-6 col-sm-6 col-12">
             <form action="/stats/toogleTotal" method="POST" id="toogle_total_view_select">
                 @csrf
@@ -23,6 +25,7 @@
                 </select>
             </form>
         </div>
+        @endif
         @if(session()->get('toogle_view_stats') == "periodic chart")
         <div class="col-lg-4 col-md-6 col-sm-6 col-12">
             <form action="/stats/toogleYear" method="POST" id="toogle_year_select">
