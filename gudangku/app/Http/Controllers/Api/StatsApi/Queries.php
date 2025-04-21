@@ -153,15 +153,23 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_most_expensive_inventory_per_context(Request $request, $context)
-    {
-        try{
-            if(in_array($context, ['inventory_category','inventory_merk','inventory_room','inventory_storage'])){
-                $user_id = $request->user()->id;
-                $check_admin = AdminModel::find($user_id);
+    public function get_most_expensive_inventory_per_context(Request $request, $context){
+        try {
+            $contexts = explode(',', $context); 
+            foreach ($contexts as $ctx) {
+                if (!in_array($ctx, ['inventory_category', 'inventory_merk', 'inventory_room', 'inventory_storage'])) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => Generator::getMessageTemplate("validation_failed", 'context must be inventory_category, inventory_merk, inventory_room, or inventory_storage'),
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+            }
 
-                $res = InventoryModel::getMostExpensiveInventoryPerContext(!$check_admin ? $user_id:null, $context);
-                
+            $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+
+            if (count($contexts) === 1) {
+                $res = InventoryModel::getMostExpensiveInventoryPerContext(!$check_admin ? $user_id : null, $contexts[0]);
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
@@ -175,12 +183,19 @@ class Queries extends Controller
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
+                $result = [];
+                foreach ($contexts as $ctx) {
+                    $res = InventoryModel::getMostExpensiveInventoryPerContext(!$check_admin ? $user_id : null, $ctx);
+                    $result[$ctx] = $res ? $res : null;
+                }
+
                 return response()->json([
-                    'status' => 'error',
-                    'message' => Generator::getMessageTemplate("validation_failed", 'context must be inventory_category, inventory_merk, inventory_room, or inventory_storage'),
-                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                    'status' => 'success',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'data' => $result
+                ], Response::HTTP_OK);
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => Generator::getMessageTemplate("unknown_error", null),

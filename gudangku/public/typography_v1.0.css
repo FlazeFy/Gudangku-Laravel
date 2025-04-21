@@ -44,10 +44,11 @@ li::marker {
     color: white !important;
     font-size: 1.5em !important; 
 }
-/* Apexchart */
-.apexcharts-legend-text {
+/* Apexchart & D3 */
+.apexcharts-legend-text, .d3 .node {
     color: var(--whiteColor) !important;
     font-size: var(--textXMD) !important;
+    font-weight: 500;
 }
 .apexcharts-xaxis-label {
     font-size: var(--textMD) !important;

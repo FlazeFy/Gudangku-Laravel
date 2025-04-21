@@ -9,7 +9,7 @@
                     @php($selected = session()->get('toogle_view_stats'))
                     <option value="top chart" <?php if($selected == 'top chart'){ echo 'selected'; }?>>Top Chart</option>
                     <option value="periodic chart" <?php if($selected == 'periodic chart'){ echo 'selected'; }?>>Periodic Chart</option>
-                    <option value="tree map" <?php if($selected == 'tree map'){ echo 'selected'; }?>>Tree Map</option>
+                    <option value="most expensive" <?php if($selected == 'most expensive'){ echo 'selected'; }?>>Most Expensive</option>
                 </select>
             </form>
         </div>

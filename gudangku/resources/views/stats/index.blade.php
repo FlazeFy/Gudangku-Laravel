@@ -47,6 +47,8 @@
                 <div class="col-lg-6 col-md-12 mx-auto">
                     @include('stats.get_total_report_used_per_month')
                 </div>
+            @elseif(session()->get('toogle_view_stats') == 'most expensive')
+                @include('stats.get_most_expensive_inventory_per_context')
             @endif
         </div>
     </div>

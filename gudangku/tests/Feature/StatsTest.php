@@ -184,14 +184,14 @@ class StatsTest extends TestCase
 
         foreach ($data['data'] as $dt) {
             $this->assertArrayHasKey('context', $dt);
-            $this->assertArrayHasKey('total', $dt);
+            $this->assertArrayHasKey('inventory_price', $dt);
 
             $this->assertNotNull($dt['context']);
             $this->assertIsString($dt['context']);
     
-            $this->assertNotNull($dt['total']);
-            $this->assertIsInt($dt['total']);
-            $this->assertGreaterThanOrEqual(0, $dt['total']);
+            $this->assertNotNull($dt['inventory_price']);
+            $this->assertIsInt($dt['inventory_price']);
+            $this->assertGreaterThanOrEqual(0, $dt['inventory_price']);
         }
 
         Audit::auditRecordText("Test - Get Most Expensive Inventory Per Context", "TC-XXX", "Result : ".json_encode($data));
