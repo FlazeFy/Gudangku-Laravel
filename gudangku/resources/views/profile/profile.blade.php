@@ -59,6 +59,12 @@
                         $('#telegram_user_id').attr('disabled', true)
                     }
                 }
+
+                if(data.telegram_is_valid == 0 && data.telegram_user_id == null){
+                    $('#telegram_user_id').after(`
+                        <div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Sync your GudangKu account with your <b>Telegram ID</b> to use this apps straight at your Telegram Chat</div>
+                    `)
+                }
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()

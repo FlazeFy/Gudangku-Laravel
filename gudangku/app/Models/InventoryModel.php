@@ -196,6 +196,9 @@ class InventoryModel extends Model
         if($user_id){
             $res = $res->where('created_by', $user_id);
         }
+        if($context == 'inventory_storage'){
+            $res = $res->whereNotNull('inventory_storage');
+        }
         $res = $res->groupby($context)
             ->orderby('inventory_price','desc')
             ->limit(7)

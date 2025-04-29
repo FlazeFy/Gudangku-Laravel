@@ -1,6 +1,10 @@
 @extends('components.layout')
 
 @section('content')
+    <script>
+        formValidation('Inventory')
+    </script>
+
     <div class="content">
         @include('others.profile')
         @include('others.notification')

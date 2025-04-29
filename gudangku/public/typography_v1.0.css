@@ -30,6 +30,10 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
     color: var(--greyColor) !important;
 }
 /* Table */
+thead th {
+    vertical-align: middle;
+    text-align: center;
+}
 table td {
     font-size: var(--textXMD) !important;
 }

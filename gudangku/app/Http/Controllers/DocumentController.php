@@ -47,7 +47,8 @@ class DocumentController extends Controller
                     ->where('id',$user_id)
                     ->where('telegram_is_valid',1)
                     ->first();
-                if($user->telegram_user_id){
+
+                if($user && $user->telegram_user_id){
                     $pdfContent = $dompdf->output();
                     $pdfFilePath = public_path($file_name);
                     file_put_contents($pdfFilePath, $pdfContent);
@@ -112,7 +113,7 @@ class DocumentController extends Controller
                     ->where('telegram_is_valid',1)
                     ->first();
 
-                if($user->telegram_user_id){
+                if($user && $user->telegram_user_id){
                     $pdfContent = $dompdf->output();
                     $pdfFilePath = public_path($file_name);
                     file_put_contents($pdfFilePath, $pdfContent);
@@ -174,7 +175,7 @@ class DocumentController extends Controller
                     ->where('telegram_is_valid',1)
                     ->first();
 
-                if($user->telegram_user_id){
+                if($user && $user->telegram_user_id){
                     $pdfContent = $dompdf->output();
                     $pdfFilePath = public_path($file_name);
                     file_put_contents($pdfFilePath, $pdfContent);

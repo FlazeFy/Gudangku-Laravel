@@ -278,7 +278,7 @@ const setArrowCollapse = () => {
 };
 setArrowCollapse()
 
-const formValidation = () => {
+const formValidation = (context) => {
     $(document).ready(function() {
         $('.form-validated').each(function(idx, el) {
             if ($(this).is('input, textarea')) {
@@ -320,7 +320,7 @@ const formValidation = () => {
                         $(this).after(`<span id='alert-holder-${idx}-${$(this).attr('name')}'></span>`)
                     }
 
-                    $(this).before(`<label title='This input is ${is_required ? 'mandatory' : 'optional'}${lengthTitle}'>${is_required == true ? `<span class='text-danger'>*</span>`:''}${name}</label>`)
+                    $(this).before(`<label title='This input is ${is_required ? 'mandatory' : 'optional'}${lengthTitle}'>${is_required == true ? `<span class='text-danger'>*</span>`:''}${name.replace(context,'')}</label>`)
 
                     $(document).on('input', `.form-validated`, function(idx2, el2) {            
                         const val = $(this).val().trim()
@@ -363,4 +363,3 @@ const formValidation = () => {
         });
     });
 }
-formValidation()

@@ -30,7 +30,7 @@
         <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
         @include('home.toogle_view')
         @if($role == 0)
-            <a class="btn btn-primary btn-main bottom" href="/inventory/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Add Inventory @endif</a>
+            <a class="btn btn-primary btn-main bottom" href="/inventory/add" id="add_inventory-button"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Add Inventory @endif</a>
         @endif
         <a class="btn btn-primary btn-main bottom" style="bottom:calc(1.9*var(--spaceJumbo));" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Stats @endif</a>
         @if($role == 0)

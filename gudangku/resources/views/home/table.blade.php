@@ -175,12 +175,12 @@
                     }
                     
                     $(`#${item_holder}`).append(`
-                        <tr ${styletr} class='inventory-tr'>
+                        <tr ${styletr} class='inventory-tr ${el.deleted_at ? 'deleted-inventory' :''}'>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 ${el.inventory_image ? `
                                     <img src="${el.inventory_image}" data-bs-toggle='modal' data-bs-target='#zoom_image-${el.id}'class='img-responsive img-zoomable-modal mb-3' title="${el.inventory_name}">
                                 ` : ''}
-                                ${el.is_favorite ? `<span class='bg-success rounded-pill px-3 py-1'><i class="fa-solid fa-bookmark" title="Favorite"></i> Favorite</span>` : ''}
+                                ${el.is_favorite ? `<span class='bg-success rounded-pill px-3 py-1 favorite-status'><i class="fa-solid fa-bookmark" title="Favorite"></i> Favorite</span>` : ''}
                                 <h6 class='mt-2 inventory-name' style='font-size:var(--textLG); font-weight:600;'>${el.inventory_name}</h6>
                                 <hr class='my-2'>
                                 <h6 class='fw-bold mt-2'>Description</h6>
@@ -218,7 +218,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h2 class="modal-title fw-bold">Properties</h2>
-                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+                                                <button type="button" class="btn btn-danger btn-close" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">
                                                 <h6 class='fw-bold'>Created At</h6>
@@ -259,7 +259,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <h2>${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'}this item "${el.inventory_name}"?</h2>
+                                                        <h2>${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'} this item "${el.inventory_name}"?</h2>
                                                         <a class="btn btn-danger mt-4" onclick="delete_inventory_by_id('${el.id}', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
                                                     </div>
                                                 </div>
@@ -335,7 +335,7 @@
                     });
                 } else {
                     $('#total-item').text(0)
-                    $(`#${item_holder}`).append(`<tr><td colspan='7' class='text-center py-3'>- No Inventory Found -</td></tr>`)
+                    $(`#${item_holder}`).html(`<tr><td colspan='7' class='text-center py-3'>- No Inventory Found -</td></tr>`)
                 }
             }
         });
