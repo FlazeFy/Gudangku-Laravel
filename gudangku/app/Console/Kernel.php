@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
     {
         // In staging
         // $schedule->call([new ReminderSchedule, 'remind_inventory'])->hourly();
+        // $schedule->call([new ReminderSchedule, 'remind_low_capacity'])->dailyAt('01:30');
         // $schedule->call([new CleanSchedule, 'clean_history'])->dailyAt('01:00');
         // $schedule->call([new CleanSchedule, 'clean_deleted_inventory'])->dailyAt('02:00');
         // $schedule->call([new AuditSchedule, 'audit_error'])->weeklyOn(1, '3:00');	
@@ -26,10 +27,11 @@ class Kernel extends ConsoleKernel
 
         // In development
         // $schedule->command(ReminderSchedule::remind_inventory())->everyMinute();
+        // $schedule->command(ReminderSchedule::remind_low_capacity())->everyMinute();
         // $schedule->command(CleanSchedule::clean_history())->everyMinute();
         // $schedule->command(CleanSchedule::clean_deleted_inventory())->everyMinute();
         // $schedule->command(AuditSchedule::audit_error())->everyMinute();
-        $schedule->command('dusk:run')->everyMinute();
+        // $schedule->command('dusk:run')->everyMinute();
     }
 
     /**

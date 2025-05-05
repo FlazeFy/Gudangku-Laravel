@@ -12,6 +12,7 @@ use App\Service\FirebaseRealtime;
 use App\Helpers\LineMessage;
 use App\Helpers\Generator;
 
+use App\Models\InventoryModel;
 use App\Models\ReminderModel;
 use App\Models\ScheduleMarkModel;
 
@@ -176,6 +177,50 @@ class ReminderSchedule
                         $firebaseRealtime->insert_command('task_scheduling/reminder/' . uniqid(), $record);
                     } 
                 }
+            }
+        }
+    }
+
+    public static function remind_low_capacity(){
+        $low_inventory = InventoryModel::getAllLowCapacity();
+
+        if($low_inventory){
+            $firebaseRealtime = new FirebaseRealtime();
+
+            foreach($low_inventory as $index => $dt){
+                $arr_inventory = explode(', ', $dt->list_inventory);
+                $list_inventory = "- " . implode("\n- ", $arr_inventory);
+                $message_template = "Hello $dt->username, you have total $dt->total inventory who at the low capacity status, please check each of these inventory. Here's the list :";
+                $message = "$message_template\n\n$list_inventory";
+                $message_notif = "$message_template $dt->list_inventory";
+
+                if($dt->telegram_user_id && $dt->telegram_is_valid == 1){
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $dt->telegram_user_id,
+                        'text' => $message,
+                        'parse_mode' => 'HTML'
+                    ]);
+                }
+                if($dt->line_user_id){
+                    LineMessage::sendMessage('text',$message,$dt->line_user_id);
+                }
+                if($dt->firebase_fcm_token){
+                    $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                    $messaging = $factory->createMessaging();
+                    $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)
+                        ->withNotification(Notification::create($message_notif, $dt->username));
+                    $response = $messaging->send($message);
+                }
+
+                // Audit to firebase realtime
+                $record = [
+                    'list_inventory' => $dt->list_inventory,
+                    'created_by' => $dt->username,
+                    'telegram_message' => $dt->telegram_user_id,
+                    'line_message' => $dt->line_user_id,
+                    'firebase_fcm_message' => $dt->firebase_fcm_token,
+                ];
+                $firebaseRealtime->insert_command('task_scheduling/reminder_low_capacity/' . uniqid(), $record);
             }
         }
     }

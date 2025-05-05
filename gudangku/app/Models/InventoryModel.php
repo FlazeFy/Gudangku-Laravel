@@ -380,4 +380,17 @@ class InventoryModel extends Model
 
         return $res->get();
     }
+
+    public static function getAllLowCapacity(){
+        $res = InventoryModel::selectRaw("
+            GROUP_CONCAT(CONCAT(inventory_name, ' (', inventory_capacity_vol, '%)') SEPARATOR ', ') as list_inventory,
+            username, telegram_user_id, telegram_is_valid, line_user_id, firebase_fcm_token")
+            ->join('users','users.id','=','inventory.created_by')
+            ->where('inventory_capacity_unit','percentage')
+            ->where('inventory_capacity_vol','<=',30)
+            ->groupby('inventory.created_by')
+            ->get();
+
+        return count($res) > 0 ? $res : null;
+    } 
 }
