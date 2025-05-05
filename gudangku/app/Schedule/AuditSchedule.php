@@ -4,43 +4,35 @@ namespace App\Schedule;
 
 use Carbon\Carbon;
 use DateTime;
-
-use App\Helpers\LineMessage;
-use App\Helpers\Generator;
-
-use App\Models\ErrorModel;
-use App\Models\AdminModel;
-
-use App\Mail\ScheduleEmail;
 use Illuminate\Support\Facades\Mail;
-
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Telegram\Bot\FileUpload\InputFile;
-
-use App\Service\FirebaseRealtime;
-use App\Service\FirebaseStorage;
-
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Kreait\Firebase\Factory;
-
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Telegram\Bot\FileUpload\InputFile;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Dompdf\Canvas\Factory as CanvasFactory;
 use Dompdf\Options as DompdfOptions;
 use Dompdf\Adapter\CPDF;
 
+use App\Helpers\LineMessage;
+use App\Helpers\Generator;
+
+use App\Models\ErrorModel;
+use App\Models\AdminModel;
+use App\Models\InventoryModel;
+
+use App\Mail\ScheduleEmail;
+
+use App\Service\FirebaseRealtime;
+use App\Service\FirebaseStorage;
+
 class AuditSchedule
 {
     public static function audit_error()
     {
-        $summary = ErrorModel::selectRaw('message,created_at,faced_by,COUNT(1) as total')
-            ->where('is_fixed','0')
-            ->orderby('total','desc')
-            ->orderby('message','asc')
-            ->orderby('created_at','asc')
-            ->groupby('message')
-            ->get();
+        $summary = ErrorModel::getAllErrorAudit();
         
         if($summary){
             $firebaseRealtime = new FirebaseRealtime();
@@ -146,6 +138,28 @@ class AuditSchedule
             $firebaseUrl = $firebaseService->uploadFile($pdfFilePath, "audit/error", "audit_error_$datetime.pdf");
     
             unlink($pdfFilePath);
+        }
+    }
+
+    public static function audit_dashboard(){
+        $dashboard = InventoryModel::getAllDashboard();
+
+        if($dashboard){
+            foreach($dashboard as $index => $dt){
+                $message_template = "Hello $dt->username, here's the weekly dashboard we've gathered so far from your inventory :";
+                $message = "$message_template\n\n- Total Item : $dt->total_inventory\n- Favorite Item : $dt->total_favorite\n- Low Capacity : $dt->total_low_capacity- Last Added : $dt->last_created_inventory_name\n- Most Category : $dt->most_category ($dt->most_category_count)\n- The Highest Price : Rp. ".number_format($dt->max_price)." ($dt->max_price_inventory_name)";
+
+                if($dt->telegram_user_id && $dt->telegram_is_valid == 1){
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $dt->telegram_user_id,
+                        'text' => $message,
+                        'parse_mode' => 'HTML'
+                    ]);
+                }
+                if($dt->line_user_id){
+                    LineMessage::sendMessage('text',$message,$dt->line_user_id);
+                }
+            }
         }
     }
 }

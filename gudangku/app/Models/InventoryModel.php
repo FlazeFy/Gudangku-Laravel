@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 use Carbon\Carbon;
 use DateTime;
@@ -393,4 +394,59 @@ class InventoryModel extends Model
 
         return count($res) > 0 ? $res : null;
     } 
+
+    public static function getAllDashboard(){
+        $res = DB::table('inventory as i')
+            ->select(
+                'username','telegram_user_id','telegram_is_valid','line_user_id',
+                DB::raw('COUNT(i.id) as total_inventory'),
+                DB::raw('SUM(CASE WHEN i.is_favorite = 1 THEN 1 ELSE 0 END) as total_favorite'),
+                DB::raw("SUM(CASE WHEN i.inventory_capacity_unit = 'percentage' AND i.inventory_capacity_vol <= 30 THEN 1 ELSE 0 END) as total_low_capacity"),
+                DB::raw('MAX(i.inventory_price) as max_price'),
+                // SubQuery : The Highest Price
+                DB::raw('(
+                    SELECT inventory_name 
+                    FROM inventory 
+                    WHERE created_by = i.created_by 
+                    ORDER BY inventory_price DESC 
+                    LIMIT 1
+                ) as max_price_inventory_name'),
+                // SubQuery : Most Category
+                DB::raw('(
+                    SELECT inventory_category 
+                    FROM inventory 
+                    WHERE created_by = i.created_by 
+                    GROUP BY inventory_category 
+                    ORDER BY COUNT(*) DESC 
+                    LIMIT 1
+                ) as most_category'),
+                // SubQuery : Total Of Most Category
+                DB::raw('(
+                    SELECT COUNT(*) 
+                    FROM inventory 
+                    WHERE created_by = i.created_by 
+                    AND inventory_category = (
+                        SELECT inventory_category 
+                        FROM inventory 
+                        WHERE created_by = i.created_by 
+                        GROUP BY inventory_category 
+                        ORDER BY COUNT(*) DESC 
+                        LIMIT 1
+                    )
+                ) as most_category_count'),
+                // SubQuery : Last Created
+                DB::raw('(
+                    SELECT inventory_name 
+                    FROM inventory 
+                    WHERE created_by = i.created_by 
+                    ORDER BY created_at DESC 
+                    LIMIT 1
+                ) as last_created_inventory_name')
+            )
+            ->join('users as u', 'u.id', '=', 'i.created_by')
+            ->groupBy('i.created_by')
+            ->get();
+
+        return count($res) > 0 ? $res : null;
+    }
 }

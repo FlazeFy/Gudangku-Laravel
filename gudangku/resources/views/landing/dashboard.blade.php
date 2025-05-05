@@ -7,16 +7,23 @@
         font-weight: bold;
     }
     .dashboard-subtitle {
-        font-size: var(--textXJumbo) !important; 
+        font-size: var(--textXLG) !important; 
         font-weight: 600;
+        background: var(--infoBG);
+        padding: var(--spaceXSM) var(--spaceXMD);
+        width: fit-content;
+        margin-inline: auto;
+        display: block;
+        border-radius: var(--roundedXLG);
+        margin-top: var(--spaceXSM);
     }
 </style>
 
 <div class="row mb-3">
     <div class="col-lg-4 col-md-6 col-sm-12" id='total_item-section'>
-        <h1 class="dashboard-title"><span id='total_item'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Item</span> @endif</h1>
+        <h1 class="dashboard-title"><span id='total_item'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Total Item</span> @endif</h1>
         @if(!$isMobile)
-            <h2 class="dashboard-subtitle">Item</h2>
+            <h2 class="dashboard-subtitle">Total Item</h2>
         @endif
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12" id='total_fav-section'>
@@ -58,11 +65,11 @@
     <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center" id='highest_price_name-section'>
         <div>
             @if($isMobile)
-                <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">The Highest Price</h6>
+                <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Highest Price</h6>
             @endif
             <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;">(<span id='highest_price_name'></span>) <span id='highest_price'></span> </h2>
             @if(!$isMobile)
-                <h2 class="dashboard-subtitle">The Highest Price</h2>
+                <h2 class="dashboard-subtitle">Highest Price</h2>
             @endif
         </div>
     </div>

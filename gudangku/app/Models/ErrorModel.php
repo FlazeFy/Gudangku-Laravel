@@ -38,4 +38,16 @@ class ErrorModel extends Model
         
         return $is_paginate ? $res->paginate(12) : $res->get();
     }
+
+    public static function getAllErrorAudit(){
+        $res = ErrorModel::selectRaw('message,created_at,faced_by,COUNT(1) as total')
+            ->where('is_fixed','0')
+            ->orderby('total','desc')
+            ->orderby('message','asc')
+            ->orderby('created_at','asc')
+            ->groupby('message')
+            ->get();
+
+        return count($res) > 0 ? $res : null;
+    } 
 }
