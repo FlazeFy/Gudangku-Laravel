@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         // $schedule->call([new ReminderSchedule, 'remind_low_capacity'])->dailyAt('01:30');
         // $schedule->call([new CleanSchedule, 'clean_history'])->dailyAt('01:00');
         // $schedule->call([new CleanSchedule, 'clean_deleted_inventory'])->dailyAt('02:00');
+        // $schedule->call([new CleanSchedule, 'clean_deleted_report'])->dailyAt('04:00');
         // $schedule->call([new AuditSchedule, 'audit_error'])->weeklyOn(1, '3:00');
         // $schedule->call([new AuditSchedule, 'audit_dashboard'])->weeklyOn(2, '1:50');	
         // $schedule->command('dusk:run')->weeklyOn(6, '6:00');
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command(ReminderSchedule::remind_low_capacity())->everyMinute();
         // $schedule->command(CleanSchedule::clean_history())->everyMinute();
         // $schedule->command(CleanSchedule::clean_deleted_inventory())->everyMinute();
+        $schedule->command(CleanSchedule::clean_deleted_report())->everyMinute();
         // $schedule->command(AuditSchedule::audit_error())->everyMinute();
         // $schedule->command(AuditSchedule::audit_dashboard())->everyMinute();
         // $schedule->command('dusk:run')->everyMinute();

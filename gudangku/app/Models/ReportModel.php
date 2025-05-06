@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Generator;
+use Carbon\Carbon;
 
 /**
  * @OA\Schema(
@@ -39,6 +40,17 @@ class ReportModel extends Model
     protected $casts = [
         'report_image' => 'array',
     ];
+
+    public static function getReportPlanDestroy($days){
+        $res = ReportModel::select('report.id','report_title','deleted_at','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
+            ->join('users','users.id','=','report.created_by')
+            ->whereDate('deleted_at', '<', Carbon::now()
+            ->subDays($days))
+            ->orderby('username','asc')
+            ->get();
+
+        return count($res) > 0 ? $res : null;
+    }
 
     public static function getMyReport($user_id, $search_item, $search_report_title, $id, $filter_category){
         $extra = "";
