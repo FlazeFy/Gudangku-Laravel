@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Carbon\Carbon;
+use App\Models\ErrorModel;
+use App\Models\InventoryModel;
+use App\Models\ReportModel;
+use App\Models\UserModel;
 
 /**
  * @OA\Schema(
@@ -40,9 +45,36 @@ class AdminModel extends Authenticatable
     protected $fillable = ['id', 'username', 'password', 'email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','timezone', 'created_at', 'updated_at'];
 
     public static function  getAllContact(){
-        $res = AdminModel::select('id','username','email','telegram_user_id','line_user_id','firebase_fcm_token')
+        $res = AdminModel::select('id','username','email','telegram_user_id','telegram_is_valid','line_user_id','firebase_fcm_token')
             ->get();
 
         return $res;
+    }
+
+    public static function getAppsSummaryForLastNDays($days){
+        $res_inventory = InventoryModel::selectRaw('count(1) as total')
+            ->whereDate('created_at', '>=', Carbon::now()->subDays($days))
+            ->first();
+
+        $res_user = UserModel::selectRaw('count(1) as total')
+            ->whereDate('created_at', '>=', Carbon::now()->subDays($days))
+            ->first();
+
+        $res_report = ReportModel::selectRaw('count(1) as total')
+            ->whereDate('created_at', '>=', Carbon::now()->subDays($days))
+            ->first();
+
+        $res_error = ErrorModel::selectRaw('count(1) as total')
+            ->whereDate('created_at', '>=', Carbon::now()->subDays($days))
+            ->first();
+
+        $final_res = (object)[
+            'inventory_created' => $res_inventory->total,
+            'new_user' => $res_user->total,
+            'report_created' => $res_report->total,
+            'error_happen' => $res_error->total,
+        ];
+
+        return $final_res;
     }
 }

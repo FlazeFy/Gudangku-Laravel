@@ -147,7 +147,32 @@ class AuditSchedule
         if($dashboard){
             foreach($dashboard as $index => $dt){
                 $message_template = "Hello $dt->username, here's the weekly dashboard we've gathered so far from your inventory :";
-                $message = "$message_template\n\n- Total Item : $dt->total_inventory\n- Favorite Item : $dt->total_favorite\n- Low Capacity : $dt->total_low_capacity- Last Added : $dt->last_created_inventory_name\n- Most Category : $dt->most_category ($dt->most_category_count)\n- The Highest Price : Rp. ".number_format($dt->max_price)." ($dt->max_price_inventory_name)";
+                $message = "$message_template\n\n- Total Item : $dt->total_inventory\n- Favorite Item : $dt->total_favorite\n- Low Capacity : $dt->total_low_capacity\n- Last Added : $dt->last_created_inventory_name\n- Most Category : $dt->most_category ($dt->most_category_count)\n- The Highest Price : Rp. ".number_format($dt->max_price)." ($dt->max_price_inventory_name)";
+
+                if($dt->telegram_user_id && $dt->telegram_is_valid == 1){
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $dt->telegram_user_id,
+                        'text' => $message,
+                        'parse_mode' => 'HTML'
+                    ]);
+                }
+                if($dt->line_user_id){
+                    LineMessage::sendMessage('text',$message,$dt->line_user_id);
+                }
+            }
+        }
+    }
+
+    public static function audit_apps(){
+        $days = 7;
+        $summary = AdminModel::getAppsSummaryForLastNDays($days);
+
+        if($summary){
+            $admin = AdminModel::getAllContact();
+
+            foreach($admin as $dt){
+                $message_template = "[ADMIN] Hello $dt->username, here's the apps summary for the last $days days:";
+                $message = "$message_template\n\n- Inventory Created: $summary->inventory_created\n- New User : $summary->new_user\n- Report Created : $summary->report_created\n- Error Happen : $summary->error_happen";
 
                 if($dt->telegram_user_id && $dt->telegram_is_valid == 1){
                     $response = Telegram::sendMessage([
