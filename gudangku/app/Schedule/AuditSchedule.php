@@ -4,7 +4,6 @@ namespace App\Schedule;
 
 use Carbon\Carbon;
 use DateTime;
-use Illuminate\Support\Facades\Mail;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Kreait\Firebase\Factory;
@@ -22,8 +21,6 @@ use App\Helpers\Generator;
 use App\Models\ErrorModel;
 use App\Models\AdminModel;
 use App\Models\InventoryModel;
-
-use App\Mail\ScheduleEmail;
 
 use App\Service\FirebaseRealtime;
 use App\Service\FirebaseStorage;
@@ -61,9 +58,9 @@ class AuditSchedule
             $options = new DompdfOptions();
             $options->set('defaultFont', 'Helvetica');
             $dompdf = new Dompdf($options);
-            $header_template = Generator::generateDocTemplate('header');
-            $style_template = Generator::generateDocTemplate('style');
-            $footer_template = Generator::generateDocTemplate('footer');
+            $header_template = Generator::getDocTemplate('header');
+            $style_template = Generator::getDocTemplate('style');
+            $footer_template = Generator::getDocTemplate('footer');
     
             $html = "
             <html>

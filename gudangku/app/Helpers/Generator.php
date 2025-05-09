@@ -85,8 +85,8 @@ class Generator
         }
     }
 
-    public static function generateDocTemplate($type){
-        $datetime = now();
+    public static function getDocTemplate($type){
+        $datetime = date("d M Y H:i");
 
         if($type == "footer"){
             return "

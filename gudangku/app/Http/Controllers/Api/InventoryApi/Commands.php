@@ -648,9 +648,9 @@ class Commands extends Controller
                         $options->set('defaultFont', 'Helvetica');
                         $dompdf = new Dompdf($options);
                         $datetime = now();
-                        $header_template = Generator::generateDocTemplate('header');
-                        $style_template = Generator::generateDocTemplate('style');
-                        $footer_template = Generator::generateDocTemplate('footer');
+                        $header_template = Generator::getDocTemplate('header');
+                        $style_template = Generator::getDocTemplate('style');
+                        $footer_template = Generator::getDocTemplate('footer');
                         $imageOnTableDoc = "";
                         if($inventory_image){
                             $imageOnTableDoc = "

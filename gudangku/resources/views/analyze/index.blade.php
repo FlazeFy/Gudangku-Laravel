@@ -221,9 +221,9 @@
 
         let toggle_show_customize = false
         const generate_custom = () => {
-            const header = `<?= Generator::generateDocTemplate('header') ?>`
-            const footer = `<?= Generator::generateDocTemplate('footer') ?>`
-            const style = `<?= Generator::generateDocTemplate('style') ?>`
+            const header = `<?= Generator::getDocTemplate('header') ?>`
+            const footer = `<?= Generator::getDocTemplate('footer') ?>`
+            const style = `<?= Generator::getDocTemplate('style') ?>`
             if(!toggle_show_customize){
                 let editor = new RichTextEditor("#work_area")
                 editor.setHTML(`<head>${style}<link rel="stylesheet" href="{{ asset('/room_v1.0.css') }}"/></head>${header}${$('#render_area').html()}${footer}`)

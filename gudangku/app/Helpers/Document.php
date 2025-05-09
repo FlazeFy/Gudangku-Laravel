@@ -8,13 +8,13 @@ class Document
         $tbody = "";
         $datetime = now();
         if($header_template == null){
-            $header_template = Generator::generateDocTemplate('header');
+            $header_template = Generator::getDocTemplate('header');
         }
         if($style_template == null){
-            $style_template = Generator::generateDocTemplate('style');
+            $style_template = Generator::getDocTemplate('style');
         }
         if($footer_template == null){
-            $footer_template = Generator::generateDocTemplate('footer');
+            $footer_template = Generator::getDocTemplate('footer');
         }
 
         $extra_template = "";
@@ -109,13 +109,13 @@ class Document
         $tbody = "";
         $datetime = now();
         if($header_template == null){
-            $header_template = Generator::generateDocTemplate('header');
+            $header_template = Generator::getDocTemplate('header');
         }
         if($style_template == null){
-            $style_template = Generator::generateDocTemplate('style');
+            $style_template = Generator::getDocTemplate('style');
         }
         if($footer_template == null){
-            $footer_template = Generator::generateDocTemplate('footer');
+            $footer_template = Generator::getDocTemplate('footer');
         }
         $extra_template = "";
             $layout_template = "<div id='room-container'>";
@@ -250,13 +250,13 @@ class Document
         $tbody = "";
         $datetime = now();
         if($header_template == null){
-            $header_template = Generator::generateDocTemplate('header');
+            $header_template = Generator::getDocTemplate('header');
         }
         if($style_template == null){
-            $style_template = Generator::generateDocTemplate('style');
+            $style_template = Generator::getDocTemplate('style');
         }
         if($footer_template == null){
-            $footer_template = Generator::generateDocTemplate('footer');
+            $footer_template = Generator::getDocTemplate('footer');
         }
         $reminder_template = "";
         foreach ($reminder as $dt) {

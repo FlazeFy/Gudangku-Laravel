@@ -49,10 +49,9 @@ class InventoryModel extends Model
     protected $fillable = ['id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
 
     public static function getInventoryPlanDestroy($days){
-        $res = InventoryModel::select('inventory.id','inventory_name','deleted_at','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
+        $res = InventoryModel::select('inventory.id','inventory_name','deleted_at','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id')
             ->join('users','users.id','=','inventory.created_by')
-            ->whereDate('deleted_at', '<', Carbon::now()
-            ->subDays($days))
+            ->whereDate('deleted_at', '<', Carbon::now()->subDays($days))
             ->orderby('username','asc');
 
         return $res->get();
