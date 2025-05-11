@@ -69,7 +69,7 @@ class Validation
                 'report_desc' => 'nullable|string|max:255',
                 'report_category' => ['required', new ReportCategory],
                 'is_reminder' => 'required|numeric|min:0|max:1',
-                'reminder_at' => 'nullable|datetime',
+                'reminder_at' => 'nullable|date_format:Y-m-d H:i:s',
                 'report_item' => 'nullable|json',
             ]);  
         } 

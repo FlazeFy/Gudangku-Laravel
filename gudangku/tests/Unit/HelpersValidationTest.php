@@ -57,7 +57,7 @@ class HelpersValidationTest extends TestCase
     }
 
     // getValidateDictionary
-    public function test_validate_dictionary_success_with_valid_data()
+    public function test_validate_dictionary_create_success_with_valid_data()
     {
         $request = Request::create('/test', 'POST', [
             'dictionary_name' => 'test',
@@ -67,10 +67,10 @@ class HelpersValidationTest extends TestCase
         $validator = Validation::getValidateDictionary($request,'create');
 
         $this->assertFalse($validator->fails());
-        Audit::auditRecordText("Test - Validation Dictionary Success With Valid Data", "Validation-Dictionary", "Request : ".json_encode($request->all()));
-        Audit::auditRecordSheet("Test - Validation Dictionary Success With Valid Data", "Validation-Dictionary", json_encode($request->all()),'');
+        Audit::auditRecordText("Test - Validation Dictionary Create Success With Valid Data", "Validation-Dictionary Create", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Dictionary Create Success With Valid Data", "Validation-Dictionary Create", json_encode($request->all()),'');
     }
-    public function test_validate_dictionary_failed_with_invalid_long_char_dictionary_name()
+    public function test_validate_dictionary_create_failed_with_invalid_long_char_dictionary_name()
     {
         $request = Request::create('/test', 'POST', [
             'dictionary_name' => 't',
@@ -81,10 +81,10 @@ class HelpersValidationTest extends TestCase
 
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('dictionary_name', $validator->errors()->toArray());
-        Audit::auditRecordText("Test - Validation Dictionary Failed With Invalid Long Char Dictionary Name", "Validation-Dictionary", "Request : ".json_encode($request->all()));
-        Audit::auditRecordSheet("Test - Validation Dictionary Failed With Invalid Long Char Dictionary Name", "Validation-Dictionary", json_encode($request->all()),'');
+        Audit::auditRecordText("Test - Validation Dictionary Create Failed With Invalid Long Char Dictionary Name", "Validation-Dictionary Create", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Dictionary Create Failed With Invalid Long Char Dictionary Name", "Validation-Dictionary Create", json_encode($request->all()),'');
     }
-    public function test_validate_dictionary_failed_with_invalid_rules_dictionary_type()
+    public function test_validate_dictionary_create_failed_with_invalid_rules_dictionary_type()
     {
         $request = Request::create('/test', 'POST', [
             'dictionary_name' => 'test',
@@ -95,9 +95,129 @@ class HelpersValidationTest extends TestCase
 
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('dictionary_type', $validator->errors()->toArray());
-        Audit::auditRecordText("Test - Validation Dictionary Failed With Invalid Rules Dictionary Type", "Validation-Dictionary", "Request : ".json_encode($request->all()));
-        Audit::auditRecordSheet("Test - Validation Dictionary Failed With Invalid Rules Dictionary Type", "Validation-Dictionary", json_encode($request->all()),'');
+        Audit::auditRecordText("Test - Validation Dictionary Create Failed With Invalid Rules Dictionary Type", "Validation-Dictionary Create", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Dictionary Create Failed With Invalid Rules Dictionary Type", "Validation-Dictionary Create", json_encode($request->all()),'');
     }
+    public function test_validate_dictionary_delete_success_with_valid_data()
+    {
+        $request = Request::create('/test', 'POST', [
+            'id' => 1,
+        ]);
+
+        $validator = Validation::getValidateDictionary($request,'delete');
+
+        $this->assertFalse($validator->fails());
+        Audit::auditRecordText("Test - Validation Dictionary Delete Success With Valid Data", "Validation-Dictionary Delete", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Dictionary Delete Success With Valid Data", "Validation-Dictionary Delete", json_encode($request->all()),'');
+    }
+    public function test_validate_dictionary_delete_failed_with_invalid_long_char_id()
+    {
+        $request = Request::create('/test', 'POST', [
+            'id' => '1124',
+        ]);
+
+        $validator = Validation::getValidateDictionary($request,'delete');
+
+        $this->assertTrue($validator->fails());
+        $this->assertArrayHasKey('id', $validator->errors()->toArray());
+        Audit::auditRecordText("Test - Validation Dictionary Delete Failed With Long Char Id", "Validation-Dictionary Delete", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Dictionary Delete Failed With Long Char Id", "Validation-Dictionar Deletey", json_encode($request->all()),'');
+    }
+
+    // getValidateReport
+    public function test_validate_report_create_success_with_valid_data()
+    {
+        $request = Request::create('/test', 'POST', [
+            'report_title' => 'test',
+            'report_desc' => 'test desc',
+            'report_category' => 'Shopping Cart',
+            'is_reminder' => 1,
+            'reminder_at' => '2025-07-17 14:00:00',
+            'report_item' => json_encode(['task' => 'Write code'])
+        ]);
+
+        $validator = Validation::getValidateReport($request, 'create');
+
+        $this->assertFalse($validator->fails());
+        Audit::auditRecordText("Test - Validation Report Create Success With Valid Data", "Validation-Report Create", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Report Create Success With Valid Data", "Validation-Report Create", json_encode($request->all()),'');
+    }
+
+    public function test_validate_report_create_failed_with_invalid_is_reminder()
+    {
+        $request = Request::create('/test', 'POST', [
+            'report_title' => 'test',
+            'report_desc' => 'test desc',
+            'report_category' => 'Shopping Cart',
+            'is_reminder' => 2,
+            'reminder_at' => '2025-07-17 14:00:00',
+            'report_item' => json_encode(['task' => 'Write code'])
+        ]);
+
+        $validator = Validation::getValidateReport($request, 'create');
+
+        $this->assertTrue($validator->fails());
+        $this->assertArrayHasKey('is_reminder', $validator->errors()->toArray());
+        Audit::auditRecordText("Test - Validation Report Create Failed With Invalid is_reminder", "Validation-Report Create", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Report Create Failed With Invalid is_reminder", "Validation-Report Create", json_encode($request->all()),'');
+    }
+
+    public function test_validate_report_create_failed_with_invalid_reminder_at()
+    {
+        $request = Request::create('/test', 'POST', [
+            'report_title' => 'test',
+            'report_desc' => 'test desc',
+            'report_category' => 'Shopping Cart',
+            'is_reminder' => 1,
+            'reminder_at' => 'not-a-date',
+            'report_item' => json_encode(['task' => 'Write code'])
+        ]);
+
+        $validator = Validation::getValidateReport($request, 'create');
+
+        $this->assertTrue($validator->fails());
+        $this->assertArrayHasKey('reminder_at', $validator->errors()->toArray());
+        Audit::auditRecordText("Test - Validation Report Create Failed With Invalid reminder_at", "Validation-Report Create", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Report Create Failed With Invalid reminder_at", "Validation-Report Create", json_encode($request->all()),'');
+    }
+
+    public function test_validate_report_create_failed_with_invalid_report_category()
+    {
+        $request = Request::create('/test', 'POST', [
+            'report_title' => 'test',
+            'report_desc' => 'test desc',
+            'report_category' => 'main_room',
+            'is_reminder' => 1,
+            'reminder_at' => '2025-07-17 14:00:00',
+            'report_item' => json_encode(['task' => 'Write code'])
+        ]);
+
+        $validator = Validation::getValidateReport($request, 'create');
+
+        $this->assertTrue($validator->fails());
+        $this->assertArrayHasKey('report_category', $validator->errors()->toArray());
+        Audit::auditRecordText("Test - Validation Report Create Failed With Invalid report_category", "Validation-Report Create", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Report Create Failed With Invalid report_category", "Validation-Report Create", json_encode($request->all()),'');
+    }
+
+    public function test_validate_report_create_failed_with_missing_report_title()
+    {
+        $request = Request::create('/test', 'POST', [
+            'report_category' => 'Shopping Cart',
+            'report_desc' => 'test desc',
+            'is_reminder' => 1,
+            'reminder_at' => '2025-07-17 14:00:00',
+            'report_item' => json_encode(['task' => 'Write code'])
+        ]);
+
+        $validator = Validation::getValidateReport($request, 'create');
+
+        $this->assertTrue($validator->fails());
+        $this->assertArrayHasKey('report_title', $validator->errors()->toArray());
+        Audit::auditRecordText("Test - Validation Report Create Failed With Missing report_title", "Validation-Report Create", "Request : ".json_encode($request->all()));
+        Audit::auditRecordSheet("Test - Validation Report Create Failed With Missing report_title", "Validation-Report Create", json_encode($request->all()),'');
+    }
+
 
     // getValidateUUID
     public function test_validate_uuid_success_with_valid_data()
@@ -117,5 +237,25 @@ class HelpersValidationTest extends TestCase
         $this->assertEquals($validator,false);
         Audit::auditRecordText("Test - Validation UUID Failed With Invalid Data", "Validation-UUID", "Request : ".$id);
         Audit::auditRecordSheet("Test - Validation UUID Failed With Invalid Data", "Validation-UUID", $id,'');
+    }
+
+    // getValidateTimezone
+    public function test_validate_timezone_success_with_valid_data()
+    {
+        $time = "+07:00";
+        $validator = Validation::getValidateTimezone($time);
+
+        $this->assertEquals($validator,true);
+        Audit::auditRecordText("Test - Validation Timezone Success With Valid Data", "Validation-Timezone", "Request : ".$time);
+        Audit::auditRecordSheet("Test - Validation Timezone Success With Valid Data", "Validation-Timezone", $time,'');
+    }
+    public function test_validate_timezone_failed_with_invalid_data()
+    {
+        $time = "-15:00";
+        $validator = Validation::getValidateTimezone($time);
+
+        $this->assertEquals($validator,false);
+        Audit::auditRecordText("Test - Validation Timezone Failed With Invalid Data", "Validation-Timezone", "Request : ".$time);
+        Audit::auditRecordSheet("Test - Validation Timezone Failed With Invalid Data", "Validation-Timezone", $time,'');
     }
 }
