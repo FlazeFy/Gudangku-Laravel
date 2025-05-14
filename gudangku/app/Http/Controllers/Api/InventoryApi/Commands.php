@@ -796,6 +796,123 @@ class Commands extends Controller
 
     /**
      * @OA\PUT(
+     *     path="/api/v1/inventory/edit/{id}",
+     *     summary="Update inventory By Id",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="inventory updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory 'product A' is updated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Data is already exist",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory is already exist")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function edit_inventory_by_id(Request $request,$id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $validator = Validation::getValidateInventory($request,'update');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                // Check Inventory Name
+                $is_exist = InventoryModel::selectRaw('1')
+                    ->where('inventory_name',$request->inventory_name)
+                    ->whereNot('id',$id)
+                    ->where('created_by',$user_id)
+                    ->first();
+
+                if(!$is_exist){
+                    // Update Inventory
+                    $res = InventoryModel::where('id',$id)->update([
+                        'inventory_name' => $request->inventory_name, 
+                        'inventory_category' => $request->inventory_category, 
+                        'inventory_desc' => $request->inventory_desc, 
+                        'inventory_merk' => $request->inventory_merk, 
+                        'inventory_color' => $request->inventory_color, 
+                        'inventory_room' => $request->inventory_room, 
+                        'inventory_storage' => $request->inventory_storage, 
+                        'inventory_rack' => $request->inventory_rack, 
+                        'inventory_price' => $request->inventory_price, 
+                        'inventory_unit' => $request->inventory_unit, 
+                        'inventory_vol' => $request->inventory_vol, 
+                        'inventory_capacity_unit' => $request->inventory_capacity_unit, 
+                        'inventory_capacity_vol' => $request->inventory_capacity_vol, 
+                        'is_favorite' => $request->is_favorite, 
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
+
+                    if($res){
+                        // History
+                        Audit::createHistory('Update', $request->inventory_name, $user_id);
+                        
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => "inventory '$request->inventory_name' is updated",
+                            'data' => $res
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => Generator::getMessageTemplate("unknown_error", null),
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("conflict", "inventory name"),
+                    ], Response::HTTP_CONFLICT);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\PUT(
      *     path="/api/v1/inventory/edit_layout/{id}",
      *     summary="Update inventory layout by id",
      *     tags={"Inventory"},

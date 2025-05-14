@@ -1,4 +1,4 @@
-<form id="form_edit_inventory" method="POST">
+<form id="form_edit_inventory">
     @csrf
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
     <div class="row">
@@ -94,8 +94,7 @@
         }
         const createdAtOpposite = convertToOppositeTimezone($('#created_at_edit').val())
         $('#created_at_edit').val(createdAtOpposite)
-
-        $('#form_edit_inventory').submit()
+        save_update()
     })
     const get_detail_inventory = (id) => {
         const item_holder = 'report_holder'
@@ -352,4 +351,37 @@
 
     get_dictionary()
     get_detail_inventory("<?= $id ?>")
+
+    const save_update = () => {
+        const id = `<?= $id ?>`
+        $.ajax({
+            url: `/api/v1/inventory/edit/${id}`,
+            type: 'PUT',
+            data: $('#form_edit_inventory').serialize(),
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                Swal.showLoading()
+            },
+            success: function(response) {
+                Swal.hideLoading()
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success",
+                    allowOutsideClick: false,
+                    confirmButtonText: "Ok"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        get_dictionary();
+                        get_detail_inventory(id);
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                generate_api_error(response, true)
+            }
+        });
+    }
 </script>

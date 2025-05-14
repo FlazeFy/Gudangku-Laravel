@@ -55,6 +55,7 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::delete('/destroy/{id}', [CommandsInventoryController::class, 'hard_delete_inventory_by_id']);
     Route::put('/fav_toggle/{id}', [CommandsInventoryController::class, 'fav_toogle_inventory_by_id']);
     Route::put('/recover/{id}', [CommandsInventoryController::class, 'recover_inventory_by_id']);
+    Route::put('/edit/{id}', [CommandsInventoryController::class, 'edit_inventory_by_id']);
     Route::put('/edit_image/{id}', [CommandsInventoryController::class, 'edit_image_by_id']);
     Route::put('/edit_layout/{id}', [CommandsInventoryController::class, 'edit_layout_by_id']);
 });
