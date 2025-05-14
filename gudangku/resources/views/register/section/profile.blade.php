@@ -156,10 +156,10 @@
                 })
             } else {
                 Swal.fire({
-                    title: "Oops!",                    
-                    text: "Something went wrong on the server. Please try again later.",
+                    title: "Oops!",
+                    text: `Something error please call admin`,
                     icon: "error"
-                })
+                });
             }
             var pins = pin_holder.querySelectorAll('input')
             var is_empty = false
