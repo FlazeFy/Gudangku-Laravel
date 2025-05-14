@@ -92,6 +92,7 @@
                 </footer>
             </div>
         </div>
+        @include('others.scroll_top')
         <script>
             var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
             var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {

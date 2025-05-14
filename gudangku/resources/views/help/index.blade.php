@@ -16,5 +16,4 @@
         </div>
         @include('help.list')
     </div>
-    <div id="nav_scroll-holder" style="position:fixed; right:20px; bottom:20px; z-index:1000; width: 11vw;"></div>
 @endsection
