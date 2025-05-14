@@ -1,4 +1,4 @@
-<hr><h1 class="fw-bold my-3 text-center" style="font-size:calc(2*var(--textLG));">User Manual</h1>
+<hr><h1 class="fw-bold my-3 text-center" style="font-size:calc(2*var(--textLG));" id="user_manual-section">User Manual</h1>
 <div class="container bordered mb-4">
     <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Login?</h1>
     <h2 style="font-size:calc(var(--textLG));">To sign it to GudangKu Apps you must provide <b>Email / Username</b> and <b>Password</b></h2>
@@ -361,3 +361,139 @@
         <li>Click <b class='text-success'>Validate Token</b> to finish the Telegram ID Change</li>
     </ol>
 </div>
+<hr><h1 class="fw-bold my-3 text-center" style="font-size:calc(2*var(--textLG));" id="data_constraint-section">Data Constraint</h1>  
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        <div class="container bordered mb-4">
+            <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Inventory</h1>
+            <ol class="text-white ms-4" style="list-style-type: circle;">
+                <li>Inventory Name (Max Char: 75)</li>
+                <li>Inventory Category (Such as : <span id="inventory_category-text"></span>)</li>
+                <li>Inventory Description (Max Char: 255, Optional)</li>
+                <li>Inventory Merk (Max Char: 75, Optional)</li>
+                <li>Inventory Room (Such as : <span id="inventory_room-text"></span>)</li>
+                <li>Inventory Storage (Max Char: 36, Optional)</li>
+                <li>Inventory Rack (Max Char: 36, Optional)</li>
+                <li>Inventory Price (Max Char: 9)</li>
+                <li>Inventory Image (Allowed Type : JPG, JPEG, PNG, GIF, Max Size : 10 Mb, Optional)</li>
+                <li>Inventory Color (From Uploaded Images, or Manually Input)</li>
+                <li>Inventory Unit, Inventory Capacity Unit (Such as : <span id="inventory_unit-text"></span>)</li>
+                <li>Inventory Volume, Inventory Capacity Volume (Max Char: 6)</li>
+                <li>Is Inventory Reminded At, Is Favorited (True / False)</li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <div class="container bordered mb-4">
+            <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Report</h1>
+            <ol class="text-white ms-4" style="list-style-type: circle;">
+                <li>Report Title (Max Char: 75)</li>
+                <li>Report Category (Such as : <span id="report_category-text"></span>)</li>
+                <li>Report Description (Max Char: 255, Optional)</li>
+                <li>Report Image (Allowed Type : JPG, JPEG, PNG, GIF, Max Size : 10 Mb, Optional)</li>
+                <li>Remind At (Date)</li>
+                <li>Is Report Reminded At (True / False)</li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <div class="container bordered mb-4">
+            <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Reminder</h1>
+            <ol class="text-white ms-4" style="list-style-type: circle;">
+                <li>Reminder Description (Max Char: 255)</li>
+                <li>Reminder Type (Such as : <span id="reminder_type-text"></span>)</li>
+                <li>Reminder Context (Such as : <span id="reminder_context-text"></span>)</li>
+                <li>Remind At (Date)</li>
+                <li>Is Report Reminded At (True / False)</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<script>
+    const get_dct = () => {
+        $.ajax({
+            url: '/api/v1/dictionary/type/inventory_unit,inventory_room,inventory_category,inventory_unit_room,report_category,reminder_type,reminder_context',
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                Swal.showLoading()
+            },
+            success: function(response) {
+                Swal.close()
+                const data = response.data
+                const grouped = data.reduce((dct, dt) => {
+                    if (!dct[dt.dictionary_type]) {
+                        dct[dt.dictionary_type] = []
+                    }
+                    dct[dt.dictionary_type].push(dt.dictionary_name)
+                    return dct
+                }, {});
+
+                Object.entries(grouped).forEach(([type, names]) => {
+                    let formatted = '';
+                    names.forEach((name, idx) => {
+                        const isLast = idx === names.length - 1
+                        const isSecondLast = idx === names.length - 2
+
+                        formatted += name
+                        if (isSecondLast) {
+                            formatted += ', and '
+                        } else if (!isLast) {
+                            formatted += ', '
+                        }
+                    });
+
+                    $(`#${type}-text`).append(formatted)
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                generate_api_error(response, true)
+            }
+        });
+    }
+    get_dct()
+
+    $(document).ready(function () {
+        const check_el_viewport = (el) =>{
+            const rect = el[0].getBoundingClientRect()
+
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            )
+        }
+
+        const add_nav_el_btn = () => {
+            const target = [
+                { element: 'user_manual-section', text: '<i class="fa-solid fa-arrow-up"></i> Go to User Manual' },
+                { element: 'data_constraint-section', text: '<i class="fa-solid fa-arrow-down"></i> Go to Data Constraint' }
+            ]
+
+            target.forEach(dt => {
+                const $el = $(`#${dt.element}`)
+                const btnId = `scroll-to-${dt.element}-btn`
+
+                if ($el.length != 0){ 
+                    if (!check_el_viewport($el) && $(`#${btnId}`).length === 0) {
+                        $('#nav_scroll-holder').append(`
+                            <button class="btn btn-primary mb-2 w-100" id="${btnId}">${dt.text}</button>
+                        `)
+
+                        $(`#${btnId}`).on('click', function () {
+                            $('html, body').animate({ scrollTop: $el.offset().top}, 200)
+                        });
+                    } else if (check_el_viewport($el) && $(`#${btnId}`).length > 0) {
+                        $(`#${btnId}`).remove()
+                    }
+                }
+            });
+        };
+
+        add_nav_el_btn()
+        $(window).on('scroll resize', add_nav_el_btn)
+    });
+</script>

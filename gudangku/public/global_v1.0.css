@@ -78,6 +78,9 @@ hr {
 table tr {
     word-break: break-word;
 }
+#nav_scroll-holder button {
+    font-size: var(--textXMD);
+}
 
 /* Modal */
 .modal-content, .swal2-popup, .popover {
