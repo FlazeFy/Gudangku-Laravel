@@ -31,7 +31,7 @@ class Validation
 
     public static function getValidateInventory($request,$type){
         if($type == 'create'){
-            return Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'inventory_name' => 'required|string|max:75',
                 'inventory_category' => 'required|string|max:75',
                 'inventory_desc' => 'nullable|string|max:255',
@@ -48,8 +48,11 @@ class Validation
                 'inventory_capacity_vol' => 'nullable|numeric|min:0|max:999999',
                 'is_favorite' => 'required|boolean'
             ]);
+            self::validateInventoryVolumeRelation($validator, $request);
+
+            return $validator;
         } else if($type == 'update'){
-            return Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'inventory_name' => 'required|string|max:75',
                 'inventory_category' => 'required|string|max:75',
                 'inventory_desc' => 'nullable|string|max:255',
@@ -64,6 +67,9 @@ class Validation
                 'inventory_capacity_unit' => 'nullable|string|max:36',
                 'inventory_capacity_vol' => 'nullable|numeric|min:0|max:999999',
             ]);
+            self::validateInventoryVolumeRelation($validator, $request);
+
+            return $validator;
         } else if($type == 'update_image'){
             return Validator::make($request->all(), [
                 'inventory_image' => 'nullable|string|max:500'
@@ -154,5 +160,14 @@ class Validation
 
     public static function getValidateUUID($val){
         return preg_match('/^[{]?([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})[}]?$/i', $val) === 1;
+    }
+
+    private static function validateInventoryVolumeRelation($validator, $request){
+        $validator->after(function ($validator) use ($request) {
+            if ($request->filled('inventory_capacity_vol') && is_numeric($request->inventory_capacity_vol) &&
+                is_numeric($request->inventory_vol) && $request->inventory_vol < $request->inventory_capacity_vol) {
+                $validator->errors()->add('inventory_vol', 'Inventory vol must be greater than or equal to inventory capacity vol.');
+            }
+        });
     }
 }
