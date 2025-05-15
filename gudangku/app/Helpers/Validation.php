@@ -122,7 +122,7 @@ class Validation
     public static function getValidateReminder($request,$type){
         if($type == 'create'){
             return Validator::make($request->all(), [
-                'inventory_id' => 'required|string|max:36',
+                'inventory_id' => 'required|string|min:36|max:36',
                 'reminder_desc' => 'required|string|max:255',
                 'reminder_type' => ['required', new ReminderType],
                 'reminder_context' => 'required|string|max:36',
