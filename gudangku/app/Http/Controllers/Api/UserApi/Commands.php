@@ -161,6 +161,14 @@ class Commands extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error",
      *         @OA\JsonContent(
@@ -175,47 +183,55 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $check = UserModel::selectRaw('1')
-                ->where(function ($query) use ($request) {
-                    $query->where('email', $request->email)
-                        ->orWhere('username', $request->username);
-                })
-                ->where('id', '!=', $user_id)
-                ->first();
+            $validator = Validation::getValidateUser($request,'update');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $check = UserModel::selectRaw('1')
+                    ->where(function ($query) use ($request) {
+                        $query->where('email', $request->email)
+                            ->orWhere('username', $request->username);
+                    })
+                    ->where('id', '!=', $user_id)
+                    ->first();
 
-            if($check == null){
-                $res = UserModel::where('id',$user_id)
-                    ->update([
-                        'email' => $request->email,
-                        'username' => $request->username
-                    ]);
-                
-                if ($res) {
-                    $user = UserModel::getSocial($user_id);
-
-                    if($user->telegram_is_valid == 1){
-                        $response = Telegram::sendMessage([
-                            'chat_id' => $user->telegram_user_id,
-                            'text' => "Hello,\n\nYour profile has been updated",
-                            'parse_mode' => 'HTML'
+                if($check == null){
+                    $res = UserModel::where('id',$user_id)
+                        ->update([
+                            'email' => $request->email,
+                            'username' => $request->username
                         ]);
-                    }
+                    
+                    if ($res) {
+                        $user = UserModel::getSocial($user_id);
 
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => Generator::getMessageTemplate("update", 'profile'),
-                    ], Response::HTTP_OK);
+                        if($user->telegram_is_valid == 1){
+                            $response = Telegram::sendMessage([
+                                'chat_id' => $user->telegram_user_id,
+                                'text' => "Hello,\n\nYour profile has been updated",
+                                'parse_mode' => 'HTML'
+                            ]);
+                        }
+
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => Generator::getMessageTemplate("update", 'profile'),
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => Generator::getMessageTemplate("not_found", 'user'),
+                        ], Response::HTTP_NOT_FOUND);
+                    }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'user'),
-                    ], Response::HTTP_NOT_FOUND);
+                        'message' => Generator::getMessageTemplate("conflict", 'email or username'),
+                    ], Response::HTTP_CONFLICT);
                 }
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("conflict", 'email or username'),
-                ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {
             return response()->json([
@@ -352,6 +368,14 @@ class Commands extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error",
      *         @OA\JsonContent(
@@ -364,74 +388,82 @@ class Commands extends Controller
     public function post_validate_register(Request $request)
     {
         try{
-            $username = $request->username;
-            $valid = ValidateRequestModel::selectRaw('id')
-                ->where('request_type','register')
-                ->where('request_context',$request->token)
-                ->where('created_by',$username)
-                ->first();
-
-            if($valid){
-                $check_user = UserModel::selectRaw('1')
-                    ->where('username',$username)
+            $validator = Validation::getValidateUser($request,'create');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $username = $request->username;
+                $valid = ValidateRequestModel::selectRaw('id')
+                    ->where('request_type','register')
+                    ->where('request_context',$request->token)
+                    ->where('created_by',$username)
                     ->first();
 
-                if(!$check_user){
-                    ValidateRequestModel::destroy($valid->id);
+                if($valid){
+                    $check_user = UserModel::selectRaw('1')
+                        ->where('username',$username)
+                        ->first();
 
-                    $user = UserModel::create([
-                        'id' => Generator::getUUID(), 
-                        'username' => $request->username, 
-                        'password' => Hash::make($request->password),
-                        'telegram_user_id' => null,
-                        'telegram_is_valid' => 0,
-                        'email' => $request->email,
-                        'phone' => null,
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'updated_at' => null
-                    ]);
+                    if(!$check_user){
+                        ValidateRequestModel::destroy($valid->id);
 
-                    if($user){
-                        // Send email
-                        $ctx = 'Register new account';
-                        $email = $request->email;
-                        $data = "Welcome to GudangKu, happy explore!";
+                        $user = UserModel::create([
+                            'id' => Generator::getUUID(), 
+                            'username' => $request->username, 
+                            'password' => Hash::make($request->password),
+                            'telegram_user_id' => null,
+                            'telegram_is_valid' => 0,
+                            'email' => $request->email,
+                            'phone' => null,
+                            'created_at' => date('Y-m-d H:i:s'), 
+                            'updated_at' => null
+                        ]);
 
-                        dispatch(new UserMailer($ctx, $data, $username, $email));
+                        if($user){
+                            // Send email
+                            $ctx = 'Register new account';
+                            $email = $request->email;
+                            $data = "Welcome to GudangKu, happy explore!";
 
-                        if(Hash::check($request->password, $user->password)){
-                            $token = $user->createToken('login')->plainTextToken;
+                            dispatch(new UserMailer($ctx, $data, $username, $email));
 
-                            return response()->json([
-                                'is_signed_in' => true,
-                                'token' => $token,
-                                'status' => 'success',
-                                'message' => Generator::getMessageTemplate("custom", "account is registered"),
-                            ], Response::HTTP_OK);   
+                            if(Hash::check($request->password, $user->password)){
+                                $token = $user->createToken('login')->plainTextToken;
+
+                                return response()->json([
+                                    'is_signed_in' => true,
+                                    'token' => $token,
+                                    'status' => 'success',
+                                    'message' => Generator::getMessageTemplate("custom", "account is registered"),
+                                ], Response::HTTP_OK);   
+                            } else {
+                                return response()->json([
+                                    'is_signed_in' => false,
+                                    'status' => 'success',
+                                    'message' => Generator::getMessageTemplate("custom", "account is registered"),
+                                ], Response::HTTP_OK);   
+                            }
                         } else {
                             return response()->json([
-                                'is_signed_in' => false,
-                                'status' => 'success',
-                                'message' => Generator::getMessageTemplate("custom", "account is registered"),
-                            ], Response::HTTP_OK);   
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("unknown_error", null),
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => Generator::getMessageTemplate("unknown_error", null),
-                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            'message' => Generator::getMessageTemplate("conflict", 'username'),
+                        ], Response::HTTP_CONFLICT);
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("conflict", 'username'),
-                    ], Response::HTTP_CONFLICT);
+                        'message' => Generator::getMessageTemplate("custom", 'token is invalid'),
+                    ], Response::HTTP_NOT_FOUND);
                 }
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("custom", 'token is invalid'),
-                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([

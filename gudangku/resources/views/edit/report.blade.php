@@ -1,5 +1,7 @@
-<hr>
-<h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Report</h6>
+<div class="d-flex justify-content-between">
+    <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Report</h6>
+    <span id="add_report-holder"></span>
+</div>
 <div id="report_holder"></div>
 <script>
     const highlight_item = (find,items) => {
@@ -59,6 +61,9 @@
                         </button>
                     `);
                 });
+                $(`#add_report-holder`).html(`
+                    <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Report</a>
+                `)
 
                 generate_pagination(item_holder, get_my_report_all, total_page, current_page)
             },

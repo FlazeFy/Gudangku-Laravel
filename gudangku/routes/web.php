@@ -52,7 +52,6 @@ Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () 
     });
     Route::prefix('/edit/{id}')->group(function (){
         Route::get('/', [EditController::class, 'index']);
-        Route::post('/editInventory', [EditController::class, 'update']);
         Route::post('/editInventory/addReport', [EditController::class, 'create_report']);
     });
 });

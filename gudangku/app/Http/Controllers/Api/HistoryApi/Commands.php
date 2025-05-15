@@ -66,7 +66,9 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $rows = HistoryModel::destroy($id);
+            $rows = HistoryModel::where('id',$id)
+                ->where('created_by',$user_id)
+                ->delete();
 
             if($rows > 0){
                 return response()->json([

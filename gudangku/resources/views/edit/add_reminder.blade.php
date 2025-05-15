@@ -33,7 +33,6 @@
         formData.push({ name: "send_demo", value: is_checked })
         let dataObject = {}
         formData.forEach(item => dataObject[item.name] = item.value)
-        console.log(dataObject)
 
         $.ajax({
             url: '/api/v1/reminder',

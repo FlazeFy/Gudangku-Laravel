@@ -1,86 +1,96 @@
 <form id="form_edit_inventory">
     @csrf
-    <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
-    <div class="row">
-        <div class="col-lg-6 col-md-6 py-2">
-            <label>Name</label>
-            <input type="text" name="inventory_name" id="inventory_name" class="form-control my-2"/>
-            <label>Category</label>
-            <select class="form-select my-2" name="inventory_category" id="inventory_category" aria-label="Default select example"></select>
-            <div id='inventory_color_holder'></div>
-        </div>
-        <div class="col-lg-6 col-md-6 py-2">
-            @include('edit.image_picker')
-        </div>
-        <div class="col-lg-12 py-2">
-            <label>Description</label>
-            <textarea name="inventory_desc" id="inventory_desc" class="form-control"></textarea>
-        </div>
-        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 py-2">
-            <label>Merk</label>
-            <input type="text" name="inventory_merk" id="inventory_merk" class="form-control"/>
-        </div>
-        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 py-2">
-            <label>Price</label>
-            <input type="number" name="inventory_price" id="inventory_price" class="form-control"/>
-        </div>
-        <div class="col-xl-4 col-12 py-2">
-            <label>Created At</label>
-            <input class='form-control' type='datetime-local' id='created_at_edit' name='created_at_edit'>
-        </div>
-    </div><hr>
+    <div class="container-form">
+        <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 py-2">
+                <label>Name</label>
+                <input type="text" name="inventory_name" id="inventory_name" class="form-control my-2"/>
+                <label>Category</label>
+                <select class="form-select my-2" name="inventory_category" id="inventory_category" aria-label="Default select example"></select>
+                <div id='inventory_color_holder'></div>
+            </div>
+            <div class="col-lg-6 col-md-6 py-2">
+                @include('edit.image_picker')
+            </div>
+            <div class="col-lg-12 py-2">
+                <label>Description</label>
+                <textarea name="inventory_desc" id="inventory_desc" class="form-control"></textarea>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 py-2">
+                <label>Merk</label>
+                <input type="text" name="inventory_merk" id="inventory_merk" class="form-control"/>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 py-2">
+                <label>Price</label>
+                <input type="number" name="inventory_price" id="inventory_price" class="form-control"/>
+            </div>
+            <div class="col-xl-4 col-12 py-2">
+                <label>Created At</label>
+                <input class='form-control' type='datetime-local' id='created_at_edit' name='created_at_edit'>
+            </div>
+        </div><hr>
 
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Standard Capacity</h6>
-            <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-4 col-4 py-2">
-                    <label>Volume</label>
-                    <input type="number" name="inventory_vol" id="inventory_vol" class="form-control"/>
-                </div>
-                <div class="col-lg-9 col-md-8 col-sm-8 col-8 py-2">
-                    <label>Unit</label>
-                    <select class="form-select" name="inventory_unit" id="inventory_unit" aria-label="Default select example"></select>
-                </div>
-            </div><hr>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Standard Capacity</h6>
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-4 py-2">
+                        <label>Volume</label>
+                        <input type="number" name="inventory_vol" id="inventory_vol" class="form-control"/>
+                    </div>
+                    <div class="col-lg-9 col-md-8 col-sm-8 col-8 py-2">
+                        <label>Unit</label>
+                        <select class="form-select" name="inventory_unit" id="inventory_unit" aria-label="Default select example"></select>
+                    </div>
+                </div><hr>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Remaining Capacity</h6>
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-4 py-2">
+                        <label>Volume</label>
+                        <input type="number" name="inventory_capacity_vol" id="inventory_capacity_vol"  class="form-control"/>
+                    </div>
+                    <div class="col-lg-9 col-md-8 col-sm-8 col-8 py-2">
+                        <label>Unit</label>
+                        <select class="form-select" name="inventory_capacity_unit" id="inventory_capacity_unit" aria-label="Default select example"></select>
+                    </div>
+                </div><hr>   
+            </div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Remaining Capacity</h6>
-            <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-4 col-4 py-2">
-                    <label>Volume</label>
-                    <input type="number" name="inventory_capacity_vol" id="inventory_capacity_vol"  class="form-control"/>
-                </div>
-                <div class="col-lg-9 col-md-8 col-sm-8 col-8 py-2">
-                    <label>Unit</label>
-                    <select class="form-select" name="inventory_capacity_unit" id="inventory_capacity_unit" aria-label="Default select example"></select>
-                </div>
-            </div><hr>   
+
+        <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Placement</h6>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-6 py-2">
+                <label>Room</label>
+                <select class="form-select" name="inventory_room" id="inventory_room" aria-label="Default select example"></select>
+            </div>
+            <div class="col-md-4 col-sm-6 col-6 py-2">
+                <label>Storage</label>
+                <input type="text" name="inventory_storage" id="inventory_storage" class="form-control"/>
+            </div>
+            <div class="col-md-4 col-sm-12 col-12 py-2">
+                <label>Rack</label>
+                <input type="text" name="inventory_rack" id="inventory_rack" class="form-control"/>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a id="save_changes" class="btn btn-success mt-3 border-0" style="background:var(--successBG) !important; min-width:160px;"><i class="fa-solid fa-floppy-disk"></i> Submit</a>
         </div>
     </div>
 
-    <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Placement</h6>
-    <div class="row">
-        <div class="col-md-4 col-sm-6 col-6 py-2">
-            <label>Room</label>
-            <select class="form-select" name="inventory_room" id="inventory_room" aria-label="Default select example"></select>
+    <div class="container-form">
+        <div class="d-flex justify-content-between">
+            <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Reminder</h6>
+            <span id="add_reminder-holder"></span>
         </div>
-        <div class="col-md-4 col-sm-6 col-6 py-2">
-            <label>Storage</label>
-            <input type="text" name="inventory_storage" id="inventory_storage" class="form-control"/>
-        </div>
-        <div class="col-md-4 col-sm-12 col-12 py-2">
-            <label>Rack</label>
-            <input type="text" name="inventory_rack" id="inventory_rack" class="form-control"/>
-        </div>
+        <div id='reminder_holder'></div>
     </div>
-    <div class="d-flex justify-content-end">
-        <a id="save_changes" class="btn btn-success mt-3 border-0" style="background:var(--successBG) !important; min-width:160px;"><i class="fa-solid fa-floppy-disk"></i> Submit</a>
-    </div>
-    <hr>
 
-    <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Reminder</h6>
-    <div id='reminder_holder'></div>
+    <div class="container-form">
+        @include('edit.report')
+    </div>
 </form>
 
 <script>
@@ -201,6 +211,9 @@
                             </div>
                         `)
                     });
+                    $('#add_reminder-holder').html(`
+                        <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReminder"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Reminder</a>
+                    `)
                 } else {
                     $('#reminder_holder').html(`
                         <div class="container-fluid p-3" style="background-color:rgba(59, 131, 246, 0.2);">

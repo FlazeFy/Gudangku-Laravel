@@ -92,7 +92,6 @@ class Commands extends Controller
     {
         try {
             $validator = Validation::getValidateLogin($request);
-
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'failed',

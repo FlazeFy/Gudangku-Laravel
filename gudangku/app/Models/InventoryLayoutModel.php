@@ -49,4 +49,14 @@ class InventoryLayoutModel extends Model
         
         return $res->first();
     }
+    
+    public static function getLayoutByCoor($id, $user_id, $coor){
+        $res = InventoryLayoutModel::select('layout','inventory_storage')
+            ->where('id',$id)
+            ->where('created_by',$user_id)
+            ->where('layout', 'like', '%' . $coor . '%')
+            ->first();
+
+        return $res;
+    }
 }

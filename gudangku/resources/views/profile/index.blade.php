@@ -17,13 +17,13 @@
         </div>
         <div class="row d-flex align-items-stretch">
             <div class="col-lg-6 col-sm-12 d-flex">
-                <div class="container bordered mb-4" id="profile-section">
+                <div class="container-form" id="profile-section">
                     <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Profile</h1>
                     @include('profile.profile')
                 </div>
             </div>
             <div class="col-lg-6 col-sm-12 d-flex">
-                <div class="container bordered mb-4" id="telegram-section">
+                <div class="container-form" id="telegram-section">
                     <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Telegram Account</h1>
                     @include('profile.telegram')
                 </div>

@@ -87,7 +87,6 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-
             $rows = ReportItemModel::where('id', $id)
                 ->where('created_by', $user_id);
 
@@ -172,9 +171,9 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
             $check_admin = AdminModel::find($user_id);
-
             $report = ReportModel::select('report_title')->where('id', $id)->first();
             $rows = ReportModel::where('id', $id);
+
             if(!$check_admin){
                 $rows = $rows->where('created_by', $user_id);
             }
@@ -245,6 +244,14 @@ class Commands extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error",
      *         @OA\JsonContent(
@@ -259,28 +266,36 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $rows = ReportModel::where('id', $id)
-                ->where('created_by', $user_id)
-                ->update([
-                    'report_title' => $request->report_title,
-                    'report_desc' => $request->report_desc,
-                    'report_category' => $request->report_category,
-                    'created_at' => $request->created_at
-                ]);
-
-            if($rows > 0){
-                // History
-                Audit::createHistory('Update Report', $request->report_title, $user_id);
-
+            $validator = Validation::getValidateReport($request,'update');
+            if ($validator->fails()) {
                 return response()->json([
-                    'status' => 'success',
-                    'message' => Generator::getMessageTemplate("update", 'report'),
-                ], Response::HTTP_OK);
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'report'),
-                ], Response::HTTP_NOT_FOUND);
+                    'status' => 'error',
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {  
+                $rows = ReportModel::where('id', $id)
+                    ->where('created_by', $user_id)
+                    ->update([
+                        'report_title' => $request->report_title,
+                        'report_desc' => $request->report_desc,
+                        'report_category' => $request->report_category,
+                        'created_at' => $request->created_at
+                    ]);
+
+                if($rows > 0){
+                    // History
+                    Audit::createHistory('Update Report', $request->report_title, $user_id);
+
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("update", 'report'),
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("not_found", 'report'),
+                    ], Response::HTTP_NOT_FOUND);
+                }
             }
         } catch(\Exception $e) {
             return response()->json([
@@ -326,6 +341,14 @@ class Commands extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
      *             @OA\Property(property="message", type="string", example="report item not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
      *         )
      *     ),
      *     @OA\Response(
@@ -666,7 +689,7 @@ class Commands extends Controller
                     'report_image' => $report_image ? json_encode($report_image,true) : null,
                     'is_reminder' => 0, 
                     'remind_at' => null, 
-                    'created_at' => date('Y-m-d H:i:s'), 
+                    'created_at' => $request->created_at ?? date('Y-m-d H:i:s'), 
                     'created_by' => $user_id, 
                     'updated_at' => null, 
                     'deleted_at' => null

@@ -3,7 +3,7 @@ button, .btn, a {
     background: var(--darkColor);
 }
 button:hover, .btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.025);
 }
 .btn-feature {
     cursor: pointer;
@@ -18,7 +18,7 @@ button:hover, .btn:hover {
 }
 .btn-feature:not(.fixed):hover {
     border: var(--spaceMini) solid var(--primaryColor) !important;
-    transform: scale(1.05);
+    transform: scale(1.025);
     box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
 }
 .btn-feature.fixed:hover {

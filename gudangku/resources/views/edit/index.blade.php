@@ -18,8 +18,6 @@
             <div id="edit_toolbar-section">
                 <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
                 <span id='btn-toogle-fav-holder'></span>
-                <a class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#modalAddReport" ><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Add @endif Report</a>
-                <a class="btn btn-primary mb-3 me-2" data-bs-toggle="modal" data-bs-target="#modalAddReminder" ><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Add @endif Reminder</a>
                 <a class="btn btn-primary mb-3 me-2" href="/doc/inventory/{{$id}}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print @endif</a>
                 <a class="btn btn-primary mb-3 me-2" href="/doc/inventory/{{$id}}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Print Custom</a>
                 <a class="btn btn-primary mb-3 me-2" href="/analyze/inventory/{{$id}}" id="analyze-button"><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Analyze @endif</a>
@@ -40,7 +38,6 @@
         @include('edit.add_report')
         @include('edit.add_reminder')
         @include('edit.form')
-        @include('edit.report')
     </div>
     <script>
         is_process = false

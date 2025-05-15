@@ -163,6 +163,14 @@ class Commands extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error",
      *         @OA\JsonContent(
@@ -176,83 +184,91 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name','inventory_image')
-                ->where('id',$id)
-                ->where('created_by',$user_id)
-                ->first();
+            $validator = Validation::getValidateInventory($request,'update_image');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $inventory = InventoryModel::select('inventory_name','inventory_image')
+                    ->where('id',$id)
+                    ->where('created_by',$user_id)
+                    ->first();
 
-            if($inventory){
-                $inventory_image = $inventory->inventory_image;
-                if($inventory_image){
-                    if(Firebase::deleteFile($inventory_image)){
+                if($inventory){
+                    $inventory_image = $inventory->inventory_image;
+                    if($inventory_image){
+                        if(Firebase::deleteFile($inventory_image)){
+                            $inventory_image = null;
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("not_found", 'inventory image'),
+                            ], Response::HTTP_NOT_FOUND);
+                        }
+                    } 
+                    if ($request->hasFile('file')) {
+                        $file = $request->file('file');
+                        if ($file->isValid()) {
+                            $file_ext = $file->getClientOriginalExtension();
+                            // Validate file type
+                            if (!in_array($file_ext, $this->allowed_file_type)) {
+                                return response()->json([
+                                    'status' => 'failed',
+                                    'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
+                                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                            }
+                            // Validate file size
+                            if ($file->getSize() > $this->max_size_file) {
+                                return response()->json([
+                                    'status' => 'failed',
+                                    'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
+                                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                            }
+            
+                            // Helper: Upload inventory image
+                            try {
+                                $user = UserModel::find($user_id);
+                                $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
+                            } catch (\Exception $e) {
+                                return response()->json([
+                                    'status' => 'failed',
+                                    'message' => Generator::getMessageTemplate("unknown_error", null),
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+                        }
+                    } else {
                         $inventory_image = null;
+                    }
+
+                    $rows = InventoryModel::where('id', $id)
+                        ->where('created_by', $user_id)
+                        ->update([
+                            'inventory_image' => $inventory_image,
+                            'updated_at' => date('Y-m-d H:i:s'),
+                    ]);
+
+                    if($rows > 0){
+                        // History
+                        Audit::createHistory('Update Image', $inventory->inventory_name, $user_id);
+                        
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => Generator::getMessageTemplate("update", 'inventory image'),
+                        ], Response::HTTP_OK);
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => Generator::getMessageTemplate("not_found", 'inventory image'),
+                            'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                         ], Response::HTTP_NOT_FOUND);
                     }
-                } 
-                if ($request->hasFile('file')) {
-                    $file = $request->file('file');
-                    if ($file->isValid()) {
-                        $file_ext = $file->getClientOriginalExtension();
-                        // Validate file type
-                        if (!in_array($file_ext, $this->allowed_file_type)) {
-                            return response()->json([
-                                'status' => 'failed',
-                                'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
-                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-                        }
-                        // Validate file size
-                        if ($file->getSize() > $this->max_size_file) {
-                            return response()->json([
-                                'status' => 'failed',
-                                'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
-                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-                        }
-        
-                        // Helper: Upload inventory image
-                        try {
-                            $user = UserModel::find($user_id);
-                            $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
-                        } catch (\Exception $e) {
-                            return response()->json([
-                                'status' => 'failed',
-                                'message' => Generator::getMessageTemplate("unknown_error", null),
-                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-                        }
-                    }
-                } else {
-                    $inventory_image = null;
-                }
-
-                $rows = InventoryModel::where('id', $id)
-                    ->where('created_by', $user_id)
-                    ->update([
-                        'inventory_image' => $inventory_image,
-                        'updated_at' => date('Y-m-d H:i:s'),
-                ]);
-
-                if($rows > 0){
-                    // History
-                    Audit::createHistory('Update Image', $inventory->inventory_name, $user_id);
-                    
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => Generator::getMessageTemplate("update", 'inventory image'),
-                    ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
                         'message' => Generator::getMessageTemplate("not_found", 'inventory'),
                     ], Response::HTTP_NOT_FOUND);
                 }
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
-                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
@@ -314,9 +330,12 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
-
-            $rows = InventoryModel::destroy($id);
+            $inventory = InventoryModel::select('inventory_name')
+                ->where('id',$id)
+                ->first();
+            $rows = InventoryModel::where('id',$id)
+                ->where('created_by',$user_id)
+                ->get();
 
             if($rows > 0){
                 // History
@@ -392,8 +411,9 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
-
+            $inventory = InventoryModel::select('inventory_name')
+                ->where('id',$id)
+                ->first();
             $rows = InventoryModel::where('id',$id)
                 ->where('created_by', $user_id)
                 ->update([
@@ -478,8 +498,9 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
-
+            $inventory = InventoryModel::select('inventory_name')
+                ->where('id',$id)
+                ->first();
             $rows = InventoryModel::where('id', $id)
                 ->where('created_by', $user_id)
                 ->update([
@@ -1193,13 +1214,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
             $extra_msg = "";
-
-            $check_layout = InventoryLayoutModel::select('layout','inventory_storage')
-                ->where('id',$id)
-                ->where('created_by',$user_id)
-                ->where('layout', 'like', '%' . $coor . '%')
-                ->first();
-
+            $check_layout = InventoryLayoutModel::getLayoutByCoor($id, $user_id, $coor);
             $layout = $check_layout->layout;
             $storage = $check_layout->inventory_storage;
             $find = ':'; // Coordinate separate

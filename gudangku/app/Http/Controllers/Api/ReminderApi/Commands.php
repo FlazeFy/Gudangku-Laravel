@@ -21,6 +21,7 @@ use App\Models\AdminModel;
 use App\Helpers\Audit;
 use App\Helpers\Generator;
 use App\Helpers\LineMessage;
+use App\Helpers\Validation;
 
 class Commands extends Controller
 {
@@ -63,6 +64,14 @@ class Commands extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error",
      *         @OA\JsonContent(
@@ -77,71 +86,79 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $is_exist = ReminderModel::where('created_by', $user_id)
-                ->where('inventory_id',$request->inventory_id)
-                ->where('reminder_type',$request->reminder_type)
-                ->where('reminder_context',$request->reminder_context)
-                ->first();
-
-            if(!$is_exist){
-                $inventory = InventoryModel::select('inventory_name')
-                    ->where('created_by', $user_id)
-                    ->where('id', $request->inventory_id)
+            $validator = Validation::getValidateReminder($request,'create');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $is_exist = ReminderModel::where('created_by', $user_id)
+                    ->where('inventory_id',$request->inventory_id)
+                    ->where('reminder_type',$request->reminder_type)
+                    ->where('reminder_context',$request->reminder_context)
                     ->first();
 
-                if($inventory){
-                    ReminderModel::create([
-                        'id' => Generator::getUUID(), 
-                        'inventory_id' => $request->inventory_id, 
-                        'reminder_desc' => $request->reminder_desc, 
-                        'reminder_type' => $request->reminder_type, 
-                        'reminder_context' => $request->reminder_context, 
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'created_by' => $user_id, 
-                        'updated_at' => null
-                    ]);
+                if(!$is_exist){
+                    $inventory = InventoryModel::select('inventory_name')
+                        ->where('created_by', $user_id)
+                        ->where('id', $request->inventory_id)
+                        ->first();
 
-                    // History
-                    Audit::createHistory('Create Reminder', "$request->reminder_desc for inventory $inventory->inventory_name", $user_id);
-                    $msg = "You have create a reminder. Here's the reminder description for [DEMO]. $request->reminder_desc";
-                    if($request->send_demo){
-                        $user = UserModel::getSocial($user_id);
-                        if($user->firebase_fcm_token){
-                            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
-                            $messaging = $factory->createMessaging();
-                            $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
-                                ->withNotification(Notification::create($msg));
-                            $response = $messaging->send($fcm);
+                    if($inventory){
+                        ReminderModel::create([
+                            'id' => Generator::getUUID(), 
+                            'inventory_id' => $request->inventory_id, 
+                            'reminder_desc' => $request->reminder_desc, 
+                            'reminder_type' => $request->reminder_type, 
+                            'reminder_context' => $request->reminder_context, 
+                            'created_at' => date('Y-m-d H:i:s'), 
+                            'created_by' => $user_id, 
+                            'updated_at' => null
+                        ]);
+
+                        // History
+                        Audit::createHistory('Create Reminder', "$request->reminder_desc for inventory $inventory->inventory_name", $user_id);
+                        $msg = "You have create a reminder. Here's the reminder description for [DEMO]. $request->reminder_desc";
+                        if($request->send_demo){
+                            $user = UserModel::getSocial($user_id);
+                            if($user->firebase_fcm_token){
+                                $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                                $messaging = $factory->createMessaging();
+                                $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
+                                    ->withNotification(Notification::create($msg));
+                                $response = $messaging->send($fcm);
+                            }
+                            if($user->telegram_user_id){
+                                $response = Telegram::sendMessage([
+                                    'chat_id' => $user->telegram_user_id,
+                                    'text' => $msg,
+                                    'parse_mode' => 'HTML'
+                                ]);
+                            }
                         }
-                        if($user->telegram_user_id){
-                            $response = Telegram::sendMessage([
-                                'chat_id' => $user->telegram_user_id,
-                                'text' => $msg,
-                                'parse_mode' => 'HTML'
-                            ]);
-                        }
+
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => Generator::getMessageTemplate("create", 'reminder'),
+                        ], Response::HTTP_CREATED);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => Generator::getMessageTemplate("not_found", 'reminder'),
+                        ], Response::HTTP_NOT_FOUND);
                     }
-
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => Generator::getMessageTemplate("create", 'reminder'),
-                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'reminder'),
-                    ], Response::HTTP_NOT_FOUND);
+                        'message' => 'reminder with same type and context has been used',
+                    ], Response::HTTP_CONFLICT);
                 }
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'reminder with same type and context has been used',
-                ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

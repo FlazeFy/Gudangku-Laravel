@@ -2,15 +2,31 @@
 namespace App\Helpers;
 use Illuminate\Support\Facades\Validator;
 use App\Rules\ReportCategory;
+use App\Rules\ReminderType;
 use App\Rules\DictionaryType;
 
 class Validation
 {
     public static function getValidateLogin($request){
         return Validator::make($request->all(), [
-            'username' => 'required|min:6|max:30|string',
+            'username' => 'required|min:6|max:36|string',
             'password' => 'required|min:6|string'
         ]);
+    }
+
+    public static function getValidateUser($request,$type){
+        if($type == 'create'){
+            return Validator::make($request->all(), [
+                'username' => 'required|min:6|max:36|string',
+                'password' => 'required|min:6|max:500|string',
+                'email' => 'required|min:10|max:255|string'
+            ]);
+        } else if($type == 'update'){
+            return Validator::make($request->all(), [
+                'username' => 'required|min:6|max:36|string',
+                'email' => 'required|min:10|max:255|string'
+            ]);
+        }
     }
 
     public static function getValidateInventory($request,$type){
@@ -47,6 +63,10 @@ class Validation
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
                 'inventory_capacity_unit' => 'nullable|string|max:36',
                 'inventory_capacity_vol' => 'nullable|numeric|min:0|max:999999',
+            ]);
+        } else if($type == 'update_image'){
+            return Validator::make($request->all(), [
+                'inventory_image' => 'nullable|string|max:500'
             ]);
         } else if($type == 'update_layout'){
             return Validator::make($request->all(), [
@@ -87,6 +107,25 @@ class Validation
                 'is_reminder' => 'required|numeric|min:0|max:1',
                 'reminder_at' => 'nullable|date_format:Y-m-d H:i:s',
                 'report_item' => 'nullable|json',
+                'created_at' => 'nullable|date_format:Y-m-d H:i:s',
+            ]);  
+        } else if($type == 'update'){
+            return Validator::make($request->all(), [
+                'report_title' => 'required|string|max:36',
+                'report_desc' => 'nullable|string|max:255',
+                'report_category' => ['required', new ReportCategory],
+                'created_at' => 'required|date_format:Y-m-d H:i:s',
+            ]);  
+        } 
+    }
+    
+    public static function getValidateReminder($request,$type){
+        if($type == 'create'){
+            return Validator::make($request->all(), [
+                'inventory_id' => 'required|string|max:36',
+                'reminder_desc' => 'required|string|max:255',
+                'reminder_type' => ['required', new ReminderType],
+                'reminder_context' => 'required|string|max:36',
             ]);  
         } 
     }
