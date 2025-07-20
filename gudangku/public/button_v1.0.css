@@ -5,6 +5,9 @@ button, .btn, a {
 button:hover, .btn:hover {
     transform: scale(1.025);
 }
+.btn-primary {
+    background: var(--darkColor) !important;
+}
 .btn-feature {
     cursor: pointer;
     text-align: center;

@@ -21,6 +21,8 @@ use App\Http\Controllers\Controller;
 use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
 use App\Models\UserModel;
+use App\Models\ReminderModel;
+use App\Models\ReportItemModel;
 
 // Helpers
 use App\Helpers\Audit;
@@ -330,14 +332,13 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name')
-                ->where('id',$id)
-                ->first();
-            $rows = InventoryModel::where('id',$id)
-                ->where('created_by',$user_id)
-                ->get();
+            $inventory = InventoryModel::getInventoryNameById($id);
+            $rows = InventoryModel::deleteInventoryById($id, $user_id);
 
             if($rows > 0){
+                ReminderModel::deleteReminderByInventoryId($id, $user_id);
+                ReportItemModel::deleteReportItemByInventoryId($id, $user_id);
+
                 // History
                 Audit::createHistory('Permentally delete', $inventory->inventory_name, $user_id);
 

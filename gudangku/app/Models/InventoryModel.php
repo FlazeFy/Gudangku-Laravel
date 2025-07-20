@@ -48,6 +48,13 @@ class InventoryModel extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
 
+    public static function getInventoryNameById($id){
+        $res = InventoryModel::select('inventory_name')
+                ->where('id',$id);
+
+        return $res->first();
+    }
+
     public static function getInventoryPlanDestroy($days){
         $res = InventoryModel::select('inventory.id','inventory_name','deleted_at','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id')
             ->join('users','users.id','=','inventory.created_by')
@@ -448,4 +455,13 @@ class InventoryModel extends Model
 
         return count($res) > 0 ? $res : null;
     }
+
+    public static function deleteInventoryById($id, $user_id){
+        $res = InventoryModel::where('id',$id)
+            ->where('created_by',$user_id)
+            ->whereNotNull('deleted_at')
+            ->delete();
+
+        return $res;
+    } 
 }

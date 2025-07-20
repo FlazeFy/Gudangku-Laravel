@@ -64,4 +64,12 @@ class ReportItemModel extends Model
 
         return $res->get();
     }
+
+    public static function deleteReportItemByInventoryId($inventory_id, $user_id){
+        $res = ReportItemModel::where('inventory_id',$inventory_id)
+            ->where('created_by',$user_id)
+            ->delete();
+
+        return $res;
+    } 
 }
