@@ -36,6 +36,11 @@ Route::prefix('/')->group(function () {
     Route::post('/login/validate', [LoginController::class, 'login_auth']);
 });
 
+Route::prefix('/auth')->group(function (){
+    Route::get('/google', [LoginController::class, 'redirect_to_google']);
+    Route::get('/google/callback', [LoginController::class, 'login_google_callback']);
+});
+
 ######################### Private Route #########################
 
 Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () {

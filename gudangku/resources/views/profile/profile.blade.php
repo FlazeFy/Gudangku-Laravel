@@ -1,4 +1,5 @@
 <form id="profile-form">
+    <div id="login_status_box"></div>
     <label>Username</label>
     <input type="text" name="username" id="username_input" onkeydown="return submitOnEnter(event)" class="form-control mt-2"/><br>
     <label>Email</label>
@@ -65,6 +66,13 @@
                         <div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Sync your GudangKu account with your <b>Telegram ID</b> to use this apps straight at your Telegram Chat</div>
                     `)
                 }
+
+                if(data.is_google_sign_in){
+                    $('#email_input').prop('readonly', true)
+                    $('#login_status_box').html(`<div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Your account login using Google Sign In</div>`)
+                } else{
+                    $('#login_status_box').html(`<div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Your account login using Basic Auth</div>`)
+                } 
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()

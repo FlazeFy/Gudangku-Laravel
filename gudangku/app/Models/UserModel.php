@@ -5,9 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+
+// Model
 use App\Models\AdminModel;
 use App\Models\InventoryModel;
 use App\Models\ReportModel;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -68,14 +74,43 @@ class UserModel extends Authenticatable
         return $res;
     }
 
+    public static function getUserByUsernameOrEmail($username,$email){
+        $res = UserModel::where('username',$username)
+            ->orwhere('email',$email)
+            ->first();
+
+        return $res;
+    }
+
+    public static function createUser($username, $password, $email){
+        $res = UserModel::create([
+            'id' => Generator::getUUID(), 
+            'username' => $username, 
+            'password' => $password != "GOOGLE_SIGN_IN" ? Hash::make($password) : "GOOGLE_SIGN_IN",
+            'telegram_user_id' => null,
+            'telegram_is_valid' => 0,
+            'email' => $email,
+            'phone' => null,
+            'created_at' => date('Y-m-d H:i:s'), 
+            'updated_at' => null
+        ]);
+
+        return $res;
+    }
+
     public static function getUserById($user_id){
-        $select_query = 'id,username,email,telegram_user_id,telegram_is_valid,created_at';
+        $select_query = 'id,username,email,telegram_user_id,telegram_is_valid,created_at,password';
 
         $res = UserModel::selectRaw($select_query)
             ->where('id',$user_id)
             ->first();
         if($res){
             $res->role = 'user';
+
+            if($res->password == "GOOGLE_SIGN_IN"){
+                unset($res->password);
+                $res->is_google_sign_in = true;
+            }
         }
         if(!$res){
             $res = AdminModel::selectRaw($select_query)
@@ -83,6 +118,7 @@ class UserModel extends Authenticatable
                 ->first();
             if($res){
                 $res->role = 'admin';
+                $res->is_google_sign_in = false;
             }
         }
 

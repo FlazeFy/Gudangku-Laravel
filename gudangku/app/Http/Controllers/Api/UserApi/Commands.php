@@ -410,18 +410,7 @@ class Commands extends Controller
                     if(!$check_user){
                         ValidateRequestModel::destroy($valid->id);
 
-                        $user = UserModel::create([
-                            'id' => Generator::getUUID(), 
-                            'username' => $request->username, 
-                            'password' => Hash::make($request->password),
-                            'telegram_user_id' => null,
-                            'telegram_is_valid' => 0,
-                            'email' => $request->email,
-                            'phone' => null,
-                            'created_at' => date('Y-m-d H:i:s'), 
-                            'updated_at' => null
-                        ]);
-
+                        $user = UserModel::createUser($request->username, $request->password, $request->email);
                         if($user){
                             // Send email
                             $ctx = 'Register new account';
