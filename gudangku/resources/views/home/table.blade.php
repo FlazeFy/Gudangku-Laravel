@@ -88,11 +88,9 @@
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="/inventory/destroyReminder/${rm.id}" method="POST">
-                                                        <input type="hidden" name="reminder_desc" value="${rm.reminder_desc}"/>
-                                                        <h2><span class="text-danger">Permanently Delete</span> this reminder "${rm.reminder_desc}"?</h2>
-                                                        <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
-                                                    </form>
+                                                    <input type="hidden" name="reminder_desc" value="${rm.reminder_desc}"/>
+                                                    <h2><span class="text-danger">Permanently Delete</span> this reminder "${rm.reminder_desc}"?</h2>
+                                                    <a class="btn btn-danger mt-4" onclick="delete_reminder_by_id('${rm.id}', '${token}', () => get_inventory(${page},'${name}','${category}','${sort}'))"> Yes, Delete</a>
                                                 </div>
                                             </div>
                                         </div>

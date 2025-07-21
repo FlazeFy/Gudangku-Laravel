@@ -106,6 +106,10 @@
         $('#created_at_edit').val(createdAtOpposite)
         save_update()
     })
+
+    const inventory_id = '<?= $id ?>'
+    const token = '<?= session()->get("token_key"); ?>'
+
     const get_detail_inventory = (id) => {
         const item_holder = 'report_holder'
         Swal.showLoading()
@@ -114,7 +118,7 @@
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
             },
             success: function(response) {
                 Swal.close()
@@ -124,7 +128,7 @@
                 if(data.inventory_image){
                     $('#inventory_color_holder').html(`
                         <label>Color</label>
-                        <input type="text" name="inventory_color" id="inventory_color" value='${data.inventory_color}' class="form-control my-2" readonly/>
+                        <input type="text" name="inventory_color" id="inventory_color" value='${data.inventory_color ?? ''}' class="form-control my-2" readonly/>
                     `)
                     $('#img_holder').empty().prepend(`
                         <form id='edit-image'>
@@ -187,7 +191,9 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <h2><span class="text-danger">Permentally Delete</span> this reminder "${dt.reminder_desc}"?</h2>
-                                                        <a class="btn btn-danger mt-4" onclick='delete_reminder("${dt.id}")'>Yes, Delete</a>
+                                                        <a class="btn btn-danger mt-4"
+                                                            onclick="delete_reminder_by_id('${dt.id}', '${token}', () => get_detail_inventory('${inventory_id}'))"> Yes, Delete
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -285,6 +291,7 @@
             }
         });
     }
+    
     const get_dictionary = () => {
         const type = 'inventory_room,inventory_unit,inventory_category,reminder_type,reminder_context,report_category'
         Swal.showLoading()
@@ -293,7 +300,7 @@
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()
@@ -302,12 +309,16 @@
                 data.forEach(dt => {
                     $( document ).ready(function() {
                         if(dt.dictionary_type == 'inventory_unit'){
+                            $('#inventory_unit').empty()
+                            $('#inventory_capacity_unit').empty()
                             $('#inventory_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
                             $('#inventory_capacity_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
                         } else if(dt.dictionary_type == 'reminder_type' || dt.dictionary_type == 'reminder_context'){
                             $(`select[name="${dt.dictionary_type}"]`).each(function() {
-                                $(this).append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
-                            });
+                                const isFirst = $(this).children('option').length === 0
+                                const selectedAttr = isFirst ? 'selected' : ''
+                                $(this).append(`<option value='${dt.dictionary_name}' ${selectedAttr}>${dt.dictionary_name}</option>`)
+                            })
                         } else {
                             $(`#${dt.dictionary_type}`).append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
                         }
@@ -326,44 +337,9 @@
             }
         });
     }
-    const delete_reminder = (id) => {
-        Swal.showLoading()
-        $.ajax({
-            url: `/api/v1/reminder/${id}`,
-            type: 'DELETE',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
-            },
-            success: function(response) {
-                Swal.close()
-                Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success"
-                });
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
-                if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Something wrong. Please contact admin",
-                        icon: "error"
-                    });
-                } else {
-                    Swal.fire({
-                        title: "Oops!",
-                        text: response.responseJSON.message,
-                        icon: "error"
-                    });
-                }
-            }
-        });
-    }
 
     get_dictionary()
-    get_detail_inventory("<?= $id ?>")
+    get_detail_inventory(inventory_id)
 
     const save_update = () => {
         const id = `<?= $id ?>`
@@ -374,7 +350,7 @@
             dataType: 'json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
                 Swal.showLoading()
             },
             success: function(response) {

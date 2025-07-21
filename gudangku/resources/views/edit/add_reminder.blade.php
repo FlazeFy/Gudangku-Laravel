@@ -44,6 +44,7 @@
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
             success: function(response) {
+                $('#modalAddReminder').modal('hide')
                 Swal.fire({
                     title: "Success!",
                     text: response.message,
@@ -52,7 +53,6 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.close()
-                        get_dictionary()
                         get_detail_inventory("<?= $id ?>")
                     }
                 });

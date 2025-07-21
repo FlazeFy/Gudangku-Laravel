@@ -120,7 +120,7 @@ class Commands extends Controller
                         // History
                         Audit::createHistory('Create Reminder', "$request->reminder_desc for inventory $inventory->inventory_name", $user_id);
                         $msg = "You have create a reminder. Here's the reminder description for [DEMO]. $request->reminder_desc";
-                        if($request->send_demo){
+                        if($request->send_demo == "true"){
                             $user = UserModel::getSocial($user_id);
                             if($user->firebase_fcm_token){
                                 $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
