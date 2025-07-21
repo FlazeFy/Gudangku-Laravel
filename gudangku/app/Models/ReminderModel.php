@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+// Helpers
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -59,4 +61,29 @@ class ReminderModel extends Model
 
         return $res;
     } 
+
+    public static function getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id){
+        $res = ReminderModel::where('created_by', $user_id)
+            ->where('inventory_id',$inventory_id)
+            ->where('reminder_type',$reminder_type)
+            ->where('reminder_context',$reminder_context)
+            ->first();
+
+        return $res;
+    }
+
+    public static function createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id){
+        $res = ReminderModel::create([
+            'id' => Generator::getUUID(), 
+            'inventory_id' => $inventory_id, 
+            'reminder_desc' => $reminder_desc, 
+            'reminder_type' => $reminder_type, 
+            'reminder_context' => $reminder_context, 
+            'created_at' => date('Y-m-d H:i:s'), 
+            'created_by' => $user_id, 
+            'updated_at' => null
+        ]);
+
+        return $res;
+    }
 }

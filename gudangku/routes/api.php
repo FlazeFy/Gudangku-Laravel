@@ -81,6 +81,7 @@ Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/mark', [QueriesReminderController::class, 'get_reminder_mark']);
     Route::get('/history', [QueriesReminderController::class, 'get_reminder_history']);
     Route::post('/', [CommandsReminderController::class, 'post_reminder']);
+    Route::post('/copy', [CommandsReminderController::class, 'copy_reminder']);
     Route::post('/re_remind', [CommandsReminderController::class, 'post_re_remind']);
     Route::delete('/{id}', [CommandsReminderController::class, 'delete_reminder_by_id']);
 });

@@ -126,7 +126,7 @@
                                     </div>
 
                                     <!-- Copy Button -->
-                                    <button class="btn btn-success" data-bs-toggle="modal" onclick="loadDatatableInventoryReminder('${rm.id}')" data-bs-target="#modalCopyReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
+                                    <button class="btn btn-success" data-bs-toggle="modal" onclick="reset_reminder_form()" data-bs-target="#modalCopyReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
                                         <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i>
                                     </button>
 
@@ -139,7 +139,7 @@
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="/inventory/copyReminder/${rm.id}" method="POST">
+                                                    <form id="copy_reminder_form_${rm.id}">
                                                         <input type="hidden" value="${rm.reminder_context}" name="reminder_context">
                                                         <input type="hidden" value="${rm.reminder_desc}" name="reminder_desc">
                                                         <input type="hidden" value="${rm.reminder_type}" name="reminder_type">
@@ -160,7 +160,7 @@
                                                         </table>
                                                         <br>
                                                         <h2>Are you sure to copy this reminder "${rm.reminder_desc}" to inventory <span id="inventory_selected_name"></span>?</h2>
-                                                        <button class="btn btn-success mt-4" type="submit">Yes, Copy</button>
+                                                        <a class="btn btn-success mt-4" onclick="copy_reminder('${rm.id}')">Yes, Copy</a>
                                                     </form>
                                                 </div>
                                             </div>
@@ -311,7 +311,7 @@
                         <tr>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input check-inventory" type="checkbox" name="inventory_id[]" value="${el.id}" id="flexCheckDefault">
+                                    <input class="form-check-input check_inventory" type="checkbox" value="${el.id}" id="flexCheckDefault">
                                 </div>
                             </td>
                             <td>${el.inventory_name}</td>
@@ -340,13 +340,64 @@
     }
     get_inventory(page,search_key,filter_category,sorting)
 
-    function loadDatatableInventoryReminder(id){
-        $(`#tb-inventory-name-${id}`).DataTable({
-            // columnDefs: [
-            //     { targets: 0, orderable: true, searchable: true},
-            //     { targets: 1, orderable: true, searchable: false },
-            //     { targets: '_all', orderable: false, searchable: false}
-            // ],
+    const reset_reminder_form = () => {
+        $(document).ready(function () {
+            $('.check_inventory').prop('checked', false)
+        })
+    }
+
+    const copy_reminder = (id) => {
+        const modal = $(`#modalCopyReminder_${id}`)
+        const reminder_id = modal.find('.reminder_id').val()
+        const reminder_desc = modal.find('input[name="reminder_desc"]').val()
+        const reminder_type = modal.find('input[name="reminder_type"]').val()
+        const reminder_context = modal.find('input[name="reminder_context"]').val()
+        const checkedInventory = modal.find('.check_inventory:checked')
+        const list_inventory_id = checkedInventory.map(function () {
+            return $(this).val()
+        }).get().join(',')
+
+        if (!list_inventory_id) {
+            Swal.fire({
+                title: "Warning!",
+                text: 'Please select at least one inventory item.',
+                icon: "warning",
+            })
+            return
+        }
+
+        $.ajax({
+            url: `/api/v1/reminder/copy`,
+            type: 'POST',
+            beforeSend: function (xhr) {
+                Swal.showLoading()
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+            },
+            data: {
+                list_inventory_id: list_inventory_id,
+                reminder_desc: reminder_desc,
+                reminder_type: reminder_type,
+                reminder_context: reminder_context
+            },
+            dataType:'json',
+            success: function(response) {
+                $(`#modalCopyReminder_${reminder_id}`).modal('hide')
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success",
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.close()
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                generate_api_error(response, true)
+            }
         });
     }
 

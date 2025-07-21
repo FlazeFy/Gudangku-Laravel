@@ -222,21 +222,6 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
-    public function hard_delete_reminder(Request $request, $id)
-    {
-        $user_id = Generator::getUserId(session()->get('role_key'));
-
-        $res = ReminderModel::destroy($id);
-
-        if($res){
-            Audit::createHistory('Permentally delete reminder : ', $request->reminder_desc, $user_id);
-            
-            return redirect()->back()->with('success_message', "Success permentally delete reminder : $request->reminder_desc");
-        } else {
-            return redirect()->back()->with('failed_message', "Failed permentally delete reminder : $request->reminder_desc");
-        }
-    }
-
     public function copy_reminder(Request $request, $id)
     {
         $user_id = Generator::getUserId(session()->get('role_key'));

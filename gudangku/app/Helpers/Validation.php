@@ -133,7 +133,14 @@ class Validation
                 'reminder_type' => ['required', new ReminderType],
                 'reminder_context' => 'required|string|max:36',
             ]);  
-        } 
+        } else if($type == 'create_copy'){
+            return Validator::make($request->all(), [
+                'list_inventory_id' => 'required|string|min:36',
+                'reminder_desc' => 'required|string|max:255',
+                'reminder_type' => ['required', new ReminderType],
+                'reminder_context' => 'required|string|max:36',
+            ]);  
+        }
     }
 
     public static function getValidateDictionary($request,$type){

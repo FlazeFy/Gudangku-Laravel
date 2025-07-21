@@ -93,11 +93,7 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                $is_exist = ReminderModel::where('created_by', $user_id)
-                    ->where('inventory_id',$request->inventory_id)
-                    ->where('reminder_type',$request->reminder_type)
-                    ->where('reminder_context',$request->reminder_context)
-                    ->first();
+                $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($request->inventory_id,$request->reminder_type,$request->reminder_context,$user_id);
 
                 if(!$is_exist){
                     $inventory = InventoryModel::select('inventory_name')
@@ -106,16 +102,7 @@ class Commands extends Controller
                         ->first();
 
                     if($inventory){
-                        ReminderModel::create([
-                            'id' => Generator::getUUID(), 
-                            'inventory_id' => $request->inventory_id, 
-                            'reminder_desc' => $request->reminder_desc, 
-                            'reminder_type' => $request->reminder_type, 
-                            'reminder_context' => $request->reminder_context, 
-                            'created_at' => date('Y-m-d H:i:s'), 
-                            'created_by' => $user_id, 
-                            'updated_at' => null
-                        ]);
+                        ReminderModel::createReminder($request->inventory_id, $request->reminder_desc, $request->reminder_type, $request->reminder_context, $user_id);
 
                         // History
                         Audit::createHistory('Create Reminder', "$request->reminder_desc for inventory $inventory->inventory_name", $user_id);
@@ -158,7 +145,130 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\POST(
+     *     path="/api/v1/reminder/copy",
+     *     summary="Create a copy of reminder to another inventory",
+     *     tags={"Reminder"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=201,
+     *         description="reminder created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="reminder created")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="reminder not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="reminder not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="reminder with same type and context has been used",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="reminder with same type and context has been used or inventory not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function copy_reminder(Request $request){
+        try{
+            $user_id = $request->user()->id;
+
+            $validator = Validation::getValidateReminder($request,'create_copy');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $list_inventory_id = explode(",", $request->list_inventory_id);
+                $total_inventory = count($list_inventory_id);
+                $total_success = 0;
+                $names = [];
+
+                foreach ($list_inventory_id as $id) {
+                    $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($id, $request->reminder_type, $request->reminder_context, $user_id);
+
+                    if (!$is_exist) {
+                        $inventory = InventoryModel::getInventoryNameById($id);    
+                        if ($inventory) {
+                            $res = ReminderModel::createReminder($id, $request->reminder_desc, $request->reminder_type, $request->reminder_context, $user_id);
+
+                            if ($res) {
+                                $total_success++;
+                                $names[] = $inventory->inventory_name;
+                            }
+                        }
+                    } 
+                }
+
+                $list_inventory_name = '';
+                $count_names = count($names);
+
+                if ($count_names === 1) {
+                    $list_inventory_name = $names[0];
+                } elseif ($count_names === 2) {
+                    $list_inventory_name = $names[0] . ' and ' . $names[1];
+                } elseif ($count_names > 2) {
+                    $list_inventory_name = implode(', ', array_slice($names, 0, -1));
+                    $list_inventory_name .= ', and ' . end($names);
+                }
+                
+                if($total_success > 0){
+                    // History
+                    Audit::createHistory('Create Reminder', "$request->reminder_desc for inventory $list_inventory_name", $user_id);
+
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => "reminder created for inventory : $list_inventory_name",
+                    ], Response::HTTP_CREATED);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'reminder with same type and context has been used to all selected inventory',
+                    ], Response::HTTP_CONFLICT);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
