@@ -33,14 +33,20 @@ class GoogleTokensModel extends Model
     protected $fillable = ['id', 'access_token', 'expiry', 'created_at', 'created_by'];
 
     public static function createGoogleTokens($access_token, $expiry_date, $user_id){
-        $res = GoogleTokensModel::create([
+        return GoogleTokensModel::create([
             'id' => Generator::getUUID(), 
             'access_token' => $access_token, 
             'expiry' => $expiry_date, 
             'created_at' => date('Y-m-d H:i:s'),  
             'created_by' => $user_id
         ]);
+    }
 
-        return $res;
+    public static function getGoogleTokensByUserId($user_id){
+        return GoogleTokensModel::where('created_by', $user_id)->first();
+    }
+
+    public static function deleteGoogleTokensByUserId($user_id){
+        return GoogleTokensModel::where('created_by', $user_id)->delete();
     }
 }

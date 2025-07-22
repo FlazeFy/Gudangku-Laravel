@@ -16,12 +16,16 @@ use App\Models\ScheduleMarkModel;
 use App\Models\InventoryModel;
 use App\Models\UserModel;
 use App\Models\AdminModel;
+use App\Models\GoogleTokensModel;
 
 // Helpers
 use App\Helpers\Audit;
 use App\Helpers\Generator;
 use App\Helpers\LineMessage;
 use App\Helpers\Validation;
+
+// Service
+use App\Service\GoogleCalendar;
 
 class Commands extends Controller
 {
@@ -93,7 +97,12 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($request->inventory_id,$request->reminder_type,$request->reminder_context,$user_id);
+                $reminder_type = $request->reminder_type;
+                $reminder_context = $request->reminder_context;
+                $inventory_id = $request->inventory_id;
+                $reminder_desc = $request->reminder_desc;
+
+                $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id);
 
                 if(!$is_exist){
                     $inventory = InventoryModel::select('inventory_name')
@@ -102,12 +111,48 @@ class Commands extends Controller
                         ->first();
 
                     if($inventory){
-                        ReminderModel::createReminder($request->inventory_id, $request->reminder_desc, $request->reminder_type, $request->reminder_context, $user_id);
+                        ReminderModel::createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id);
+
+                        $google_token = GoogleTokensModel::getGoogleTokensByUserId($user_id);
+                        $reminder_desc = "$reminder_desc for inventory $inventory->inventory_name";
+                        if($google_token){
+                            $access_token = $google_token->access_token;
+
+                            // Google Calendar
+                            if($reminder_type == 'Every Day'){
+                                $hour = (int) str_replace("Every ", "", $reminder_context);
+                                $start = now()->setTime($hour, 0)->toRfc3339String();
+
+                                GoogleCalendar::createRecurringEvent($access_token, $reminder_desc, $start,'DAILY');
+                            } else if ($reminder_type == 'Every Week') {
+                                $day = (int) str_replace("Every Day", "", $reminder_context);
+                                $weekdayMap = [1 => 'MO', 2 => 'TU', 3 => 'WE', 4 => 'TH', 5 => 'FR', 6 => 'SA', 7 => 'SU'];
+                                $byDay = $weekdayMap[$day];
+                                $carbonDayMap = ['MO' => 'Monday','TU' => 'Tuesday','WE' => 'Wednesday','TH' => 'Thursday','FR' => 'Friday','SA' => 'Saturday','SU' => 'Sunday',];
+                                $start = now()->next($carbonDayMap[$byDay])->setTime(4, 0)->toRfc3339String();
+                            
+                                GoogleCalendar::createRecurringEvent($access_token, $reminder_desc, $start, 'WEEKLY', $byDay);
+                            } else if($reminder_type == 'Every Month'){
+                                $day = (int) str_replace("Every ", "", $reminder_context);
+                                $start = now()->startOfMonth()->addDays($day - 1)->setTime(9, 0)->toRfc3339String();
+
+                                GoogleCalendar::createRecurringEvent($access_token, $reminder_desc,$start,'MONTHLY',null,$byMonthDay = $day);
+                            } else if($reminder_type == 'Every Year'){
+                                [$day, $month] = explode(' ', str_replace("Every ", "", $reminder_context));
+                                $monthMap = ['Jan'=>1, 'Feb'=>2, 'Mar'=>3, 'Apr'=>4, 'May'=>5, 'Jun'=>6,'Jul'=>7, 'Aug'=>8, 'Sep'=>9, 'Oct'=>10, 'Nov'=>11, 'Dec'=>12];
+                                $monthNumber = $monthMap[$month];
+                                $start = now()->setDate(now()->year, $monthNumber, (int)$day)->setTime(9, 0)->toRfc3339String();
+
+                                GoogleCalendar::createRecurringEvent($access_token, $reminder_desc,$start,'YEARLY',null,null,$byMonth = $monthNumber,$byMonthDay = (int)$day);
+                            }         
+                        }               
 
                         // History
-                        Audit::createHistory('Create Reminder', "$request->reminder_desc for inventory $inventory->inventory_name", $user_id);
-                        $msg = "You have create a reminder. Here's the reminder description for [DEMO]. $request->reminder_desc";
+                        Audit::createHistory('Create Reminder', $reminder_desc, $user_id);
+
+                        $msg = "You have create a reminder. Here's the reminder description for [DEMO]. $reminder_desc";
                         if($request->send_demo == "true"){
+                            // Demo Reminder
                             $user = UserModel::getSocial($user_id);
                             if($user->firebase_fcm_token){
                                 $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
@@ -145,7 +190,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

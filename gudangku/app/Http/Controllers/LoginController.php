@@ -30,7 +30,10 @@ class LoginController extends Controller
     }
 
     public function redirect_to_google(){
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')
+            ->scopes(['https://www.googleapis.com/auth/calendar']) 
+            ->with(['access_type' => 'offline', 'prompt' => 'consent'])
+            ->redirect();    
     }
 
     public function login_google_callback(Request $request){
@@ -60,6 +63,7 @@ class LoginController extends Controller
                 $request->session()->put('email_key', $user->email);
                 $request->session()->put('id_key', $user->id);
 
+                GoogleTokensModel::deleteGoogleTokensByUserId($user_id);
                 GoogleTokensModel::createGoogleTokens($access_token, $expiry_date, $user_id);
 
                 return redirect('/')->with('success_message', "Welcome $username"); 
@@ -79,6 +83,7 @@ class LoginController extends Controller
                     $data = "Welcome to GudangKu, happy explore!";
                     dispatch(new UserMailer($ctx, $data, $username, $email));
 
+                    GoogleTokensModel::deleteGoogleTokensByUserId($user_id);
                     GoogleTokensModel::createGoogleTokens($access_token, $expiry_date, $user_id);
 
                     return redirect('/')->with('success_message', "Welcome $username"); 
