@@ -191,95 +191,10 @@ class HomeController extends Controller
         }
     }
 
-    public function fav_toogle(Request $request, $id)
-    {
-        $user_id = Generator::getUserId(session()->get('role_key'));
-
-        $res = InventoryModel::where('id',$id)
-            ->where('created_by', $user_id)
-            ->update([
-                'is_favorite' => $request->is_favorite
-        ]);
-
-        $ctx = 'Set';
-        if($request->is_favorite == 0){
-            $ctx = 'Unset';
-        }
-
-        if($res){
-            Audit::createHistory($ctx.' to favorite', $request->inventory_name, $user_id);
-
-            return redirect()->back()->with('success_mini_message', "$ctx $request->inventory_name to favorite");
-        } else {
-            return redirect()->back()->with('failed_message', "$ctx $request->inventory_name to favorite");
-        }
-    }
-
     public function toogle_view(Request $request)
     {
         $request->session()->put('toogle_view_inventory', $request->toogle_view);
 
         return redirect()->back();
-    }
-
-    public function copy_reminder(Request $request, $id)
-    {
-        $user_id = Generator::getUserId(session()->get('role_key'));
-        $count = count($request->inventory_id);
-        $success_exec = 0;
-        $failed_exec = 0;
-
-        for($i = 0; $i < $count; $i++){
-            $res = ReminderModel::create([
-                'id' => Generator::getUUID(), 
-                'inventory_id' => $request->inventory_id[$i], 
-                'reminder_desc' => $request->reminder_desc, 
-                'reminder_type' => $request->reminder_type, 
-                'reminder_context' => $request->reminder_context, 
-                'created_at' => date('Y-m-d H:i:s'), 
-                'created_by' => $user_id, 
-                'updated_at' => null
-            ]);
-            
-            if($res){
-                $success_exec++;
-            } else {
-                $failed_exec++;
-            }
-        }
-
-        if($failed_exec == 0 && $success_exec == $count){
-            Audit::createHistory('Copy reminder', $request->reminder_desc, $user_id);
-
-            return redirect()->back()->with('success_mini_message', "Success copy reminder : $request->reminder_desc");
-        } else if($failed_exec > 0 && $success_exec > 0){
-            Audit::createHistory('Copy reminder', $request->reminder_desc, $user_id);
-
-            return redirect()->back()->with('success_mini_message', "Success some copy reminder : $request->reminder_desc. About $failed_exec inventory failed to copy");
-        } else {
-            return redirect()->back()->with('failed_message', "Failed copy reminder : $request->reminder_desc");
-        }
-    }
-
-    public function edit_reminder(Request $request, $id)
-    {
-        $user_id = Generator::getUserId(session()->get('role_key'));
-
-        $res = ReminderModel::where('id',$id)
-            ->where('created_by', $user_id)
-            ->update([
-                'reminder_desc' => $request->reminder_desc,
-                'reminder_type' => $request->reminder_type,
-                'reminder_context' => $request->reminder_context,
-                'updated_at' => date('Y-m-d H:i:s')
-        ]);
-
-        if($res){
-            Audit::createHistory('Updated reminder', $request->reminder_desc, $user_id);
-
-            return redirect()->back()->with('success_mini_message', "Success updated reminder : $request->reminder_desc");
-        } else {
-            return redirect()->back()->with('failed_message', "Failed updated reminder : $request->reminder_desc");
-        }
     }
 }

@@ -96,35 +96,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Edit Button -->
-                                    <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#modalEditReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
-                                        <i class="fa-solid fa-pen-to-square" style="font-size:var(--textSM);"></i>
-                                    </button>
-
-                                    <!-- Edit Modal -->
-                                    <div class="modal fade" id="modalEditReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Edit Reminder</h2>
-                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="/inventory/editReminder/${rm.id}" method="POST">
-                                                        <label>Description</label>
-                                                        <textarea name="reminder_desc" class="form-control mt-2">${rm.reminder_desc}</textarea>
-
-                                                        <label>Type</label>
-                                                        <select class="form-select mt-2" name="reminder_type"></select>
-                                                        <label>Context</label>
-                                                        <select class="form-select mt-2" name="reminder_context"></select>
-                                                        <button class="btn btn-success mt-4" type="submit">Save Changes</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <!-- Copy Button -->
                                     <button class="btn btn-success" data-bs-toggle="modal" onclick="reset_reminder_form()" data-bs-target="#modalCopyReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
                                         <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i>
