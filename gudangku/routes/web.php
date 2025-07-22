@@ -46,7 +46,6 @@ Route::prefix('/auth')->group(function (){
 Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/by/{view}/{context}', [HomeController::class, 'catalog_index']); 
-    Route::post('/copyReminder/{id}', [HomeController::class, 'copy_reminder']);
     Route::post('/editReminder/{id}', [HomeController::class, 'edit_reminder']);
     Route::post('/toogleView', [HomeController::class, 'toogle_view']);
     Route::post('/save_as_csv', [HomeController::class, 'save_as_csv']);
@@ -102,7 +101,6 @@ Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ReportController::class, 'index']);
-    Route::post('/', [ReportController::class, 'create_report']);
 
     Route::prefix('/detail/{id}')->group(function (){
         Route::get('/', [ReportDetailController::class, 'index']);

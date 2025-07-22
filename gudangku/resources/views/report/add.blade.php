@@ -43,37 +43,34 @@
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <form action="/report" id="report-form" method="POST">
-                    @csrf
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <label>Title</label>
-                            <input name="report_title" class="form-control" type="text" id="report_title" required>
-                            <label>Description</label>
-                            <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
-                            <label>Category</label>
-                            <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
-                                @foreach($dct_cat as $dct)
-                                    <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                                @endforeach
-                            </select>
-                            <hr>
-                            <label>Item</label>
-                            <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
-                            <div id="item_form"></div>
-                            <hr>
-                            <label>Upload Shopping Bills</label>
-                            <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv'>
-                            <button class="btn btn-success mt-4 w-100 mb-2" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-                        </div>
-                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <h5>List Selected Item</h5>
-                            <div id="item_holder">
-                                <div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
-                            </div>
+                <div class="row">
+                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <label>Title</label>
+                        <input name="report_title" class="form-control" type="text" id="report_title" required>
+                        <label>Description</label>
+                        <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
+                        <label>Category</label>
+                        <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
+                            @foreach($dct_cat as $dct)
+                                <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
+                            @endforeach
+                        </select>
+                        <hr>
+                        <label>Item</label>
+                        <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
+                        <div id="item_form"></div>
+                        <hr>
+                        <label>Upload Shopping Bills</label>
+                        <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv'>
+                        <a class="btn btn-success mt-4 w-100 mb-2" onclick="post_report()"><i class="fa-solid fa-floppy-disk"></i> Save</a>
+                    </div>
+                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <h5>List Selected Item</h5>
+                        <div id="item_holder">
+                            <div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -98,42 +95,112 @@
                 xhr.setRequestHeader("Accept", "application/json");
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");
             },
-        })
-        .done(function (response) {
-            Swal.hideLoading()
-            let data =  response.data
-            $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
+            success: function(response) {
+                Swal.close()
+                let data =  response.data
+                $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
 
-            for (var i = 0; i < data.length; i++) {
-                let optionText = `${data[i]['inventory_name']}` +
-                    (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '');
-                $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`);
-            }
+                for (var i = 0; i < data.length; i++) {
+                    let optionText = `${data[i]['inventory_name']}` +
+                        (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '');
+                    $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`);
+                }
 
-            $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
-            $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
-        })
-        .fail(function (xhr, ajaxOptions, thrownError) {
-            Swal.hideLoading()
-            $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
-            $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
-            $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
-            
-            if (xhr.status === 404) {
-                Swal.fire({
-                    title: "Oops!",
-                    text: xhr.responseJSON?.message,
-                    icon: "warning"
-                })
-            } else {
-                Swal.fire({
-                    title: "Oops!",                    
-                    text: "Something went wrong on the server. Please try again later.",
-                    icon: "error"
-                })
+                $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
+                $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
+                $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
+                $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
+                
+                if (xhr.status === 404) {
+                    Swal.fire({
+                        title: "Oops!",
+                        text: xhr.responseJSON?.message,
+                        icon: "warning"
+                    })
+                } else {
+                    Swal.fire({
+                        title: "Oops!",                    
+                        text: "Something went wrong on the server. Please try again later.",
+                        icon: "error"
+                    })
+                }
             }
-        });   
+        })
     }
+
+    const post_report = () => {
+        const report_items = []
+
+        $('.item-holder-div').each(function () {
+            const inventory_id = $(this).find('input[name="inventory_id[]"]').val()
+            const item_name = $(this).find('input[name="item_name[]"]').val()
+            const item_desc = $(this).find('textarea[name="item_desc[]"]').val()
+            const item_qty = parseInt($(this).find('input[name="item_qty[]"]').val()) || 0
+            const item_price = parseInt($(this).find('input[name="item_price[]"]').val()) || 0
+
+            if (item_name && item_qty > 0) {
+                report_items.push({
+                    inventory_id: inventory_id,
+                    item_name: item_name,
+                    item_desc: item_desc,
+                    item_qty: item_qty,
+                    item_price: item_price
+                })
+            }
+        })
+
+        if (report_items.length == 0) {
+            Swal.fire({
+                title: "Warning!",
+                text: 'Please select at least one inventory item.',
+                icon: "warning",
+            })
+            return
+        }
+
+        $.ajax({
+            url: `/api/v1/report`,
+            type: 'POST',
+            beforeSend: function (xhr) {
+                Swal.showLoading()
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+            },
+            data: {
+                report_title: $('#report_title').val(),
+                report_desc: $('#report_desc').val(),
+                report_category: $('#report_category').val(),
+                report_item: JSON.stringify(report_items),
+                file: null, 
+                is_reminder: 0,
+            },
+            dataType:'json',
+            success: function(response) {
+                $(`#modalAddReport`).modal('hide')
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success",
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.close()
+                        get_list_inventory()
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                $(`#modalAddReport`).modal('hide')
+                generate_api_error(response, true)
+            }
+        });
+    }
+
     const post_analyze_image = () => {
         const form = $('#report-form')[0]
         const formData = new FormData(form)
@@ -210,6 +277,7 @@
     })
 
     const browse_item = (val) => {
+        let inventory_id = null
         if(val == 'add_ext'){
             $('#item_form').empty().append(`
                 <div class="row">
@@ -239,6 +307,7 @@
         } else {
             val = JSON.parse(val)
             val = val['inventory_name']
+            inventory_id = val['id']
 
             $('#item_form').empty().append(`
                 <div class="row">
@@ -253,9 +322,9 @@
                 </div>
             `)
         }
-        $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='add_item("${val}")'><i class="fa-solid fa-plus"></i> Add Item</a><hr>`)
+        $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='add_item("${val}",${inventory_id})'><i class="fa-solid fa-plus"></i> Add Item</a><hr>`)
     }
-    const add_item = (val) => {
+    const add_item = (val, inventory_id) => {
         clean_alert_item()
         let itemExists = false
         $('.item_name_selected').each(function(index) {
@@ -329,6 +398,7 @@
                 $('#item_holder').append(`
                     <div class="container-light mt-3 item-holder-div">
                         <input hidden name="item_name[]" value="${val}">
+                        <input hidden name="inventory_id[]" value="${inventory_id}">
                         <div class="d-flex justify-content-between">
                             <span class="item_name_selected">${val}</span>
                             <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>

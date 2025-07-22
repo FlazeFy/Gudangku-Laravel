@@ -21,6 +21,7 @@
         let search_key = `<?= $search_key ?>`
         let filter_category = `<?= $filter_category ?>`
         let sorting = `<?= $sorting ?>`
+        let token = '<?= session()->get("token_key"); ?>'
     </script>
 
     <div class="content">
@@ -37,17 +38,4 @@
         @include('report.filter')
         @include('report.report')
     </div>
-    
-    <script>
-        is_process = false
-        is_submit = false
-        window.addEventListener('beforeunload', function(event) {
-            is_process = check_filling_status(['report_title','report_desc'])
-            console.log(is_process)
-            if(is_process == true && !is_submit){
-                event.preventDefault()
-                event.returnValue = ''
-            }
-        });
-    </script>
 @endsection
