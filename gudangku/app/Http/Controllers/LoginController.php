@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
+
+// Model
 use App\Models\UserModel;
+use App\Models\GoogleTokensModel;
 
 // Mailer
 use App\Jobs\UserMailer;
@@ -32,12 +35,24 @@ class LoginController extends Controller
 
     public function login_google_callback(Request $request){
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $googleUser = Socialite::driver('google')
+                ->stateless()
+                ->scopes([
+                    'https://www.googleapis.com/auth/calendar',
+                    'openid',
+                    'profile',
+                    'email'
+                ])
+                ->with(['access_type' => 'offline', 'prompt' => 'consent'])
+                ->user();
             $email = $googleUser->getEmail();
             $username = explode('@', $googleUser->getEmail())[0];
+            $access_token = $googleUser->token;
+            $expiry_date = now()->addSeconds($googleUser->expiresIn);
 
             $user = UserModel::getUserByUsernameOrEmail($username,$email);
             if($user){
+                $user_id = $user->id;
                 $token = $user->createToken('login')->plainTextToken;
                 $request->session()->put('username_key', $user->username);
                 $request->session()->put('role_key', 0);
@@ -45,21 +60,26 @@ class LoginController extends Controller
                 $request->session()->put('email_key', $user->email);
                 $request->session()->put('id_key', $user->id);
 
+                GoogleTokensModel::createGoogleTokens($access_token, $expiry_date, $user_id);
+
                 return redirect('/')->with('success_message', "Welcome $username"); 
             } else {
                 $user = UserModel::createUser($username, "GOOGLE_SIGN_IN", $email);
                 if($user){
+                    $user_id = $user->id;
                     $token = $user->createToken('login')->plainTextToken;
                     $request->session()->put('username_key', $user->username);
                     $request->session()->put('role_key', 0);
                     $request->session()->put('token_key', $token);
                     $request->session()->put('email_key', $user->email);
-                    $request->session()->put('id_key', $user->id);
+                    $request->session()->put('id_key', $user_id);
                     
                     // Send email
                     $ctx = 'Register new account';
                     $data = "Welcome to GudangKu, happy explore!";
                     dispatch(new UserMailer($ctx, $data, $username, $email));
+
+                    GoogleTokensModel::createGoogleTokens($access_token, $expiry_date, $user_id);
 
                     return redirect('/')->with('success_message', "Welcome $username"); 
                 } else {
