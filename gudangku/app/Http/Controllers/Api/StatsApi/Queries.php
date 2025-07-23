@@ -944,6 +944,12 @@ class Queries extends Controller
     public function get_dashboard(Request $request){
         try{
             $user_id = $request->user()->id;
+
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = $request->query('user_id') ?? null;
+            } 
+
             $total_item = InventoryModel::getTotalInventory($user_id,'item');
             $total_fav = InventoryModel::getTotalInventory($user_id,'favorite');
             $total_low = InventoryModel::getTotalInventory($user_id,'low');

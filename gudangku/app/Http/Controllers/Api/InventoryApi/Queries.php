@@ -163,7 +163,7 @@ class Queries extends Controller
 
                 // Paginate
                 $collection = $collection->sortByDesc('is_favorite')->values();
-                $perPage = 12;
+                $perPage = $request->query('per_page_key') ?? 12;
                 $page = request()->input('page', 1);
                 $paginator = new LengthAwarePaginator(
                     $collection->forPage($page, $perPage)->values(),

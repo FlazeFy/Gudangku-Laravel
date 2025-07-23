@@ -323,8 +323,11 @@ class InventoryModel extends Model
     }
 
     public static function getTotalInventory($user_id,$type){
-        $res = InventoryModel::selectRaw('COUNT(1) AS total')
-            ->where('created_by', $user_id);
+        $res = InventoryModel::selectRaw('COUNT(1) AS total');
+
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
 
         if($type == "favorite"){
             $res = $res->where('is_favorite','1');
@@ -338,9 +341,13 @@ class InventoryModel extends Model
 
     public static function getLastAddedInventory($user_id){
         $res = InventoryModel::select('inventory_name')
-            ->whereNull('deleted_at')
-            ->where('created_by', $user_id)
-            ->orderBy('created_at','DESC')
+            ->whereNull('deleted_at');
+
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+            
+        $res = $res->orderBy('created_at','DESC')
             ->first();
 
         return $res;
@@ -348,9 +355,13 @@ class InventoryModel extends Model
 
     public static function getMostCategoryInventory($user_id){
         $res = InventoryModel::selectRaw('inventory_category as context, COUNT(1) as total')
-            ->whereNull('deleted_at')
-            ->where('created_by', $user_id)
-            ->groupBy('inventory_category')
+            ->whereNull('deleted_at');
+
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+
+        $res = $res->groupBy('inventory_category')
             ->orderBy('total','DESC')
             ->first();
 
@@ -359,9 +370,13 @@ class InventoryModel extends Model
 
     public static function getHighestPriceInventory($user_id){
         $res = InventoryModel::select('inventory_name', 'inventory_price')
-            ->whereNull('deleted_at')
-            ->where('created_by', $user_id)
-            ->orderBy('inventory_price','DESC')
+            ->whereNull('deleted_at');
+
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+
+        $res = $res->orderBy('inventory_price','DESC')
             ->first();
 
         return $res;
