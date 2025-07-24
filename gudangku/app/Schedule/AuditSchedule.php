@@ -388,6 +388,50 @@ class AuditSchedule
             // Output
             $graph->Stroke($chartPath);
             $chartFiles[] = $chartFilename;
+
+            // Total Report Spending Per Month
+            // Model
+            $res_report_spending_monthly = ReportModel::getTotalReportCreatedOrSpendingPerMonth($us->id, $year, false, 'spending');
+
+            if ($res_report_spending_monthly == null || $res_report_spending_monthly->isEmpty()) continue;
+            $res_final_report_spending_monthly = [];
+            for ($i=1; $i <= 12; $i++) { 
+                $total = 0;
+                foreach ($res_report_spending_monthly as $idx => $val) {
+                    if($i == $val->context){
+                        $total = $val->total_price;
+                        break;
+                    }
+                }
+                array_push($res_final_report_spending_monthly, [
+                    'context' => Generator::generateMonthName($i,'short'),
+                    'total' => $total,
+                ]);
+            }
+
+            // Dataset
+            $labels_report_spending_monthly = collect($res_final_report_spending_monthly)->pluck('context')->map(fn($c) => Str::upper(str_replace('_', ' ', $c)))->all();
+            $values_report_spending_monthly = collect($res_final_report_spending_monthly)->pluck('total')->all();
+
+            // Filename
+            $chartFilename = "bar_chart_report_spending_monthly_$year-$us->id.png";
+            $chartPath = storage_path("app/public/$chartFilename");
+
+            // Generate chart
+            $graph = new Graph(800, 500);
+            $graph->SetScale("textlin");
+            $graph->xaxis->SetTickLabels($labels_report_spending_monthly);
+            $graph->xaxis->SetLabelAngle(35);
+            $graph->xaxis->SetFont(FF_ARIAL, FS_NORMAL, 7);
+            $graph->yaxis->SetFont(FF_ARIAL, FS_NORMAL, 7);
+            $graph->title->SetFont(FF_ARIAL, FS_BOLD, 10);
+            $barPlot = new BarPlot($values_report_spending_monthly);
+            $barPlot->SetFillColor("navy");
+            $graph->Add($barPlot);
+            $graph->title->Set("Total Report Spending Per Month ($year)");
+            $graph->Stroke($chartPath);
+
+            $chartFiles[] = $chartFilename;
     
             if (empty($chartFiles)) continue;
     
