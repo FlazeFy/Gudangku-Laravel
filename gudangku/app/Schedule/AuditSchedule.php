@@ -18,6 +18,7 @@ use Amenadiel\JpGraph\Graph\Graph;
 use Amenadiel\JpGraph\Plot\PiePlot;
 use Amenadiel\JpGraph\Plot\PiePlot3D;
 use Amenadiel\JpGraph\Plot\BarPlot;
+use Amenadiel\JpGraph\Plot\LinePlot;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 
@@ -29,6 +30,7 @@ use App\Models\ErrorModel;
 use App\Models\AdminModel;
 use App\Models\UserModel;
 use App\Models\InventoryModel;
+use App\Models\ReportModel;
 // Service
 use App\Service\FirebaseRealtime;
 use App\Service\FirebaseStorage;
@@ -282,6 +284,7 @@ class AuditSchedule
         foreach ($users as $us) {
             $chartFiles = []; 
 
+            // Total Inventory Created Per Month
             // Model
             $res_inventory_monthly = InventoryModel::getTotalInventoryCreatedPerMonth($us->id, $year, false);
 
@@ -323,6 +326,67 @@ class AuditSchedule
             $graph->title->Set("Total Inventory Created Per Month ($year)");
             $graph->Stroke($chartPath);
 
+            $chartFiles[] = $chartFilename;
+
+            // Total Report Created Per Month
+            // Model
+            $res_report_monthly = ReportModel::getTotalReportCreatedOrSpendingPerMonth($us->id, $year, false, 'created');
+
+            if ($res_report_monthly == null || $res_report_monthly->isEmpty()) continue;
+            $res_final_report_monthly = [];
+            for ($i=1; $i <= 12; $i++) { 
+                $total_report = 0;
+                $total_item = 0;
+                foreach ($res_report_monthly as $idx => $val) {
+                    if($i == $val->context){
+                        $total_report = $val->total_report;
+                        $total_item = $val->total_item;
+                        break;
+                    }
+                }
+                array_push($res_final_report_monthly, [
+                    'context' => Generator::generateMonthName($i,'short'),
+                    'total_report' => $total_report,
+                    'total_item' => $total_item,
+                ]);
+            }
+
+            // Dataset
+            $labels_report_monthly = collect($res_final_report_monthly)->pluck('context')->map(fn($c) => Str::upper(str_replace('_', ' ', $c)))->all();
+            $values_total_report_monthly = collect($res_final_report_monthly)->pluck('total_report')->all();
+            $values_total_item_monthly = collect($res_final_report_monthly)->pluck('total_item')->all();
+
+            // Filename
+            $chartFilename = "bar_chart_report_monthly_$year-$us->id.png";
+            $chartPath = storage_path("app/public/$chartFilename");
+
+            $graph = new Graph(900, 500);
+            $graph->SetScale("textlin");
+
+            $graph->xaxis->SetTickLabels($labels_report_monthly);
+            $graph->xaxis->SetLabelAngle(50);
+            $graph->title->Set("Total Report Created Per Month ($year)");
+
+            // Bar plot
+            $barPlot = new BarPlot($values_total_report_monthly);
+            $barPlot->SetFillColor("blue");
+            $barPlot->value->Show();
+
+            // Line plot
+            $linePlot = new LinePlot($values_total_item_monthly);
+            $linePlot->SetColor("limegreen");
+            $linePlot->SetWeight(2); 
+            $linePlot->mark->SetType(MARK_FILLEDCIRCLE);
+            $linePlot->mark->SetColor("green");
+            $linePlot->mark->SetFillColor("green");
+            $linePlot->value->Show();
+
+            // Combine plots
+            $graph->Add($barPlot);
+            $graph->Add($linePlot);
+
+            // Output
+            $graph->Stroke($chartPath);
             $chartFiles[] = $chartFilename;
     
             if (empty($chartFiles)) continue;
