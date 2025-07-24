@@ -48,6 +48,12 @@ class UserModel extends Authenticatable
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'username', 'password','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email','phone','timezone','created_at', 'updated_at'];
 
+    public static function getUserBroadcastAll(){
+        return UserModel::select('id','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
+            ->where('username','flazefy')
+            ->get();
+    }
+
     public static function getSocial($id){
         $res = UserModel::select('username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
             ->where('id',$id)

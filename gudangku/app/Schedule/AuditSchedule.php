@@ -14,14 +14,22 @@ use Dompdf\Options;
 use Dompdf\Canvas\Factory as CanvasFactory;
 use Dompdf\Options as DompdfOptions;
 use Dompdf\Adapter\CPDF;
+use Amenadiel\JpGraph\Graph\Graph;
+use Amenadiel\JpGraph\Plot\PiePlot;
+use Amenadiel\JpGraph\Plot\PiePlot3D;
+use Amenadiel\JpGraph\Plot\BarPlot;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
 
+// Helpers
 use App\Helpers\LineMessage;
 use App\Helpers\Generator;
-
+// Models
 use App\Models\ErrorModel;
 use App\Models\AdminModel;
+use App\Models\UserModel;
 use App\Models\InventoryModel;
-
+// Service
 use App\Service\FirebaseRealtime;
 use App\Service\FirebaseStorage;
 
@@ -181,6 +189,88 @@ class AuditSchedule
                 if($dt->line_user_id){
                     LineMessage::sendMessage('text',$message,$dt->line_user_id);
                 }
+            }
+        }
+    }
+
+    public static function audit_stats() {
+        $listCols = ["inventory_category","inventory_room","inventory_merk"];
+        $users = UserModel::getUserBroadcastAll();
+    
+        foreach ($users as $us) {
+            $chartFiles = []; 
+    
+            foreach ($listCols as $col) {
+                $type = ["price","item"];
+
+                foreach ($type as $tp) {
+                    // Model
+                    $res = InventoryModel::getContextTotalStats($col, $tp, $us->id);
+        
+                    if ($res == null || $res->isEmpty()) continue;
+        
+                    // Dataset
+                    $labels = $res->pluck('context')->map(fn($c) => Str::upper(str_replace('_', ' ', $c)))->all();
+                    $values = $res->pluck('total')->all();
+        
+                    // Filename
+                    $chartFilename = "bar_chart_$tp-$col.png";
+                    $chartPath = storage_path("app/public/$chartFilename");
+
+                    // Generate chart
+                    $graph = new Graph(800, 500);
+                    $graph->SetScale("textlin");
+                    $graph->xaxis->SetTickLabels($labels);
+                    $graph->xaxis->SetLabelAngle(35);
+                    $graph->xaxis->SetFont(FF_ARIAL, FS_NORMAL, 7);
+                    $graph->yaxis->SetFont(FF_ARIAL, FS_NORMAL, 7);
+                    $graph->title->SetFont(FF_ARIAL, FS_BOLD, 10);
+                    $barPlot = new BarPlot($values);
+                    $barPlot->SetFillColor("navy");
+                    $graph->Add($barPlot);
+                    $graph->title->Set("Total ".Str::headline($tp)." Inventory By ".Str::headline($col));
+                    $graph->Stroke($chartPath);
+
+                    $chartFiles[] = $chartFilename;
+                }
+            }
+    
+            if (empty($chartFiles)) continue;
+    
+            // Render PDF
+            $generatedDate = now()->format('d F Y');
+            $datetime = now()->format('d M Y h:i');
+            $tmpPdfPath = storage_path("app/public/Weekly Inventory Audit - ".$us->username.".pdf");
+
+            Pdf::loadView('components.pdf.inventory_chart', [
+                'charts' => $chartFiles,
+                'date' => $generatedDate,
+                'datetime' => $datetime,
+                'username' => $us->username
+            ])->save($tmpPdfPath);
+
+            // Send Telegram
+            if ($us->telegram_user_id) {
+                $message = "[ADMIN] Hello {$us->username}, here is your weekly inventory audit report.";
+
+                Telegram::sendDocument([
+                    'chat_id' => $us->telegram_user_id,
+                    'document' => fopen($tmpPdfPath, 'rb'),
+                    'caption' => $message,
+                    'parse_mode' => 'HTML'
+                ]);
+            }
+
+            // Clean up File
+            foreach ($chartFiles as $file) {
+                $chartPath = storage_path("app/public/$file");
+                if (file_exists($chartPath)) {
+                    unlink($chartPath);
+                }
+            }
+
+            if (file_exists($tmpPdfPath)) {
+                unlink($tmpPdfPath);
             }
         }
     }

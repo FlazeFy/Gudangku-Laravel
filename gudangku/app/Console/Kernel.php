@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
         // $schedule->call([new AuditSchedule, 'audit_error'])->weeklyOn(1, '3:00');
         // $schedule->call([new AuditSchedule, 'audit_dashboard'])->weeklyOn(2, '1:50');	
         // $schedule->call([new AuditSchedule, 'audit_apps'])->weeklyOn(1, '5:00');	
+        // $schedule->call([new AuditSchedule, 'audit_stats'])->weeklyOn(1, '6:00');	
         // $schedule->command('dusk:run')->weeklyOn(6, '6:00');
 
         // In development
@@ -37,6 +38,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command(AuditSchedule::audit_error())->everyMinute();
         // $schedule->command(AuditSchedule::audit_dashboard())->everyMinute();
         // $schedule->command(AuditSchedule::audit_apps())->everyMinute();
+        // $schedule->command(AuditSchedule::audit_stats())->everyMinute();
         // $schedule->command('dusk:run')->everyMinute();
     }
 

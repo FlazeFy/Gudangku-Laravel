@@ -175,16 +175,15 @@ class InventoryModel extends Model
         return count($res) > 0 ? $res : null;
     }
 
-    public static function getContextTotalStats($context,$type,$user_id){
-        function get_inventory_stats_view($type){
-            if($type == "price"){
-                return "CAST(SUM(inventory_price) as UNSIGNED)";
-            } else if($type == "item") {
-                return "COUNT(1)";
-            }
+    private static function get_inventory_stats_view($type){
+        if($type == "price"){
+            return "CAST(SUM(inventory_price) as UNSIGNED)";
+        } else if($type == "item") {
+            return "COUNT(1)";
         }
-
-        $res = InventoryModel::selectRaw("$context as context, ".get_inventory_stats_view($type)." as total");
+    }
+    public static function getContextTotalStats($context,$type,$user_id){
+        $res = InventoryModel::selectRaw("$context as context, ".self::get_inventory_stats_view($type)." as total");
         if($user_id){
             $res = $res->where('created_by', $user_id);
         }
