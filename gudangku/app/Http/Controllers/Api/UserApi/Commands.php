@@ -89,17 +89,9 @@ class Commands extends Controller
                 if ($res) {
                     $token_length = 6;
                     $token = Generator::getTokenValidation($token_length);
-
-                    ValidateRequestModel::create([
-                        'id' => Generator::getUUID(), 
-                        'request_type' => 'telegram_id_validation',
-                        'request_context' => $token, 
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'created_by' => $user_id
-                    ]);
+                    ValidateRequestModel::createValidateRequest('telegram_id_validation', $token, $user_id);
 
                     $user = UserModel::find($user_id);
-
                     $response = Telegram::sendMessage([
                         'chat_id' => $new_telegram_id,
                         'text' => "Hello,\n\nWe received a request to validate GudangKu apps's account with username <b>$user->username</b> to sync with this Telegram account. If you initiated this request, please confirm that this account belongs to you by clicking the button YES.\n\nAlso we provided the Token :\n$token\n\nIf you did not request this, please press button NO.\n\nThank you, GudangKu",
@@ -290,13 +282,7 @@ class Commands extends Controller
                     $token_length = 6;
                     $token = Generator::getTokenValidation($token_length);
 
-                    $valid_insert = ValidateRequestModel::create([
-                        'id' => Generator::getUUID(), 
-                        'request_type' => 'register',
-                        'request_context' => $token, 
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'created_by' => $username
-                    ]);
+                    $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
 
                     if($valid_insert){
                         // Send email
@@ -509,13 +495,7 @@ class Commands extends Controller
                 $delete = ValidateRequestModel::destroy($valid->id);
 
                 if($delete > 0){
-                    $valid_insert = ValidateRequestModel::create([
-                        'id' => Generator::getUUID(), 
-                        'request_type' => 'register',
-                        'request_context' => $token, 
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'created_by' => $username
-                    ]);
+                    $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
 
                     if($valid_insert){
                         // Send email
@@ -543,13 +523,7 @@ class Commands extends Controller
                 }
             } else {
                 // already deleted
-                $valid_insert = ValidateRequestModel::create([
-                    'id' => Generator::getUUID(), 
-                    'request_type' => 'register',
-                    'request_context' => $token, 
-                    'created_at' => date('Y-m-d H:i:s'), 
-                    'created_by' => $username
-                ]);
+                $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
 
                 if($valid_insert){
                     // Send email

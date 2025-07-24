@@ -12,7 +12,6 @@
         is_submit = false
         window.addEventListener('beforeunload', function(event) {
             is_process = check_filling_status(['username','password'])
-            console.log(is_process)
             if(is_process == true && !is_submit){
                 event.preventDefault()
                 event.returnValue = ''

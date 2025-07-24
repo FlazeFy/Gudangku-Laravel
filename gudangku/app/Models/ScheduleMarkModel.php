@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -45,5 +47,13 @@ class ScheduleMarkModel extends Model
             ->orderby('last_execute','DESC');
         
         return $is_paginate ? $res->paginate(12) : $res->get();
+    }
+
+    public static function createScheduleMark($id){
+        return ScheduleMarkModel::create([
+            'id' => Generator::getUUID(), 
+            'reminder_id' => $id,
+            'last_execute' => date('Y-m-d H:i:s'), 
+        ]);
     }
 }

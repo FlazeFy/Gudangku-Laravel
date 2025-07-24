@@ -20,7 +20,6 @@
             is_process = check_filling_status([
                 'inventory_name','inventory_desc','inventory_color','inventory_merk','inventory_price','inventory_vol','inventory_capacity_vol','inventory_rack','inventory_storage'
             ])
-            console.log(is_process)
             if(is_process == true && !is_submit){
                 event.preventDefault()
                 event.returnValue = ''

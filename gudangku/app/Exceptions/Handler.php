@@ -51,17 +51,8 @@ class Handler extends ExceptionHandler
 
     private function storeError(Throwable $exception)
     {
-        ErrorModel::create([
-            'message' => $exception->getMessage(), 
-            'stack_trace' => $exception->getTraceAsString(), 
-            'file' => $exception->getFile(), 
-            'line' => $exception->getLine(), 
-            'faced_by' => null, 
-            'is_fixed' => 0,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        ErrorModel::createError($exception->getMessage(), $exception->getTraceAsString(), $exception->getFile(), $exception->getLine());
     }
-
 
     protected function unauthenticated($request, \Illuminate\Auth\AuthenticationException $exception)
     {

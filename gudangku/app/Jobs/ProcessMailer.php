@@ -54,13 +54,7 @@ class ProcessMailer implements ShouldQueue
                 'file' => $e->getFile(), 
                 'line' => $e->getLine(), 
             ];
-            FailedJob::create([
-                'id' => Generator::getUUID(), 
-                'type' => "inventory", 
-                'status' => "failed",  
-                'payload' => json_encode($obj),
-                'created_at' => date("Y-m-d H:i:s"), 
-            ]);
+            FailedJob::createFailedJob("inventory", $obj);
         }
     }
 }

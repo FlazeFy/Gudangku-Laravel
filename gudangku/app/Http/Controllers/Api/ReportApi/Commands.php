@@ -496,19 +496,7 @@ class Commands extends Controller
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
-                    $report = ReportModel::create([
-                        'id' => Generator::getUUID(), 
-                        'report_title' => $request->report_title, 
-                        'report_desc' => $request->report_desc, 
-                        'report_category' => $request->report_category,  
-                        'is_reminder' => $request->is_reminder,  
-                        'remind_at' => $request->remind_at,  
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'created_by' => $user_id, 
-                        'updated_at' => null, 
-                        'deleted_at' => null
-                    ]);
-
+                    $report = ReportModel::createReport($request->report_title, $request->report_desc, $request->report_category, null, $request->is_reminder, $request->remind_at, $user_id, null);
                     if($report){
                         $success_migrate = 0;
                         $failed_migrate = 0;
@@ -642,7 +630,6 @@ class Commands extends Controller
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {   
                 $user_id = $request->user()->id;
-                $id_report = Generator::getUUID();
                 $validation_image_failed = "";
 
                 // Report image handling
@@ -681,19 +668,10 @@ class Commands extends Controller
                 }
 
                 // Model : Create Report
-                $report = ReportModel::create([
-                    'id' => $id_report, 
-                    'report_title' => $request->report_title,  
-                    'report_desc' => $request->report_desc,  
-                    'report_category' => $request->report_category, 
-                    'report_image' => $report_image ? json_encode($report_image,true) : null,
-                    'is_reminder' => 0, 
-                    'remind_at' => null, 
-                    'created_at' => $request->created_at ?? date('Y-m-d H:i:s'), 
-                    'created_by' => $user_id, 
-                    'updated_at' => null, 
-                    'deleted_at' => null
-                ]);
+                $report = ReportModel::createReport(
+                    $request->report_title, $request->report_desc, $request->report_category, $report_image ? json_encode($report_image,true) : null, 0, $request->remind_at, $user_id, $request->created_at ?? date('Y-m-d H:i:s')
+                );
+                $id_report = $report->id;
 
                 if($report){
                     $success_exec = 0;
@@ -705,17 +683,9 @@ class Commands extends Controller
 
                         // Model : Create Report Item
                         foreach ($report_item as $idx => $dt) {
-                            $res = ReportItemModel::create([
-                                'id' => Generator::getUUID(), 
-                                'inventory_id' => $dt->inventory_id ?? null, 
-                                'report_id' => $id_report, 
-                                'item_name' => $dt->item_name, 
-                                'item_desc' => $dt->item_desc,  
-                                'item_qty' => $dt->item_qty, 
-                                'item_price' => $dt->item_price ?? null, 
-                                'created_at' => date('Y-m-d H:i:s'), 
-                                'created_by' => $user_id, 
-                            ]);
+                            $res = ReportItemModel::createReportItem(
+                                $dt->inventory_id ?? null, $id_report, $dt->item_name, $dt->item_desc, $dt->item_qty, $dt->item_price ?? null, $user_id
+                            );
 
                             if($res){
                                 $success_exec++;
@@ -830,17 +800,9 @@ class Commands extends Controller
 
                 // Model : Create Report Item
                 foreach ($report_item as $idx => $dt) {
-                    $res = ReportItemModel::create([
-                        'id' => Generator::getUUID(), 
-                        'inventory_id' => $dt->inventory_id ?? null, 
-                        'report_id' => $id, 
-                        'item_name' => $dt->item_name, 
-                        'item_desc' => $dt->item_desc,  
-                        'item_qty' => $dt->item_qty, 
-                        'item_price' => $dt->item_price ?? null, 
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'created_by' => $user_id, 
-                    ]);
+                    $res = ReportItemModel::createReportItem(
+                        $dt->inventory_id ?? null, $id, $dt->item_name, $dt->item_desc, $dt->item_qty, $dt->item_price ?? null, $user_id
+                    );
 
                     if($res){
                         $success_exec++;
@@ -1338,21 +1300,9 @@ class Commands extends Controller
                             }
 
                             // Model : Create Report
-                            $id_report = Generator::getUUID();
                             $report_image = null;
-                            $report = ReportModel::create([
-                                'id' => $id_report, 
-                                'report_title' => $report_title,  
-                                'report_desc' => $report_desc,  
-                                'report_category' => $report_category, 
-                                'report_image' => $report_image,
-                                'is_reminder' => 0, 
-                                'remind_at' => null, 
-                                'created_at' => date('Y-m-d H:i:s'), 
-                                'created_by' => $user_id, 
-                                'updated_at' => null, 
-                                'deleted_at' => null
-                            ]);
+                            $report = ReportModel::createReport($report_title, $report_desc, $report_category, $report_image, 0, null, $user_id, null);
+                            $id_report = $report->id;
 
                             if($report){
                                 $success_exec = 0;
@@ -1363,17 +1313,9 @@ class Commands extends Controller
 
                                     // Model : Create Report Item
                                     foreach ($existing_inventory as $idx => $dt) {
-                                        $res = ReportItemModel::create([
-                                            'id' => Generator::getUUID(), 
-                                            'inventory_id' => $dt['inventory_id'] ?? null, 
-                                            'report_id' => $id_report, 
-                                            'item_name' => $dt['item_name'], 
-                                            'item_desc' => $dt['item_desc'],  
-                                            'item_qty' => $dt['item_qty'], 
-                                            'item_price' => $dt['item_price'] ?? null, 
-                                            'created_at' => date('Y-m-d H:i:s'), 
-                                            'created_by' => $user_id, 
-                                        ]);
+                                        $res = ReportItemModel::createReportItem(
+                                            $dt['inventory_id'] ?? null, $id_report, $dt['item_name'],$dt['item_desc'], $dt['item_qty'], $dt['item_price'] ?? null, $user_id
+                                        );
 
                                         if($res){
                                             $success_exec++;

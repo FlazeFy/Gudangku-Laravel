@@ -192,10 +192,7 @@ class Commands extends Controller
                     ], Response::HTTP_CONFLICT);
                 } else {
                     // Service : Create
-                    $rows = DictionaryModel::create([
-                        'dictionary_type' => $dictionary_type,
-                        'dictionary_name' => $dictionary_name,
-                    ]);
+                    $rows = DictionaryModel::createDictionary($dictionary_type, $dictionary_name);
 
                     // Respond
                     if($rows){

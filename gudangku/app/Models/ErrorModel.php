@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -50,4 +49,16 @@ class ErrorModel extends Model
 
         return count($res) > 0 ? $res : null;
     } 
+
+    public static function createError($message, $stack_trace, $file, $line){
+        return ErrorModel::create([
+            'message' => $message, 
+            'stack_trace' => $stack_trace, 
+            'file' => $file, 
+            'line' => $line, 
+            'faced_by' => null, 
+            'is_fixed' => 0,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+    }
 }

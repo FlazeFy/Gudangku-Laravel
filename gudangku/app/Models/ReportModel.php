@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Helpers\Generator;
 use Carbon\Carbon;
+
+// Helpers
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -163,7 +164,7 @@ class ReportModel extends Model
 
         $res = ReportModel::selectRaw($select_query)
             ->join('report_item','report_item.report_id','=','report.id');
-        if(!$is_admin){
+        if(!$is_admin || $user_id){
             $res = $res->where('report.created_by', $user_id);
         }
         if($type == "spending") {
@@ -192,5 +193,23 @@ class ReportModel extends Model
             ->get();
 
         return $res;
+    }
+
+    public static function createReport($report_title, $report_desc, $report_category, $report_image, $is_reminder, $remind_at, $user_id, $created_at) {
+        $created_at = $created_at ?? date('Y-m-d H:i:s');
+
+        return ReportModel::create([
+            'id' => Generator::getUUID(), 
+            'report_title' => $report_title, 
+            'report_desc' => $report_desc, 
+            'report_category' => $report_category,  
+            'report_image' => $report_image,
+            'is_reminder' => $is_reminder,  
+            'remind_at' => $remind_at,  
+            'created_at' => $created_at, 
+            'created_by' => $user_id, 
+            'updated_at' => null, 
+            'deleted_at' => null
+        ]);
     }
 }

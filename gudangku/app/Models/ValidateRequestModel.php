@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -37,4 +39,14 @@ class ValidateRequestModel extends Model
 
         return $res;
     }   
+
+    public static function createValidateRequest($req_type, $token, $user_id){
+        return ValidateRequestModel::create([
+            'id' => Generator::getUUID(), 
+            'request_type' => $req_type,
+            'request_context' => $token, 
+            'created_at' => date('Y-m-d H:i:s'), 
+            'created_by' => $user_id
+        ]);
+    }
 }

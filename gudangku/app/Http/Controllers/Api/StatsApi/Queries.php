@@ -82,9 +82,13 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::getContextTotalStats('inventory_category',$type,!$check_admin ? $user_id:null);
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = $request->query('user_id') ?? null;
+            } 
+
+            $res = InventoryModel::getContextTotalStats('inventory_category',$type,$user_id);
             
             if ($res) {
                 return response()->json([
@@ -265,7 +269,11 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+
             $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = $request->query('user_id') ?? null;
+            } 
 
             $res = InventoryModel::selectRaw("
                     CASE 
@@ -363,9 +371,13 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::getContextTotalStats('inventory_room',$type,!$check_admin ? $user_id:null);
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = $request->query('user_id') ?? null;
+            } 
+
+            $res = InventoryModel::getContextTotalStats('inventory_room',$type,$user_id);
             
             if ($res) {
                 return response()->json([
@@ -449,9 +461,13 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::getContextTotalStats('inventory_merk',$type,!$check_admin ? $user_id:null);
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = $request->query('user_id') ?? null;
+            } 
+
+            $res = InventoryModel::getContextTotalStats('inventory_merk',$type,$user_id);
             
             if ($res) {
                 return response()->json([
@@ -535,9 +551,13 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
 
-            $res = ReportModel::getTotalReportCreatedOrSpendingPerMonth($check_admin ? null : $user_id, $year, $check_admin ? true : false, 'created');
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = $request->query('user_id') ?? null;
+            }
+
+            $res = ReportModel::getTotalReportCreatedOrSpendingPerMonth($user_id, $year, $check_admin ? true : false, 'created');
             
             if (count($res) > 0) {
                 $res_final = [];
@@ -638,9 +658,13 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
 
-            $res = InventoryModel::getTotalInventoryCreatedPerMonth($check_admin ? null : $user_id, $year, $check_admin ? true : false);
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = $request->query('user_id') ?? null;
+            } 
+
+            $res = InventoryModel::getTotalInventoryCreatedPerMonth($user_id, $year, $check_admin ? true : false);
             
             if (count($res) > 0) {
                 $res_final = [];

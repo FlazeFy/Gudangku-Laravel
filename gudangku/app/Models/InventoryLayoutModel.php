@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 use Carbon\Carbon;
 use DateTime;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -34,29 +35,37 @@ class InventoryLayoutModel extends Model
     protected $fillable = ['id', 'inventory_room', 'inventory_storage', 'layout', 'storage_desc', 'created_at', 'created_by'];
 
     public static function getInventoryByLayout($user_id, $room){
-        $res = InventoryLayoutModel::select('id','inventory_storage','layout','storage_desc')
+        return InventoryLayoutModel::select('id','inventory_storage','layout','storage_desc')
             ->where('created_by',$user_id)
-            ->where('inventory_room',$room);
-        
-        return $res->get();
+            ->where('inventory_room',$room)
+            ->get();
     }
 
     public static function getFindInventoryByRoomStorage($user_id,$room,$storage){
-        $res = InventoryLayoutModel::select('inventory_storage','layout','storage_desc','created_at')
+        return InventoryLayoutModel::select('inventory_storage','layout','storage_desc','created_at')
             ->where('created_by',$user_id)
             ->where('inventory_room',$room)
-            ->where('inventory_storage',$storage);
-        
-        return $res->first();
+            ->where('inventory_storage',$storage)
+            ->first();
     }
     
     public static function getLayoutByCoor($id, $user_id, $coor){
-        $res = InventoryLayoutModel::select('layout','inventory_storage')
+        return InventoryLayoutModel::select('layout','inventory_storage')
             ->where('id',$id)
             ->where('created_by',$user_id)
             ->where('layout', 'like', '%' . $coor . '%')
             ->first();
+    }
 
-        return $res;
+    public static function createInventoryLayout($inventory_room, $inventory_storage, $storage_desc, $layout, $user_id){
+        return InventoryLayoutModel::create([
+            'id' => Generator::getUUID(),
+            'inventory_room' => $inventory_room,
+            'inventory_storage' => $inventory_storage,
+            'storage_desc' => $storage_desc,
+            'layout' => $layout,
+            'created_at' => date('Y-m-d H:i'),
+            'created_by' => $user_id
+        ]);
     }
 }

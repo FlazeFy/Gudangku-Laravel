@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
 use Carbon\Carbon;
 use DateTime;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -312,9 +313,11 @@ class InventoryModel extends Model
 
     public static function getTotalInventoryCreatedPerMonth($user_id, $year, $is_admin){
         $res = InventoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context");
-            if(!$is_admin){
-                $res = $res->where('created_by', $user_id);
-            }
+        
+        if(!$is_admin || $user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+
         $res = $res->whereRaw("YEAR(created_at) = '$year'")
             ->groupByRaw('MONTH(created_at)')
             ->get();
@@ -479,4 +482,34 @@ class InventoryModel extends Model
 
         return $res;
     } 
+
+    public static function createInventory(
+        $inventory_name, $inventory_category, $inventory_desc, $inventory_merk, $inventory_color, $inventory_room, 
+        $inventory_storage, $inventory_rack, $inventory_price, $inventory_image, $inventory_unit, $inventory_vol, 
+        $inventory_capacity_unit, $inventory_capacity_vol, $is_favorite, $user_id) {
+        
+        return InventoryModel::create([
+            'id' => Generator::getUUID(), 
+            'inventory_name' => $inventory_name, 
+            'inventory_category' => $inventory_category, 
+            'inventory_desc' => $inventory_desc, 
+            'inventory_merk' => $inventory_merk, 
+            'inventory_color' => $inventory_color, 
+            'inventory_room' => $inventory_room, 
+            'inventory_storage' => $inventory_storage, 
+            'inventory_rack' => $inventory_rack, 
+            'inventory_price' => $inventory_price, 
+            'inventory_image' => $inventory_image, 
+            'inventory_unit' => $inventory_unit, 
+            'inventory_vol' => $inventory_vol, 
+            'inventory_capacity_unit' => $inventory_capacity_unit, 
+            'inventory_capacity_vol' => $inventory_capacity_vol, 
+            'is_favorite' => $is_favorite, 
+            'is_reminder' => 0, 
+            'created_at' => date('Y-m-d H:i:s'), 
+            'created_by' => $user_id, 
+            'updated_at' => null, 
+            'deleted_at' => null
+        ]);
+    }
 }

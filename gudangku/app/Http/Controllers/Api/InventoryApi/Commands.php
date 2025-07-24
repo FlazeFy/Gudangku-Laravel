@@ -636,30 +636,12 @@ class Commands extends Controller
                     ->first();
 
                 if(!$is_exist){
-                    $id = Generator::getUUID();
-                    $res = InventoryModel::create([
-                        'id' => $id, 
-                        'inventory_name' => $request->inventory_name, 
-                        'inventory_category' => $request->inventory_category, 
-                        'inventory_desc' => $request->inventory_desc, 
-                        'inventory_merk' => $request->inventory_merk, 
-                        'inventory_color' => $request->inventory_color, 
-                        'inventory_room' => $request->inventory_room, 
-                        'inventory_storage' => $request->inventory_storage, 
-                        'inventory_rack' => $request->inventory_rack, 
-                        'inventory_price' => $request->inventory_price, 
-                        'inventory_image' => $inventory_image, 
-                        'inventory_unit' => $request->inventory_unit, 
-                        'inventory_vol' => $request->inventory_vol, 
-                        'inventory_capacity_unit' => $request->inventory_capacity_unit, 
-                        'inventory_capacity_vol' => $request->inventory_capacity_vol, 
-                        'is_favorite' => $request->is_favorite, 
-                        'is_reminder' => 0, 
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'created_by' => $user_id, 
-                        'updated_at' => null, 
-                        'deleted_at' => null
-                    ]);
+                    $res = InventoryModel::createInventory(
+                        $request->inventory_name, $request->inventory_category, $request->inventory_desc, $request->inventory_merk, $request->inventory_color, $request->inventory_room, 
+                        $request->inventory_storage, $request->inventory_rack, $request->inventory_price, $request->inventory_image, $request->inventory_unit, $request->inventory_vol, 
+                        $request->inventory_capacity_unit, $request->inventory_capacity_vol, $request->is_favorite, $user_id
+                    );
+                    $id = $res->id;
 
                     if($res){
                         // History
@@ -1125,15 +1107,7 @@ class Commands extends Controller
                             Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
                         }
                     } else {
-                        $rows_layout = InventoryLayoutModel::create([
-                            'id' => Generator::getUUID(),
-                            'inventory_room' => $request->inventory_room,
-                            'inventory_storage' => $request->inventory_storage,
-                            'storage_desc' => $request->storage_desc,
-                            'layout' => $request->layout,
-                            'created_at' => date('Y-m-d H:i'),
-                            'created_by' => $user_id
-                        ]);
+                        $rows_layout = InventoryLayoutModel::createInventoryLayout($request->inventory_room, $request->inventory_storage, $request->storage_desc, $request->layout, $user_id);
 
                         if($rows_layout){
                             $is_success = true;

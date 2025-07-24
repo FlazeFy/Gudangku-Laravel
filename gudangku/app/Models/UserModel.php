@@ -1,13 +1,12 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 
-// Model
+// Other Model
 use App\Models\AdminModel;
 use App\Models\InventoryModel;
 use App\Models\ReportModel;
@@ -83,7 +82,7 @@ class UserModel extends Authenticatable
     }
 
     public static function createUser($username, $password, $email){
-        $res = UserModel::create([
+        return UserModel::create([
             'id' => Generator::getUUID(), 
             'username' => $username, 
             'password' => $password != "GOOGLE_SIGN_IN" ? Hash::make($password) : "GOOGLE_SIGN_IN",
@@ -94,8 +93,6 @@ class UserModel extends Authenticatable
             'created_at' => date('Y-m-d H:i:s'), 
             'updated_at' => null
         ]);
-
-        return $res;
     }
 
     public static function getUserById($user_id){

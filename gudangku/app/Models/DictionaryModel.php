@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,5 +44,12 @@ class DictionaryModel extends Model
             ->first();
 
         return $res ? true : false;
+    }
+
+    public static function createDictionary($dictionary_type, $dictionary_name){
+        return DictionaryModel::create([
+            'dictionary_type' => $dictionary_type,
+            'dictionary_name' => $dictionary_name,
+        ]);
     }
 }

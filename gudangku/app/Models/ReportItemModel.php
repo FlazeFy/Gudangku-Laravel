@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helpers
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -72,4 +74,18 @@ class ReportItemModel extends Model
 
         return $res;
     } 
+
+    public static function createReportItem($inventory_id, $report_id, $item_name, $item_desc, $item_qty, $item_price, $user_id) {
+        return ReportItemModel::create([
+            'id' => Generator::getUUID(), 
+            'inventory_id' => $inventory_id, 
+            'report_id' => $report_id, 
+            'item_name' => $item_name, 
+            'item_desc' => $item_desc,  
+            'item_qty' => $item_qty, 
+            'item_price' => $item_price, 
+            'created_at' => date('Y-m-d H:i:s'), 
+            'created_by' => $user_id, 
+        ]);
+    }
 }

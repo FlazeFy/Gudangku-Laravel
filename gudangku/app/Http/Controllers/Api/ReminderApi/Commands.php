@@ -372,11 +372,7 @@ class Commands extends Controller
                     $deleted = ScheduleMarkModel::where('reminder_id',$id)->delete();
 
                     if($deleted > 0){
-                        ScheduleMarkModel::create([
-                            'id' => Generator::getUUID(), 
-                            'reminder_id' => $id,
-                            'last_execute' => date('Y-m-d H:i:s'), 
-                        ]);
+                        ScheduleMarkModel::createScheduleMark($id);
 
                         $message = "Hello $reminder->username, your inventory $reminder->inventory_name has remind $reminder->reminder_desc";
 

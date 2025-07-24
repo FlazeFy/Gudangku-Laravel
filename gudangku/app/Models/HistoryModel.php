@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -43,5 +45,15 @@ class HistoryModel extends Model
             ->paginate($paginate);
 
         return $res;
+    }
+
+    public static function createHistory($type, $ctx, $user_id){
+        return HistoryModel::create([
+            'id' => Generator::getUUID(), 
+            'history_type' => $type, 
+            'history_context' => $ctx, 
+            'created_at' => date("Y-m-d H:i:s"), 
+            'created_by' => $user_id,
+        ]);
     }
 }
