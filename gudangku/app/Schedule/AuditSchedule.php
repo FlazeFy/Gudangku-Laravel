@@ -193,7 +193,7 @@ class AuditSchedule
         }
     }
 
-    public static function audit_stats() {
+    public static function audit_weekly_stats() {
         $listCols = ["inventory_category","inventory_room","inventory_merk"];
         $users = UserModel::getUserBroadcastAll();
     
@@ -214,7 +214,7 @@ class AuditSchedule
                     $values = $res->pluck('total')->all();
         
                     // Filename
-                    $chartFilename = "bar_chart_$tp-$col.png";
+                    $chartFilename = "bar_chart_$tp-$col-$us->id.png";
                     $chartPath = storage_path("app/public/$chartFilename");
 
                     // Generate chart
@@ -252,6 +252,96 @@ class AuditSchedule
             // Send Telegram
             if ($us->telegram_user_id) {
                 $message = "[ADMIN] Hello {$us->username}, here is your weekly inventory audit report.";
+
+                Telegram::sendDocument([
+                    'chat_id' => $us->telegram_user_id,
+                    'document' => fopen($tmpPdfPath, 'rb'),
+                    'caption' => $message,
+                    'parse_mode' => 'HTML'
+                ]);
+            }
+
+            // Clean up File
+            foreach ($chartFiles as $file) {
+                $chartPath = storage_path("app/public/$file");
+                if (file_exists($chartPath)) {
+                    unlink($chartPath);
+                }
+            }
+
+            if (file_exists($tmpPdfPath)) {
+                unlink($tmpPdfPath);
+            }
+        }
+    }
+
+    public static function audit_yearly_stats() {
+        $users = UserModel::getUserBroadcastAll();
+        $year = 2025;
+    
+        foreach ($users as $us) {
+            $chartFiles = []; 
+
+            // Model
+            $res_inventory_monthly = InventoryModel::getTotalInventoryCreatedPerMonth($us->id, $year, false);
+
+            if ($res_inventory_monthly == null || $res_inventory_monthly->isEmpty()) continue;
+            $res_final_inventory_monthly = [];
+            for ($i=1; $i <= 12; $i++) { 
+                $total = 0;
+                foreach ($res_inventory_monthly as $idx => $val) {
+                    if($i == $val->context){
+                        $total = $val->total;
+                        break;
+                    }
+                }
+                array_push($res_final_inventory_monthly, [
+                    'context' => Generator::generateMonthName($i,'short'),
+                    'total' => $total,
+                ]);
+            }
+
+            // Dataset
+            $labels_inventory_monthly = collect($res_final_inventory_monthly)->pluck('context')->map(fn($c) => Str::upper(str_replace('_', ' ', $c)))->all();
+            $values_inventory_monthly = collect($res_final_inventory_monthly)->pluck('total')->all();
+
+            // Filename
+            $chartFilename = "bar_chart_inventory_monthly_$year-$us->id.png";
+            $chartPath = storage_path("app/public/$chartFilename");
+
+            // Generate chart
+            $graph = new Graph(800, 500);
+            $graph->SetScale("textlin");
+            $graph->xaxis->SetTickLabels($labels_inventory_monthly);
+            $graph->xaxis->SetLabelAngle(35);
+            $graph->xaxis->SetFont(FF_ARIAL, FS_NORMAL, 7);
+            $graph->yaxis->SetFont(FF_ARIAL, FS_NORMAL, 7);
+            $graph->title->SetFont(FF_ARIAL, FS_BOLD, 10);
+            $barPlot = new BarPlot($values_inventory_monthly);
+            $barPlot->SetFillColor("navy");
+            $graph->Add($barPlot);
+            $graph->title->Set("Total Inventory Created Per Month ($year)");
+            $graph->Stroke($chartPath);
+
+            $chartFiles[] = $chartFilename;
+    
+            if (empty($chartFiles)) continue;
+    
+            // Render PDF
+            $generatedDate = now()->format('d F Y');
+            $datetime = now()->format('d M Y h:i');
+            $tmpPdfPath = storage_path("app/public/Yearly Inventory Audit - ".$us->username.".pdf");
+
+            Pdf::loadView('components.pdf.inventory_chart', [
+                'charts' => $chartFiles,
+                'date' => $generatedDate,
+                'datetime' => $datetime,
+                'username' => $us->username
+            ])->save($tmpPdfPath);
+
+            // Send Telegram
+            if ($us->telegram_user_id) {
+                $message = "[ADMIN] Hello {$us->username}, here is your yearly inventory audit report.";
 
                 Telegram::sendDocument([
                     'chat_id' => $us->telegram_user_id,
