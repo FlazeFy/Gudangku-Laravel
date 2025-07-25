@@ -60,20 +60,29 @@ class ReportItemModel extends Model
         if(!$is_admin){
             $res = $res->where('inventory.created_by',$user_id);
         }
-        $res = $res->where('report_item.report_id',$report_id)
+        return $res->where('report_item.report_id',$report_id)
             ->whereNull('deleted_at')
-            ->orderBy('report_item.created_at', 'DESC');
-
-        return $res->get();
+            ->orderBy('report_item.created_at', 'DESC')
+            ->get();
     }
 
     public static function deleteReportItemByInventoryId($inventory_id, $user_id){
-        $res = ReportItemModel::where('inventory_id',$inventory_id)
+        return ReportItemModel::where('inventory_id',$inventory_id)
             ->where('created_by',$user_id)
             ->delete();
-
-        return $res;
     } 
+
+    public static function deleteReportItemByReportId($report_id, $user_id){
+        return ReportItemModel::where('report_id', $report_id)
+            ->where('created_by', $user_id)
+            ->delete();
+    } 
+
+    public static function deleteManyReportItemById($list_id, $user_id){
+        return ReportItemModel::whereIn('id', $list_id)
+            ->where('created_by', $user_id)
+            ->delete();
+    }
 
     public static function createReportItem($inventory_id, $report_id, $item_name, $item_desc, $item_qty, $item_price, $user_id) {
         return ReportItemModel::create([
@@ -87,5 +96,9 @@ class ReportItemModel extends Model
             'created_at' => date('Y-m-d H:i:s'), 
             'created_by' => $user_id, 
         ]);
+    }
+
+    public static function deleteReportItemByUserId($user_id){
+        return ReportItemModel::where('created_by',$user_id)->delete();
     }
 }

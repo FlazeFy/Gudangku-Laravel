@@ -56,4 +56,8 @@ class ScheduleMarkModel extends Model
             'last_execute' => date('Y-m-d H:i:s'), 
         ]);
     }
+
+    public static function deleteScheduleMarkById($id){
+        return ScheduleMarkModel::where('reminder_id',$id)->delete();
+    }
 }

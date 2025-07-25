@@ -80,11 +80,9 @@ class UserModel extends Authenticatable
     }
 
     public static function getUserByUsernameOrEmail($username,$email){
-        $res = UserModel::where('username',$username)
+        return UserModel::where('username',$username)
             ->orwhere('email',$email)
             ->first();
-
-        return $res;
     }
 
     public static function createUser($username, $password, $email){
@@ -129,11 +127,9 @@ class UserModel extends Authenticatable
     }
 
     public static function getAllUser($paginate){
-        $res = UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at')
+        return UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at')
             ->orderby('created_at','desc')
             ->paginate($paginate);
-
-        return $res;
     }
 
     public static function getAvailableYear($user_id, $is_admin){
@@ -151,16 +147,14 @@ class UserModel extends Authenticatable
         $res_report = $res_report->groupBy('year')
             ->get();
     
-        $res = $res_inventory->concat($res_report)
+        return $res_inventory->concat($res_report)
             ->unique('year') 
             ->sortBy('year')
-            ->values(); 
-
-        return $res;
+            ->values();
     }
 
     public static function getUserExport(){
-        $res = UserModel::selectRaw("users.id,username,telegram_user_id,telegram_is_valid,firebase_fcm_token,line_user_id,email,phone,timezone,users.created_at,users.updated_at, 
+        return UserModel::selectRaw("users.id,username,telegram_user_id,telegram_is_valid,firebase_fcm_token,line_user_id,email,phone,timezone,users.created_at,users.updated_at, 
             CAST(COALESCE(SUM(CASE WHEN inventory.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS UNSIGNED) as total_inventory,
             CAST(COALESCE(SUM(CASE WHEN report.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS UNSIGNED) as total_report")
             ->leftjoin('inventory','users.id','=','inventory.created_by')
@@ -168,7 +162,5 @@ class UserModel extends Authenticatable
             ->groupby('users.id')
             ->orderby('users.created_at')
             ->get();
-
-        return $res;
     }
 }

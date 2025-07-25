@@ -68,4 +68,8 @@ class InventoryLayoutModel extends Model
             'created_by' => $user_id
         ]);
     }
+    
+    public static function deleteInventoryLayoutByUserId($user_id){
+        return InventoryLayoutModel::where('created_by',$user_id)->delete();
+    }
 }

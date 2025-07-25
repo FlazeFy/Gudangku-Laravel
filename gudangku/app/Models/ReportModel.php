@@ -116,13 +116,11 @@ class ReportModel extends Model
     }
 
     public static function getLastFoundInventoryReport($user_id,$inventory_id){
-        $res = ReportModel::select('report.created_at','report_title','report_category')
+        return ReportModel::select('report.created_at','report_title','report_category')
             ->join('report_item','report_item.report_id','=','report.id')
             ->where('report.created_by',$user_id)
             ->where('inventory_id',$inventory_id)
             ->get();
-
-        return $res;
     }
 
     public static function getInventoryMonthlyInReport($user_id, $inventory_id, $year = null) {
@@ -184,15 +182,15 @@ class ReportModel extends Model
                 MONTH(report.created_at) as context
             ")
             ->join('report_item', 'report_item.report_id', '=', 'report.id');
+            
         if(!$is_admin){
             $res = $res->where('report.created_by', $user_id);
         }
-        $res = $res->whereIn('report_category', ['Checkout', 'Wash List'])
+
+        return $res->whereIn('report_category', ['Checkout', 'Wash List'])
             ->whereRaw("YEAR(report.created_at) = '$year'")
             ->groupByRaw('MONTH(report.created_at)')
             ->get();
-
-        return $res;
     }
 
     public static function createReport($report_title, $report_desc, $report_category, $report_image, $is_reminder, $remind_at, $user_id, $created_at) {
@@ -211,5 +209,9 @@ class ReportModel extends Model
             'updated_at' => null, 
             'deleted_at' => null
         ]);
+    }
+
+    public static function deleteReportByUserId($user_id){
+        return ReportModel::where('created_by',$user_id)->delete();
     }
 }

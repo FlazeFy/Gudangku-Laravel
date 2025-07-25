@@ -369,7 +369,7 @@ class Commands extends Controller
                 $reminder = ReminderModel::getReminderJob($id);
 
                 if($reminder){
-                    $deleted = ScheduleMarkModel::where('reminder_id',$id)->delete();
+                    $deleted = ScheduleMarkModel::deleteScheduleMarkById($id);
 
                     if($deleted > 0){
                         ScheduleMarkModel::createScheduleMark($id);
@@ -480,15 +480,8 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $reminder = ReminderModel::select('reminder_desc','inventory_name')
-                ->join('inventory','inventory.id','=','reminder.inventory_id')
-                ->where('reminder.id',$id)
-                ->first();
-
-            $res = ReminderModel::where('created_by', $user_id)
-                ->where('id',$id)
-                ->delete();
-
+            $reminder = ReminderModel::getReminderAndInventoryById($id,$user_id);
+            $res = ReminderModel::hardDeleteReminder($id, $user_id);
             if($reminder && $res > 0){
                 // History
                 Audit::createHistory('Delete Reminder', "$reminder->reminder_desc for inventory $reminder->inventory_name", $user_id);

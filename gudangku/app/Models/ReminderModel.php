@@ -46,34 +46,37 @@ class ReminderModel extends Model
     }
 
     public static function getReminderByInventoryId($id,$user_id){
-        $res = ReminderModel::select('id','reminder_desc','reminder_type','reminder_context','created_at')
+        return ReminderModel::select('id','reminder_desc','reminder_type','reminder_context','created_at')
             ->where('created_by',$user_id)
             ->where('inventory_id',$id)
-            ->orderby('created_at','desc');
-
-        return $res->get();
+            ->orderby('created_at','desc')
+            ->get();
     }
 
     public static function deleteReminderByInventoryId($inventory_id, $user_id){
-        $res = ReminderModel::where('inventory_id',$inventory_id)
+        return ReminderModel::where('inventory_id',$inventory_id)
             ->where('created_by',$user_id)
             ->delete();
-
-        return $res;
     } 
 
+    public static function getReminderAndInventoryById($id,$user_id){
+        return ReminderModel::select('reminder_desc','inventory_name')
+            ->join('inventory','inventory.id','=','reminder.inventory_id')
+            ->where('reminder.id',$id)
+            ->where('reminder.created_by',$user_id)
+            ->first();
+    }
+
     public static function getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id){
-        $res = ReminderModel::where('created_by', $user_id)
+        return ReminderModel::where('created_by', $user_id)
             ->where('inventory_id',$inventory_id)
             ->where('reminder_type',$reminder_type)
             ->where('reminder_context',$reminder_context)
             ->first();
-
-        return $res;
     }
 
     public static function createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id){
-        $res = ReminderModel::create([
+        return ReminderModel::create([
             'id' => Generator::getUUID(), 
             'inventory_id' => $inventory_id, 
             'reminder_desc' => $reminder_desc, 
@@ -83,7 +86,15 @@ class ReminderModel extends Model
             'created_by' => $user_id, 
             'updated_at' => null
         ]);
+    }
 
-        return $res;
+    public static function hardDeleteReminder($id, $user_id){
+        return ReminderModel::where('created_by', $user_id)
+            ->where('id',$id)
+            ->delete();
+    }
+
+    public static function deleteReminderByUserId($user_id){
+        return ReminderModel::where('created_by',$user_id)->delete();
     }
 }

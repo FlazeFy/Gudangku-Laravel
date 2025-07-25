@@ -87,14 +87,9 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $rows = ReportItemModel::where('id', $id)
-                ->where('created_by', $user_id);
-
             $list_id = explode(",", $id);
-            $rows = ReportItemModel::whereIn('id', $list_id)
-                ->where('created_by', $user_id)
-                ->delete();
 
+            $rows = ReportItemModel::deleteManyReportItemById($list_id, $user_id);
             if($rows > 0){
                 $extra = "";
                 if(count($list_id) > 1){
@@ -183,9 +178,7 @@ class Commands extends Controller
                 // History
                 Audit::createHistory('Delete Report', $report->report_title, $user_id);
                 
-                ReportItemModel::where('report_id', $id)
-                    ->where('created_by', $user_id)
-                    ->delete();
+                ReportItemModel::deleteReportItemByReportId($id, $user_id);
 
                 return response()->json([
                     'status' => 'success',

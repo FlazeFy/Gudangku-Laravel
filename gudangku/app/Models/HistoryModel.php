@@ -56,4 +56,14 @@ class HistoryModel extends Model
             'created_by' => $user_id,
         ]);
     }
+
+    public static function hardDeleteHistory($id, $user_id){
+        return HistoryModel::where('id',$id)
+            ->where('created_by',$user_id)
+            ->delete();
+    }
+
+    public static function deleteHistoryByUserId($user_id){
+        return HistoryModel::where('created_by',$user_id)->delete();
+    }
 }

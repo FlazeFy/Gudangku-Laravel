@@ -738,13 +738,13 @@ class Commands extends Controller
                 $res = UserModel::where('id',$id)->delete();
                 
                 if ($res) {
-                    InventoryModel::where('created_by',$id)->delete();
-                    InventoryLayoutModel::where('created_by',$id)->delete();
-                    ReportModel::where('created_by',$id)->delete();
-                    ReportItemModel::where('created_by',$id)->delete();
-                    HistoryModel::where('created_by',$id)->delete();
-                    ReminderModel::where('created_by',$id)->delete();
-                    PersonalAccessToken::where('tokenable_id',$id)->delete();
+                    InventoryModel::deleteInventoryByUserId($id);
+                    InventoryLayoutModel::deleteInventoryLayoutByUserId($id);
+                    ReportModel::deleteReportByUserId($id);
+                    ReportItemModel::deleteReportItemByUserId($id);
+                    HistoryModel::deleteHistoryByUserId($id);
+                    ReminderModel::deleteReminderByUserId($id);
+                    PersonalAccessToken::deletePersonalAccessTokenByUserId($id);
 
                     return response()->json([
                         'status' => 'success',

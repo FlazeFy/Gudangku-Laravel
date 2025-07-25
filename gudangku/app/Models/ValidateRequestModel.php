@@ -33,11 +33,9 @@ class ValidateRequestModel extends Model
     protected $fillable = ['id', 'request_type', 'request_context', 'created_at', 'created_by']; 
 
     public static function getActiveRequest($user_id){
-        $res = ValidateRequestModel::select('id','request_type', 'request_context', 'created_at')
+        return ValidateRequestModel::select('id','request_type', 'request_context', 'created_at')
             ->where('created_by', $user_id)
             ->first();
-
-        return $res;
     }   
 
     public static function createValidateRequest($req_type, $token, $user_id){
