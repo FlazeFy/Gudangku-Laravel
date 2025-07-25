@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\File;
+use Carbon\Carbon;
 
 // Models
 use App\Models\UserModel;
@@ -95,7 +96,9 @@ class Commands extends Controller
                         'message' => Generator::getMessageTemplate("conflict", "qr code"),
                     ], Response::HTTP_CONFLICT);
                 } else {
-                    $lend = LendModel::createLend(null,$request->qr_period,null,'open',$user_id);
+                    $qrPeriodHours = $request->qr_period;
+                    $lend = LendModel::createLend(null,$qrPeriodHours,null,'open',$user_id);
+                    $lend_expired_datetime = Carbon::parse($lend->created_at)->addHours($qrPeriodHours);
                     $lend_id = $lend->id;
                     $qr_path = QRGenerate::generateQR("https://gudangku.leonardhors.com/lend/$lend_id");
 
@@ -111,7 +114,7 @@ class Commands extends Controller
                     } catch (\Exception $e) {
                         return response()->json([
                             'status' => 'error',
-                            'message' => $e->getMessage(),
+                            'message' => Generator::getMessageTemplate("unknown_error", null),
                         ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
 
@@ -122,15 +125,19 @@ class Commands extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'qr generated',
-                        'data' => $qr_image
+                        'message' => 'lend created, inventory can now seen by others',
+                        'data' => [
+                            'qr_code' => $qr_image,
+                            'qr_period' => $qrPeriodHours,
+                            'lend_expired_datetime' => $lend_expired_datetime
+                        ]
                     ], Response::HTTP_CREATED);
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
