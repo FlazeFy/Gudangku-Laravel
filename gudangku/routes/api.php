@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\DictionaryApi\Queries as QueriesDictionaryControlle
 use App\Http\Controllers\Api\DictionaryApi\Commands as CommandsDictionaryController;
 use App\Http\Controllers\Api\ErrorApi\Queries as QueriesErrorController;
 use App\Http\Controllers\Api\LendApi\Commands as CommandsLendController;
+use App\Http\Controllers\Api\LendApi\Queries as QueriesLendController;
 
 ######################### Public Route #########################
 
@@ -95,6 +96,7 @@ Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/lend')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/qr', [CommandsLendController::class, 'post_lend_qr']);
+    Route::get('/qr', [QueriesLendController::class, 'get_lend_active']);
 });
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {

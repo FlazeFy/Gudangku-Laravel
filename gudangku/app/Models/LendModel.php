@@ -49,6 +49,13 @@ class LendModel extends Model
         ]);
     }
 
+    public static function getLendActive($user_id){
+        return LendModel::select('id','lend_qr_url','qr_period','lend_desc')
+            ->where('created_by',$user_id)
+            ->where('is_finished',0)
+            ->first();
+    }
+
     public static function getLendByUserId($user_id){
         return LendModel::where('created_by',$user_id)
             ->where('is_finished',0)

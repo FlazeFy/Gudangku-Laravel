@@ -3653,6 +3653,124 @@
             }
         },
         "/api/v1/lend": {
+            "get": {
+                "tags": [
+                    "Lend"
+                ],
+                "summary": "Get active qr code",
+                "description": "This request is used to get active qr code. This request is using MySQL database, and has protected routes.",
+                "operationId": "1ed41c6155c56331d03bf3fdd4e1b597",
+                "responses": {
+                    "200": {
+                        "description": "lend qr code fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend qr code fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "d8b5d4cc-805d-3303-3966-dc767c062d27"
+                                                },
+                                                "lend_qr_url": {
+                                                    "type": "string",
+                                                    "format": "url",
+                                                    "example": "https://storage.googleapis.com/download/storage/v1/b/gudangku-94edc.appspot.com/o/lend%2F..."
+                                                },
+                                                "qr_period": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "lend_desc": {
+                                                    "type": "string",
+                                                    "example": "lorem ipsum"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "lend qr code failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend qr code not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "Lend"
