@@ -89,6 +89,14 @@ class Validation
         }
     }
 
+    public static function getValidateLend($request,$type){
+        if($type == 'create_qr'){
+            return Validator::make($request->all(), [
+                'qr_period' => 'required|numeric|min:1|max:24',
+            ]);
+        } 
+    }
+
     public static function getValidateReportItem($request,$type){
         if($type == 'create'){
             return Validator::make($request->all(), [

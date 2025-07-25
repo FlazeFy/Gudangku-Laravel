@@ -28,6 +28,12 @@
                     @include('profile.telegram')
                 </div>
             </div>
+            <div class="col-lg-12 col-sm-12 d-flex">
+                <div class="container-form" id="telegram-section">
+                    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Lend Your Inventory</h1>
+                    @include('profile.qr_lend')
+                </div>
+            </div>
         </div>
     </div>
 @endsection

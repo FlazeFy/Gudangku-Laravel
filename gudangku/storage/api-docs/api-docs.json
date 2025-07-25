@@ -3652,6 +3652,122 @@
                 ]
             }
         },
+        "/api/v1/lend": {
+            "post": {
+                "tags": [
+                    "Lend"
+                ],
+                "summary": "Create lend QR",
+                "operationId": "9bf37bf370c9fdb0889e8d1fe0d44ef8",
+                "responses": {
+                    "201": {
+                        "description": "lend created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend created, inventory can now seen by others"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Data is already exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend is already exist"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "{validation_msg}",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "{field validation message}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/reminder": {
             "post": {
                 "tags": [
@@ -9146,7 +9262,6 @@
                 "required": [
                     "id",
                     "access_token",
-                    "refresh_token",
                     "expiry",
                     "created_at",
                     "created_by"
@@ -9158,10 +9273,6 @@
                     },
                     "access_token": {
                         "description": "Access token of Google Sign In",
-                        "type": "string"
-                    },
-                    "refresh_token": {
-                        "description": "Refresh token of Google Sign In",
                         "type": "string"
                     },
                     "expiry": {
@@ -9364,6 +9475,57 @@
                         "description": "Timestamp when the inventory was deleted",
                         "type": "string",
                         "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Lend": {
+                "required": [
+                    "id",
+                    "lend_qr_url",
+                    "qr_period",
+                    "lend_desc",
+                    "lend_status",
+                    "created_at",
+                    "created_by",
+                    "is_finished"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary key for the lend",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "lend_qr_url": {
+                        "description": "QR Code uploaded file url",
+                        "type": "string"
+                    },
+                    "qr_period": {
+                        "description": "Period of qr to expired (in hour)",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "lend_desc": {
+                        "description": "Description of the lending",
+                        "type": "string"
+                    },
+                    "lend_status": {
+                        "description": "Status of the lend",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the lend was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the lend",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "is_finished": {
+                        "description": "Finished status of lending",
+                        "type": "boolean"
                     }
                 },
                 "type": "object"
@@ -9746,6 +9908,10 @@
         {
             "name": "Inventory",
             "description": "Inventory"
+        },
+        {
+            "name": "Lend",
+            "description": "Lend"
         },
         {
             "name": "Reminder",

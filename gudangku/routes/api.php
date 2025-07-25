@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\ReminderApi\Queries as QueriesReminderController;
 use App\Http\Controllers\Api\DictionaryApi\Queries as QueriesDictionaryController;
 use App\Http\Controllers\Api\DictionaryApi\Commands as CommandsDictionaryController;
 use App\Http\Controllers\Api\ErrorApi\Queries as QueriesErrorController;
+use App\Http\Controllers\Api\LendApi\Commands as CommandsLendController;
 
 ######################### Public Route #########################
 
@@ -90,6 +91,10 @@ Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/report', [CommandsReportController::class, 'post_analyze_report']);
     Route::post('/bill', [CommandsReportController::class, 'post_analyze_bill']);
     Route::post('/report/new', [CommandsReportController::class, 'post_create_analyzed_report']);
+});
+
+Route::prefix('/v1/lend')->middleware(['auth:sanctum'])->group(function () {
+    Route::post('/qr', [CommandsLendController::class, 'post_lend_qr']);
 });
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
