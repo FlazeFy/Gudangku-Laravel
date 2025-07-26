@@ -3691,12 +3691,46 @@
                                                     "type": "integer",
                                                     "example": 2
                                                 },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-03-19 02:37:58"
+                                                },
                                                 "lend_desc": {
                                                     "type": "string",
                                                     "example": "lorem ipsum"
+                                                },
+                                                "lend_expired_datetime": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-03-19 04:37:58"
+                                                },
+                                                "is_expired": {
+                                                    "type": "boolean",
+                                                    "example": false
                                                 }
                                             },
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "qr is code is exist but expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend qr code is expired"
                                         }
                                     },
                                     "type": "object"
@@ -3851,6 +3885,163 @@
                                         "message": {
                                             "type": "string",
                                             "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/lend/history": {
+            "get": {
+                "tags": [
+                    "Lend"
+                ],
+                "summary": "Get history qr code",
+                "description": "This request is used to get history of qr code. This request is using MySQL database, and has protected routes.",
+                "operationId": "f12bc945a874c0f200a9311a5a872951",
+                "responses": {
+                    "200": {
+                        "description": "lend qr code fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend qr code fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "format": "uuid",
+                                                                "example": "d8b5d4cc-805d-3303-3966-dc767c062d27"
+                                                            },
+                                                            "lend_qr_url": {
+                                                                "type": "string",
+                                                                "format": "url",
+                                                                "example": "https://storage.googleapis.com/download/storage/v1/b/gudangku-94edc.appspot.com/o/lend%2F..."
+                                                            },
+                                                            "qr_period": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-03-19 02:37:58"
+                                                            },
+                                                            "lend_desc": {
+                                                                "type": "string",
+                                                                "example": "lorem ipsum"
+                                                            },
+                                                            "lend_status": {
+                                                                "type": "string",
+                                                                "example": "expired"
+                                                            },
+                                                            "is_finished": {
+                                                                "type": "integer",
+                                                                "example": 0
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "lend qr code failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend qr code not found"
                                         }
                                     },
                                     "type": "object"

@@ -97,6 +97,7 @@ Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/lend')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/qr', [CommandsLendController::class, 'post_lend_qr']);
     Route::get('/qr', [QueriesLendController::class, 'get_lend_active']);
+    Route::get('/qr/history', [QueriesLendController::class, 'get_lend_history']);
 });
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {

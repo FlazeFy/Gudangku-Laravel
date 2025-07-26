@@ -88,16 +88,24 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                $check_lend = LendModel::getLendByUserId($user_id);
+                $check_lend = LendModel::getLendActive($user_id);
+                $is_expired = true;
 
-                if($check_lend){
+                if ($check_lend) {
+                    $lend_expired_datetime = Carbon::parse($check_lend->created_at)->addHours($check_lend->qr_period);
+                    $is_expired = Carbon::now()->greaterThan($lend_expired_datetime);
+                }
+
+                // If active QR exists and not expired, block creation
+                if ($check_lend && !$is_expired) {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("conflict", "qr code"),
+                        'message' => 'qr code is already exist',
                     ], Response::HTTP_CONFLICT);
                 } else {
+                    // Create a new lend
                     $qrPeriodHours = $request->qr_period;
-                    $lend = LendModel::createLend(null,$qrPeriodHours,null,'open',$user_id);
+                    $lend = LendModel::createLend(null, $qrPeriodHours, null, 'open', $user_id);
                     $lend_expired_datetime = Carbon::parse($lend->created_at)->addHours($qrPeriodHours);
                     $lend_id = $lend->id;
                     $qr_path = QRGenerate::generateQR("https://gudangku.leonardhors.com/lend/$lend_id");
@@ -105,11 +113,9 @@ class Commands extends Controller
                     $file = new File($qr_path);
                     $file_ext = pathinfo($qr_path, PATHINFO_EXTENSION);
 
-                    // Helper: Upload qr image
                     try {
                         $user = UserModel::find($user_id);
-                        $qr_image = Firebase::uploadFile('lend', $user_id, $user->username, $file, $file_ext); 
-
+                        $qr_image = Firebase::uploadFile('lend', $user_id, $user->username, $file, $file_ext);
                         unlink($qr_path);
                     } catch (\Exception $e) {
                         return response()->json([
@@ -118,10 +124,15 @@ class Commands extends Controller
                         ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
 
-                    $data = [
-                        'lend_qr_url' => $qr_image
-                    ];
-                    LendModel::updateLendByUserId($data,$user_id);
+                    // Mark the old lend as expired
+                    if ($check_lend && $is_expired) {
+                        $data = ['lend_status' => 'expired'];
+                        LendModel::updateLendByUserId($data, $user_id, $check_lend->id);
+                    }
+
+                    // Save new QR image
+                    $data = ['lend_qr_url' => $qr_image];
+                    LendModel::updateLendByUserId($data, $user_id, $lend_id);
 
                     return response()->json([
                         'status' => 'success',
