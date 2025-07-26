@@ -50,7 +50,7 @@ class LendModel extends Model
     }
 
     public static function getLendActive($user_id){
-        return LendModel::select('id','lend_qr_url','qr_period','lend_desc')
+        return LendModel::select('id','lend_qr_url','qr_period','lend_desc','created_at')
             ->where('created_by',$user_id)
             ->where('is_finished',0)
             ->first();

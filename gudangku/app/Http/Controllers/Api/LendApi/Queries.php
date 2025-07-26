@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\LendApi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Carbon\Carbon;
 
 // Helpers
 use App\Helpers\Generator;
@@ -67,6 +68,8 @@ class Queries extends Controller
 
             $res = LendModel::getLendActive($user_id);
             if($res) {    
+                $res->lend_expired_datetime = Carbon::parse($res->created_at)->addHours($res->qr_period);
+
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", "lend qr code"),
