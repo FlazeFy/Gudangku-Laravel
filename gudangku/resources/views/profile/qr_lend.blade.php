@@ -3,7 +3,8 @@
         <div id="qr-lend-holder"></div>
     </div>
     <div class="col">
-        
+        <h5 class="fw-bold my-3" style="font-size:var(--textLG);">QR Code History</h5>
+        <div id="qr-code-history"></div>
     </div>
 </div>
 
@@ -86,4 +87,54 @@
             }
         });
     }
+
+    const get_qr_history = () => {
+        Swal.showLoading()
+        $.ajax({
+            url: `/api/v1/lend/qr/history`,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+            },
+            success: function(response) {
+                Swal.close()
+                const data = response.data.data
+                const current_page = response.data.current_page
+                const total_page = response.data.last_page
+                const total_item = response.data.total
+                
+                $('#qr-code-history').empty()
+                data.forEach(el => {
+                    $('#qr-code-history').append(`
+                        <button class="report-box mt-1" onclick="window.location.href='/lend/detail/${el.id}'">
+                            <div class="d-flex justify-content-between mb-2">
+                                <div>
+                                    <h2 style="font-weight:500; font-size:var(--textJumbo);">${ucFirst(el.lend_status)}</h2>
+                                </div>
+                                <div>
+                                    <span class="bg-success text-white rounded-pill px-3 py-2 report-category">For ${el.qr_period} hours</span>
+                                </div>
+                            </div>
+                            <p>${el.lend_desc ?? '<span class="fst-italic">- No Description Provided -</span>'}</p>
+                            <h6 class='date-text mt-2'>Created At : ${getDateToContext(el.created_at,'calendar')}</h6>
+                        </button>
+                    `)
+                });
+
+                generate_pagination(item_holder, get_qr_history, total_page, current_page)
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                if (response.status === 404) {
+                    const json = JSON.parse(response.responseText);
+                    const message = json.message
+                    $('#qr-lend-holder').html(`<span class="fst-italic">- ${message} -</span>`);
+                } else {
+                    generate_api_error(response, true)
+                }
+            }
+        });
+    }
+    get_qr_history()
 </script>
