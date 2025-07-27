@@ -293,6 +293,8 @@
 
                 zoomableModal()
                 generate_pagination(item_holder, get_inventory, total_page, current_page,sorting)
+
+                get_lend_item(response.lend_data)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()

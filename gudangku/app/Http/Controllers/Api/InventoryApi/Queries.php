@@ -18,6 +18,7 @@ use App\Models\InventoryLayoutModel;
 use App\Models\ReminderModel;
 use App\Models\ReportModel;
 use App\Models\AdminModel;
+use App\Models\LendInventoryRelModel;
 
 class Queries extends Controller
 {
@@ -34,6 +35,12 @@ class Queries extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="inventory fetched"),
+     *             @OA\Property(property="lend_data", type="array",
+     *                  @OA\Items(
+     *                      @OA\Property(property="inventory_category", type="string", example="Food & Beverages"),
+     *                      @OA\Property(property="list_inventory", type="string", example="Nike Air Force 1 High By You"),
+     *                  )
+     *             ),
      *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="data", type="array",
      *                     @OA\Items(
@@ -174,10 +181,14 @@ class Queries extends Controller
                 );
                 $res_final = $paginator->appends(request()->except('page'));
 
+                // Get Lend Item
+                $res_lend = LendInventoryRelModel::getAllLendActiveInventory($user_id);
+
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'inventory'),
-                    'data' => $res_final
+                    'data' => $res_final,
+                    'lend_data' => $res_lend
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -188,7 +199,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

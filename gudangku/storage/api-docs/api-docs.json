@@ -1545,6 +1545,22 @@
                                             "type": "string",
                                             "example": "inventory fetched"
                                         },
+                                        "lend_data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "inventory_category": {
+                                                        "type": "string",
+                                                        "example": "Food & Beverages"
+                                                    },
+                                                    "list_inventory": {
+                                                        "type": "string",
+                                                        "example": "Nike Air Force 1 High By You"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
                                         "data": {
                                             "properties": {
                                                 "data": {
@@ -4286,6 +4302,10 @@
                                                             "is_finished": {
                                                                 "type": "integer",
                                                                 "example": 0
+                                                            },
+                                                            "list_inventory": {
+                                                                "type": "string",
+                                                                "example": "Herborist Aloe Vera Gel (Skin & Body Care), Palmolive Shower Gel Absoule Relax (Food And Beverages)"
                                                             }
                                                         },
                                                         "type": "object"

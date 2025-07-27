@@ -131,6 +131,7 @@ class Queries extends Controller
      *                         @OA\Property(property="lend_desc", type="string", example="lorem ipsum"),
      *                         @OA\Property(property="lend_status", type="string", example="expired"),
      *                         @OA\Property(property="is_finished", type="integer", example=0),
+     *                         @OA\Property(property="list_inventory", type="string", example="Herborist Aloe Vera Gel (Skin & Body Care), Palmolive Shower Gel Absoule Relax (Food And Beverages)"),
      *                     )
      *                 ),
      *                 @OA\Property(property="current_page", type="integer", example=1),

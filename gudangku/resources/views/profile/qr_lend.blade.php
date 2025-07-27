@@ -1,8 +1,8 @@
 <div class="row">
-    <div class="col">
+    <div class="col-lg-6 col-md-12">
         <div id="qr-lend-holder"></div>
     </div>
-    <div class="col">
+    <div class="col-lg-6 col-md-12">
         <h5 class="fw-bold my-3" style="font-size:var(--textLG);">QR Code History</h5>
         <div id="qr-code-history"></div>
     </div>
@@ -119,6 +119,7 @@
                             </div>
                             <p>${el.lend_desc ?? '<span class="fst-italic">- No Description Provided -</span>'}</p>
                             <h6 class='date-text mt-2'>Created At : ${getDateToContext(el.created_at,'calendar')}</h6>
+                            ${ el.lend_status == 'used' ? `<hr class="mb-2"><b>Borrowed Item</b><p>${el.list_inventory}</p>` : ""}
                         </button>
                     `)
                 });

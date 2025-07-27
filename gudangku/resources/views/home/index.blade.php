@@ -45,6 +45,7 @@
         </form>
         @php($selected = session()->get('toogle_view_inventory'))
         @include('home.filter')
+        @include('home.lend_inventory')
         @if($selected == 'table')
             @include('home.table')
         @elseif($selected == 'catalog')

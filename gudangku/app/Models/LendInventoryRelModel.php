@@ -42,4 +42,15 @@ class LendInventoryRelModel extends Model
             'created_at' => date('Y-m-d H:i:s'), 
         ]);
     }
+
+    public static function getAllLendActiveInventory($user_id){
+        return LendInventoryRelModel::selectRaw("inventory_category,GROUP_CONCAT(CONCAT(inventory_name, ' (', inventory_category, ')') SEPARATOR ', ') as list_inventory")
+            ->join('inventory','inventory.id','=','lend_inventory_rel.inventory_id')
+            ->join('lend','lend.id','=','lend_inventory_rel.lend_id')
+            ->where('inventory.created_by',$user_id)
+            ->where('lend_status','used')
+            ->where('is_finished',0)
+            ->groupby('inventory_category')
+            ->get();
+    }
 }
