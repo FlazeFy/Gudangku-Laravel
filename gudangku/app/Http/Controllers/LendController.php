@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 class LendController extends Controller
 {
-    public function index($id)
+    public function index($lend_id)
     {
-        return view('lend.index');
+        return view('lend.index')->with('lend_id',$lend_id);
     }
 }

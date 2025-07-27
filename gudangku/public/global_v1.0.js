@@ -141,6 +141,14 @@ const generate_api_error = (response, is_list_format) => {
     }
 }
 
+const generate_last_page_error = () => {
+    Swal.fire({
+        title: "Oops!",
+        text: "You are at the last page",
+        icon: "warning"
+    });
+}
+
 const get_dct_by_type = (type) => {
     return new Promise((resolve, reject) => {
         Swal.showLoading();

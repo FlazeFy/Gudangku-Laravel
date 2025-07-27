@@ -16,7 +16,7 @@ button:hover, .btn:hover {
     border-radius: var(--roundedLG);
     color: var(--whiteColor);
     margin-right: var(--spaceLG) !important;
-    border: calc(var(--spaceMini) / 2) solid var(--primaryColor) !important;
+    border: calc(var(--spaceMini) / 2) solid var(--primaryColor);
     width: 100%;
 }
 .btn-feature:not(.fixed):hover {
