@@ -64,6 +64,12 @@ class LendModel extends Model
             ->first();
     }
 
+    public static function getLendOwnerById($lend_id){
+        return LendModel::select('users.id','username')
+            ->join('users','users.id','=','lend.created_by')
+            ->first();
+    }
+
     public static function updateLendByUserId($data,$user_id,$id){
         return LendModel::where('created_by',$user_id)
             ->where('id',$id)

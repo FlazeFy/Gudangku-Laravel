@@ -205,6 +205,10 @@ class Queries extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="lend inventory fetched"),
+     *             @OA\Property(property="owner", type="object",
+     *                 @OA\Property(property="id", type="string", format="uuid", example="d8b5d4cc-805d-3303-3966-dc767c062d27"),
+     *                 @OA\Property(property="username", type="string", format="url", example="flazefy"),
+     *             ),
      *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="data", type="array",
      *                     @OA\Items(
@@ -263,10 +267,13 @@ class Queries extends Controller
 
             $res = LendModel::getAllLendInventory($lend_id,$perPage);
             if(count($res) > 0) { 
+                $user = LendModel::getLendOwnerById($lend_id);
+
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", "lend inventory"),
-                    'data' => $res
+                    'data' => $res,
+                    'owner' => $user
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

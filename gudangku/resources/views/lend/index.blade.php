@@ -14,11 +14,29 @@
     <script>
         let token = '<?= session()->get("token_key"); ?>'
         let lend_id = '<?= $lend_id ?>'
+        const SELECTED_STORAGE_KEY = `selected_lend_items_${lend_id}`
+
+        const save_selected_items = (items) => {
+            localStorage.setItem(SELECTED_STORAGE_KEY, JSON.stringify(items))
+        }
+
+        const get_selected_items = () => {
+            const raw = localStorage.getItem(SELECTED_STORAGE_KEY)
+            return raw ? JSON.parse(raw) : []
+        }
+
+        const get_cart_button = () => {
+            $(document).ready(function () {
+                const selected = get_selected_items()
+                $('#total-item-selected').text(selected.length)
+            })
+        }
     </script>
     <div class="content">
-        <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">@if($role == 0) <span>...</span> @endif Inventory</h2>
+        <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">@if($role == 0) <span class="inventory-owner"></span> @endif Inventory</h2>
         <a class="btn btn-danger mb-3 me-2" href="/profile"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
         <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-home" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Home Page @endif</a>
+        @include('lend.selected_inventory')
         @include('lend.inventory')
     </div>
 @endsection

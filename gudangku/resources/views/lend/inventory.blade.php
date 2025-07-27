@@ -2,27 +2,17 @@
 <div id="inventory-holder-navigation"></div>
 
 <script>
-    const SELECTED_STORAGE_KEY = `selected_lend_items_${lend_id}`
-
-    const get_selected_items = () => {
-        return JSON.parse(localStorage.getItem(SELECTED_STORAGE_KEY)) || []
-    }
-
-    const save_selected_items = (items) => {
-        localStorage.setItem(SELECTED_STORAGE_KEY, JSON.stringify(items))
-    }
-
-    const toggle_select_item = (itemId, buttonEl) => {
+    const toggle_select_item = (inventory, buttonEl) => {
         $(document).ready(function () {
             let selected = get_selected_items()
-            const isSelected = selected.includes(itemId)
+            const isSelected = selected.some(item => item.id === inventory.id)
 
             if (isSelected) {
-                selected = selected.filter(id => id !== itemId)
+                selected = selected.filter(item => item.id !== inventory.id)
                 buttonEl.style.borderColor = 'var(--primaryColor)'
             } else {
-                selected.push(itemId);
-                buttonEl.style.borderColor = 'var(--successBG)' 
+                selected.push(inventory)
+                buttonEl.style.borderColor = 'var(--successBG)'
             }
 
             save_selected_items(selected)
@@ -44,19 +34,32 @@
                 const data = response.data.data
                 const current_page = response.data.current_page
                 const total_page = response.data.last_page
+                const owner = response.owner
+
+                $('.inventory-owner').text(`@${owner.username}'s`)
 
                 const selectedItems = get_selected_items()
                 data.forEach(el => {
                     const isSelected = selectedItems.includes(el.id)
                     const buttonStyle = isSelected ? "border-color: var(--successBG) !important;" : ""
+                    const inventory = {
+                        id : el.id,
+                        inventory_name : el.inventory_name,
+                        inventory_category : el.inventory_category,
+                        inventory_room : el.inventory_room,
+                    }
 
                     $('#inventory-holder').append(`
                         <div class='col-xl-3 col-lg-4 col-md-6 col-sm-12'>
-                            <button class="btn-feature mb-4 position-relative inventory-item" style="${buttonStyle}" data-id="${el.id}">
+                            <button class="btn-feature mb-4 position-relative inventory-item" style="${buttonStyle}" data-inventory="${encodeURIComponent(JSON.stringify(inventory))}">
                                 ${el.inventory_image ? `<img class="img img-fluid" style="border-radius: var(--roundedMD);" src="${el.inventory_image}" title="${el.inventory_image}">` : `<i class="fa-solid fa-box" style="font-size:90px;"></i>`}
                                 <h2 class="mt-3" style="font-size:var(--textXLG);">${el.inventory_name}</h2>
                                 <div class="mt-3 d-flex justify-content-center props-box">
+                                    <span style="background: var(--successBG);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_category}</span>
                                     <span style="background: var(--primaryColor);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_vol} ${el.inventory_unit}</span>
+                                </div>
+                                <div class="mt-2 d-flex justify-content-center props-box">
+                                    <span style="background: var(--warningBG);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_room}${el.inventory_storage ? ` - ${el.inventory_storage}`:''}</span>
                                 </div>
                                 <h6 class='date-text mt-2'>Created At : ${getDateToContext(el.created_at, 'calendar')}</h6>
                             </button>
@@ -86,10 +89,12 @@
 
     $('#inventory-holder').empty()
     get_lend_inventory(lend_id,page)
+    get_cart_button()
 
-    $(document).on('click','.inventory-item', function() {
-        const id = $(this).data('id')
-        toggle_select_item(id, this)
+    $(document).on('click', '.inventory-item', function () {
+        const inventory = JSON.parse(decodeURIComponent($(this).attr('data-inventory')))
+        toggle_select_item(inventory, this)
+        get_cart_button()
     })
     $(document).on('click','#see-more-button', function() {
         page++
