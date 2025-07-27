@@ -23,6 +23,7 @@ use App\Http\Controllers\HelpController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\ReminderController;
+use App\Http\Controllers\LendController;
 
 ######################### Public Route #########################
 
@@ -95,6 +96,10 @@ Route::prefix('/reminder')->middleware(['auth_v2:sanctum'])->group(function () {
 
 Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [CalendarController::class, 'index']);
+});
+
+Route::prefix('/lend')->middleware(['auth_v2:sanctum'])->group(function () {
+    Route::get('/{id}', [LendController::class, 'index']);
 });
 
 Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {

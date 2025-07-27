@@ -78,6 +78,7 @@
                     if (result.isConfirmed) {
                         Swal.close()
                         get_my_qr()
+                        get_qr_history()
                     }
                 });
             },
@@ -129,7 +130,7 @@
                 if (response.status === 404) {
                     const json = JSON.parse(response.responseText);
                     const message = json.message
-                    $('#qr-lend-holder').html(`<span class="fst-italic">- ${message} -</span>`);
+                    $('#qr-code-history').html(`<span class="fst-italic text-white">- ${ucFirst(message)} -</span>`);
                 } else {
                     generate_api_error(response, true)
                 }

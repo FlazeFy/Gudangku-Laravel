@@ -100,6 +100,10 @@ Route::prefix('/v1/lend')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/qr/history', [QueriesLendController::class, 'get_lend_history']);
 });
 
+Route::prefix('/v1/lend')->group(function () {
+    Route::get('/inventory/{lend_id}', [QueriesLendController::class, 'get_lend_inventory']);
+});
+
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesHistoryController::class, 'get_all_history']);
     Route::delete('/destroy/{id}', [CommandsHistoryController::class, 'hard_delete_history_by_id']);

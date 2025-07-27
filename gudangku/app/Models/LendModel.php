@@ -69,4 +69,15 @@ class LendModel extends Model
             ->where('id',$id)
             ->update($data);
     }
+
+    public static function getAllLendInventory($lend_id,$paginate){
+        return LendModel::select('inventory.id','inventory_name','inventory_category','inventory_desc','inventory_merk','inventory_room','inventory_storage','inventory_rack','inventory_image',
+            'inventory_unit','inventory_vol','inventory_color','inventory.created_at')
+            ->join('inventory','inventory.created_by','=','lend.created_by')
+            ->where('lend.id',$lend_id)
+            ->where('lend.lend_status','open')
+            ->orderby('inventory.updated_at','desc')
+            ->orderby('inventory.created_at','desc')
+            ->paginate($paginate);
+    }
 }
