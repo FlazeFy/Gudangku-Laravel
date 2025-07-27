@@ -94,6 +94,10 @@ class Validation
             return Validator::make($request->all(), [
                 'qr_period' => 'required|numeric|min:1|max:24',
             ]);
+        } else if($type == 'create_borrow'){
+            return Validator::make($request->all(), [
+                'borrower_name' => 'required|string|min:1|max:36',
+            ]);
         } 
     }
 

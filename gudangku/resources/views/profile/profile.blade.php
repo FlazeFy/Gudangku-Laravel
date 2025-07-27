@@ -88,13 +88,13 @@
 
     const update_profile = () => {
         if($('#username_input').val() != "" && $('#email_input').val() != "") {
-            Swal.showLoading()
             $.ajax({
                 url: '/api/v1/user/update_profile',
                 type: 'PUT',
                 data: $('#profile-form').serialize(),
                 dataType: 'json',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json");
                     xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");    
                 },

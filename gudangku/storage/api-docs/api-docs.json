@@ -3920,6 +3920,313 @@
                 ]
             }
         },
+        "/api/v1/lend/inventory/{lend_id}": {
+            "get": {
+                "tags": [
+                    "Lend"
+                ],
+                "summary": "Get lend inventory",
+                "description": "This request is used to get lend inventory by lend id (QR Code). This request is using MySQL database, and has protected routes.",
+                "operationId": "be3b68c7289d41e6fa46a4385c33d4f7",
+                "responses": {
+                    "200": {
+                        "description": "lend inventory fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend inventory fetched"
+                                        },
+                                        "owner": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "d8b5d4cc-805d-3303-3966-dc767c062d27"
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "format": "url",
+                                                    "example": "flazefy"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                            },
+                                                            "inventory_name": {
+                                                                "type": "string",
+                                                                "example": "Nike Air Force 1 High By You"
+                                                            },
+                                                            "inventory_category": {
+                                                                "type": "string",
+                                                                "example": "Fashion"
+                                                            },
+                                                            "inventory_desc": {
+                                                                "type": "string",
+                                                                "example": "Sepatu High"
+                                                            },
+                                                            "inventory_merk": {
+                                                                "type": "string",
+                                                                "example": "Nike"
+                                                            },
+                                                            "inventory_room": {
+                                                                "type": "string",
+                                                                "example": "Main Room"
+                                                            },
+                                                            "inventory_storage": {
+                                                                "type": "string",
+                                                                "example": "Wardrobe"
+                                                            },
+                                                            "inventory_rack": {
+                                                                "type": "string",
+                                                                "example": "Shoes & Sandals - Bottom"
+                                                            },
+                                                            "inventory_image": {
+                                                                "type": "string",
+                                                                "example": "https://example.com/inventory/image.jpg"
+                                                            },
+                                                            "inventory_unit": {
+                                                                "type": "string",
+                                                                "example": "Pcs"
+                                                            },
+                                                            "inventory_vol": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "inventory_color": {
+                                                                "type": "string",
+                                                                "example": "Black"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-03-19 02:37:58"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "lend inventory failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend inventory not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Lend"
+                ],
+                "summary": "Create request borrow",
+                "operationId": "5c1edd5ad056072b8a66098e2f405b24",
+                "responses": {
+                    "201": {
+                        "description": "borrow created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "borrow has sended, we also give you the evidence"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "{validation_msg}",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "{field validation message}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "lend is expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "is_expired": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lend already expired, inform the owner to create a new lend"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/lend/history": {
             "get": {
                 "tags": [
@@ -9782,6 +10089,41 @@
                     },
                     "deleted_at": {
                         "description": "Timestamp when the inventory was deleted",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Lend Inventory Relation": {
+                "required": [
+                    "id",
+                    "lend_id",
+                    "inventory_id",
+                    "borrower_name",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary key for the lend",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "lend_id": {
+                        "description": "ID of the lend",
+                        "type": "string"
+                    },
+                    "inventory_id": {
+                        "description": "Id of the inventory",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "borrower_name": {
+                        "description": "Name / username of the borrower",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the lend inventory relation was created",
                         "type": "string",
                         "format": "date-time"
                     }

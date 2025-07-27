@@ -1,6 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Api\LendApi;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use Dompdf\Canvas\Factory as CanvasFactory;
+use Dompdf\Options as DompdfOptions;
+use Dompdf\Adapter\CPDF;
 use Kreait\Firebase\Factory;
 use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Messaging\CloudMessage;
@@ -17,6 +22,8 @@ use Carbon\Carbon;
 // Models
 use App\Models\UserModel;
 use App\Models\LendModel;
+use App\Models\InventoryModel;
+use App\Models\LendInventoryRelModel;
 
 // Helpers
 use App\Helpers\Audit;
@@ -103,6 +110,8 @@ class Commands extends Controller
                         'message' => 'qr code is already exist',
                     ], Response::HTTP_CONFLICT);
                 } else {
+                    $message = 'lend created, inventory can now seen by others';
+
                     // Create a new lend
                     $qrPeriodHours = $request->qr_period;
                     $lend = LendModel::createLend(null, $qrPeriodHours, null, 'open', $user_id);
@@ -116,6 +125,17 @@ class Commands extends Controller
                     try {
                         $user = UserModel::find($user_id);
                         $qr_image = Firebase::uploadFile('lend', $user_id, $user->username, $file, $file_ext);
+
+                        $user = UserModel::getSocial($user_id);
+                        if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                            $response = Telegram::sendPhoto([
+                                'chat_id' => $user->telegram_user_id,
+                                'photo' => fopen($file, 'rb'),
+                                'caption' => $message,
+                                'parse_mode' => 'HTML'
+                            ]);
+                        }
+                        
                         unlink($qr_path);
                     } catch (\Exception $e) {
                         return response()->json([
@@ -134,9 +154,12 @@ class Commands extends Controller
                     $data = ['lend_qr_url' => $qr_image];
                     LendModel::updateLendByUserId($data, $user_id, $lend_id);
 
+                    // History
+                    Audit::createHistory('Create', 'QR Generate', $user_id);
+
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'lend created, inventory can now seen by others',
+                        'message' => $message,
                         'data' => [
                             'qr_code' => $qr_image,
                             'qr_period' => $qrPeriodHours,
@@ -149,6 +172,206 @@ class Commands extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\POST(
+     *     path="/api/v1/lend/inventory/{lend_id}",
+     *     summary="Create request borrow",
+     *     tags={"Lend"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=201,
+     *         description="borrow created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="borrow has sended, we also give you the evidence")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="lend is expired",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="is_expired", type="bool", example=true),
+     *             @OA\Property(property="message", type="string", example="lend already expired, inform the owner to create a new lend")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function post_borrow_inventory(Request $request,$lend_id)
+    {
+        try{
+            $validator = Validation::getValidateLend($request,'create_borrow');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'is_expired' => false,
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $check_lend = LendModel::find($lend_id);
+                $lend_expired_datetime = Carbon::parse($check_lend->created_at)->addHours($check_lend->qr_period);
+                $is_expired = Carbon::now()->greaterThan($lend_expired_datetime);
+
+                if($is_expired){
+                    // Update lend status
+                    $data = ['lend_status' => 'expired'];
+                    LendModel::updateLendByUserId($data, null, $lend_id);
+
+                    return response()->json([
+                        'status' => 'failed',
+                        'is_expired' => true,
+                        'message' => 'lend already expired, inform the owner to create a new lend'
+                    ], Response::HTTP_BAD_REQUEST);
+                } else {
+                    $success_add = 0;
+                    $failed_add = 0;
+                    $inventory_id_list = $request->inventory_list;
+                    $borrower_name = $request->borrower_name;
+                    $tbody = "";
+
+                    foreach($inventory_id_list as $id){
+                        // Add borrowed inventory
+                        $res = LendInventoryRelModel::createLendInventoryRel($lend_id,$id,$borrower_name);
+                        if($res){
+                            $inv = InventoryModel::find($id);
+                            $tbody .= "
+                                <tr>
+                                    <td>$inv->inventory_name</td>
+                                    <td>$inv->inventory_category</td>
+                                    <td>$inv->inventory_room</td>
+                                    <td>".$inv->inventory_name ?? "-"."</td>
+                                    <td> </td>
+                                </tr>
+                            ";
+                            $success_add++;
+                        } else {
+                            $failed_add++;
+                        }
+                    }
+
+                    if($success_add > 0){
+                        // Update lend status
+                        $data = ['lend_status' => 'used'];
+                        LendModel::updateLendByUserId($data, null, $lend_id);
+
+                        // Get owner 
+                        $owner = UserModel::getSocial($check_lend->created_by);
+
+                        $options = new DompdfOptions();
+                        $options->set('defaultFont', 'Helvetica');
+                        $dompdf = new Dompdf($options);
+                        $datetime = now();
+                        $header_template = Generator::getDocTemplate('header');
+                        $style_template = Generator::getDocTemplate('style');
+                        $footer_template = Generator::getDocTemplate('footer');
+
+                        $html = "
+                            <html>
+                                <head>
+                                    $style_template
+                                </head>
+                                <body>
+                                    $header_template
+                                    <h3 style='margin:0 0 6px 0;'>Lend ID : $lend_id</h3>
+                                    <p style='margin:0; font-size:14px;'>Owner : $owner->username</p>
+                                    <p style='margin-top:0; font-size:14px;'>Borrower : $borrower_name</p><br>
+                                    <p style='font-size:13px; text-align: justify;'>
+                                        At $datetime, this document has been generated for the new lend that has been requested by $borrower_name and ask about to borrow $success_add item. Here you can see the item in this report:
+                                    </p>                    
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <td>Inventory Name</td>
+                                                <td>Category</td>
+                                                <td>Room</td>
+                                                <td>Storage</td>
+                                                <td style='min-width:60px !important;'>Check</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>$tbody</tbody>
+                                    </table>
+                                    $footer_template
+                                </body>
+                            </html>";
+
+                        $dompdf->loadHtml($html);
+                        $dompdf->setPaper('A4', 'portrait');
+                        $dompdf->render();
+
+                        $pdfContent = $dompdf->output();
+                        $pdfFilePath = public_path("lend inventory-$lend_id-$borrower_name.pdf");
+                        file_put_contents($pdfFilePath, $pdfContent);
+
+                        if($owner && $owner->telegram_is_valid == 1 && $owner->telegram_user_id){
+                            $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+                            
+                            $response = Telegram::sendDocument([
+                                'chat_id' => $owner->telegram_user_id,
+                                'document' => $inputFile,
+                                'caption' => "$borrower_name has been requested you to borrow some item from your inventory",
+                                'parse_mode' => 'HTML'
+                            ]);
+                        }
+
+                        $file = new File($pdfFilePath);
+                        $file_ext = pathinfo($pdfFilePath, PATHINFO_EXTENSION);
+
+                        try {
+                            $url_evidence = Firebase::uploadFile('lend', $owner->id, $owner->username, $file, $file_ext);
+
+                            unlink($pdfFilePath);
+                        } catch (\Exception $e) {
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => Generator::getMessageTemplate("unknown_error", null),
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        }
+
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'borrow has sended, we also give you the evidence',
+                            'data' => $url_evidence
+                        ], Response::HTTP_CREATED);
+                    } else {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => Generator::getMessageTemplate("unknown_error", null),
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }                    
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

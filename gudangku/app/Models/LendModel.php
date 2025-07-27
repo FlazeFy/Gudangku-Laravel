@@ -71,9 +71,13 @@ class LendModel extends Model
     }
 
     public static function updateLendByUserId($data,$user_id,$id){
-        return LendModel::where('created_by',$user_id)
-            ->where('id',$id)
-            ->update($data);
+        $query = LendModel::where('id', $id);
+
+        if (!is_null($user_id)) {
+            $query->where('created_by', $user_id);
+        }
+
+        return $query->update($data);
     }
 
     public static function getAllLendInventory($lend_id,$paginate){

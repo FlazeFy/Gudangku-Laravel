@@ -102,6 +102,7 @@ Route::prefix('/v1/lend')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/lend')->group(function () {
     Route::get('/inventory/{lend_id}', [QueriesLendController::class, 'get_lend_inventory']);
+    Route::post('/inventory/{lend_id}', [CommandsLendController::class, 'post_borrow_inventory']);
 });
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
