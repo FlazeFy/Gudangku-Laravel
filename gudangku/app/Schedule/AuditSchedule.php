@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Schedule;
-
 use Carbon\Carbon;
 use DateTime;
 use Kreait\Firebase\Messaging\CloudMessage;

@@ -1,20 +1,22 @@
 <?php
 
 namespace App\Schedule;
-
 use Carbon\Carbon;
 use DateTime;
 use Telegram\Bot\Laravel\Facades\Telegram;
-use App\Service\FirebaseRealtime;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Kreait\Firebase\Factory;
 
+// Service
+use App\Service\FirebaseRealtime;
+// Helper
 use App\Helpers\LineMessage;
-
+// Model
 use App\Models\HistoryModel;
 use App\Models\InventoryModel;
 use App\Models\AdminModel;
+use App\Models\LendModel;
 use App\Models\ReportModel;
 use App\Models\ReportItemModel;
 
@@ -230,6 +232,50 @@ class CleanSchedule
                 // Audit to firebase realtime
                 $record = [
                     'context' => 'inventory_report_admin',
+                    'context_id' => $dt->id,
+                    'clean_type' => 'destroy',
+                    'telegram_message' => $dt->telegram_user_id,
+                    'line_message' => $dt->line_user_id,
+                    'firebase_fcm_message' => $dt->firebase_fcm_token,
+                ];
+                $firebaseRealtime->insert_command('task_scheduling/clean/' . uniqid(), $record);
+            }
+        }
+    }
+
+    public static function clean_finished_and_expired_lend()
+    {
+        $days = 30;
+        $rows_deleted = LendModel::getLendPlanDestroy($days);
+        
+        if($rows_deleted > 0){
+            $admin = AdminModel::getAllContact();
+
+            // Report to admin
+            foreach($admin as $dt){
+                $message_admin = "[ADMIN] Hello $dt->username, the system just run a clean lend with total $rows_deleted lend deleted";
+
+                if($dt->telegram_user_id){
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $dt->telegram_user_id,
+                        'text' => $message_admin,
+                        'parse_mode' => 'HTML'
+                    ]);
+                }
+                if($dt->line_user_id){
+                    LineMessage::sendMessage('text',$message_admin,$dt->line_user_id);
+                }
+                if($dt->firebase_fcm_token){
+                    $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+                    $messaging = $factory->createMessaging();
+                    $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)
+                        ->withNotification(Notification::create($message_admin, $dt->id));
+                    $response = $messaging->send($message);
+                }
+
+                // Audit to firebase realtime
+                $record = [
+                    'context' => 'lend_admin',
                     'context_id' => $dt->id,
                     'clean_type' => 'destroy',
                     'telegram_message' => $dt->telegram_user_id,

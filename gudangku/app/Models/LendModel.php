@@ -93,4 +93,17 @@ class LendModel extends Model
             ->orderby('inventory.created_at','desc')
             ->paginate($paginate);
     }
+
+    public static function getLendPlanDestroy($days){
+        $expiredLends = LendModel::where(function($query) {
+            $query->where('lend_status', 'expired')
+                  ->orWhere('is_finished', 1);
+            })
+            ->whereDate('created_at', '<', Carbon::now()->subDays($days))
+            ->pluck('id'); 
+
+        DB::table('lend_inventory_rel')->whereIn('lend_id', $expiredLends)->delete();
+
+        return LendModel::whereIn('id', $expiredLends)->delete();
+    }
 }
