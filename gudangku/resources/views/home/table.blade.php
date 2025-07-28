@@ -295,6 +295,13 @@
                 generate_pagination(item_holder, get_inventory, total_page, current_page,sorting)
 
                 get_lend_item(response.lend_data)
+
+                $('#toolbar-button-section').html(`
+                    <form class="d-inline" action="/inventory/save_as_csv" method="POST">
+                        @csrf
+                        <button class="btn btn-primary mb-3 me-2" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Save as CSV @endif</button>
+                    </form>
+                `)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()

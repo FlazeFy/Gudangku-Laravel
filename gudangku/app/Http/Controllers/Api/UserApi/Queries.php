@@ -84,7 +84,7 @@ class Queries extends Controller
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'user'),
                     'data' => $res,
-                    'telegram_data' => $validation_telegram
+                    'telegram_data' => $validation_telegram,
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

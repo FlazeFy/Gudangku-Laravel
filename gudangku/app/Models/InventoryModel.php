@@ -133,6 +133,10 @@ class InventoryModel extends Model
         return $res;
     }
 
+    public static function getInventoryTotal($user_id){
+        return InventoryModel::where('created_by',$user_id)->count();
+    }
+
     public static function getAnalyzeMost($user_id, $col){
         $avgCol = $col === 'inventory_price' ? "CAST(AVG($col) as UNSIGNED) as average_$col, CAST(SUM($col) as UNSIGNED) as sub_total, " : "";
         $maxCol = $col === 'inventory_price' ? "CAST(MAX($col) as UNSIGNED)" : "MAX($col)";

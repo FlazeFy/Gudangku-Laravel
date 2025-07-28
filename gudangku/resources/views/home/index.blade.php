@@ -39,10 +39,7 @@
             <a class="btn btn-primary mb-3 me-2" href="/room/2d"><i class="fa-solid fa-layer-group" style="font-size:var(--textXLG);"></i> @if(!$isMobile) 2D Room @endif</a>
             <a class="btn btn-primary mb-3 me-2" href="/room/3d"><i class="fa-solid fa-cube" style="font-size:var(--textXLG);"></i> @if(!$isMobile) 3D Room @endif</a>
         @endif
-        <form class="d-inline" action="/inventory/save_as_csv" method="POST">
-            @csrf
-            <button class="btn btn-primary mb-3 me-2" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Save as CSV @endif</button>
-        </form>
+        <span id="toolbar-button-section"></span>
         @php($selected = session()->get('toogle_view_inventory'))
         @include('home.filter')
         @include('home.lend_inventory')

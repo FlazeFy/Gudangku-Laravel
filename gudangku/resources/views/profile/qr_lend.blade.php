@@ -31,19 +31,21 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status === 404) {
+                if (response.status === 404 || response.status === 400) {
                     $('#qr-lend-holder').html(`
                         <div class="alert alert-success w-100 mt-4">
-                            <i class="fa-solid fa-circle-info"></i> There's <b>no active</b> QR, and people can't see your inventory
+                            <i class="fa-solid fa-circle-info"></i> ${response.status === 404 ? `There's <b>no active</b> QR, and people can't see your inventory`:`The last QR Code is already <b>expired</b>. Generate a new one?`}
                         </div>
                         <a class="btn btn-success mt-3" onclick="generate_qr()"><i class="fa-solid fa-qrcode"></i> Generate QR Code</a>
                     `)
-                } else if (response.status === 400) {
+                } else if (response.status === 422) {
+                    const json = JSON.parse(response.responseText)
+                    const message = json.message
+
                     $('#qr-lend-holder').html(`
                         <div class="alert alert-danger w-100 mt-4">
-                            <i class="fa-solid fa-circle-info"></i> The last QR Code is already <b>expired</b>. Generate a new one?
+                            <i class="fa-solid fa-circle-info"></i> ${message}
                         </div>
-                        <a class="btn btn-success mt-3" onclick="generate_qr()"><i class="fa-solid fa-qrcode"></i> Generate QR Code</a>
                     `)
                 } else {
                     generate_api_error(response, true)

@@ -8,15 +8,15 @@ use Carbon\Carbon;
 
 // Helpers
 use App\Helpers\Generator;
-
 // Models
 use App\Models\LendModel;
+use App\Models\InventoryModel;
 
 class Queries extends Controller
 {
     /**
      * @OA\GET(
-     *     path="/api/v1/lend",
+     *     path="/api/v1/lend/qr",
      *     summary="Get active qr code",
      *     description="This request is used to get active qr code. This request is using MySQL database, and has protected routes.",
      *     tags={"Lend"},
@@ -63,6 +63,14 @@ class Queries extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=422,
+     *         description="qr is code cant generated due to empty inventory",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you must have at least one inventory to generate QR")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Internal Server Error",
      *         @OA\JsonContent(
@@ -76,6 +84,15 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+
+            // Check If user has inventory
+            $check_inventory = InventoryModel::getInventoryTotal($user_id);
+            if($check_inventory == 0){
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'you must have at least one inventory to generate QR',
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             $res = LendModel::getLendActive($user_id);
             if($res) { 
@@ -265,6 +282,16 @@ class Queries extends Controller
     {
         try{
             $perPage = $request->query('per_page_key') ?? 12;
+
+            $check = LendModel::find($lend_id);
+
+            if($check->lend_status == 'expired' || $check->lend_status == 'used' || $check->is_finished){
+                $extra = $check->lend_status == 'expired' ? 'expired' : 'used';
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => "lend already $extra",
+                ], Response::HTTP_BAD_REQUEST);
+            }
 
             $res = LendModel::getAllLendInventory($lend_id,$perPage);
             if(count($res) > 0) { 

@@ -72,13 +72,14 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 
-                if (response.status === 404) {
+                if (response.status === 404 || response.status === 400) {
                     if(page != 1){
                         generate_last_page_error()
                         return
                     }
                     const json = JSON.parse(response.responseText)
                     const message = json.message
+                    $('#selected-inventory-modal-button').remove()
                     $('#inventory-holder').html(`<span class="fst-italic text-white text-center">- ${ucFirst(message)} -</span>`)
                 } else {
                     generate_api_error(response, true)

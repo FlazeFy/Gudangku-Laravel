@@ -70,8 +70,10 @@
                 if(data.is_google_sign_in){
                     $('#email_input').prop('readonly', true)
                     $('#login_status_box').html(`<div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Your account login using Google Sign In</div>`)
+                    $('#change-pass-button-holder').empty()
                 } else{
                     $('#login_status_box').html(`<div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Your account login using Basic Auth</div>`)
+                    $('#change-pass-button-holder').html(`<a class="btn btn-primary mb-3" href="/forgot"><i class="fa-solid fa-key" style="font-size:var(--textXLG);"></i> Change Password</a>`)
                 } 
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
