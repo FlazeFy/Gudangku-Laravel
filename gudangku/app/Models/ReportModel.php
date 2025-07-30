@@ -94,11 +94,11 @@ class ReportModel extends Model
         return $res->get();
     }   
 
-    public static function getReportDetail($user_id,$id,$type){
+    public static function getReportDetail($user_id = null,$id,$type){
         $res = ReportModel::selectRaw($type == 'data' ? '*' : 'id,report_title, report_desc, report_category, report_image, created_at')
             ->where('id',$id);
 
-        if($type == 'data'){
+        if($type == 'data' && $user_id != null){
             $res = $res->where('created_by',$user_id);
         }
 

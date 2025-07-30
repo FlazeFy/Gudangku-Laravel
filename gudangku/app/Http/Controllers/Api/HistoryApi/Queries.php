@@ -74,7 +74,8 @@ class Queries extends Controller
             $paginate = $request->query('per_page_key') ?? 12;
 
             if($check_admin){
-                $res = HistoryModel::getAllHistory('admin', null, $paginate);
+                $user_id = $request->query('user_id') ?? null;
+                $res = HistoryModel::getAllHistory('admin', $user_id, $paginate);
             } else {
                 $res = HistoryModel::getAllHistory('user', $user_id, $paginate);
             }

@@ -12,10 +12,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Helpers\Document;
 use App\Helpers\Validation;
 use App\Helpers\Generator;
-
 // Models
 use App\Models\ReportModel;
 use App\Models\AdminModel;
+use App\Models\UserModel;
 use App\Models\ReportItemModel;
 
 class Queries extends Controller
@@ -338,6 +338,10 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = null;
+            } 
 
             $res = ReportModel::getReportDetail($user_id,$id,'data');
             $res_item = ReportItemModel::getReportItem($user_id,$id,'data');
@@ -355,6 +359,11 @@ class Queries extends Controller
 
                 $res['total_item'] = $total_item;
                 $res['total_price'] = $total_price; 
+
+                if($check_admin){
+                    $user = UserModel::find($res->created_by);
+                    $res['username'] = $user->username;
+                }
                    
                 return response()->json([
                     'status' => 'success',

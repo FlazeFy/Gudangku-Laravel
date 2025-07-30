@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 
 // Model
 use App\Models\HistoryModel;
-
+use App\Models\AdminModel;
 // Helper
 use App\Helpers\Generator;
 
@@ -65,6 +65,11 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
+
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = null;
+            }
 
             $rows = HistoryModel::hardDeleteHistory($id, $user_id);
             if($rows > 0){

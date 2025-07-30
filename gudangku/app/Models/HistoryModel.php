@@ -38,7 +38,8 @@ class HistoryModel extends Model
         $res = HistoryModel::selectRaw($select_query);
         if($type == "admin"){
             $res = $res->join('users','users.id','=','history.created_by');
-        } else {
+        }
+        if($type == "user" || $user_id) {
             $res = $res->where('created_by',$user_id);
         }    
         $res = $res->orderby('history.created_at', 'DESC')
@@ -57,10 +58,14 @@ class HistoryModel extends Model
         ]);
     }
 
-    public static function hardDeleteHistory($id, $user_id){
-        return HistoryModel::where('id',$id)
-            ->where('created_by',$user_id)
-            ->delete();
+    public static function hardDeleteHistory($id, $user_id = null){
+        $res = HistoryModel::where('id',$id);
+
+        if($user_id){
+            $res = $res->where('created_by',$user_id);
+        }
+            
+        return $res->delete();
     }
 
     public static function deleteHistoryByUserId($user_id){

@@ -791,6 +791,12 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = null;
+            }
+
             $inventory = InventoryModel::getInventoryDetail($id,$user_id);
 
             if (is_array($inventory) ? count($inventory) > 0 : $inventory) {    

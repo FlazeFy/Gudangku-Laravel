@@ -90,17 +90,25 @@ class InventoryModel extends Model
             ->get();
     }
 
-    public static function getInventoryDetail($id,$user_id){
+    public static function getInventoryDetail($id,$user_id = null){
         if (strpos($id, ',') == null) {
-            return InventoryModel::select('id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'updated_at')
-                ->where('created_by',$user_id)
-                ->where('id',$id)
+            $res = InventoryModel::select('id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'updated_at');
+                
+            if($user_id){
+                $res = $res->where('created_by',$user_id);
+            }
+
+            return $res->where('id',$id)
                 ->first();
         } else {
             $ids = explode(',',$id);
-            return InventoryModel::select('id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'updated_at')
-                ->where('created_by',$user_id)
-                ->whereIn('id',$ids)
+            $res = InventoryModel::select('id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'updated_at');
+            
+            if($user_id){
+                $res = $res->where('created_by',$user_id);
+            }
+            
+            return $res->whereIn('id',$ids)
                 ->get();
         }
     }

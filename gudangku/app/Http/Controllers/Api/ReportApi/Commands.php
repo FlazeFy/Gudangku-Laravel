@@ -89,6 +89,11 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $list_id = explode(",", $id);
 
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = null;
+            } 
+
             $rows = ReportItemModel::deleteManyReportItemById($list_id, $user_id);
             if($rows > 0){
                 $extra = "";

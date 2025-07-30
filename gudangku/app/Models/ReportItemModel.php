@@ -35,11 +35,11 @@ class ReportItemModel extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_id', 'report_id', 'item_name', 'item_desc', 'item_qty', 'item_price', 'created_at', 'created_by'];
 
-    public static function getReportItem($user_id,$id,$type,$filter_in = null){
+    public static function getReportItem($user_id = null,$id,$type,$filter_in = null){
         $res = ReportItemModel::selectRaw($type == 'data' ? '*' : 'item_name, item_desc, item_qty, item_price')
             ->where('report_id',$id);
 
-        if($type == 'data'){
+        if($type == 'data' && $user_id != null){
             $res = $res->where('created_by',$user_id);
         }
         if($filter_in){
@@ -78,10 +78,14 @@ class ReportItemModel extends Model
             ->delete();
     } 
 
-    public static function deleteManyReportItemById($list_id, $user_id){
-        return ReportItemModel::whereIn('id', $list_id)
-            ->where('created_by', $user_id)
-            ->delete();
+    public static function deleteManyReportItemById($list_id, $user_id = null){
+        $res = ReportItemModel::whereIn('id', $list_id);
+
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+            
+        return $res->delete();
     }
 
     public static function createReportItem($inventory_id, $report_id, $item_name, $item_desc, $item_qty, $item_price, $user_id) {
