@@ -170,18 +170,19 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
+            $report = ReportModel::find($id);            
+
             $check_admin = AdminModel::find($user_id);
-            $report = ReportModel::select('report_title')->where('id', $id)->first();
-            $rows = ReportModel::where('id', $id);
+            if($check_admin){
+                $user_id = null;
+            } 
 
-            if(!$check_admin){
-                $rows = $rows->where('created_by', $user_id);
-            }
-            $rows = $rows->delete();
-
+            $rows = ReportModel::deleteReportById($user_id,$id);
             if($rows > 0){
-                // History
-                Audit::createHistory('Delete Report', $report->report_title, $user_id);
+                if(!$check_admin){
+                    // History
+                    Audit::createHistory('Delete Report', $report->report_title, $user_id);
+                }
                 
                 ReportItemModel::deleteReportItemByReportId($id, $user_id);
 
@@ -198,7 +199,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

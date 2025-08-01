@@ -66,16 +66,24 @@ class ReportItemModel extends Model
             ->get();
     }
 
-    public static function deleteReportItemByInventoryId($inventory_id, $user_id){
-        return ReportItemModel::where('inventory_id',$inventory_id)
-            ->where('created_by',$user_id)
-            ->delete();
+    public static function deleteReportItemByInventoryId($inventory_id, $user_id = null){
+        $res = ReportItemModel::where('inventory_id',$inventory_id);
+
+        if($user_id){
+            $res = $res->where('created_by',$user_id);
+        }
+
+        return $res->delete();
     } 
 
     public static function deleteReportItemByReportId($report_id, $user_id){
-        return ReportItemModel::where('report_id', $report_id)
-            ->where('created_by', $user_id)
-            ->delete();
+        $res = ReportItemModel::where('report_id', $report_id);
+
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+            
+        return $res->delete();
     } 
 
     public static function deleteManyReportItemById($list_id, $user_id = null){

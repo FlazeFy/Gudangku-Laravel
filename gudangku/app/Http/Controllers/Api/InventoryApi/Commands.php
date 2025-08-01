@@ -21,9 +21,9 @@ use App\Http\Controllers\Controller;
 use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
 use App\Models\UserModel;
+use App\Models\AdminModel;
 use App\Models\ReminderModel;
 use App\Models\ReportItemModel;
-
 // Helpers
 use App\Helpers\Audit;
 use App\Helpers\Generator;
@@ -98,15 +98,17 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
 
-            $rows = InventoryModel::where('id', $id)
-                ->where('created_by', $user_id)
-                ->update([
-                    'deleted_at' => date('Y-m-d H:i:s'),
-            ]);
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = null;
+            }
 
+            $rows = InventoryModel::updateInventoryById($user_id,$id,['deleted_at' => date('Y-m-d H:i:s')]);
             if($rows > 0){
-                // History
-                Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
+                if(!$check_admin){
+                    // History
+                    Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
+                }
                 
                 return response()->json([
                     'status' => 'success',
@@ -333,14 +335,21 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
             $inventory = InventoryModel::getInventoryNameById($id);
-            $rows = InventoryModel::deleteInventoryById($id, $user_id);
 
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = null;
+            }
+
+            $rows = InventoryModel::deleteInventoryById($id, $user_id);
             if($rows > 0){
                 ReminderModel::deleteReminderByInventoryId($id, $user_id);
                 ReportItemModel::deleteReportItemByInventoryId($id, $user_id);
 
-                // History
-                Audit::createHistory('Permentally delete', $inventory->inventory_name, $user_id);
+                if(!$check_admin){
+                    // History
+                    Audit::createHistory('Permentally delete', $inventory->inventory_name, $user_id);
+                }
 
                 return response()->json([
                     'status' => 'success',
@@ -499,19 +508,20 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name')
-                ->where('id',$id)
-                ->first();
-            $rows = InventoryModel::where('id', $id)
-                ->where('created_by', $user_id)
-                ->update([
-                    'deleted_at' => null,
-            ]);
+            $inventory = InventoryModel::find($id);
 
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = null;
+            } 
+            
+            $rows = InventoryModel::updateInventoryById($user_id,$id,['deleted_at' => null]);
             if($rows > 0){
-                // History
-                Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
-                
+                if(!$check_admin){
+                    // History
+                    Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
+                }
+
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("recover", 'inventory'),

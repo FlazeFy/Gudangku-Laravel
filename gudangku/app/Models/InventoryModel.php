@@ -473,10 +473,14 @@ class InventoryModel extends Model
         return count($res) > 0 ? $res : null;
     }
 
-    public static function deleteInventoryById($id, $user_id){
-        return InventoryModel::where('id',$id)
-            ->where('created_by',$user_id)
-            ->whereNotNull('deleted_at')
+    public static function deleteInventoryById($id, $user_id = null){
+        $res = InventoryModel::where('id',$id);
+
+        if($user_id){
+            $res = $res->where('created_by',$user_id);
+        }
+        
+        return $res->whereNotNull('deleted_at')
             ->delete();
     } 
 
@@ -512,5 +516,15 @@ class InventoryModel extends Model
 
     public static function deleteInventoryByUserId($user_id){
         return InventoryModel::where('created_by',$user_id)->delete();
+    }
+
+    public static function updateInventoryById($user_id = null,$inventory_id,$data){
+        $rows = InventoryModel::where('id', $inventory_id);
+        
+        if($user_id){
+            $rows = $rows->where('created_by', $user_id);
+        }
+
+        return $rows->update($data);
     }
 }

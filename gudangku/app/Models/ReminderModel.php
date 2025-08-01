@@ -53,10 +53,14 @@ class ReminderModel extends Model
             ->get();
     }
 
-    public static function deleteReminderByInventoryId($inventory_id, $user_id){
-        return ReminderModel::where('inventory_id',$inventory_id)
-            ->where('created_by',$user_id)
-            ->delete();
+    public static function deleteReminderByInventoryId($inventory_id, $user_id = null){
+        $res = ReminderModel::where('inventory_id',$inventory_id);
+        
+        if($user_id){
+            $res = $res->where('created_by',$user_id);
+        }
+
+        return $res->delete();
     } 
 
     public static function getReminderAndInventoryById($id,$user_id){

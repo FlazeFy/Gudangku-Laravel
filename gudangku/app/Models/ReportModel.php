@@ -123,6 +123,16 @@ class ReportModel extends Model
             ->get();
     }
 
+    public static function deleteReportById($user_id = null,$report_id){
+        $rows = ReportModel::where('id', $report_id);
+        
+        if($user_id){
+            $rows = $rows->where('created_by', $user_id);
+        }
+
+        return $rows->delete();
+    }
+
     public static function getInventoryMonthlyInReport($user_id, $inventory_id, $year = null) {
         if ($year === null) {
             $year = date('Y');
