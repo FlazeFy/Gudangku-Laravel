@@ -37,7 +37,7 @@
         <!-- Bootstrap Bundle JS -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.5.1/js/bootstrap.bundle.min.js"></script>
 
-        <?php if(preg_match('(stats|analyze)', $cleanedUrl)): ?>
+        <?php if(preg_match('(stats|analyze|embed)', $cleanedUrl)): ?>
             <!--Apex Chart-->
             <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <?php endif; ?>
@@ -59,7 +59,7 @@
         <script src="{{ asset('/global_v1.0.js')}}"></script>
         <script src="{{ asset('/template_v1.0.js')}}"></script>
 
-        <?php if(preg_match('(stats|analyze)', $cleanedUrl)): ?>
+        <?php if(preg_match('(stats|analyze|embed)', $cleanedUrl)): ?>
             <script src="{{ asset('/chart_v1.0.js')}}"></script>
         <?php endif; ?>
 
@@ -81,6 +81,7 @@
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
             <div>
                 @yield('content')
+                <?php if(!preg_match('(embed)', $cleanedUrl)): ?>
                 <footer class="py-3 my-4">
                     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
                         <li class="nav-item"><a href="/" class="nav-link px-2">Landing</a></li>
@@ -90,6 +91,7 @@
                     </ul>
                     <p class="text-center">© 2024 Part Of FlazenApps</p>
                 </footer>
+                <?php endif; ?>
             </div>
         </div>
         @include('others.scroll_top')

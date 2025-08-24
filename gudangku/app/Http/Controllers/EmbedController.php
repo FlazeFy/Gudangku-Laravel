@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+
+// Models
+
+// Helpers
+use App\Helpers\Generator;
+use App\Helpers\Audit;
+
+class EmbedController extends Controller
+{
+    public function distribution_inventory_category()
+    {
+        return view('embed.distribution_inventory_category');
+    }
+
+    public function distribution_inventory_room()
+    {
+        return view('embed.distribution_inventory_room');
+    }
+}

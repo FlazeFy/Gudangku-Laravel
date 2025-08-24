@@ -81,12 +81,16 @@ class Queries extends Controller
     public function get_total_inventory_by_category(Request $request, $type)
     {
         try{
-            $user_id = $request->user()->id;
+            if ($request->hasHeader('Authorization')) {
+                $user_id = $request->user()->id;
 
-            $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = $request->query('user_id') ?? null;
-            } 
+                $check_admin = AdminModel::find($user_id);
+                if($check_admin){
+                    $user_id = $request->query('user_id') ?? null;
+                } 
+            } else {
+                $user_id = null;
+            }
 
             $res = InventoryModel::getContextTotalStats('inventory_category',$type,$user_id);
             
@@ -370,12 +374,16 @@ class Queries extends Controller
     public function get_total_inventory_by_room(Request $request, $type)
     {
         try{
-            $user_id = $request->user()->id;
+            if ($request->hasHeader('Authorization')) {
+                $user_id = $request->user()->id;
 
-            $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = $request->query('user_id') ?? null;
-            } 
+                $check_admin = AdminModel::find($user_id);
+                if($check_admin){
+                    $user_id = $request->query('user_id') ?? null;
+                } 
+            } else {
+                $user_id = null;
+            }
 
             $res = InventoryModel::getContextTotalStats('inventory_room',$type,$user_id);
             

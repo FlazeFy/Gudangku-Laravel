@@ -24,6 +24,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\LendController;
+use App\Http\Controllers\EmbedController;
 
 ######################### Public Route #########################
 
@@ -63,6 +64,11 @@ Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::post('/toogleTotal', [StatsController::class, 'toogle_total']);
     Route::post('/toogleView', [StatsController::class, 'toogle_view']);
     Route::post('/toogleYear', [StatsController::class, 'toogle_year']);
+});
+
+Route::prefix('/embed')->group(function () {
+    Route::get('/distribution_inventory_category', [EmbedController::class, 'distribution_inventory_category']);
+    Route::get('/distribution_inventory_room', [EmbedController::class, 'distribution_inventory_room']);
 });
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {

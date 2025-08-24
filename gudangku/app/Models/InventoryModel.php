@@ -182,7 +182,7 @@ class InventoryModel extends Model
             return "COUNT(1)";
         }
     }
-    public static function getContextTotalStats($context,$type,$user_id){
+    public static function getContextTotalStats($context,$type,$user_id = null){
         $res = InventoryModel::selectRaw("$context as context, ".self::get_inventory_stats_view($type)." as total");
         if($user_id){
             $res = $res->where('created_by', $user_id);
