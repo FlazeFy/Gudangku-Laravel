@@ -1,16 +1,22 @@
 @extends('components.layout')
 
 @section('content')
-<div class='container bordered'>
-    <div id="stats_total_inventory_by_room_holder"></div>
+<div class="row">
+    <div class="col">
+        <div class='container bordered'>
+            <div id="stats_total_item_inventory_by_room_holder"></div>
+        </div>
+    </div>
+    <div class="col">
+        <div class='container bordered'>
+            <div id="stats_total_price_inventory_by_room_holder"></div>
+        </div>
+    </div>
 </div>
 <script>
-    const get_total_inventory_by_room = (page) => {
+    const get_total_inventory_by_room = (type_chart,ctx_holder) => {
         Swal.showLoading()
         const title = 'Inventory By Room'
-        const ctx = 'total_inventory_by_room_temp'
-        const ctx_holder = 'stats_total_inventory_by_room_holder'
-        const type_chart =  '<?= session()->get('toogle_total_stats') ?>'
 
         const failedMsg = () => {
             Swal.fire({
@@ -29,8 +35,8 @@
                 success: function(response) {
                     Swal.close()
                     const data = response.data
-                    localStorage.setItem(ctx,JSON.stringify(data))
-                    localStorage.setItem(`last-hit-${ctx}`,Date.now())
+                    localStorage.setItem(ctx_holder,JSON.stringify(data))
+                    localStorage.setItem(`last-hit-${ctx_holder}`,Date.now())
                     generate_pie_chart(`Total ${type_chart} ${title}`,ctx_holder,data)
                     generate_table_context_total(ctx_holder,data,type_chart == 'price' && ['total'])
                 },
@@ -46,12 +52,12 @@
             });
         }
 
-        if(ctx in localStorage){
-            const lastHit = parseInt(localStorage.getItem(`last-hit-${ctx}`))
+        if(ctx_holder in localStorage){
+            const lastHit = parseInt(localStorage.getItem(`last-hit-${ctx_holder}`))
             const now = Date.now()
 
             if(((now - lastHit) / 1000) < statsFetchRestTime){
-                const data = JSON.parse(localStorage.getItem(ctx))
+                const data = JSON.parse(localStorage.getItem(ctx_holder))
                 if(data){
                     generate_pie_chart(`Total ${type_chart} ${title}`,ctx_holder,data)
                     generate_table_context_total(ctx_holder,data,type_chart == 'price' && ['total'])
@@ -67,6 +73,7 @@
             fetchData()
         }
     }
-    get_total_inventory_by_room()
+    get_total_inventory_by_room('item','stats_total_item_inventory_by_room_holder')
+    get_total_inventory_by_room('price','stats_total_price_inventory_by_room_holder')
 </script>
 @endsection

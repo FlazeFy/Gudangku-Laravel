@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Helpers\Generator;
+use Illuminate\Support\Facades\Auth;
 
 // Models
 use App\Models\InventoryModel;
@@ -82,7 +83,8 @@ class Queries extends Controller
     {
         try{
             if ($request->hasHeader('Authorization')) {
-                $user_id = $request->user()->id;
+                $user = Auth::guard('sanctum')->user(); 
+                $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
                 if($check_admin){
@@ -375,7 +377,8 @@ class Queries extends Controller
     {
         try{
             if ($request->hasHeader('Authorization')) {
-                $user_id = $request->user()->id;
+                $user = Auth::guard('sanctum')->user(); 
+                $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
                 if($check_admin){
