@@ -69,6 +69,8 @@ Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
 Route::prefix('/embed')->group(function () {
     Route::get('/distribution_inventory_category', [EmbedController::class, 'distribution_inventory_category']);
     Route::get('/distribution_inventory_room', [EmbedController::class, 'distribution_inventory_room']);
+    Route::get('/distribution_inventory_favorite', [EmbedController::class, 'distribution_inventory_favorite']);
+    Route::get('/distribution_inventory_merk', [EmbedController::class, 'distribution_inventory_merk']);
 });
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {

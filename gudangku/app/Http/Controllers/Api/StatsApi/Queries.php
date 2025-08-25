@@ -274,12 +274,18 @@ class Queries extends Controller
     public function get_total_inventory_by_favorite(Request $request, $type)
     {
         try{
-            $user_id = $request->user()->id;
+            if ($request->hasHeader('Authorization')) {
+                $user = Auth::guard('sanctum')->user(); 
+                $user_id = $user ? $user->id : null;
 
-            $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = $request->query('user_id') ?? null;
-            } 
+                $check_admin = AdminModel::find($user_id);
+                if($check_admin){
+                    $user_id = $request->query('user_id') ?? null;
+                } 
+            } else {
+                $check_admin = null;
+                $user_id = null;
+            }
 
             $res = InventoryModel::selectRaw("
                     CASE 
@@ -287,7 +293,7 @@ class Queries extends Controller
                         ELSE 'Normal Item' 
                     END AS context, 
                     ".$this->get_inventory_stats_view($type)." as total");
-            if(!$check_admin){
+            if(!$check_admin && $user_id){
                 $res->where('created_by',$user_id);
             }
             $res = $res->groupby('is_favorite')
@@ -310,7 +316,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -471,11 +477,11 @@ class Queries extends Controller
     public function get_total_inventory_by_merk(Request $request, $type)
     {
         try{
-            $user_id = $request->user()->id;
-
-            $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = $request->query('user_id') ?? null;
+            if ($request->hasHeader('Authorization')) {
+                $user = Auth::guard('sanctum')->user(); 
+                $user_id = $user ? $user->id : null;
+            } else {
+                $user_id = null;
             } 
 
             $res = InventoryModel::getContextTotalStats('inventory_merk',$type,$user_id);

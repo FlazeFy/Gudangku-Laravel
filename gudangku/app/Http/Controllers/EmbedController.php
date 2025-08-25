@@ -20,4 +20,14 @@ class EmbedController extends Controller
     {
         return view('embed.distribution_inventory_room');
     }
+
+    public function distribution_inventory_favorite()
+    {
+        return view('embed.distribution_inventory_favorite');
+    }
+
+    public function distribution_inventory_merk()
+    {
+        return view('embed.distribution_inventory_merk');
+    }
 }
