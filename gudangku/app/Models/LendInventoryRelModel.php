@@ -31,7 +31,7 @@ class LendInventoryRelModel extends Model
 
     protected $table = 'lend_inventory_rel';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'lend_id', 'inventory_id', 'borrower_name', 'created_at'];
+    protected $fillable = ['id', 'lend_id', 'inventory_id', 'borrower_name', 'returned_at', 'created_at'];
 
     public static function createLendInventoryRel($lend_id, $inventory_id, $borrower_name){
         return LendInventoryRelModel::create([
@@ -51,6 +51,14 @@ class LendInventoryRelModel extends Model
             ->where('lend_status','used')
             ->where('is_finished',0)
             ->groupby('inventory_category')
+            ->get();
+    }
+
+    public static function getInventoryByLendId($user_id,$lend_id){
+        return LendInventoryRelModel::selectRaw("inventory_category,inventory_name,returned_at")
+            ->join('inventory','inventory.id','=','lend_inventory_rel.inventory_id')
+            ->where('inventory.created_by',$user_id)
+            ->where('lend_id',$lend_id)
             ->get();
     }
 }

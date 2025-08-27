@@ -50,7 +50,7 @@ class LendModel extends Model
     }
 
     public static function getAllLend($user_id,$paginate){
-        return LendModel::selectRaw("lend.id,lend_qr_url,qr_period,lend_desc,lend_status,lend.created_at,is_finished,GROUP_CONCAT(CONCAT(inventory_name, ' (', inventory_category, ')') SEPARATOR ', ') as list_inventory")
+        return LendModel::selectRaw("lend.id,lend_qr_url,qr_period,lend_desc,lend_status,lend.created_at,is_finished,GROUP_CONCAT(CONCAT(inventory_name, ' (', inventory_category, ')') SEPARATOR ', ') as list_inventory,borrower_name")
             ->leftjoin('lend_inventory_rel','lend_inventory_rel.lend_id','=','lend.id')
             ->leftjoin('inventory','inventory.id','lend_inventory_rel.inventory_id','=','inventory.id')
             ->where('lend.created_by',$user_id)

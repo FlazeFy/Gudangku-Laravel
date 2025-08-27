@@ -106,7 +106,7 @@ Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [CalendarController::class, 'index']);
 });
 
-Route::prefix('/lend')->middleware(['auth_v2:sanctum'])->group(function () {
+Route::prefix('/lend')->group(function () {
     Route::get('/{id}', [LendController::class, 'index']);
 });
 

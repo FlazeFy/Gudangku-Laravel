@@ -11,6 +11,7 @@ use App\Helpers\Generator;
 // Models
 use App\Models\LendModel;
 use App\Models\InventoryModel;
+use App\Models\LendInventoryRelModel;
 
 class Queries extends Controller
 {
@@ -191,12 +192,42 @@ class Queries extends Controller
             $perPage = $request->query('per_page_key') ?? 12;
 
             $res = LendModel::getAllLend($user_id,$perPage);
-            if(count($res) > 0) { 
+            if ($res->count() > 0){
+                $final_res = [];
+                foreach ($res as $dt) {
+                    $final_res[] = [
+                        'id' => $dt->id,
+                        'lend_qr_url' => $dt->lend_qr_url,
+                        'qr_period' => $dt->qr_period,
+                        'lend_desc' => $dt->lend_desc,
+                        'lend_status' => $dt->lend_status,
+                        'created_at' => $dt->created_at,
+                        'is_finished' => $dt->is_finished,
+                        'list_inventory' => $dt->list_inventory,
+                        'borrower_name' => $dt->borrower_name,
+                        'list_inventory_detail' => LendInventoryRelModel::getInventoryByLendId($user_id,$dt->id)
+                    ];
+                }
+
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", "lend qr code"),
-                    'data' => $res
-                ], Response::HTTP_OK);
+                    'data' => [
+                        'current_page' => $res->currentPage(),
+                        'data' => $final_res,
+                        'first_page_url' => $res->url(1),
+                        'from' => $res->firstItem(),
+                        'last_page' => $res->lastPage(),
+                        'last_page_url' => $res->url($res->lastPage()),
+                        'links' => $res->toArray()['links'], 
+                        'next_page_url' => $res->nextPageUrl(),
+                        'path' => $res->path(),
+                        'per_page' => $res->perPage(),
+                        'prev_page_url' => $res->previousPageUrl(),
+                        'to' => $res->lastItem(),
+                        'total' => $res->total(),
+                    ]
+                ], Response::HTTP_OK);                
             } else {
                 return response()->json([
                     'status' => 'failed',
@@ -206,7 +237,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
