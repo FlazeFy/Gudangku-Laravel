@@ -375,4 +375,106 @@ class Commands extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/lend/update_status/{lend_id}",
+     *     summary="Update Returned Status Of Lend Inventory",
+     *     tags={"Lend"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="lend created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="lend updated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function put_confirmation_returned(Request $request, $lend_id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            $validator = Validation::getValidateLend($request,'update_returned');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $success = 0;
+                $failed = 0;
+                $list_inventory = $request->list_inventory;
+                $returned_all = true;
+
+                foreach ($list_inventory as $dt) {
+                    if($dt['is_returned']){
+                        $returned_at = date('Y-m-d H:i:s');
+                    } else {
+                        $returned_at = null;
+                    }
+
+                    $inventory_rel = LendInventoryRelModel::updateLendInventoryById($dt['id'],$lend_id,[
+                        'returned_at' => $returned_at
+                    ]);
+
+                    if (!$dt['is_returned']) {
+                        $returned_all = false;
+                    }
+                }
+                    
+                if($returned_all){
+                    $lend = LendModel::updateLendByUserId(
+                        ['lend_status' => 'finished'],
+                    $user_id,$lend_id);
+
+                    if($lend){
+                        // History
+                        Audit::createHistory('Returned', 'Lend is finished', $user_id);
+                    } else {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => Generator::getMessageTemplate("unknown_error", null),
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => Generator::getMessageTemplate("update", 'lend'),
+                ], Response::HTTP_OK);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

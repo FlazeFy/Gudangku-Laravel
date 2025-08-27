@@ -112,11 +112,12 @@
                     let inventory_holder = ''
 
                     if(el.lend_status == 'used'){
-                        el.list_inventory_detail.forEach(iv => {
+                        el.list_inventory_detail.forEach(inv => {
                             inventory_holder += `
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6>${iv.inventory_name} (${iv.inventory_category})</h6>
-                                    <input class="form-check-input" type="checkbox" value="">
+                                <div class="form-check">
+                                    <input type="hidden" name="inventory_id" value="${inv.id}">
+                                    <input class="form-check-input" type="checkbox" name="is_returned" id="inv-${inv.id}" ${inv.returned_at ? "checked" : ""}>
+                                    <label class="form-check-label" for="inv-${inv.id}">${inv.inventory_name} (${inv.inventory_category})</label>
                                 </div>
                             `
                         });
@@ -148,9 +149,9 @@
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form id=''>
+                                                    <form id="form-${el.id}">
                                                         ${inventory_holder}
-                                                        <a class='btn btn-success mt-4 w-100'><i class="fa-solid fa-floppy-disk"></i> Set Returned to Selected Item</a>
+                                                        <a class='btn btn-success mt-4 w-100 update-returned-btn' data-lend-id="${el.id}" data-form-id="form-${el.id}"><i class="fa-solid fa-floppy-disk"></i> Update Returned Status</a>
                                                         <a class='btn btn-success mt-2 w-100'><i class="fa-solid fa-floppy-disk"></i> All Returned</a>
                                                     </form>
                                                 </div>
@@ -179,4 +180,54 @@
         });
     }
     get_qr_history()
+
+    $(document).on('click', '.update-returned-btn', function () {
+        const lend_id = $(this).data('lend-id')
+        const form_id = $(this).data('form-id')
+
+        const list_inventory = []
+
+        $(`#${form_id} .form-check`).each(function () {
+            const id = $(this).find("input[type=hidden][name=inventory_id]").val()
+            const is_returned = $(this).find("input[type=checkbox][name=is_returned]").is(":checked")
+            list_inventory.push({ id, is_returned })
+        });
+
+        update_returned_status(lend_id, list_inventory)
+    });
+
+
+    const update_returned_status = (lend_id, list_inventory) => {
+        $.ajax({
+            url: `/api/v1/lend/update_status/${lend_id}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ list_inventory }),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                Swal.showLoading()
+            },
+            success: function(response) {
+                const data = response.data
+
+                Swal.fire({
+                    title: "Success!",
+                    text: response.message,
+                    icon: "success",
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.close()
+                        get_my_qr()
+                        get_qr_history()
+                    }
+                });
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                generate_api_error(response, true)
+            }
+        });
+    }
 </script>

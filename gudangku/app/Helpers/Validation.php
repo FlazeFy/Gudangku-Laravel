@@ -98,6 +98,12 @@ class Validation
             return Validator::make($request->all(), [
                 'borrower_name' => 'required|string|min:1|max:36',
             ]);
+        } else if($type == 'update_returned'){
+            return Validator::make($request->all(), [
+                'list_inventory' => 'required|array',
+                'list_inventory.*.id' => 'required|string|min:36|max:36',
+                'list_inventory.*.is_returned' => 'required|boolean',
+            ]);
         } 
     }
 

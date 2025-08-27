@@ -55,10 +55,16 @@ class LendInventoryRelModel extends Model
     }
 
     public static function getInventoryByLendId($user_id,$lend_id){
-        return LendInventoryRelModel::selectRaw("inventory_category,inventory_name,returned_at")
+        return LendInventoryRelModel::selectRaw("lend_inventory_rel.id, inventory_category, inventory_name, returned_at")
             ->join('inventory','inventory.id','=','lend_inventory_rel.inventory_id')
             ->where('inventory.created_by',$user_id)
             ->where('lend_id',$lend_id)
             ->get();
+    }
+
+    public static function updateLendInventoryById($id,$lend_id,$data){
+        return LendInventoryRelModel::where('id',$id)
+            ->where('lend_id',$lend_id)
+            ->update($data);
     }
 }
