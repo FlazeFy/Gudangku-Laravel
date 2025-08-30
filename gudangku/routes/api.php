@@ -73,6 +73,7 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
     });
     Route::prefix('/user')->group(function () {
         Route::get('/last_login', [QueriesStatsController::class, 'get_last_login_user']);
+        Route::get('/leaderboard', [QueriesStatsController::class, 'get_leaderboard']);
     });
 });
 

@@ -172,4 +172,13 @@ class UserModel extends Authenticatable
             ->limit($limit)
             ->get();
     }
+
+    public static function getUserWithMostContext($table_ctx){
+        return UserModel::selectRaw("username,COUNT(1) as total")
+            ->join($table_ctx,'users.id','=',$table_ctx.'.created_by')
+            ->groupby('users.id')
+            ->orderby('total','desc')
+            ->limit(3)
+            ->get();
+    }
 }

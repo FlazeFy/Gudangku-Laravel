@@ -307,6 +307,44 @@ class StatsTest extends TestCase
         Audit::auditRecordSheet("Test - Get Last Login User", "TC-XXX", 'TC-XXX test_get_last_login_user', json_encode($data));
     }
 
+    public function test_get_leaderboard(): void
+    {
+        // Exec
+        $token = $this->login_trait("admin");
+        $response = $this->httpClient->get("user/leaderboard", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data);
+
+        $context = ['inventory','report'];
+        foreach ($context as $ctx) {
+            foreach ($data['data']['user_with_most_'.$ctx] as $dt) {
+                $this->assertArrayHasKey('username', $dt);
+                $this->assertArrayHasKey('total', $dt);
+
+                $this->assertNotNull($dt['username']);
+                $this->assertIsString($dt['username']);
+        
+                $this->assertNotNull($dt['total']);
+                $this->assertIsInt($dt['total']);
+                $this->assertGreaterThanOrEqual(0, $dt['total']);
+            }
+        }
+
+        Audit::auditRecordText("Test - Get Leaderboard", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Leaderboard", "TC-XXX", 'TC-XXX test_get_leaderboard', json_encode($data));
+    }
+
     public function test_get_total_report_spending_by_month(): void
     {
         // Exec
