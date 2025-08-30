@@ -20,6 +20,15 @@
             @csrf
             <button class="btn btn-primary mb-3 me-2" href=""><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print @endif</button>
         </form>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="container bordered" id="last_login-section">
+                    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Last Login</h1>
+                    @include('user.last_login')
+                </div>      
+            </div>
+        </div>
+        <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">All User</h1>
         @include('user.table')
     </div>
 @endsection

@@ -168,7 +168,7 @@ class UserModel extends Authenticatable
         return UserModel::select("username","personal_access_tokens.created_at as login_at")
             ->join('personal_access_tokens','users.id','=','personal_access_tokens.tokenable_id')
             ->groupby('users.id')
-            ->orderby('personal_access_tokens.created_at')
+            ->orderby('personal_access_tokens.created_at','desc')
             ->limit($limit)
             ->get();
     }
