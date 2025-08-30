@@ -68,7 +68,6 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
         Route::get('/most_expensive/{context}', [QueriesStatsController::class, 'get_most_expensive_inventory_per_context']);
     });
     Route::prefix('/report')->group(function () {
-        Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'get_total_report_created_per_month']);
         Route::get('/total_spending_per_month/{year}', [QueriesStatsController::class, 'get_total_report_spending_per_month']);
         Route::get('/total_used_per_month/{year}', [QueriesStatsController::class, 'get_total_report_used_per_month']);
     });
@@ -81,6 +80,9 @@ Route::prefix('/v1/stats')->group(function () {
         Route::get('/total_by_room/{type}', [QueriesStatsController::class, 'get_total_inventory_by_room']);
         Route::get('/total_by_favorite/{type}', [QueriesStatsController::class, 'get_total_inventory_by_favorite']);
         Route::get('/total_by_merk/{type}', [QueriesStatsController::class, 'get_total_inventory_by_merk']);
+    });
+    Route::prefix('/report')->group(function () {
+        Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'get_total_report_created_per_month']);
     });
 });
 

@@ -567,11 +567,17 @@ class Queries extends Controller
     public function get_total_report_created_per_month(Request $request, $year)
     {
         try{
-            $user_id = $request->user()->id;
+            if ($request->hasHeader('Authorization')) {
+                $user = Auth::guard('sanctum')->user(); 
+                $user_id = $user ? $user->id : null;
 
-            $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = $request->query('user_id') ?? null;
+                $check_admin = AdminModel::find($user_id);
+                if($check_admin){
+                    $user_id = $request->query('user_id') ?? null;
+                } 
+            } else {
+                $check_admin = null;
+                $user_id = null;
             }
 
             $res = ReportModel::getTotalReportCreatedOrSpendingPerMonth($user_id, $year, $check_admin ? true : false, 'created');

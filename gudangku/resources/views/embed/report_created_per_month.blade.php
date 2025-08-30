@@ -2,14 +2,14 @@
 
 @section('content')
 <div class='container bordered' style="min-width:720px;">
-    <div id="stats_total_inventory_created_per_month"></div>
+    <div id="stats_total_report_created_per_month"></div>
 </div>
 <script>
-    const get_total_inventory_created_per_month = (year) => {
+    const get_total_report_created_per_month = (year) => {
         Swal.showLoading()
-        const title = `Total inventory Created Per Month (${year})`
-        const ctx = `total_inventory_created_per_month_temp-${year}`
-        const ctx_holder = "stats_total_inventory_created_per_month"
+        const title = `Total report Created Per Month (${year})`
+        const ctx = `total_report_created_per_month_temp-${year}`
+        const ctx_holder = "stats_total_report_created_per_month"
 
         const failedMsg = () => {
             Swal.fire({
@@ -20,7 +20,7 @@
         }
         const fetchData = () => {
             $.ajax({
-                url: `/api/v1/stats/inventory/total_created_per_month/${year}`,
+                url: `/api/v1/stats/report/total_created_per_month/${year}`,
                 type: 'GET',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Accept", "application/json")
@@ -38,7 +38,7 @@
                     if(response.status != 404){
                         failedMsg()
                     } else {
-                        template_alert_container(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>','/inventory/add')
+                        template_alert_container(ctx_holder, 'no-data', "No report found for this context to generate the stats", 'add a report', '<i class="fa-solid fa-warehouse"></i>','/report/add')
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                     }
                 }
@@ -67,6 +67,6 @@
         }
     }
     const year = "<?= $year ?>"
-    get_total_inventory_created_per_month(year)
+    get_total_report_created_per_month(year)
 </script>
 @endsection

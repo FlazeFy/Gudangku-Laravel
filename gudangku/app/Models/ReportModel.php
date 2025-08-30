@@ -163,7 +163,7 @@ class ReportModel extends Model
         return $res_final;
     }
 
-    public static function getTotalReportCreatedOrSpendingPerMonth($user_id, $year, $is_admin, $type){
+    public static function getTotalReportCreatedOrSpendingPerMonth($user_id = null, $year, $is_admin, $type){
         if($type == "created"){
             $select_query = "COUNT(DISTINCT report.id) as total_report, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context";
         } else if($type == "spending"){
@@ -172,7 +172,7 @@ class ReportModel extends Model
 
         $res = ReportModel::selectRaw($select_query)
             ->join('report_item','report_item.report_id','=','report.id');
-        if(!$is_admin || $user_id){
+        if($user_id){
             $res = $res->where('report.created_by', $user_id);
         }
         if($type == "spending") {

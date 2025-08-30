@@ -35,4 +35,9 @@ class EmbedController extends Controller
     {
         return view('embed.inventory_created_per_month')->with('year',$year);
     }
+
+    public function report_created_per_month($year)
+    {
+        return view('embed.report_created_per_month')->with('year',$year);
+    }
 }
