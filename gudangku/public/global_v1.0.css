@@ -44,7 +44,7 @@
     --infoBG : #1ba6f7;
     --infoLightBG : #E7F4FE;
     --hoverBG : #F2F2F2;
-
+    --semiDarkColor: #18233A;
     --primaryColor : #3b82f6;
     --darkColor : #121725;
     --whiteColor : #FFFFFF;
@@ -113,11 +113,11 @@ table tr {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-.container, .container-fluid, .control-panel {
+.container, .container-fluid {
     border-radius: var(--roundedMD);
     margin-top: var(--spaceMD);
 }
-.container.bordered, .control-panel {
+.container.bordered {
     border: 1.5px solid var(--whiteColor);
     padding: var(--spaceXMD);
 }

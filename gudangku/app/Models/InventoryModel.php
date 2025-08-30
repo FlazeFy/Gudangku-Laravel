@@ -310,10 +310,10 @@ class InventoryModel extends Model
         return $final_res;
     }
 
-    public static function getTotalInventoryCreatedPerMonth($user_id, $year, $is_admin){
+    public static function getTotalInventoryCreatedPerMonth($user_id = null, $year, $is_admin){
         $res = InventoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context");
         
-        if(!$is_admin || $user_id){
+        if($user_id){
             $res = $res->where('created_by', $user_id);
         }
 

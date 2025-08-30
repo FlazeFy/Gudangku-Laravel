@@ -44,11 +44,20 @@ button:hover, .btn:hover {
     border-radius: var(--roundedMD) !important;
 }
 /* Pagination generator */
+.btn-page-holder {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: var(--spaceXSM); 
+    padding: var(--spaceXSM);
+    margin-bottom: var(--spaceSM);
+}
 .btn-page {
     border: 1.5px solid var(--primaryColor) !important;
     cursor: pointer;
     padding: var(--spaceSM) var(--spaceMD);
     border-radius: var(--roundedMD);
+    margin: 0;
 }
 .btn-page:hover, .btn-page.active{
     background: var(--primaryColor) !important;

@@ -41,11 +41,11 @@ input, textarea, select{
     margin-top: -10px;
     margin-left: -10px;
 }
-.container-form {
+.container-form, .btn-page-holder, .control-panel {
     width: 100%;
     padding: var(--spaceXLG);
     margin-bottom: var(--spaceJumbo);
-    background-color:rgba(59, 130, 246, 0.1);
+    background-color: var(--semiDarkColor);
     border: 1.75px solid var(--whiteColor);
     border-radius: var(--roundedLG);
 }
