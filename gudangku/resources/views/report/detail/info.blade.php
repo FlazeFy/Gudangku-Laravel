@@ -195,7 +195,7 @@
                                                     <label>Name</label>
                                                     <input class="form-control" type="text" name="item_name" value="${dt.item_name}">
                                                     <label>Description</label>
-                                                    <textarea class="form-control mt-2" name="item_desc">${dt.item_desc ?? ''}</textarea>
+                                                    <textarea class="form-control" name="item_desc">${dt.item_desc ?? ''}</textarea>
                                                     <label>Qty</label>
                                                     <input class="form-control" type="number" name="item_qty" value="${dt.item_qty}" min="1">
                                                     ${

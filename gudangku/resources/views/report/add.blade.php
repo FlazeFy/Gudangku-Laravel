@@ -65,7 +65,7 @@
                         <a class="btn btn-success mt-4 w-100 mb-2" onclick="post_report()"><i class="fa-solid fa-floppy-disk"></i> Save</a>
                     </div>
                     <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <h5>List Selected Item</h5>
+                        <label>List Selected Item</label>
                         <div id="item_holder">
                             <div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
                         </div>
@@ -291,7 +291,7 @@
                     </div>
                 </div>
                 <label>Description</label>
-                <textarea id="item_desc" class="form-control mt-2"></textarea>
+                <textarea id="item_desc" class="form-control"></textarea>
             `)
         } else if(val == 'copy_report'){
             $('#item_form').empty().append(`
@@ -313,7 +313,7 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <label>Description</label>
-                        <textarea id="item_desc" class="form-control mt-2"></textarea>
+                        <textarea id="item_desc" class="form-control"></textarea>
                     </div>
                     <div class="col-lg-4">
                         <label>Qty</label>

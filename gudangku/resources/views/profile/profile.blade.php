@@ -1,9 +1,9 @@
 <form id="profile-form">
     <div id="login_status_box"></div>
     <label>Username</label>
-    <input type="text" name="username" id="username_input" onkeydown="return submitOnEnter(event)" class="form-control mt-2"/><br>
+    <input type="text" name="username" id="username_input" onkeydown="return submitOnEnter(event)" class="form-control"/><br>
     <label>Email</label>
-    <input type="email" name="email" id="email_input" onkeydown="return submitOnEnter(event)" class="form-control mt-2"/><br>
+    <input type="email" name="email" id="email_input" onkeydown="return submitOnEnter(event)" class="form-control"/><br>
     <div class="d-flex justify-content-between">
         <label class="fst-italic">Joined since <span id="created_at_holder"></span></label>
         <a class='btn btn-success' onclick='update_profile()'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
@@ -50,7 +50,7 @@
                                     @csrf
                                     <div class="d-flex justify-content-between">
                                         <input hidden value="${tele_data.id}" name="id">
-                                        <input type="text" name="validate_token" class="form-control mt-2" required/><br>
+                                        <input type="text" name="validate_token" class="form-control" required/><br>
                                         <button class="btn btn-success bg-success ms-2" style="width:240px;" type="submit">Validate Token</button>
                                     </div>
                                 </form>

@@ -15,6 +15,10 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
     border: 2px solid var(--primaryColor);
     color: var(--whiteColor);
 }
+label, .form-label {
+    font-weight: 600 !important;
+    margin-bottom: var(--spaceSM);
+}
 .date-text {
     font-size: var(--textXMD);
     color: var(--greyColor) !important;
@@ -48,21 +52,7 @@ li::marker {
     color: white !important;
     font-size: 1.5em !important; 
 }
-/* Apexchart & D3 */
-.apexcharts-legend-text, .d3 .node {
-    color: var(--whiteColor) !important;
-    font-size: var(--textXMD) !important;
-    font-weight: 500;
-}
-.apexcharts-xaxis-label {
-    font-size: var(--textMD) !important;
-}
-.apexcharts-yaxis-label {
-    font-size: var(--textSM) !important;
-}
-.apexcharts-yaxis-label, .apexcharts-xaxis-label {
-    fill: var(--whiteColor) !important;
-}
+
 footer {
     color: var(--whiteColor) !important;
 }

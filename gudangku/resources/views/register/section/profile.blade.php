@@ -1,11 +1,11 @@
 <label>Username</label>
-<input type="text" name="username" id="username" class="form-control mt-2"/><br>
+<input type="text" name="username" id="username" class="form-control"/><br>
 <label>Email</label>
-<input type="email" name="email" id="email" class="form-control mt-2"/><br>
+<input type="email" name="email" id="email" class="form-control"/><br>
 <label>Password</label>
-<input type="password" name="password" id="password" class="form-control mt-2"/><br>
+<input type="password" name="password" id="password" class="form-control"/><br>
 <label>Re-Type Password</label>
-<input type="password" name="password_validation" id="password_validation" class="form-control mt-2"/><br>
+<input type="password" name="password_validation" id="password_validation" class="form-control"/><br>
 <a class="btn btn-success w-100" id="btn-register-acc"><i class="fa-solid fa-paper-plane"></i> Register Account</a><br>
 <div class="text-center mt-3 d-none section-form" id="token-section">
     <h2>Validate</h2><br>

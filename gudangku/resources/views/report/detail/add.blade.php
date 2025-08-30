@@ -249,7 +249,7 @@
                     </div>
                 </div>
                 <label>Description</label>
-                <textarea id="item_desc" class="form-control mt-2"></textarea>
+                <textarea id="item_desc" class="form-control"></textarea>
             `)
         } else if(val == 'copy_report'){
             $('#item_form').empty().append(`
@@ -270,7 +270,7 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <label>Description</label>
-                        <textarea id="item_desc" class="form-control mt-2"></textarea>
+                        <textarea id="item_desc" class="form-control"></textarea>
                     </div>
                     <div class="col-lg-4">
                         <label>Qty</label>

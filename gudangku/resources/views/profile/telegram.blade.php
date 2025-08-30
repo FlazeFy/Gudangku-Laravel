@@ -3,7 +3,7 @@
     <span id="label-validate-holder"></span>
     <span id="update-tele-holder" style="display:none;"></span>
 </div>
-<input type="text" name="telegram_user_id" id="telegram_user_id" class="form-control mt-2"/><br>
+<input type="text" name="telegram_user_id" id="telegram_user_id" class="form-control"/><br>
 <input id="telegram_user_id_old" hidden/>
 <div id="telegram_validation_status_box"></div>
 
