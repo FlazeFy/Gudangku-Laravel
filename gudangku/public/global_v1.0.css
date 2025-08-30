@@ -210,7 +210,6 @@ table tr {
     fill: var(--whiteColor) !important;
 }
 .apexcharts-tooltip {
-    font-weight: 500 !important;
     font-size: var(--textXLG) !important;
 }
 .apexcharts-tooltip-title {
@@ -232,15 +231,19 @@ table tr {
 .apexcharts-tooltip-marker {
     border-radius: 50% !important;
 }
-
 .apexcharts-xaxistooltip, .apexcharts-xaxistooltip.apexcharts-theme-light, .apexcharts-xaxistooltip.apexcharts-theme-dark {
     box-shadow: none !important;
 }
-
 .apexcharts-tooltip,.apexcharts-xaxistooltip, .apexcharts-xaxistooltip.apexcharts-theme-light, .apexcharts-xaxistooltip.apexcharts-theme-dark {
     border: calc(var(--spaceMini) / 2.5) solid var(--whiteColor);
 }
-
 .apexcharts-xaxistooltip .apexcharts-xaxistooltip-text, .apexcharts-tooltip-title {
     font-weight: 600 !important;
+}
+.apexcharts-legend-text {
+    text-transform: capitalize !important;
+    color: var(--whiteColor) !important;
+}
+.apexcharts-legend-text, .apexcharts-tooltip {
+    font-weight: 500 !important;
 }

@@ -163,4 +163,13 @@ class UserModel extends Authenticatable
             ->orderby('users.created_at')
             ->get();
     }
+
+    public static function getLastLoginUser($limit = 7){
+        return UserModel::select("username","personal_access_tokens.created_at as login_at")
+            ->join('personal_access_tokens','users.id','=','personal_access_tokens.tokenable_id')
+            ->groupby('users.id')
+            ->orderby('personal_access_tokens.created_at')
+            ->limit($limit)
+            ->get();
+    }
 }
