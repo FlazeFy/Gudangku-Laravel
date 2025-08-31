@@ -88,6 +88,9 @@ Route::prefix('/v1/stats')->group(function () {
     Route::prefix('/report')->group(function () {
         Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'get_total_report_created_per_month']);
     });
+    Route::prefix('/history')->group(function () {
+        Route::get('/total_activity_per_month/{year}', [QueriesStatsController::class, 'get_total_activity_per_month']);
+    });
 });
 
 Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {

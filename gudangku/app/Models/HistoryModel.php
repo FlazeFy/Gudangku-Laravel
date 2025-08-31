@@ -48,6 +48,20 @@ class HistoryModel extends Model
         return $res;
     }
 
+    public static function getTotalActivityPerMonth($user_id = null, $year){
+        $res = HistoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context");
+        
+        if($user_id){
+            $res = $res->where('created_by', $user_id);
+        }
+
+        $res = $res->whereRaw("YEAR(created_at) = '$year'")
+            ->groupByRaw('MONTH(created_at)')
+            ->get();
+
+        return $res;
+    }
+
     public static function createHistory($type, $ctx, $user_id){
         return HistoryModel::create([
             'id' => Generator::getUUID(), 

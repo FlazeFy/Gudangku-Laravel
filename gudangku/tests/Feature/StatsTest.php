@@ -198,7 +198,7 @@ class StatsTest extends TestCase
         Audit::auditRecordSheet("Test - Get Most Expensive Inventory Per Context", "TC-XXX", 'TC-XXX test_get_most_expensive_inventory_per_context', json_encode($data));
     }
 
-    public function test_get_total_report_created_at_month(): void
+    public function test_get_total_report_created_per_month(): void
     {
         // Exec
         $token = $this->login_trait("user");
@@ -235,11 +235,11 @@ class StatsTest extends TestCase
             $this->assertGreaterThanOrEqual(0, $dt['total_report']);
         }
 
-        Audit::auditRecordText("Test - Get Total Report Created At Month", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Get Total Report Created At Month", "TC-XXX", 'TC-XXX test_get_total_report_created_at_month', json_encode($data));
+        Audit::auditRecordText("Test - Get Total Report Created Per Month", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Total Report Created Per Month", "TC-XXX", 'TC-XXX test_get_total_report_created_per_month', json_encode($data));
     }
 
-    public function test_get_total_inventory_created_at_month(): void
+    public function test_get_total_inventory_created_per_month(): void
     {
         // Exec
         $token = $this->login_trait("user");
@@ -271,8 +271,44 @@ class StatsTest extends TestCase
             $this->assertGreaterThanOrEqual(0, $dt['total']);
         }
 
-        Audit::auditRecordText("Test - Get Total Inventory Created At Month", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Get Total Inventory Created At Month", "TC-XXX", 'TC-XXX test_get_total_inventory_created_at_month', json_encode($data));
+        Audit::auditRecordText("Test - Get Total Inventory Created Per Month", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Total Inventory Created Per Month", "TC-XXX", 'TC-XXX test_get_total_inventory_created_per_month', json_encode($data));
+    }
+
+    public function test_get_total_activity_per_month(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $response = $this->httpClient->get("history/total_activity_per_month/2024", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data);
+        $this->assertEquals(12,count($data['data']));
+
+        foreach ($data['data'] as $dt) {
+            $this->assertArrayHasKey('context', $dt);
+            $this->assertArrayHasKey('total', $dt);
+
+            $this->assertNotNull($dt['context']);
+            $this->assertIsString($dt['context']);
+    
+            $this->assertNotNull($dt['total']);
+            $this->assertIsInt($dt['total']);
+            $this->assertGreaterThanOrEqual(0, $dt['total']);
+        }
+
+        Audit::auditRecordText("Test - Get Total Activity Per Month", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Total Activity Per Month", "TC-XXX", 'TC-XXX test_get_total_activity_per_month', json_encode($data));
     }
 
     public function test_get_last_login_user(): void
