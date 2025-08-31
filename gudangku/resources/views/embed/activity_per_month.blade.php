@@ -38,7 +38,6 @@
                     if(response.status != 404){
                         failedMsg()
                     } else {
-                        template_alert_container(ctx_holder, 'no-data', "No report found for this context to generate the stats", 'add a report', '<i class="fa-solid fa-warehouse"></i>','/report/add')
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                     }
                 }

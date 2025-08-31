@@ -418,6 +418,74 @@ class InventoryModel extends Model
         return count($res) > 0 ? $res : null;
     } 
 
+    public static function getInventoryTreeMap($user_id){
+        $res = InventoryModel::select("inventory_name", "inventory_room", "inventory_storage", "inventory_rack")
+            ->where('created_by', $user_id)
+            ->whereNull('deleted_at')
+            ->get();
+
+        if ($res->isEmpty()) {
+            return null;
+        }
+
+        $tree = [];
+
+        foreach ($res as $row) {
+            $room = $row->inventory_room ?? "- Unknown Room -";
+            $storage = $row->inventory_storage ?? "- No Storage -";
+            $rack = $row->inventory_rack ?? "- No Rack -";
+            $itemName = $row->inventory_name;
+
+            // Room Level
+            if (!isset($tree[$room])) {
+                $tree[$room] = [
+                    "id" => "room_" . md5($room),
+                    "name" => $room,
+                    "children" => []
+                ];
+            }
+
+            // Storage Level
+            if (!isset($tree[$room]["children"][$storage])) {
+                $tree[$room]["children"][$storage] = [
+                    "id" => "storage_" . md5($room.$storage),
+                    "name" => $storage,
+                    "children" => []
+                ];
+            }
+
+            // Rack Level
+            if (!isset($tree[$room]["children"][$storage]["children"][$rack])) {
+                $tree[$room]["children"][$storage]["children"][$rack] = [
+                    "id" => "rack_" . md5($room.$storage.$rack),
+                    "name" => $rack,
+                    "children" => []
+                ];
+            }
+
+            // Inventory
+            $tree[$room]["children"][$storage]["children"][$rack]["children"][] = [
+                "id" => "item_" . md5($room.$storage.$rack.$itemName),
+                "name" => $itemName
+            ];
+        }
+
+        // Re-Index and Remove Keys
+        $tree = array_values(array_map(function ($room) {
+            $room["children"] = array_values(array_map(function ($storage) {
+                $storage["children"] = array_values(array_map(function ($rack) {
+                    $rack["children"] = array_values($rack["children"]);
+                    return $rack;
+                }, $storage["children"]));
+                return $storage;
+            }, $room["children"]));
+            return $room;
+        }, $tree));
+
+        return $tree;
+    }
+
+
     public static function getAllDashboard(){
         $res = DB::table('inventory as i')
             ->select(

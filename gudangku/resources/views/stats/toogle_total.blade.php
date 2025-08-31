@@ -10,6 +10,7 @@
                     <option value="top chart" <?php if($selected == 'top chart'){ echo 'selected'; }?>>Top Chart</option>
                     <option value="periodic chart" <?php if($selected == 'periodic chart'){ echo 'selected'; }?>>Periodic Chart</option>
                     <option value="most expensive" <?php if($selected == 'most expensive'){ echo 'selected'; }?>>Most Expensive</option>
+                    <option value="tree distribution map" <?php if($selected == 'tree distribution map'){ echo 'selected'; }?>>Tree Distribution Map</option>
                 </select>
             </form>
         </div>

@@ -49,6 +49,8 @@
                 </div>
             @elseif(session()->get('toogle_view_stats') == 'most expensive')
                 @include('stats.get_most_expensive_inventory_per_context')
+            @elseif(session()->get('toogle_view_stats') == 'tree distribution map')
+                @include('stats.tree_distribution_map')
             @endif
         </div>
     </div>

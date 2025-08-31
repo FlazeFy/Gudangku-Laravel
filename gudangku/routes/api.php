@@ -66,6 +66,7 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/dashboard', [QueriesStatsController::class, 'get_dashboard']);
     Route::prefix('/inventory')->group(function () {
         Route::get('/most_expensive/{context}', [QueriesStatsController::class, 'get_most_expensive_inventory_per_context']);
+        Route::get('/tree_map', [QueriesStatsController::class, 'get_inventory_tree_map']);
     });
     Route::prefix('/report')->group(function () {
         Route::get('/total_spending_per_month/{year}', [QueriesStatsController::class, 'get_total_report_spending_per_month']);
