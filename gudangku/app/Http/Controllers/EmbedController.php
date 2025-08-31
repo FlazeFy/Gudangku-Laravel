@@ -40,4 +40,9 @@ class EmbedController extends Controller
     {
         return view('embed.report_created_per_month')->with('year',$year);
     }
+
+    public function activity_per_month($year)
+    {
+        return view('embed.activity_per_month')->with('year',$year);
+    }
 }

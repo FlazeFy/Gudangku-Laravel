@@ -73,6 +73,7 @@ Route::prefix('/embed')->group(function () {
     Route::get('/distribution_inventory_merk', [EmbedController::class, 'distribution_inventory_merk']);
     Route::get('/inventory_created_per_month/{year}', [EmbedController::class, 'inventory_created_per_month']);
     Route::get('/report_created_per_month/{year}', [EmbedController::class, 'report_created_per_month']);
+    Route::get('/activity_per_month/{year}', [EmbedController::class, 'activity_per_month']);
 });
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {
