@@ -11,6 +11,7 @@
                     <option value="periodic chart" <?php if($selected == 'periodic chart'){ echo 'selected'; }?>>Periodic Chart</option>
                     <option value="most expensive" <?php if($selected == 'most expensive'){ echo 'selected'; }?>>Most Expensive</option>
                     <option value="tree distribution map" <?php if($selected == 'tree distribution map'){ echo 'selected'; }?>>Tree Distribution Map</option>
+                    <option value="used percentage" <?php if($selected == 'used percentage'){ echo 'selected'; }?>>Used Percentage</option>
                 </select>
             </form>
         </div>
@@ -34,6 +35,18 @@
                 <label>Select Year</label>
                 <select class="form-select" id="toogle_year" name="toogle_year"></select>
             </form>
+        </div>
+        @endif
+        @if(session()->get('toogle_view_stats') == "tree distribution map")
+        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+            <label>Set Layout</label><br>
+            <div class="d-inline-block">
+                <button class="btn btn-primary" id="layoutTop">Top</button>
+                <button class="btn btn-primary" id="layoutBottom">Bottom</button>
+                <button class="btn btn-primary" id="layoutLeft">Left</button>
+                <button class="btn btn-primary" id="layoutRight">Right</button>
+                <button class="btn btn-primary" id="fitScreen">Fit Screen</button>
+            </div>
         </div>
         @endif
     </div>

@@ -177,6 +177,71 @@ const generate_line_column_chart = (title, holder, data) => {
     }
 }
 
+const generate_gauge_chart = (title, holder, data) => {
+    $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
+
+    if(data.length > 0){
+        let keys = Object.keys(data[0])
+        if(keys.length == 2 && ((typeof data[0][keys[0]] === 'string' && Number.isInteger(data[0][keys[1]])) || (typeof data[0][keys[1]] === 'string' && Number.isInteger(data[0][keys[0]])))){
+            const value = data[0][Number.isInteger(data[0][keys[1]]) ? keys[1] : keys[0]]
+            const context = data[0][typeof data[0][keys[0]] === 'string' ? keys[0] : keys[1]]
+
+            var options = {
+                series: [value],
+                chart: {
+                    height: 350,
+                    type: "radialBar",
+                },
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -90,
+                        endAngle: 90,
+                        hollow: {
+                            margin: 0,
+                            size: "70%",
+                        },
+                        track: {
+                            background: "#f2f2f2",
+                            strokeWidth: "100%",
+                        },
+                        dataLabels: {
+                            name: {
+                                show: true,
+                                offsetY: -10,
+                                fontSize: "16px",
+                                color: "#333",
+                                formatter: () => context
+                            },
+                            value: {
+                                offsetY: 5,
+                                fontSize: "20px",
+                                fontWeight: 600,
+                                formatter: (val) => `${val}%`
+                            }
+                        }
+                    }
+                },
+                fill: {
+                    colors: ["#009FF9"],
+                },
+                labels: [context]
+            };
+
+            let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
+            chart.render()
+        } else {
+            $(`#${holder}`).html(`
+                <h6 class="text-center">Data is Not Valid</h6>
+            `)
+        }
+    } else {
+        $(`#${holder}`).html(`
+            <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
+            <h6 class="text-center">No Data</h6>
+        `)
+    }
+}
+
 const generate_table_context_total = (holder, data, key_currency) => {
     if(data.length > 0){
         let keys = Object.keys(data[0])

@@ -51,6 +51,10 @@
                 @include('stats.get_most_expensive_inventory_per_context')
             @elseif(session()->get('toogle_view_stats') == 'tree distribution map')
                 @include('stats.tree_distribution_map')
+            @elseif(session()->get('toogle_view_stats') == 'used percentage')
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mx-auto">
+                    @include('stats.get_favorite_inventory_comparison')
+                </div>
             @endif
         </div>
     </div>

@@ -86,6 +86,7 @@
 
             const tree = new ApexTree(document.getElementById(ctx_holder), options);
             const graph = tree.render(data);
+            graph.changeLayout('left')
 
             $(document).ready(function() {
                 document.getElementById('layoutTop').addEventListener('click', (e) => {
