@@ -57,10 +57,13 @@
                     data.forEach(dt => {
                         $(`#table-inventory-${target} tbody`).append(`
                             <tr>
-                                <td>${dt.inventory_name}</td>
+                                <td class='text-center'>${dt.inventory_rack ?? '-'}</td>
+                                <td>
+                                    <b class="mb-0">${dt.inventory_name}</b>
+                                    <p class="mb-0">${dt.inventory_vol} ${dt.inventory_unit}</p>
+                                </td>
                                 <td class='text-center'>${dt.inventory_category}</td>
                                 <td>Rp. ${number_format(dt.inventory_price, 0, ',', '.')}</td>
-                                <td class='text-center'>${dt.inventory_vol} ${dt.inventory_unit}</td>
                                 <td><a class="btn btn-warning modal-btn" href="/inventory/edit/${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></a></td>
                             </tr>
                         `)

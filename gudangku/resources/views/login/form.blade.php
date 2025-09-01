@@ -1,6 +1,6 @@
 <form action="/login/validate" method="POST" id="form-login">
     @csrf
-    <h1 class="text-primary">Welcome to GudangKu</h1><br>
+    <h1>Welcome to GudangKu</h1><br>
     <div class="text-start">
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label text-white">Email / Username</label>
@@ -23,7 +23,7 @@
     <input hidden name="profile_pic" value="" id="profile_pic">
     <a onclick="login()" id="submit-login-btn" class="btn btn-success border-0 w-100" style="background:var(--successBG) !important;"><i class="fa-solid fa-paper-plane mx-1"></i> Submit</a>
     <br><br>
-    <p class='text-secondary mt-4 mb-2'>New user? please register first to use this app</p>
+    <p class='mt-4 mb-2'>New user? please register first to use this app</p>
     <a href="/register" id="regis_btn" class="btn btn-primary ms-2 w-100 mb-3" style="background:var(--primaryBG) !important;"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Register</a>
     <a href="/auth/google" class="btn btn-primary ms-2 w-100" style="background:var(--primaryBG) !important;"><i class="fa-brands fa-google mx-1"></i> Sign In With Google</a>
 </form>

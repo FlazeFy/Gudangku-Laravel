@@ -52,6 +52,14 @@
     --shadowColor : #E0E0E0;
 }
 
+body {
+    background: var(--darkColor);
+}
+
+a {
+    text-decoration: none;
+}
+
 .bg-success {
     background: var(--successBG) !important;
 }
@@ -107,6 +115,7 @@ table tr {
 .img-responsive {
     cursor: pointer;
     border-radius: var(--roundedLG);
+    width: 100%;
 }
 .img-responsive:hover {
     transform: scale(1.025);

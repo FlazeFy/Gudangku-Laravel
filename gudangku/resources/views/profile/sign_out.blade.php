@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <form action="/profile/sign_out" method="POST" id="form-sign-out">
                     @csrf
-                    <h2>Are you sure want to leave this account?</h2>
+                    <p>Are you sure want to leave this account?</p>
                     <a class="btn btn-danger mt-4" onclick="sign_out()" id="validation_sign_out_btn">Yes, Sign Out</a>
                 </form>
             </div>

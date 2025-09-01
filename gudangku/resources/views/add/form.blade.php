@@ -1,6 +1,6 @@
 <div class="container-form">
     <form id="add_inventory">
-        <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
+        <h1 class="mt-3">Inventory Detail</h1>
         <div class="row">
             <div class="col-lg-6 col-md-6 py-2">
                 <input type="text" name="inventory_name" id='inventory_name' class="form-control form-validated mb-2" maxlength="75"/>

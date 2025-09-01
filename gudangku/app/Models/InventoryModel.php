@@ -73,7 +73,7 @@ class InventoryModel extends Model
     }
 
     public static function getInventoryByStorage($storage,$room,$user_id){
-        return InventoryModel::select('id','inventory_name','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price')
+        return InventoryModel::select('id','inventory_name','inventory_vol','inventory_unit', 'inventory_category', 'inventory_price','inventory_rack')
             ->where('created_by',$user_id)
             ->where('inventory_storage',$storage)
             ->where('inventory_room',$room)

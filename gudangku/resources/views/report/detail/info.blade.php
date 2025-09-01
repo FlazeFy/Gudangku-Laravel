@@ -5,15 +5,24 @@
     }
 </style>
 
-<div id="report_holder"></div>
-<div id="report_check_action"></div>
-<h3 class='fw-bold' style="font-size:var(--textJumbo);">Attached Image</h3>
-<div id="report_img_holder" class='row'></div>
-<h3 class='fw-bold mt-2' style="font-size:var(--textJumbo);">Attached Item</h3>
-<div id="report_item_holder" class='table-holder'>
-    <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
+<div class="container-form" id="edit_report_detail-section">
+    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Report Detail</h1>
+    <div id="report_holder"></div>
+    <div id="report_check_action"></div>
 </div>
-<div id="report_check_extra"></div>
+
+<div class="container-form" id="edit_attached_image-section">
+    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Attached Image</h1>
+    <div id="report_img_holder" class='row'></div>
+</div>
+
+<div class="container-form" id="edit_attached_item-section">
+    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Attached Item</h1>
+    <div id="report_item_holder" class='table-holder'>
+        <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
+    </div>
+    <div id="report_check_extra"></div>
+</div>
 
 <script>
     const is_edit_mode = <?= session()->get('toogle_edit_report') ?>;

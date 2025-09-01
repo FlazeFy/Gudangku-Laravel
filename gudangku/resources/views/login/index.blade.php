@@ -36,8 +36,10 @@
             </div>
             <div class="col-xl-4 col-lg-5 col-md-6">
                 @if(!$isMobile)
-                <div class="position-sticky" style="top:25vh;">
-                    @include('login.form')
+                <div class="position-sticky" style="top:15vh;">
+                    <div class="container-form">
+                        @include('login.form')
+                    </div>
                 </div>
                 @endif
             </div>

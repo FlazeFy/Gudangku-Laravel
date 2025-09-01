@@ -153,25 +153,25 @@
                                 <h6 class='mt-2 inventory-name' style='font-size:var(--textLG); font-weight:600;'>${el.inventory_name}</h6>
                                 <hr class='my-2'>
                                 <h6 class='fw-bold mt-2'>Description</h6>
-                                <h6 class='inventory-desc'>${el.inventory_desc || '-'}</h6>
+                                <p class='inventory-desc'>${el.inventory_desc || '-'}</p>
                                 ${role == 1 ? `
                                     <h6 class='fw-bold mt-2'>Created By</h6>
-                                    <h6>@${el.username}</h6>
+                                    <p>@${el.username}</p>
                                 ` : ''}
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 <h6 class='fw-bold'>Category</h6>
-                                <h6 class='inventory-category'>${el.inventory_category}</h6>
+                                <p class='inventory-category'>${el.inventory_category}</p>
                                 <h6 class='fw-bold mt-2'>Merk</h6>
-                                <h6 class='inventory-merk'>${el.inventory_merk || '-'}</h6>
+                                <p class='inventory-merk'>${el.inventory_merk || '-'}</p>
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 <h6 class='fw-bold'>Room</h6>
-                                <h6 class='inventory-room'>${el.inventory_room}</h6>
+                                <p class='inventory-room'>${el.inventory_room}</p>
                                 <h6 class='fw-bold mt-2'>Storage</h6>
-                                <h6 class='inventory-storage'>${el.inventory_storage ?? '-'}</h6>
+                                <p class='inventory-storage'>${el.inventory_storage ?? '-'}</p>
                                 <h6 class='fw-bold mt-2'>Rack</h6>
-                                <h6 class='inventory-rack'>${el.inventory_rack ?? '-'}</h6>
+                                <p class='inventory-rack mb-0'>${el.inventory_rack ?? '-'}</p>
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>Rp. ${number_format(el.inventory_price, 0, ',', '.')}</td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>${el.inventory_vol} ${el.inventory_unit}</td>

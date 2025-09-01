@@ -47,9 +47,9 @@ const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
                         </div>
                         <div class="modal-body">
                             <div class='row'>
-                                <div class='col'>
+                                <div class='col-lg-4 col-md-5 col-sm-12'>
                                     <div id='pie-chart-${coor}'></div>
-                                    <label>Name</label>
+                                    <label>Storage Name</label>
                                     <input type="text" name="inventory_storage" class="form-control" value='${storage ?? ''}'/>
                                     <label>Description</label>
                                     <textarea name="inventory_desc" class="form-control">${storage_desc ?? ''}</textarea>
@@ -58,14 +58,14 @@ const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
                                         <a class='btn btn-danger remove_coordinate'><i class="fa-solid fa-trash"></i> Remove Coordinate</a>
                                     </div>
                                 </div>
-                                <div class='col'>
+                                <div class='col-lg-8 col-md-7 col-sm-12'>
                                     <table id='table-inventory-${coor}' class='table'>
                                         <thead>
                                             <tr class='text-center'>
-                                                <th>Name</th>
+                                                <th>Rack</th>
+                                                <th>Name, Unit & Volume</th>
                                                 <th>Category</th>
                                                 <th>Price</th>
-                                                <th>Unit & Volume</th>
                                                 <th>Edit</th>
                                             </tr>
                                         </thead>

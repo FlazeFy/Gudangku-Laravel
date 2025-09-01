@@ -66,6 +66,7 @@
                 nodeBGColorHover: 'var(--primaryColor)',
                 edgeColor: 'var(--greyColor)',
                 edgeColorHover: 'var(--whiteColor)',
+                borderRadius: 'var(--roundedLG)',
                 childrenSpacing: 150,
                 siblingSpacing: 30,
                 nodeWidth: 220,   

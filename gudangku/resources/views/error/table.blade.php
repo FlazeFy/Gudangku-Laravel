@@ -37,7 +37,7 @@
                 data.forEach(el => {
                     $(`#${item_holder}`).append(`
                         <tr>
-                            <td class='fw-bold'>${el.message}</td>
+                            <td>${el.message}</td>
                             <td>
                                 <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalDetailStack_${el.id}">
                                     <i class="fa-solid fa-circle-info" style="font-size:var(--textXLG);"></i> See Detail

@@ -33,8 +33,8 @@
                         <div class="history-box">
                             <div class="d-flex justify-content-between">
                                 <div class="">
-                                    <h2>${el.history_type} from item called ${el.history_context}</h2>
-                                    <h6 class='date-text mt-2'>Created At : ${getDateToContext(el.created_at,'calendar')}</h6>
+                                    <h6>${el.history_type} from item called ${el.history_context}</h6>
+                                    <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
                                 </div>
                                 <div class="pe-2 ps-3">
                                     <button class="btn btn-danger d-block mx-auto btn-delete" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}"><i class="fa-solid fa-trash mx-2"></i></button>
