@@ -171,7 +171,7 @@ const generate_line_column_chart = (title, holder, data) => {
     }
 }
 
-const generate_gauge_chart = (title, holder, data) => {
+const generate_gauge_chart = (title, holder, data, type_color = 'single_color') => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
     if (data.length > 0) {
@@ -187,11 +187,17 @@ const generate_gauge_chart = (title, holder, data) => {
             let percentage = percentages[selectedIndex];
             let fillColor = "var(--successBG)"
 
-            if (percentage < 30) {
-                fillColor = "var(--dangerBG)"
-            } else if (percentage < 70) {
-                fillColor = "var(--warningBG)"
-            } 
+            if(type_color != 'single_color'){
+                if (percentage < 30) {
+                    fillColor = type_color == 'low_best' ? "var(--successBG)" : "var(--dangerBG)"
+                } else if (percentage < 70) {
+                    fillColor = "var(--warningBG)"
+                } else {
+                    fillColor = type_color == 'low_best' ? "var(--dangerBG)" : "var(--successBG)"
+                }
+            } else {
+                fillColor = "var(--primaryColor)"
+            }
 
             let options = {
                 series: [percentages[selectedIndex]],

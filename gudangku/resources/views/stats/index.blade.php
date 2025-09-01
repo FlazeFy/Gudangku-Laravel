@@ -55,6 +55,9 @@
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mx-auto">
                     @include('stats.get_favorite_inventory_comparison')
                 </div>
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mx-auto">
+                    @include('stats.get_low_capacity_inventory_comparison')
+                </div>
             @endif
         </div>
     </div>
