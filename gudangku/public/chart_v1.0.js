@@ -33,9 +33,7 @@ const generate_pie_chart = (title, holder, data) => {
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
         } else {
-            $(`#${holder}`).html(`
-                <h6 class="text-center">Data is Not Valid</h6>
-            `)
+            $(`#${holder}`).html(`<h6 class="text-center">Data is Not Valid</h6>`)
         }
     } else {
         $(`#${holder}`).html(`
@@ -96,9 +94,7 @@ const generate_bar_chart = (title, holder, data) => {
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
         } else {
-            $(`#${holder}`).html(`
-                <h6 class="text-center">Data is Not Valid</h6>
-            `)
+            $(`#${holder}`).html(`<h6 class="text-center">Data is Not Valid</h6>`)
         }
     } else {
         $(`#${holder}`).html(`
@@ -165,9 +161,7 @@ const generate_line_column_chart = (title, holder, data) => {
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
         } else {
-            $(`#${holder}`).html(`
-                <h6 class="text-center">Data is Not Valid</h6>
-            `)
+            $(`#${holder}`).html(`<h6 class="text-center">Data is Not Valid</h6>`)
         }
     } else {
         $(`#${holder}`).html(`
@@ -180,14 +174,27 @@ const generate_line_column_chart = (title, holder, data) => {
 const generate_gauge_chart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
-    if(data.length > 0){
+    if (data.length > 0) {
         let keys = Object.keys(data[0])
-        if(keys.length == 2 && ((typeof data[0][keys[0]] === 'string' && Number.isInteger(data[0][keys[1]])) || (typeof data[0][keys[1]] === 'string' && Number.isInteger(data[0][keys[0]])))){
-            const value = data[0][Number.isInteger(data[0][keys[1]]) ? keys[1] : keys[0]]
-            const context = data[0][typeof data[0][keys[0]] === 'string' ? keys[0] : keys[1]]
+        if (keys.length === 2 && ((typeof data[0][keys[0]] === 'string' && Number.isInteger(data[0][keys[1]])) || (typeof data[0][keys[1]] === 'string' && Number.isInteger(data[0][keys[0]])))) {
+            const totals = data.map(item => item[Object.keys(item).find(k => Number.isInteger(item[k]))])
+            const contexts = data.map(item => item[Object.keys(item).find(k => typeof item[k] === 'string')])
 
-            var options = {
-                series: [value],
+            const sum = totals.reduce((a, b) => a + b, 0)
+            const percentages = totals.map(val => Math.round((val / sum) * 100))
+
+            let selectedIndex = 0
+            let percentage = percentages[selectedIndex];
+            let fillColor = "var(--successBG)"
+
+            if (percentage < 30) {
+                fillColor = "var(--dangerBG)"
+            } else if (percentage < 70) {
+                fillColor = "var(--warningBG)"
+            } 
+
+            let options = {
+                series: [percentages[selectedIndex]],
                 chart: {
                     height: 350,
                     type: "radialBar",
@@ -201,20 +208,21 @@ const generate_gauge_chart = (title, holder, data) => {
                             size: "70%",
                         },
                         track: {
-                            background: "#f2f2f2",
+                            background: "var(--greyColor)",
                             strokeWidth: "100%",
                         },
                         dataLabels: {
                             name: {
                                 show: true,
-                                offsetY: -10,
-                                fontSize: "16px",
+                                offsetY: 20,
+                                fontSize: "var(--textXLG)",
                                 color: "#333",
-                                formatter: () => context
+                                formatter: () => contexts[selectedIndex]
                             },
                             value: {
-                                offsetY: 5,
-                                fontSize: "20px",
+                                show: true,
+                                offsetY: -30, 
+                                fontSize: "calc(1.5*var(--textXJumbo))",
                                 fontWeight: 600,
                                 formatter: (val) => `${val}%`
                             }
@@ -222,17 +230,15 @@ const generate_gauge_chart = (title, holder, data) => {
                     }
                 },
                 fill: {
-                    colors: ["#009FF9"],
+                    colors: [fillColor],
                 },
-                labels: [context]
-            };
+                labels: [contexts[selectedIndex]]
+            }
 
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
         } else {
-            $(`#${holder}`).html(`
-                <h6 class="text-center">Data is Not Valid</h6>
-            `)
+            $(`#${holder}`).html(`<h6 class="text-center">Data is Not Valid</h6>`)
         }
     } else {
         $(`#${holder}`).html(`
@@ -241,6 +247,7 @@ const generate_gauge_chart = (title, holder, data) => {
         `)
     }
 }
+
 
 const generate_table_context_total = (holder, data, key_currency) => {
     if(data.length > 0){

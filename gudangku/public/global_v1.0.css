@@ -222,7 +222,10 @@ table tr {
     padding: var(--spaceMini) var(--spaceSM) !important;
 }
 .apexcharts-tooltip, .apexcharts-tooltip-title, .apexcharts-tooltip-series-group, .apexcharts-legend-text, .d3 .node, .apexcharts-xaxistooltip .apexcharts-xaxistooltip-text {
-    color: var(--whiteColor);   
+    color: var(--whiteColor) !important;   
+}
+.apexcharts-datalabels-group text{
+    fill: var(--whiteColor) !important; 
 }
 .apexcharts-tooltip-title, .apexcharts-tooltip, .apexcharts-xaxistooltip, .apexcharts-xaxistooltip.apexcharts-theme-light, .apexcharts-xaxistooltip.apexcharts-theme-dark {
     background: var(--semiDarkColor) !important;  

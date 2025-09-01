@@ -805,8 +805,8 @@ class Queries extends Controller
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'stats'),
                     'data' => [
-                        [ 'context' => 'Normal Inventory', 'total' => $total_item ],
-                        [ 'context' => 'Favorited', 'total' => $total_fav ]
+                        [ 'context' => 'Favorited', 'total' => $total_fav ],
+                        [ 'context' => 'Normal Inventory', 'total' => $total_item ]
                     ]
                 ], Response::HTTP_OK);
             } else {
