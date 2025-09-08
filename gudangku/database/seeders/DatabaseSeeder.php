@@ -9,6 +9,7 @@ use App\Models\ReportModel;
 use App\Models\HistoryModel;
 use App\Models\ReportItemModel;
 use App\Models\ReminderModel;
+use App\Models\FAQModel;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         // Delete All
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        FAQModel::truncate();
         HistoryModel::truncate();
         ReportItemModel::truncate();
         ReportModel::truncate();
@@ -31,6 +33,7 @@ class DatabaseSeeder extends Seeder
         // Factory
         AdminModel::factory(10)->create();
         UserModel::factory(10)->create();
+        FAQModel::factory(50)->create();
         InventoryModel::factory(10)->create();
         ReportModel::factory(10)->create();
         ReportItemModel::factory(10)->create();
