@@ -109,11 +109,11 @@
 
     const get_detail_inventory = (id) => {
         const item_holder = 'report_holder'
-        Swal.showLoading()
         $.ajax({
             url: `/api/v1/inventory/detail/${id}`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json");
                 xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
             },
@@ -260,11 +260,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Something wrong. Please contact admin",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 } else {
                     Swal.fire({
                         title: "Failed!",
@@ -285,11 +281,11 @@
     
     const get_dictionary = () => {
         const type = 'inventory_room,inventory_unit,inventory_category,reminder_type,reminder_context,report_category'
-        Swal.showLoading()
         $.ajax({
             url: `/api/v1/dictionary/type/${type}`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
@@ -318,13 +314,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Something wrong. Please contact admin",
-                        icon: "error"
-                    });
-                }
+                generate_api_error(response, true)
             }
         });
     }

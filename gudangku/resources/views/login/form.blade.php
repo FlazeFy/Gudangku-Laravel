@@ -141,11 +141,7 @@
                     Swal.close()
                     sessionStorage.clear()
                     localStorage.clear()
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the user data",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 }
             });
         } else {

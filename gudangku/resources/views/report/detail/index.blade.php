@@ -10,7 +10,7 @@
     <div class="content">
         @include('others.profile')
         @include('others.notification')
-        <h2 class="main-page-title">Report Detail</h2>
+        <h1 class="main-page-title">Report Detail</h1>
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-<?php if(!$isMobile){ echo "start"; } else { echo "end"; } ?>">
                 <a class="btn btn-danger btn-main top" href="/report"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>

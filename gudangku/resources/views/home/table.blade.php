@@ -306,11 +306,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the history",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 } else {
                     $('#total-item').text(0)
                     $(`#${item_holder}`).html(`<tr><td colspan='7' class='text-center py-3'>- No Inventory Found -</td></tr>`)

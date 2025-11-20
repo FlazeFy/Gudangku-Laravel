@@ -27,11 +27,11 @@
     })
     
     const get_available_year = () => {
-        Swal.showLoading()
         $.ajax({
             url: `/api/v1/user/my_year`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
@@ -46,11 +46,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get available year",
-                    icon: "error"
-                });
+                generate_api_error(response, true)
             }
         });
     }

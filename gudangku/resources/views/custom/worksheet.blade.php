@@ -5,7 +5,6 @@
     const id = '<?= $id ?>'
     const filter_in = '<?= $filter_in ?? ''?>'
     const get_generated_default_document = () => {
-        Swal.showLoading()
         $.ajax({
             url: (() => {
                 if (type === 'report') {
@@ -20,6 +19,7 @@
             })(),
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
@@ -29,13 +29,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to generated",
-                        icon: "error"
-                    });
-                }
+                generate_api_error(response, true)
             }
         });
     }

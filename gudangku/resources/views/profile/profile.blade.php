@@ -78,11 +78,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get the user data",
-                    icon: "error"
-                });
+                generate_api_error(response, true)
             }
         });
     }
@@ -114,19 +110,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
-                    if(response.status != 404 && response.status != 409){
-                        Swal.fire({
-                            title: "Oops!",
-                            text: "Something wrong. Please contact admin",
-                            icon: "error"
-                        });
-                    } else {
-                        Swal.fire({
-                            title: "Oops!",
-                            text: response.responseJSON.message,
-                            icon: "error"
-                        });
-                    }
+                    generate_api_error(response, true)
                 }
             });
         } else {

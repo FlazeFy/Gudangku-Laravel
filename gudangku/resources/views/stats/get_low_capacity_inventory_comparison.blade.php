@@ -3,7 +3,6 @@
 </div>
 <script>
     const get_total_low_capacity_inventory_comparison = (page) => {
-        Swal.showLoading()
         const title = 'Low Capacity Inventory Comparison'
         const ctx = 'total_low_capacity_inventory_comparison_temp'
         const ctx_holder = 'stats_total_low_capacity_inventory_comparison_holder'
@@ -20,6 +19,7 @@
                 url: `/api/v1/stats/inventory/low_capacity_inventory_comparison`,
                 type: 'GET',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json")
                     xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
                 },

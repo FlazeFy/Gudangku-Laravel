@@ -17,7 +17,6 @@
 
 <script>
     const get_all_user = () => {
-        Swal.showLoading()
         const item_holder = 'user_tb_body'
         $(`#${item_holder}`).empty()
 
@@ -25,6 +24,7 @@
             url: `/api/v1/user`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
@@ -76,11 +76,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the user",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 } else {
                     template_alert_container(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
                 }
@@ -90,16 +86,16 @@
     get_all_user()
 
     const destroy_history_by_id = (id) => {
-        Swal.showLoading()
         $.ajax({
             url: `/api/v1/user/${id}`,
             type: 'DELETE',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
             success: function(response) {
-                Swal.hideLoading()
+                Swal.close()
                 Swal.fire({
                     title: "Success!",
                     text: `${response.message}`,
@@ -112,6 +108,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
                 generate_api_error(response, true)
             }
         });

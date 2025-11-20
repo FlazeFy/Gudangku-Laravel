@@ -23,19 +23,7 @@ const delete_reminder_by_id = (id, token, refreshData) => {
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
             Swal.close()
-            if(response.status != 404){
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Something wrong. Please contact admin",
-                    icon: "error"
-                });
-            } else {
-                Swal.fire({
-                    title: "Oops!",
-                    text: response.responseJSON.message,
-                    icon: "error"
-                });
-            }
+            generate_api_error(response, true)
         }
     });
 }

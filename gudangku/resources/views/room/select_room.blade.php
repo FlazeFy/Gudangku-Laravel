@@ -8,11 +8,11 @@
 
 <script>
     const get_list_room = (page) => {
-        Swal.showLoading()
         $.ajax({
             url: `/api/v1/inventory/room`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
@@ -28,11 +28,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get the list room",
-                    icon: "error"
-                });
+                generate_api_error(response, true)
             }
         });
     }

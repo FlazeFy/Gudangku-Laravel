@@ -114,20 +114,7 @@
                 $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
                 $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
                 $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
-                
-                if (xhr.status === 404) {
-                    Swal.fire({
-                        title: "Oops!",
-                        text: xhr.responseJSON?.message,
-                        icon: "warning"
-                    })
-                } else {
-                    Swal.fire({
-                        title: "Oops!",                    
-                        text: "Something went wrong on the server. Please try again later.",
-                        icon: "error"
-                    })
-                }
+                generate_api_error(response, true)
             }
         })
     }

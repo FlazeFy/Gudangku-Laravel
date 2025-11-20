@@ -3,7 +3,6 @@
 </div>
 <script>
     const get_total_inventory_by_merk = (page) => {
-        Swal.showLoading()
         const title = 'Inventory By Merk'
         const ctx = 'total_inventory_by_merk_temp'
         const ctx_holder = 'stats_total_inventory_by_merk_holder'
@@ -21,6 +20,7 @@
                 url: `/api/v1/stats/inventory/total_by_merk/${type_chart}`,
                 type: 'GET',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json")
                     xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
                 },

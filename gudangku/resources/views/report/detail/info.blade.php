@@ -6,18 +6,18 @@
 </style>
 
 <div class="container-form" id="edit_report_detail-section">
-    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Report Detail</h1>
+    <h3 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Report Detail</h3>
     <div id="report_holder"></div>
     <div id="report_check_action"></div>
 </div>
 
 <div class="container-form" id="edit_attached_image-section">
-    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Attached Image</h1>
+    <h3 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Attached Image</h3>
     <div id="report_img_holder" class='row'></div>
 </div>
 
 <div class="container-form" id="edit_attached_item-section">
-    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Attached Item</h1>
+    <h3 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Attached Item</h3>
     <div id="report_item_holder" class='table-holder'>
         <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
     </div>
@@ -299,21 +299,17 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.hideLoading()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to update the item",
-                    icon: "error"
-                });
+                generate_api_error(response, true)
             }
         });
     }
 
     const delete_item = (id) => {
-        Swal.showLoading()
         $.ajax({
             url: `/api/v1/report/delete/item/${id}`,
             type: 'DELETE',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
@@ -330,12 +326,8 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.hideLoading()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to delete the item",
-                    icon: "error"
-                });
+                Swal.close()
+                generate_api_error(response, true);
             }
         });
     }
@@ -378,12 +370,8 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.hideLoading()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to update the report",
-                    icon: "error"
-                });
+                Swal.close()
+                generate_api_error(response, true)
             }
         });
     }
@@ -411,11 +399,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Something wrong. Please contact admin",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 }
             }
         });
@@ -451,12 +435,8 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.hideLoading()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to update the report",
-                    icon: "error"
-                });
+                Swal.close()
+                generate_api_error(response, true)
             }
         });
     }

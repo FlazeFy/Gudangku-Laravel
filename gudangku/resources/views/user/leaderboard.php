@@ -27,12 +27,11 @@
 
 <script>
     const get_leaderboard = () => {
-        Swal.showLoading()
-
         $.ajax({
             url: `/api/v1/stats/user/leaderboard`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },

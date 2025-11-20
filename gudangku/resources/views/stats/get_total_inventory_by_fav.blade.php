@@ -3,7 +3,6 @@
 </div>
 <script>
     const get_total_inventory_by_favorite = (page) => {
-        Swal.showLoading()
         const title = 'Inventory By Favorite'
         const ctx = 'total_inventory_by_favorite_temp'
         const ctx_holder = 'stats_total_inventory_by_favorite_holder'
@@ -21,6 +20,7 @@
                 url: `/api/v1/stats/inventory/total_by_favorite/${type_chart}`,
                 type: 'GET',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json")
                     xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
                 },

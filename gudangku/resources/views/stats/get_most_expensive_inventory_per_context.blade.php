@@ -24,7 +24,6 @@
 </div>
 <script>
     const get_most_expensive_inventory_per_context = () => {
-        Swal.showLoading()
         const ctx_holders = [
             { holder: "stats_most_expensive_inventory_per_category", object: "inventory_category" },
             { holder: "stats_most_expensive_inventory_per_merk", object: "inventory_merk" },
@@ -45,6 +44,7 @@
                 url: `/api/v1/stats/inventory/most_expensive/inventory_category,inventory_room,inventory_storage,inventory_merk`,
                 type: 'GET',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json")
                     xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
                 },

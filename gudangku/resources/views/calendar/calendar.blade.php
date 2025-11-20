@@ -237,11 +237,11 @@
         calendar.render()
 
         const get_calendar = () => {
-            Swal.showLoading()
             $.ajax({
                 url: `/api/v1/inventory/calendar`,
                 type: 'GET',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json")
                     xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")
                 },
@@ -260,13 +260,9 @@
                     calendar.addEventSource(events)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    Swal.close();
+                    Swal.close()
                     if(response.status != 404){
-                        Swal.fire({
-                            title: "Oops!",
-                            text: "Failed to get the calendar",
-                            icon: "error"
-                        });
+                        generate_api_error(response, true)
                     }
                 }
             });

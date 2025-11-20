@@ -1,6 +1,6 @@
-<hr><h1 class="fw-bold my-3 text-center" style="font-size:calc(2*var(--textLG));" id="user_manual-section">User Manual</h1>
+<hr><h2 class="fw-bold my-3 text-center" style="font-size:calc(2*var(--textLG));" id="user_manual-section">User Manual</h2>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Login?</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Login?</h2>
     <h2 style="font-size:calc(var(--textLG));">To sign it to GudangKu Apps you must provide <b>Email / Username</b> and <b>Password</b></h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -9,7 +9,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Sign Out?</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Sign Out?</h2>
     <h2 style="font-size:calc(var(--textLG));">When sign out, you will also delete the stored local and session data of GudangKu</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -19,9 +19,9 @@
     </ol>
 </div>
 
-<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Inventory</h1>
+<h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Inventory</h2>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Add Inventory?</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Add Inventory?</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you must provide <b>Pin Name</b>, <b>Category</b>, <b>Inventory Merk</b>, <b>Inventory Price</b>, <b>Inventory Volume</b>, <b>Inventory Unit</b>, and <b>Inventory Room</b></h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
@@ -33,7 +33,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Browse your Inventory</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Browse your Inventory</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will see all of your created inventory</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -45,7 +45,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Inventory using Name or Merk</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Inventory using Name or Merk</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will search inventory by providing the <b>Inventory Name</b> or <b>Inventory Merk</b></h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -55,7 +55,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Reset Inventory Search By Name or Merk</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Reset Inventory Search By Name or Merk</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will reset the inventory search by <b>Name</b> or <b>Merk</b> and showing all the available inventory</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -65,7 +65,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Inventory using Category</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Inventory using Category</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will search inventory by providing the <b>Inventory Category</b></h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -75,7 +75,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Sorting your Inventory</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Sorting your Inventory</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will sorting inventory list by some context</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -85,7 +85,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Delete Inventory</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Delete Inventory</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section not permentally delete your inventory. You can recover the deleted item before 30 days after it got deleted</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -95,7 +95,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Recover Inventory</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Recover Inventory</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you can recover the deleted item before it passed 30 days</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -105,7 +105,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Permentally Delete Inventory</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Permentally Delete Inventory</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will permentally delete your inventory, remove inventory from attached report, and reminder</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -115,7 +115,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Export All Inventory CSV</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Export All Inventory CSV</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will export the all inventory into CSV format and sended it to your Telegram Chat</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -124,7 +124,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Delete Reminder From Inventory</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Delete Reminder From Inventory</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will delete reminder from a inventory. The reminder will be deleted (not removed) so you need to make a new reminder if you have been delete the reminder</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -135,7 +135,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Edit Reminder Attached in Inventory</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Edit Reminder Attached in Inventory</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you need to provide <b>Description</b>, <b>Type</b>, and <b>Context</b></h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -147,7 +147,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Copy Reminder to Another Inventory</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Copy Reminder to Another Inventory</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will copy reminder from a inventory and attach to another inventory with same <b>Description</b>, <b>Type</b>, and <b>Context</b></h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -159,9 +159,9 @@
     </ol>
 </div>
 
-<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Inventory Room</h1>
+<h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Inventory Room</h2>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to See 2D Room Layout?</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to See 2D Room Layout?</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will see the <b>room layout</b> and the <b>inventory</b> found on it</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
@@ -171,7 +171,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Toggle Room</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Toggle Room</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you can toggle what room you want to show the layout</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
@@ -181,7 +181,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Print the 2D Room Layout</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Print the 2D Room Layout</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you can print the document of <b>room layout</b>, <b>inventory</b>, and <b>storage / rack</b> in PDF format</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
@@ -192,7 +192,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Add Storage Layout</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Add Storage Layout</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you can <b>add a storage to floor layout</b>, or maybe expand it by giving <b>same name in different floor coordinate</b>. When you add new storage, you will need to provide the <b>Storage</b> name</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
@@ -204,9 +204,9 @@
     </ol>
 </div>
 
-<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Report</h1>
+<h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Report</h2>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Add Report?</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">How to Add Report?</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you must provide <b>Title</b>, <b>Category</b>, and choose at least one item from your inventory</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
@@ -222,7 +222,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Browse your Report</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Browse your Report</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will see all of your created report</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -234,7 +234,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Report using Title</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Report using Title</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will search report by providing the <b>Report Title</b></h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -244,7 +244,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Reset Report Search By Title</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Reset Report Search By Title</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will reset the report search by <b>Title</b> and showing all the available report</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -254,7 +254,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Report using Category</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Search your Report using Category</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will search report by providing the <b>Report Category</b></h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -264,7 +264,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Sorting your Report</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Sorting your Report</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will sorting report list by some context</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -274,9 +274,9 @@
     </ol>
 </div>
 
-<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Stats</h1>
+<h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Stats</h2>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">See and Toggle Stats View</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">See and Toggle Stats View</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you can choose the chart type to show and the total view</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -298,9 +298,9 @@
     </ol>
 </div>
 
-<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">History</h1>
+<h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">History</h2>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">See My History</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">See My History</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section showing list of your activity in the Apps. That contain <b>Context</b> and <b>Datetime</b> when its happen</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
         <li>In the landing page, press the <b>History</b> menu</li>
@@ -308,7 +308,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Delete History</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Delete History</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section, after delete the history. You can't recover it</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -318,7 +318,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Export Historyin CSV</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Export Historyin CSV</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you will export the history activity into CSV format and sended it to your Telegram Chat</h2>
     <h2 style="font-size:calc(var(--textLG));" class="fw-bold mt-3">How to do it :</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
@@ -327,9 +327,9 @@
     </ol>
 </div>
 
-<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Calendar</h1>
+<h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Calendar</h2>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">See My Inventory or Report Calendar</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">See My Inventory or Report Calendar</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section showing the date when <b>inventory</b> or <b>report</b> are created in calendar format</h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
         <li>In the landing page, press the <b>Calendar</b> menu</li>
@@ -337,9 +337,9 @@
     </ol>
 </div>
 
-<h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Profile</h1>
+<h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textXLG));">Profile</h2>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Edit My Profile</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Edit My Profile</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you must provide <b>Username</b> and <b>Email</b></h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
         <li>In the landing page, press the <b>My Profile</b> menu</li>
@@ -348,7 +348,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Change My Telegram ID</h1>
+    <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Change My Telegram ID</h2>
     <h2 style="font-size:calc(var(--textLG));">In this section you must provide your <b>Telegram User ID</b>. You can find your ID from bot called <b>@username_to_id_bot</b></h2>
     <ol class="text-white ms-4" style="list-style-type: circle;">
         <li>In the landing page, press the <b>My Profile</b> menu</li>
@@ -361,11 +361,11 @@
         <li>Click <b class='text-success'>Validate Token</b> to finish the Telegram ID Change</li>
     </ol>
 </div>
-<hr><h1 class="fw-bold my-3 text-center" style="font-size:calc(2*var(--textLG));" id="data_constraint-section">Data Constraint</h1>  
+<hr><h2 class="fw-bold my-3 text-center" style="font-size:calc(2*var(--textLG));" id="data_constraint-section">Data Constraint</h2>  
 <div class="row">
     <div class="col-md-6 col-sm-12">
         <div class="container bordered mb-4">
-            <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Inventory</h1>
+            <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Inventory</h2>
             <ol class="text-white ms-4" style="list-style-type: circle;">
                 <li>Inventory Name (Max Char: 75)</li>
                 <li>Inventory Category (Such as : <span id="inventory_category-text"></span>)</li>
@@ -385,7 +385,7 @@
     </div>
     <div class="col-md-6 col-sm-12">
         <div class="container bordered mb-4">
-            <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Report</h1>
+            <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Report</h2>
             <ol class="text-white ms-4" style="list-style-type: circle;">
                 <li>Report Title (Max Char: 75)</li>
                 <li>Report Category (Such as : <span id="report_category-text"></span>)</li>
@@ -398,7 +398,7 @@
     </div>
     <div class="col-md-6 col-sm-12">
         <div class="container bordered mb-4">
-            <h1 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Reminder</h1>
+            <h2 class="fw-bold mb-3" style="font-size:calc(2*var(--textLG));">Reminder</h2>
             <ol class="text-white ms-4" style="list-style-type: circle;">
                 <li>Reminder Description (Max Char: 255)</li>
                 <li>Reminder Type (Such as : <span id="reminder_type-text"></span>)</li>

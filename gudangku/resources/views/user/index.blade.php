@@ -14,7 +14,7 @@
     <div class="content">
         @include('others.profile')
         @include('others.notification')
-        <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">User</h2>
+        <h1 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">User</h1>
         <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
         <form action='/user/save_as_csv' method='POST' class='d-inline'>
             @csrf
@@ -23,18 +23,18 @@
         <div class="row">
             <div class="col-lg-4 col-md-5 col-sm-12">
                 <div class="container bordered" id="last_login-section">
-                    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Last Login</h1>
+                    <h2 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Last Login</h2>
                     @include('user.last_login')
                 </div>      
             </div>
             <div class="col-lg-8 col-md-7 col-sm-12">
                 <div class="container bordered" id="last_login-section">
-                    <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Leaderboard</h1>
+                    <h2 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Leaderboard</h2>
                     @include('user.leaderboard')
                 </div>      
             </div>
         </div>
-        <h1 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">All User</h1>
+        <h2 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">All User</h2>
         @include('user.table')
     </div>
 @endsection

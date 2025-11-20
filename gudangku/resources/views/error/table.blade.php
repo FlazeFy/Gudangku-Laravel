@@ -68,11 +68,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the error",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 } else {
                     template_alert_container(item_holder, 'no-data', "No error found to show", null, '<i class="fa-solid fa-scroll"></i>')
                 }

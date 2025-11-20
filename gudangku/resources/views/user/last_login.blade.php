@@ -10,7 +10,6 @@
 
 <script>
     const get_last_login = () => {
-        Swal.showLoading()
         const item_holder = 'last_login-holder'
         $(`#${item_holder}`).empty()
 
@@ -18,6 +17,7 @@
             url: `/api/v1/stats/user/last_login`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
@@ -37,11 +37,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the user",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 } else {
                     template_alert_container(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
                 }

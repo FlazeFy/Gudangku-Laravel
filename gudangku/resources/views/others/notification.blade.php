@@ -44,11 +44,7 @@
                         },
                         error: function(response, jqXHR, textStatus, errorThrown) {
                             if(response.status != 404){
-                                Swal.fire({
-                                    title: "Oops!",
-                                    text: "Failed to get the history",
-                                    icon: "error"
-                                });
+                                generate_api_error(response, true)
                             } else {
                                 template_alert_container(item_holder, 'no-data', "No notification to show", null, '<i class="fa-solid fa-rotate-left"></i>')
                             }

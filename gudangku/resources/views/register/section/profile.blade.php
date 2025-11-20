@@ -9,7 +9,7 @@
 <a class="btn btn-success w-100" id="btn-register-acc"><i class="fa-solid fa-paper-plane"></i> Register Account</a><br>
 <div class="text-center mt-3 d-none section-form" id="token-section">
     <h2>Validate</h2><br>
-    <h1 class="my-2 fw-bold" style="font-size:var(--textJumbo);" id="timer">15:00</h1>
+    <h2 class="my-2 fw-bold" style="font-size:var(--textJumbo);" id="timer">15:00</h2>
     <label>Type the Token that has sended to your email</label><br>
     <div class="pin-code" id="pin-holder">
         <input type="text" maxlength="1" oninput="validatePin()" autofocus>
@@ -146,21 +146,9 @@
                 icon: "success"
             });
         })
-        .fail(function (xhr, ajaxOptions, thrownError) {
+        .fail(function (response, xhr, ajaxOptions, thrownError) {
             Swal.hideLoading()
-            if (xhr.status === 404) {
-                Swal.fire({
-                    title: "Oops!",
-                    text: xhr.responseJSON?.message,
-                    icon: "warning"
-                })
-            } else {
-                Swal.fire({
-                    title: "Oops!",
-                    text: `Something error please call admin`,
-                    icon: "error"
-                });
-            }
+            generate_api_error(response, true)
             var pins = pin_holder.querySelectorAll('input')
             var is_empty = false
 
@@ -238,12 +226,8 @@
                     icon: data.status
                 });
             })
-            .fail(function (jqXHR, ajaxOptions, thrownError) {
-                Swal.fire({
-                    title: "Oops!",
-                    text: `Something error please call admin`,
-                    icon: "error"
-                });
+            .fail(function (response, textStatus, errorThrown) {
+                generate_api_error(response, true)
             });
         })
 
@@ -251,7 +235,6 @@
             if(validateInput('text', 'username', 36, 6) && validateInput('text', 'password', 36, 6) && validateInput('text', 'email', 255, 10)){
                 if($('#password').val() == $('#password_validation').val()){
                     if($('#email').val().includes("gmail")){
-                        Swal.showLoading()
                         $.ajax({
                             url: `/api/v1/register/token`,
                             dataType: 'json',
@@ -262,6 +245,7 @@
                             }), 
                             type: "POST",
                             success: function(response) {
+                                Swal.close()
                                 $('#checkTerm').attr('disabled', true)
                                 $('#username, #email, #password, #password_validation').attr('readonly',true)
                                 $('#token-section').removeClass('d-none')
@@ -273,7 +257,6 @@
                                 }, []);
 
                                 let data = response
-                                Swal.hideLoading()
                                 Swal.fire({
                                     title: `Token ${data.status}`,
                                     text: data.message,
@@ -281,19 +264,8 @@
                                 });
                             },
                             error: function(response, jqXHR, textStatus, errorThrown) {
-                                if(response.status != 404 && response.status != 409){
-                                    Swal.fire({
-                                        title: "Oops!",
-                                        text: `Something error please call admin`,
-                                        icon: "error"
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: "Oops!",
-                                        text: response.responseJSON.message,
-                                        icon: "error"
-                                    });
-                                }
+                                Swal.close()
+                                generate_api_error(response, true)
                             }
                         })
                     } else {

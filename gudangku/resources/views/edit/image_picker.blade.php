@@ -82,11 +82,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.hideLoading();
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to update the image. Please try again",
-                    icon: "error"
-                });
+                generate_api_error(response, true)
             }
         });
     }

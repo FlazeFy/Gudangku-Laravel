@@ -111,7 +111,7 @@ class CleanSchedule
                     }
             
                     // Destroy inventory items
-                    // InventoryModel::destroy($in->id);
+                    InventoryModel::destroy($in->id);
             
                     $summary_exec .= "- $items owned by #$in->username\n";
                     $items = "";

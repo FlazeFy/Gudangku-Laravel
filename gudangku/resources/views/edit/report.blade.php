@@ -70,11 +70,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Something wrong. Please contact admin",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 } else {
                     template_alert_container(item_holder, 'no-data', "This item doesn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')
                 }

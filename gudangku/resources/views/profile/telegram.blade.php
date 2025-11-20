@@ -83,6 +83,7 @@
                 },
                 dataType: 'json',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json");
                     xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");    
                 },
@@ -99,30 +100,8 @@
                     });
                 },
                 error: function(response, textStatus, errorThrown) {
-                    var errorMessage = "Unknown error occurred"
-                    var allMsg
-                    var icon = `<i class='fa-solid fa-triangle-exclamation'></i> `
-
-                    if (response.responseJSON && response.responseJSON.hasOwnProperty('message')) {
-                        allMsg = response.responseJSON.message
-                    } else if (response.responseJSON && response.responseJSON.hasOwnProperty('result')) {
-                        if (typeof response.responseJSON.result === "string") {
-                            allMsg = response.responseJSON.result
-                        } 
-                    } else if (response.responseJSON && response.responseJSON.hasOwnProperty('errors')) {
-                        allMsg = response.responseJSON.errors.result[0]
-                    } else {
-                        allMsg = errorMessage
-                    }
-
-                    if (allMsg) {
-                        $('#all_msg').html(icon + allMsg);
-                        Swal.fire({
-                            title: "Oops!",
-                            text: allMsg,
-                            icon: "error"
-                        });
-                    }
+                    Swal.close()
+                    generate_api_error(response, true)
                 }
             });
         });

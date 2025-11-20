@@ -1,6 +1,6 @@
 <div class="container-form">
     <form id="add_inventory">
-        <h1 class="mt-3">Inventory Detail</h1>
+        <h2 class="mt-3">Inventory Detail</h2>
         <div class="row">
             <div class="col-lg-6 col-md-6 py-2">
                 <input type="text" name="inventory_name" id='inventory_name' class="form-control form-validated mb-2" maxlength="75"/>
@@ -117,7 +117,7 @@
                 Swal.showLoading()
             },
             success: function(response) {
-                Swal.hideLoading()
+                Swal.close()
                 Swal.fire({
                     title: "Success!",
                     text: `${response.message}. Do you want to see the created item?`,
@@ -137,6 +137,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
                 generate_api_error(response, true)
             }
         });

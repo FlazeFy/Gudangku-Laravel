@@ -60,19 +60,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.hideLoading()
-                    if(response.status != 404){
-                        Swal.fire({
-                            title: "Oops!",
-                            text: "Something wrong. Please contact admin",
-                            icon: "error"
-                        });
-                    } else {
-                        Swal.fire({
-                            title: "Oops!",
-                            text: response.responseJSON.message,
-                            icon: "error"
-                        });
-                    }
+                    generate_api_error(response, true)
                 }
             });
         })
@@ -106,19 +94,7 @@
                     },
                     error: function(response, jqXHR, textStatus, errorThrown) {
                         Swal.hideLoading()
-                        if(response.status != 404){
-                            Swal.fire({
-                                title: "Oops!",
-                                text: "Something wrong. Please contact admin",
-                                icon: "error"
-                            });
-                        } else {
-                            Swal.fire({
-                                title: "Oops!",
-                                text: response.responseJSON.message,
-                                icon: "error"
-                            });
-                        }
+                        generate_api_error(response, true)
                     }
                 });
             }

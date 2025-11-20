@@ -141,11 +141,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the report",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true);
                 } else {
                     $('#total-item').text(0)
                     template_alert_container(item_holder, 'no-data', "No report found to show", null, '<i class="fa-solid fa-scroll"></i>','')

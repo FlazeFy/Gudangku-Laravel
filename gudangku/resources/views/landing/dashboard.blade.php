@@ -21,19 +21,19 @@
 
 <div class="row mb-3">
     <div class="col-lg-4 col-md-6 col-sm-12" id='total_item-section'>
-        <h1 class="dashboard-title"><span id='total_item'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Total Item</span> @endif</h1>
+        <h2 class="dashboard-title"><span id='total_item'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Total Item</span> @endif</h2>
         @if(!$isMobile)
             <h2 class="dashboard-subtitle">Total Item</h2>
         @endif
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12" id='total_fav-section'>
-        <h1 class="dashboard-title"><span id='total_fav'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Favorite Item</span> @endif</h1>
+        <h2 class="dashboard-title"><span id='total_fav'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Favorite Item</span> @endif</h2>
         @if(!$isMobile)
             <h2 class="dashboard-subtitle">Favorite Item</h2>
         @endif
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12" id='total_low-section'>
-        <h1 class="dashboard-title"><span id='total_low'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Low Capacity</span> @endif</h1>
+        <h2 class="dashboard-title"><span id='total_low'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Low Capacity</span> @endif</h2>
         @if(!$isMobile)
             <h2 class="dashboard-subtitle">Low Capacity</h2>
         @endif
@@ -77,11 +77,11 @@
 
 <script>
     const get_dashboard = () => {
-        Swal.showLoading()
         $.ajax({
             url: `/api/v1/stats/dashboard`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
@@ -99,11 +99,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get the report",
-                    icon: "error"
-                });
+                generate_api_error(response, true)
             }
         });
     }

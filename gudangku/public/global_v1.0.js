@@ -132,6 +132,12 @@ const generate_api_error = (response, is_list_format) => {
             html: msg,
             icon: "error"
         });
+    } else if(response.status === 422){
+        Swal.fire({
+            title: "Oops!",
+            html: "Data not found",
+            icon: "error"
+        });
     } else {
         Swal.fire({
             title: "Oops!",
@@ -169,11 +175,7 @@ const get_dct_by_type = (type) => {
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to fetch dictionary",
-                    icon: "error"
-                });
+                generate_api_error(response, true)
                 reject(errorThrown)
             }
         });

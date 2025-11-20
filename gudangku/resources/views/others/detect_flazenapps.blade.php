@@ -59,7 +59,7 @@
             <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">FlazenApps Was Here!</a>
             <div class="collapse multi-collapse mt-3" id="multiCollapseExample1">
                 <div class="content">
-                    <h1 class="mb-2">Hey FlazenApps Was Here!</h1>
+                    <h2 class="mb-2">Hey FlazenApps Was Here!</h2>
                     <p class="text-dark mb-2">We know that you have opened <b>GudangKu</b> from <b>FlazenApps</b> platform, are you want to use our testing account so you can explore this apps easily?</p>
                     <a class="btn btn-primary me-2" id="login_test_acc">Yeah, Bring Me There!</a>
                     <a class="btn btn-danger" id="reject_test_acc">Maybe, Later</a>
@@ -90,11 +90,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.hideLoading()
-                Swal.fire({
-                    title: "Oops!",
-                    text: `Something error please call admin`,
-                    icon: "error"
-                });
+                generate_api_error(response, true)
             }
         });
     })

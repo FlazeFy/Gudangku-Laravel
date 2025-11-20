@@ -37,12 +37,8 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.hideLoading()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to delete the report",
-                    icon: "error"
-                });
+                Swal.close()
+                generate_api_error(response, true)
             }
         });
     }

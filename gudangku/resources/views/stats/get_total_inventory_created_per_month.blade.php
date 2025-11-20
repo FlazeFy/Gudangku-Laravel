@@ -3,7 +3,6 @@
 </div>
 <script>
     const get_total_inventory_created_per_month = (year) => {
-        Swal.showLoading()
         const title = `Total inventory Created Per Month (${year})`
         const ctx = 'total_inventory_created_per_month_temp'
         const ctx_holder = "stats_total_inventory_created_per_month"
@@ -20,6 +19,7 @@
                 url: `/api/v1/stats/inventory/total_created_per_month/${year}`,
                 type: 'GET',
                 beforeSend: function (xhr) {
+                    Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json")
                     xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
                 },
