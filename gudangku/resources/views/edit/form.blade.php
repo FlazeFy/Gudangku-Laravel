@@ -1,4 +1,4 @@
-<div class="container-form">
+<form class="container-form" id="form_edit_inventory">
     <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
     <div class="row">
         <div class="col-lg-6 col-md-6 py-2">
@@ -25,7 +25,7 @@
         </div>
         <div class="col-xl-4 col-12 py-2">
             <label>Created At</label>
-            <input class='form-control' type='datetime-local' id='created_at_edit' name='created_at_edit'>
+            <input class='form-control' type='datetime-local' id='created_at_edit' name='created_at'>
         </div>
     </div><hr>
 
@@ -76,7 +76,7 @@
     <div class="d-flex justify-content-end">
         <a id="save_changes" class="btn btn-success mt-3 border-0" style="background:var(--successBG) !important; min-width:160px;"><i class="fa-solid fa-floppy-disk"></i> Submit</a>
     </div>
-</div>
+</form>
 
 <div class="container-form">
     <div class="d-flex justify-content-between">
@@ -92,15 +92,6 @@
 
 <script>
     $(document).on('click','#save_changes',function(){
-        const convertToOppositeTimezone = (datetime) => {
-            const localDate = new Date(datetime)
-            const offsetHr = getUTCHourOffset()
-            const oppositeOffsetHr = -offsetHr + offsetHr
-            const oppositeDate = new Date(localDate.getTime() + oppositeOffsetHr * 60 * 60 * 1000)
-            return oppositeDate.toISOString().slice(0, 16)
-        }
-        const createdAtOpposite = convertToOppositeTimezone($('#created_at_edit').val())
-        $('#created_at_edit').val(createdAtOpposite)
         save_update()
     })
 
@@ -183,7 +174,7 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete Reminder</h2>
+                                                        <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete Reminder</h5>
                                                         <a class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
                                                     </div>
                                                     <div class="modal-body">
@@ -242,8 +233,8 @@
                 $('#reminder_type').val(data.reminder_type)
                 $('#reminder_context').val(data.reminder_context)
                 $('#reminder_desc').text(data.reminder_desc)
-                $('#created_at').text(getDateToContext(data.created_at,'calendar'))
-                $('#created_at_edit').val(getDateToContext(data.created_at,'calendar'))
+                $('#created_at').text(getDateToContext(data.created_at,'calendar',false))
+                $('#created_at_edit').val(getDateToContext(data.created_at,'calendar',false))
                 $('#updated_at').text(data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-')
                 
                 $('#inventory_name_add_report').val(data.inventory_name)

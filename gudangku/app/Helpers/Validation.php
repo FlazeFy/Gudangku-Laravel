@@ -40,7 +40,7 @@ class Validation
                 'inventory_room' => 'required|string|max:36',
                 'inventory_storage' => 'nullable|string|max:36',
                 'inventory_rack' => 'nullable|string|max:36',
-                'inventory_price' => 'required|numeric|min:0|max:999999999',
+                'inventory_price' => 'nullable|numeric|min:0|max:999999999',
                 'inventory_image' => 'nullable|string|max:500',
                 'inventory_unit' => 'required|string|max:36',
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
@@ -61,7 +61,7 @@ class Validation
                 'inventory_room' => 'required|string|max:36',
                 'inventory_storage' => 'nullable|string|max:36',
                 'inventory_rack' => 'nullable|string|max:36',
-                'inventory_price' => 'required|numeric|min:0|max:999999999',
+                'inventory_price' => 'nullable|numeric|min:0|max:999999999',
                 'inventory_unit' => 'required|string|max:36',
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
                 'inventory_capacity_unit' => 'nullable|string|max:36',
@@ -117,7 +117,7 @@ class Validation
                 'item_name' => 'required|string|max:75|min:2',
                 'item_desc' => 'nullable|string|max:144',
                 'item_qty' => 'required|numeric|min:0|max:9999',
-                'item_price' => 'required|numeric|min:0|max:999999999',
+                'item_price' => 'nullable|numeric|min:0|max:999999999',
             ]);
         } 
     }

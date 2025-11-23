@@ -42,7 +42,7 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                                    <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                                 </div>
                                                 <div class="modal-body">

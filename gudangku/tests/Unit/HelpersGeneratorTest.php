@@ -60,9 +60,9 @@ class HelpersGeneratorTest extends TestCase
 
         // Test Parameter
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('id', $data['result']);
+        $this->assertArrayHasKey('id', $data['message']);
 
-        $user_id = $data['result']['id'];
+        $user_id = $data['message']['id'];
 
         // Exec
         $check = Generator::getUserEmail($user_id);

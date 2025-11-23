@@ -269,7 +269,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'result' => $validator->errors()
+                    'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {  
                 $rows = ReportModel::where('id', $id)

@@ -3,11 +3,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <h2>Are you sure want to <span class="text-danger">Permentally Delete</span> this report?</h2>
+                <p>Are you sure want to <span class="text-danger">Permentally Delete</span> this report?</p>
                 <button class="btn btn-danger mt-4" id="submit-delete-report-btn" onclick="delete_report('{{$id}}')" >Yes, Delete</button>
             </div>
         </div>

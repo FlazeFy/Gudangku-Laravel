@@ -1,6 +1,6 @@
 const template_alert_container = (target, type, msg, btn_title, icon, href) => {
     $(`#${target}`).html(`
-        <div class="container p-3" style="${type == 'no-data'? 'background-color:rgba(59, 131, 246, 0.2);':''}">
+        <div class="container-fluid p-3" style="${type == 'no-data'? 'background-color:rgba(59, 131, 246, 0.2);':''}">
             <h4>${icon} ${msg}</h4>
             ${btn_title != null ? `<a class="btn btn-primary mt-3" href=${href}><i class="${type == 'no-data'? 'fa-solid fa-plus':''}"></i> ${ucEachWord(btn_title)}</a>`:''}
         </div>
@@ -42,7 +42,7 @@ const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${coor}</h2>
+                            <h5 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${coor}</h5>
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                         <div class="modal-body">
@@ -84,7 +84,7 @@ const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${coor}</h2>
+                            <h5 class="modal-title fw-bold" id="exampleModalLabel">Coordinate ${coor}</h5>
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                         <div class="modal-body">

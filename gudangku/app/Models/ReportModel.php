@@ -40,6 +40,7 @@ class ReportModel extends Model
     protected $fillable = ['id', 'report_title', 'report_desc', 'report_category', 'report_image', 'is_reminder', 'remind_at', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
     protected $casts = [
         'report_image' => 'array',
+        'is_reminder' => 'integer'
     ];
 
     public static function getReportPlanDestroy($days){

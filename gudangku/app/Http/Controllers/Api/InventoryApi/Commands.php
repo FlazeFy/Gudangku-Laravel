@@ -715,7 +715,7 @@ class Commands extends Controller
                                             </tr>
                                             <tr>
                                                 <th>Price</th>
-                                                <td>Rp. " . number_format($request->inventory_price, 2, ',', '.') . "</td>
+                                                <td>Rp. " . $request->inventory_price ? number_format($request->inventory_price, 2, ',', '.') : "-" . "</td>
                                             </tr>
                                             <tr>
                                                 <th>Unit</th>
@@ -892,6 +892,7 @@ class Commands extends Controller
                         'inventory_capacity_unit' => $request->inventory_capacity_unit, 
                         'inventory_capacity_vol' => $request->inventory_capacity_vol, 
                         'is_favorite' => $request->is_favorite, 
+                        'created_at' => $request->created_at,
                         'updated_at' => date('Y-m-d H:i:s')
                     ]);
 
@@ -990,7 +991,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'result' => $validator->errors()
+                    'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {  
                 $old_data = InventoryLayoutModel::find($id);

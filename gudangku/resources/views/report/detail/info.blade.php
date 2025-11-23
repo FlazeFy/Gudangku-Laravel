@@ -47,7 +47,7 @@
             const data_item = response.data_item
             report_title = data.report_title
             let select_cat_el = ''
-            const created_at = getDateToContext(data.created_at,'calendar')
+            const created_at = getDateToContext(data.created_at,'calendar',false)
             const updated_at = data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-'
 
             if(!isMobile()){
@@ -149,11 +149,11 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h2 class="modal-title fw-bold" id="exampleModalLabel">Update</h2>
+                                    <h5 class="modal-title fw-bold" id="exampleModalLabel">Update</h5>
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                 </div>
                                 <div class="modal-body">
-                                    <h2>Are you sure want to <span class="text-warning">update</span> this report? The generated document will affected too</h2>
+                                    <p>Are you sure want to <span class="text-warning">update</span> this report? The generated document will affected too</p>
                                     <button class="btn btn-success mt-4" id="submit-update-report-btn" onclick="update_report('{{"$id"}}')" >Yes, Update</button>
                                 </div>
                             </div>
@@ -196,7 +196,7 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h2 class="modal-title fw-bold" id="exampleModalLabel">Update Report Item : ${dt.item_name}</h2>
+                                                <h5 class="modal-title fw-bold" id="exampleModalLabel">Update Report Item : ${dt.item_name}</h5>
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">
@@ -225,7 +225,7 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                                <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">
@@ -335,11 +335,14 @@
     const update_report = (id) => {
         Swal.showLoading()
         const convertToOppositeTimezone = (datetime) => {
-            const localDate = new Date(datetime)
-            const offsetHr = getUTCHourOffset()
-            const oppositeOffsetHr = -offsetHr + offsetHr
-            const oppositeDate = new Date(localDate.getTime() + oppositeOffsetHr * 60 * 60 * 1000)
-            return oppositeDate.toISOString().slice(0, 16)
+            datetime = new Date(datetime)
+            const year = datetime.getFullYear()
+            const month = String(datetime.getMonth() + 1).padStart(2, '0')
+            const day = String(datetime.getDate()).padStart(2, '0')
+            const hour = String(datetime.getHours()).padStart(2, '0')
+            const minute = String(datetime.getMinutes()).padStart(2, '0')
+
+            return `${year}-${month}-${day} ${hour}:${minute}:00`
         }
         const createdAtOpposite = convertToOppositeTimezone($('#created_at_edit').val())
         
@@ -486,7 +489,7 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Add Report</h2>
+                                        <h5 class="modal-title fw-bold" id="exampleModalLabel">Add Report</h5>
                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                     </div>
                                     <div class="modal-body">
@@ -521,7 +524,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h2 class="modal-title fw-bold" id="exampleModalLabel">Delete</h2>
+                                        <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                     </div>
                                     <div class="modal-body">

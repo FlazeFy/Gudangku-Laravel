@@ -46,7 +46,7 @@
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h2 class="modal-title fw-bold">Stack Trace</h2>
+                                                <h5 class="modal-title fw-bold">Stack Trace</h5>
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">

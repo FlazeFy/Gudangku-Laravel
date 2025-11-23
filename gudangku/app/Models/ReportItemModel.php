@@ -34,6 +34,10 @@ class ReportItemModel extends Model
     protected $table = 'report_item';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_id', 'report_id', 'item_name', 'item_desc', 'item_qty', 'item_price', 'created_at', 'created_by'];
+    protected $casts = [
+        'item_qty' => 'integer',
+        'item_price' => 'integer'
+    ];
 
     public static function getReportItem($user_id = null,$id,$type,$filter_in = null){
         $res = ReportItemModel::selectRaw($type == 'data' ? '*' : 'item_name, item_desc, item_qty, item_price')

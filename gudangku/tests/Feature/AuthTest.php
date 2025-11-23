@@ -39,23 +39,23 @@ class AuthTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertArrayHasKey('token', $data);
         $this->assertArrayHasKey('role', $data);
-        $this->assertArrayHasKey('result', $data);
+        $this->assertArrayHasKey('message', $data);
 
         $check_object = ['id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at'];
         foreach ($check_object as $col) {
-            $this->assertArrayHasKey($col, $data['result']);
+            $this->assertArrayHasKey($col, $data['message']);
         }
 
         $check_not_null_str = ['id','username','email','created_at'];
         foreach ($check_not_null_str as $col) {
-            $this->assertNotNull($col, $data['result'][$col]);
-            $this->assertIsString($col, $data['result'][$col]);
+            $this->assertNotNull($col, $data['message'][$col]);
+            $this->assertIsString($col, $data['message'][$col]);
         }
 
         $check_nullable_str = ['telegram_user_id','firebase_fcm_token','line_user_id','phone','timezone','updated_at'];
         foreach ($check_nullable_str as $col) {
-            if(!is_null($data['result'][$col])){
-                $this->assertIsString($col, $data['result'][$col]);
+            if(!is_null($data['message'][$col])){
+                $this->assertIsString($col, $data['message'][$col]);
             }
         }
 
@@ -81,7 +81,7 @@ class AuthTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertArrayHasKey('message', $data);
 
-        Audit::auditRecordText("Test - Sign Out", "TC-002", "Result : ".json_encode($data));
+        Audit::auditRecordText("Test - Sign Out", "TC-002", "message : ".json_encode($data));
         Audit::auditRecordSheet("Test - Sign Out", "TC-002", 'TC-001 test_post_login', json_encode($data));
     }
 }

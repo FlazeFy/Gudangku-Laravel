@@ -30,6 +30,10 @@ class ErrorModel extends Model
     protected $table = 'errors';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'message', 'stack_trace', 'file', 'line', 'faced_by','is_fixed','created_at'];
+    protected $casts = [
+        'line' => 'integer',
+        'is_fixed' => 'integer'
+    ];
 
     public static function getAllError($is_paginate){
         $res = ErrorModel::select('*')

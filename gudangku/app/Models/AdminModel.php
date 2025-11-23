@@ -44,6 +44,9 @@ class AdminModel extends Authenticatable
     protected $table = 'admin';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'username', 'password', 'email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','timezone', 'created_at', 'updated_at'];
+    protected $casts = [
+        'telegram_is_valid' => 'integer'
+    ];
 
     public static function  getAllContact(){
         return AdminModel::select('id','username','email','telegram_user_id','telegram_is_valid','line_user_id','firebase_fcm_token')

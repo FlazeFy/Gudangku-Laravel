@@ -35,6 +35,10 @@ class LendModel extends Model
     protected $table = 'lend';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'lend_qr_url', 'qr_period', 'lend_desc', 'lend_status', 'created_at', 'created_by', 'is_finished'];
+    protected $casts = [
+        'qr_period' => 'integer',
+        'is_finished' => 'integer'
+    ];
 
     public static function createLend($lend_qr_url,$qr_period,$lend_desc,$lend_status,$user_id){
         return LendModel::create([
