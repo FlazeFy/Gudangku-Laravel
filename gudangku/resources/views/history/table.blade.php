@@ -51,7 +51,7 @@
                                             <div class="modal-body">
                                                 <form action="/history/delete/${el.id}" method="POST">
                                                     @csrf
-                                                    <h2>Delete this history about ${el.history_type} from item called ${el.history_context}?</h2>
+                                                    <p>Delete this history about ${el.history_type} from item called ${el.history_context}?</p>
                                                     <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
                                                 </form>
                                             </div>

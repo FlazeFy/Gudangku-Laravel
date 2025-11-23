@@ -46,7 +46,8 @@ class Validation
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
                 'inventory_capacity_unit' => 'nullable|string|max:36',
                 'inventory_capacity_vol' => 'nullable|numeric|min:0|max:999999',
-                'is_favorite' => 'required|boolean'
+                'is_favorite' => 'required|boolean',
+                'created_at' => 'required|date_format:Y-m-d H:i:s',
             ]);
             self::validateInventoryVolumeRelation($validator, $request);
 
@@ -66,6 +67,7 @@ class Validation
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
                 'inventory_capacity_unit' => 'nullable|string|max:36',
                 'inventory_capacity_vol' => 'nullable|numeric|min:0|max:999999',
+                'created_at' => 'required|date_format:Y-m-d H:i:s',
             ]);
             self::validateInventoryVolumeRelation($validator, $request);
 
@@ -131,7 +133,7 @@ class Validation
                 'is_reminder' => 'required|numeric|min:0|max:1',
                 'reminder_at' => 'nullable|date_format:Y-m-d H:i:s',
                 'report_item' => 'nullable|json',
-                'created_at' => 'nullable|date_format:Y-m-d H:i:s',
+                'created_at' => 'required|date_format:Y-m-d H:i:s',
             ]);  
         } else if($type == 'update'){
             return Validator::make($request->all(), [

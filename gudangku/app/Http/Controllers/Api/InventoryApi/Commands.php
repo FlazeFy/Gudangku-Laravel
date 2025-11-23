@@ -649,13 +649,14 @@ class Commands extends Controller
                     $res = InventoryModel::createInventory(
                         $request->inventory_name, $request->inventory_category, $request->inventory_desc, $request->inventory_merk, $request->inventory_color, $request->inventory_room, 
                         $request->inventory_storage, $request->inventory_rack, $request->inventory_price, $request->inventory_image, $request->inventory_unit, $request->inventory_vol, 
-                        $request->inventory_capacity_unit, $request->inventory_capacity_vol, $request->is_favorite, $user_id
+                        $request->inventory_capacity_unit, $request->inventory_capacity_vol, $request->is_favorite, $user_id, $request->created_at
                     );
                     $id = $res->id;
 
                     if($res){
                         // History
                         Audit::createHistory('Create', $request->inventory_name, $user_id);
+                        $inventory_price = $request->inventory_price ? number_format($request->inventory_price, 2, ',', '.') : "-" ;
                         $user = UserModel::getSocial($user_id);
 
                         $options = new DompdfOptions();
@@ -715,7 +716,7 @@ class Commands extends Controller
                                             </tr>
                                             <tr>
                                                 <th>Price</th>
-                                                <td>Rp. " . $request->inventory_price ? number_format($request->inventory_price, 2, ',', '.') : "-" . "</td>
+                                                <td>Rp. " . $inventory_price . "</td>
                                             </tr>
                                             <tr>
                                                 <th>Unit</th>

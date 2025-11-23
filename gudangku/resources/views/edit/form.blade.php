@@ -284,11 +284,12 @@
                 Swal.close()
                 const data = response.data
                 
+                $('#inventory_unit').empty()
+                $('#inventory_capacity_unit').empty()
+                $('#inventory_capacity_unit').append('<option>-</option>')
                 data.forEach(dt => {
                     $( document ).ready(function() {
                         if(dt.dictionary_type == 'inventory_unit'){
-                            $('#inventory_unit').empty()
-                            $('#inventory_capacity_unit').empty()
                             $('#inventory_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
                             $('#inventory_capacity_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
                         } else if(dt.dictionary_type == 'reminder_type' || dt.dictionary_type == 'reminder_context'){
@@ -318,7 +319,10 @@
         $.ajax({
             url: `/api/v1/inventory/edit/${id}`,
             type: 'PUT',
-            data: $('#form_edit_inventory').serialize(),
+            data: $('#form_edit_inventory').serialize().replace(
+                /created_at=[^&]+/, 
+                "created_at=" + tidyUpDateTimeFormat($('#created_at_edit').val())
+            ),
             dataType: 'json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")

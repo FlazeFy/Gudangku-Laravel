@@ -173,7 +173,7 @@
                                 <h6 class='fw-bold mt-2'>Rack</h6>
                                 <p class='inventory-rack mb-0'>${el.inventory_rack ?? '-'}</p>
                             </td>
-                            <td ${el.reminder ? 'rowspan="2"' : ''}>Rp. ${number_format(el.inventory_price, 0, ',', '.')}</td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''}>Rp. ${el.inventory_price ? number_format(el.inventory_price, 0, ',', '.') : '-'}</td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>${el.inventory_vol} ${el.inventory_unit}</td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
                                 ${el.inventory_capacity_unit === 'percentage' ? `${el.inventory_capacity_vol}%` : '-'}

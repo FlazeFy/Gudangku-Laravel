@@ -49,12 +49,20 @@
                         <input name="report_title" class="form-control" type="text" id="report_title" required>
                         <label>Description</label>
                         <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
-                        <label>Category</label>
-                        <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
-                            @foreach($dct_cat as $dct)
-                                <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                            @endforeach
-                        </select>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <label>Category</label>
+                                <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
+                                    @foreach($dct_cat as $dct)
+                                        <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <label>Created At</label>
+                                <input type="datetime-local" name="created_at" id="created_at" class="form-control form-validated"/>
+                            </div>
+                        </div>
                         <hr>
                         <label>Item</label>
                         <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
@@ -77,6 +85,8 @@
 </div>
 
 <script>
+    setCurrentLocalDateTime('created_at')
+
     const clean_alert_item = () => {
         if ($('#item_holder').find('div.alert').length) {
             $('#item_holder').empty()
@@ -161,6 +171,7 @@
                 report_title: $('#report_title').val(),
                 report_desc: $('#report_desc').val(),
                 report_category: $('#report_category').val(),
+                created_at: tidyUpDateTimeFormat($('#created_at').val()),
                 report_item: JSON.stringify(report_items),
                 file: null, 
                 is_reminder: 0,

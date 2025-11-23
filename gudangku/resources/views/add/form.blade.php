@@ -21,11 +21,14 @@
             <div class="col-lg-12 py-2">
                 <textarea name="inventory_desc" id="inventory_desc" class="form-control form-validated" maxlength="255"></textarea>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-12 py-2">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 py-2">
                 <input type="text" name="inventory_merk" id="inventory_merk" class="form-control form-validated" maxlength="75"/>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-12 py-2">
-                <input type="number" name="inventory_price" id="inventory_price" class="form-control form-validated" min="0"/>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 py-2">
+                <input type="number" name="inventory_price" id="inventory_price" class="form-control form-validated"/>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 py-2">
+                <input type="datetime-local" name="created_at" id="created_at" class="form-control form-validated"/>
             </div>
         </div>
         <div class="form-check mt-2">
@@ -39,7 +42,7 @@
                 <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Standard Capacity</h6>
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-4 py-2">
-                        <input type="number" name="inventory_vol" id="inventory_vol" class="form-control form-validated" max="9999" min="0"/>
+                        <input type="number" name="inventory_vol" id="inventory_vol" class="form-control form-validated" max="9999" min="1" value="1"/>
                     </div>
                     <div class="col-lg-9 col-md-8 col-sm-8 col-8 py-2">
                         <label>Unit</label>
@@ -100,10 +103,13 @@
     const urlParams = new URL(url).searchParams
     const inventory_name = urlParams.get("inventory_name")
     $('#inventory_name').val(inventory_name)
+    setCurrentLocalDateTime('created_at')
 
     const submit_add = () => {
         const form = $('#add_inventory')[0]
         const formData = new FormData(form)
+        formData.set('created_at', tidyUpDateTimeFormat(formData.get('created_at')))
+
         $.ajax({
             url: '/api/v1/inventory',
             type: 'POST',

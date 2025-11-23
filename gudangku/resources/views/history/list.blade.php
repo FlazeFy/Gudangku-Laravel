@@ -46,7 +46,7 @@
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <h2>Delete this history about ${el.history_type} from item called ${el.history_context}?</h2>
+                                                    <p>Delete this history about ${el.history_type} from item called ${el.history_context}?</p>
                                                     <button class="btn btn-danger mt-4" onclick="destroy_history_by_id('${el.id}', '${token}', 
                                                     ()=>get_history(${page}))">Yes, Delete</button>
                                                 </div>

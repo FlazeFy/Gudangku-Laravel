@@ -562,7 +562,7 @@ class InventoryModel extends Model
     public static function createInventory(
         $inventory_name, $inventory_category, $inventory_desc, $inventory_merk, $inventory_color, $inventory_room, 
         $inventory_storage, $inventory_rack, $inventory_price, $inventory_image, $inventory_unit, $inventory_vol, 
-        $inventory_capacity_unit, $inventory_capacity_vol, $is_favorite, $user_id) {
+        $inventory_capacity_unit, $inventory_capacity_vol, $is_favorite, $user_id, $created_at) {
         
         return InventoryModel::create([
             'id' => Generator::getUUID(), 
@@ -582,8 +582,8 @@ class InventoryModel extends Model
             'inventory_capacity_vol' => $inventory_capacity_vol, 
             'is_favorite' => $is_favorite, 
             'is_reminder' => 0, 
-            'created_at' => date('Y-m-d H:i:s'), 
             'created_by' => $user_id, 
+            'created_at' => $created_at,
             'updated_at' => null, 
             'deleted_at' => null
         ]);

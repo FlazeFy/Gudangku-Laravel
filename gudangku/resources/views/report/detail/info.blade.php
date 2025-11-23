@@ -333,18 +333,7 @@
     }
 
     const update_report = (id) => {
-        Swal.showLoading()
-        const convertToOppositeTimezone = (datetime) => {
-            datetime = new Date(datetime)
-            const year = datetime.getFullYear()
-            const month = String(datetime.getMonth() + 1).padStart(2, '0')
-            const day = String(datetime.getDate()).padStart(2, '0')
-            const hour = String(datetime.getHours()).padStart(2, '0')
-            const minute = String(datetime.getMinutes()).padStart(2, '0')
-
-            return `${year}-${month}-${day} ${hour}:${minute}:00`
-        }
-        const createdAtOpposite = convertToOppositeTimezone($('#created_at_edit').val())
+        const createdAtOpposite = tidyUpDateTimeFormat($('#created_at_edit').val())
         
         $.ajax({
             url: `/api/v1/report/update/report/${id}`,
@@ -357,6 +346,7 @@
                 created_at: createdAtOpposite
             }),
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
                 xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
             },
