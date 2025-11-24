@@ -22,12 +22,11 @@
             }
             h5{
                 font-size:22px;
-                margin: 0;
+                font-weight: 700 !important;
             }
             h6{
                 font-size:14px;
-                margin: 0;
-                font-weight: 500 !important;
+                font-weight: 600 !important;
             }
             hr{
                 margin-top: 10px;
@@ -37,12 +36,10 @@
     </head>
     <body class="bg">
         <div class="container">
-            <h5 style="margin-bottom:10px;">Hello there, {{$username}}</h5>
-
-            <h6 style="color:#3b82f6;">You have successfully {{$context}}</h6>
-
+            <h5>Hello there, {{$username}}</h5>
+            <p>You have successfully {{$context}}</p>
             <p><?php echo $body; ?></p>
-           
+            <hr>
             <div style="text-align: left;">
                 <h6>Properties</h6>
                 <h6>Created at : {{date("Y M d H:i:s")}}</h6>

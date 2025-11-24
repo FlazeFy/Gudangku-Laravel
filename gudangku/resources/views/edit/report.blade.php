@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                             ` : ''}
-                            <h6 class='date-text mt-2'>Created At : ${getDateToContext(el.created_at,'calendar')}</h6>
+                            <p class='date-text mt-2'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
                         </button>
                     `);
                 });
@@ -72,7 +72,7 @@
                 if(response.status != 404){
                     generate_api_error(response, true)
                 } else {
-                    template_alert_container(item_holder, 'no-data', "This item doesn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')
+                    template_alert_container(item_holder, 'no-data', "This inventory doesn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')
                 }
             }
         });

@@ -61,7 +61,7 @@
                                 <div class="mt-2 d-flex justify-content-center props-box">
                                     <span style="background: var(--warningBG);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_room}${el.inventory_storage ? ` - ${el.inventory_storage}`:''}</span>
                                 </div>
-                                <h6 class='date-text mt-2'>Created At : ${getDateToContext(el.created_at, 'calendar')}</h6>
+                                <p class='date-text mt-2'>Created At : ${getDateToContext(el.created_at, 'calendar')}</p>
                             </button>
                         </div>
                     `);

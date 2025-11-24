@@ -37,7 +37,7 @@
                                             <div class='container bordered mt-0 text-center me-2 p-3' style='width:50px; height:50px; border-radius: var(--roundedLG);'><i class="fa-solid fa-bell mx-0" style='font-size: var(--textJumbo);'></i></div>
                                             <h6>${el.reminder_desc}</h6> 
                                         </div>
-                                        <h6 class='date-text mt-2' style='font-size:var(--textMD) !important;'>Received At : ${getDateToContext(el.last_execute,'calendar')}</h6>
+                                        <p class='date-text mt-2' style='font-size:var(--textMD) !important;'>Received At : ${getDateToContext(el.last_execute,'calendar')}</p>
                                     </button>
                                 `)
                             });

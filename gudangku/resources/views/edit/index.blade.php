@@ -14,8 +14,8 @@
     <div class="content">
         @include('others.profile')
         @include('others.notification')
-        <h2 class="text-white fw-bold mb-4" style="font-size:36px;">Edit Inventory</h2>
-        <div class='d-flex justify-content-between'>
+        <h1 class="main-page-title">Edit Inventory</h1>
+        <div class='d-flex justify-content-between align-items-center'>
             <div id="edit_toolbar-section">
                 <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
                 <span id='btn-toogle-fav-holder'></span>
@@ -25,15 +25,15 @@
             </div>
             @if(!$isMobile)
             <div class='text-end'>
-                <h6 class='date-text'>Created At : <span id='created_at'></span></h6>
-                <h6 class='date-text'>Last Updated : <span id='updated_at'></span></h6>
+                <p class='date-text mb-0'>Created At : <span id='created_at'></span></p>
+                <p class='date-text mb-0'>Last Updated : <span id='updated_at'></span></p>
             </div>
             @endif
         </div>
         @if($isMobile)
         <div class='text-start'>
-            <h6 class='date-text'>Created At : <span id='created_at'></span></h6>
-            <h6 class='date-text'>Last Updated : <span id='updated_at'></span></h6>
+            <p class='date-text mb-0'>Created At : <span id='created_at'></span></p>
+            <p class='date-text mb-0'>Last Updated : <span id='updated_at'></span></p>
         </div>
         @endif
         @include('edit.add_report')

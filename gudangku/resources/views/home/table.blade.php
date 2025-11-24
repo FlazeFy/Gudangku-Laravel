@@ -191,14 +191,14 @@
                                             </div>
                                             <div class="modal-body">
                                                 <h6 class='fw-bold'>Created At</h6>
-                                                <h6>${getDateToContext(el.created_at,'calendar')}</h6>
+                                                <p class="mb-0">${getDateToContext(el.created_at,'calendar')}</p>
                                                 <h6 class='fw-bold mt-2'>Updated At</h6>
-                                                <h6>${el.updated_at ? getDateToContext(el.updated_at,'calendar') : '-'}</h6>
+                                                <p class="mb-0">${el.updated_at ? getDateToContext(el.updated_at,'calendar') : '-'}</p>
                                                 <h6 class='fw-bold mt-2'>Deleted At</h6>
-                                                <h6>${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</h6>
+                                                <p class="mb-0">${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</p>
                                                 <div class="alert alert-primary mt-3" role="alert">
                                                     <h6 class='fw-bold' style="font-size:var(--textXLG);"><i class="fa-solid fa-circle-info"></i> For Your Information</h6>
-                                                    <h6 class='mt-2'><b class="text-primary">${el.inventory_name}</b> is been existed in your inventory for about <b>${count_time(el.created_at,null,'day')}</b> days ago.</h6>
+                                                    <p class='mt-2 mb-0'><b class="text-primary">${el.inventory_name}</b> is been existed in your inventory for about <b>${count_time(el.created_at,null)}</b></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -228,7 +228,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <h2>${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'} this item "${el.inventory_name}"?</h2>
+                                                        <h2>${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'} this inventory "${el.inventory_name}"?</h2>
                                                         <a class="btn btn-danger mt-4" onclick="delete_inventory_by_id('${el.id}', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
                                                     </div>
                                                 </div>
@@ -257,7 +257,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <h2>Recover this item "${el.inventory_name}"?</h2>
+                                                        <h2>Recover this inventory "${el.inventory_name}"?</h2>
                                                         <a class="btn btn-success mt-4" onclick="recover_inventory_by_id('${el.id}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Recover</a>
                                                     </div>
                                                 </div>

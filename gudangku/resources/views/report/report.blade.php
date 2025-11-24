@@ -69,7 +69,7 @@
                                 <h6>Items : </h6>
                                 <div class='d-flex justify-content-start mt-2 report-items'>${el.report_items ?? '<span class="text-secondary fst-italic mt-2">- No Items Found -</span>'}</div>
                                 ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
-                                    <div class="d-flex justify-content-between mt-3">
+                                    <hr><div class="d-flex justify-content-between mt-2">
                                         <div class='total-price'>
                                             ${
                                                 isMobile() ?
@@ -90,8 +90,8 @@
                                         </div>
                                     </div>
                                 ` : ''}
-                                <h6 class='date-text mt-2'>Created At : ${getDateToContext(el.created_at,'calendar')}</h6>
-                                ${ role == 1 ? `<h6 class='date-text mt-2'>Created By : @${el.username}</h6>` : ''}
+                                <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
+                                ${ role == 1 ? `<p class='date-text mt-2 mb-0'>Created By : @${el.username}</p>` : ''}
                             </button>
                         `);
                     } else {

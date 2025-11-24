@@ -22,12 +22,15 @@
             }
             h5{
                 font-size:22px;
-                margin: 0;
+                font-weight: 700 !important;
             }
             h6{
                 font-size:14px;
+                font-weight: 600 !important;
+            }
+            h5, h6 {
                 margin: 0;
-                font-weight: 500 !important;
+                margin-bottom: 10px;
             }
             hr{
                 margin-top: 10px;
@@ -37,20 +40,20 @@
     </head>
     <body class="bg">
         <div class="container">
-            <h5 style="margin-bottom:10px;">Hello there, {{$username}}</h5>
-
-            <h6 style="color:#3b82f6;">You have successfully {{$context}} to inventory called {{$body['inventory_name']}}
+            <h5>Hello there, {{$username}}</h5>
+            <p>You have successfully {{$context}} to inventory called {{$body['inventory_name']}}
                 {{$body['inventory_vol']}} {{$body['inventory_unit']}} 
-                with category as {{$body['inventory_category']}}</h6>
+                with category as {{$body['inventory_category']}}</p>
             @if($body['inventory_desc'] != null)
+                <h6>Description</h6>
                 <p>{{$body['inventory_desc']}}</p>
             @else 
-                <p style="color: grey; font-style: italic;">This item doesnt provide description</p>
+                <p style="color: grey; font-style: italic;">This inventory doesnt provide description</p>
             @endif
-        
+            <hr>
             <div style="text-align: left;">
                 <h6>Properties</h6>
-                <h6>Located at : {{$body['inventory_room']}} Room 
+                <h6>Located at : {{$body['inventory_room']}} 
                     @if($body['inventory_storage'] != null)
                         / {{$body['inventory_storage']}}
                     @endif

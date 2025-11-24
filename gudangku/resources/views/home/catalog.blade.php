@@ -1,4 +1,4 @@
-<h2 class="text-white fw-bold mb-4" style="font-size:var(--textXJumbo);">By Room</h2>
+<h2 class="mb-4">By Room</h2>
 <div class="row"> 
 @foreach($room as $r)
     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
@@ -11,7 +11,7 @@
 @endforeach
 </div>
 
-<h2 class="text-white fw-bold mb-4 mt-3" style="font-size:var(--textXJumbo);">By Category</h2>
+<h2 class="mb-4 mt-3">By Category</h2>
 <div class="row"> 
 @foreach($category as $c)
     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
@@ -24,7 +24,7 @@
 @endforeach
 </div>
 
-<h2 class="text-white fw-bold mb-4 mt-3" style="font-size:var(--textXJumbo);">By Storage</h2>
+<h2 class="mb-4 mt-3">By Storage</h2>
 <div class="row"> 
 @foreach($storage as $s)
     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">

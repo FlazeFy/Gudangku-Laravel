@@ -139,8 +139,8 @@
                     ${
                         isMobile() ? `
                             <div class='mt-4'>
-                                <h6 class='date-text'>Created At : ${created_at}</h6>
-                                <h6 class='date-text'>Last Updated : ${updated_at}</h6>
+                                <p class='date-text'>Created At : ${created_at}</p>
+                                <p class='date-text'>Last Updated : ${updated_at}</p>
                             </div>
                         ` : ''
                     }
@@ -229,7 +229,7 @@
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">
-                                                <h2>Remove this item "${dt.item_name}" from report "${data.report_title}"?</h2>
+                                                <h2>Remove this inventory "${dt.item_name}" from report "${data.report_title}"?</h2>
                                                 <a class="btn btn-danger mt-4" onclick="delete_item('${dt.id}')">Yes, Delete</a>
                                             </div>
                                         </div>
@@ -518,7 +518,7 @@
                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                     </div>
                                     <div class="modal-body">
-                                        <h2>Remove this item ${selected_item_name} from report "${report_title}"?</h2>
+                                        <h2>Remove this inventory ${selected_item_name} from report "${report_title}"?</h2>
                                         <a class="btn btn-danger mt-4" onclick="delete_item('${selected_item_id}')">Yes, Delete</a>
                                     </div>
                                 </div>

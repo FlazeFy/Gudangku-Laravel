@@ -4,8 +4,8 @@
     <input type="text" name="username" id="username_input" onkeydown="return submitOnEnter(event)" class="form-control"/><br>
     <label>Email</label>
     <input type="email" name="email" id="email_input" onkeydown="return submitOnEnter(event)" class="form-control"/><br>
-    <div class="d-flex justify-content-between">
-        <label class="fst-italic">Joined since <span id="created_at_holder"></span></label>
+    <div class="d-flex justify-content-between align-items-center">
+        <p class="fst-italic text-secondary mb-0">Joined since <span id="created_at_holder"></span></p>
         <a class='btn btn-success' onclick='update_profile()'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
     </div>
 </form>

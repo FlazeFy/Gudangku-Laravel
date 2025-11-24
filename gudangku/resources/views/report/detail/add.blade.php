@@ -58,7 +58,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                             <h5>List Selected Item</h5>
                             <div id="item_holder">
-                                <div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
+                                <div class="alert alert-danger w-100"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
                             </div>
                         </div>
                     </div>

@@ -18,19 +18,19 @@
         <div class="row d-flex align-items-stretch">
             <div class="col-lg-6 col-sm-12 d-flex">
                 <div class="container-form" id="profile-section">
-                    <h2 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Profile</h2>
+                    <h2 class="fw-bold my-3">Profile</h2>
                     @include('profile.profile')
                 </div>
             </div>
             <div class="col-lg-6 col-sm-12 d-flex">
                 <div class="container-form" id="telegram-section">
-                    <h2 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Telegram Account</h2>
+                    <h2 class="fw-bold my-3">Telegram Account</h2>
                     @include('profile.telegram')
                 </div>
             </div>
             <div class="col-lg-12 col-sm-12 d-flex">
                 <div class="container-form" id="telegram-section">
-                    <h2 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Lend Your Inventory</h2>
+                    <h2 class="fw-bold my-3">Lend Your Inventory</h2>
                     @include('profile.qr_lend')
                 </div>
             </div>

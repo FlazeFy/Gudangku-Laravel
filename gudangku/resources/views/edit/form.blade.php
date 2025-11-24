@@ -166,8 +166,8 @@
                                 <div class="container py-0 ps-4 ms-5 w-auto" style='border-left: var(--spaceMini) solid var(--primaryColor); border-radius:0;'>
                                     <div class='d-flex justify-content-between'>
                                         <div>
-                                            <h6 class='date-text'>Created At : ${getDateToContext(dt.created_at,'calendar')}</h6>
-                                            <h6 class='date-text mt-2'>Last Updated : ${dt.updated_at ? getDateToContext(dt.updated_at,'calendar') : '-'}</h6>
+                                            <p class='date-text mb-0'>Created At : ${getDateToContext(dt.created_at,'calendar')}</p>
+                                            <p class='date-text mb-0'>Last Updated : ${dt.updated_at ? getDateToContext(dt.updated_at,'calendar') : '-'}</p>
                                         </div>
                                         <a class='btn btn-danger' data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${dt.id}"><i class="fa-solid fa-trash"></i> Delete Reminder</a>
                                         <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" id="modalDeleteReminder_${dt.id}" aria-hidden="true">
@@ -211,7 +211,7 @@
                 } else {
                     $('#reminder_holder').html(`
                         <div class="container-fluid p-3" style="background-color:rgba(59, 131, 246, 0.2);">
-                            <h4><i class="fa-regular fa-clock"></i> This item doesn't have reminder</h4>
+                            <h4><i class="fa-regular fa-clock"></i> This inventory doesn't have reminder</h4>
                             <a class="btn btn-primary mt-3" data-bs-toggle='modal' data-bs-target='#modalAddReminder'><i class="fa-solid fa-plus"></i> Add New Reminder</a>
                         </div>
                     `)

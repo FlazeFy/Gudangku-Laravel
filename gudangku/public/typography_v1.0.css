@@ -25,7 +25,6 @@ label, .form-label {
     font-style: italic;
 }
 .main-page-title {
-    color: var(--whiteColor);
     font-weight: bold;
     margin-bottom: var(--spaceJumbo);
     font-size: calc(var(--textXJumbo)*1.75);

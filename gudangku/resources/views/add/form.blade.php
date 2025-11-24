@@ -13,7 +13,7 @@
                 </select>
 
                 <label>Color</label>
-                <input type="text" name="inventory_color" id="inventory_color" class="form-control" readonly/>
+                <input type="text" name="inventory_color" id="inventory_color" class="form-control"/>
             </div>
             <div class="col-lg-6 col-md-6 d-flex align-items-center py-2">
                 @include('add.image_picker')
@@ -39,7 +39,7 @@
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Standard Capacity</h6>
+                <h2 class="mt-3">Standard Capacity</h2>
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-4 py-2">
                         <input type="number" name="inventory_vol" id="inventory_vol" class="form-control form-validated" max="9999" min="1" value="1"/>
@@ -55,7 +55,7 @@
                 </div><hr>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Remaining Capacity</h6>
+                <h2 class="mt-3">Remaining Capacity</h2>
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-4 py-2">
                         <input type="number" name="inventory_capacity_vol" id='inventory_capacity_vol' class="form-control form-validated"/>
@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Placement</h6>
+        <h2 class="mt-3">Placement</h2>
         <div class="row">
             <div class="col-md-4 col-sm-6 col-6 py-2">
                 <label>Room</label>

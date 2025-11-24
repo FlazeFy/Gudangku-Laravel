@@ -23,7 +23,7 @@
     <div class="content">
         @include('others.profile')
         @include('others.notification')
-        <h2 class="text-white fw-bold mb-4" style="font-size:<?php if(!$isMobile){ echo "calc(var(--textXJumbo)*1.75)"; } else { echo "var(--textXJumbo)"; } ?>">Analyze : {{ucfirst($type)}} <b class='inventory_name text-primary'></b></h2>
+        <h1 class="main-page-title">Analyze : {{ucfirst($type)}} <b class='inventory_name text-primary'></b></h1>
         <div class="d-flex justify-content-start">
             <a class="btn btn-danger mb-3 me-2" href="/inventory/edit/{{$id}}"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
             <a class="btn btn-primary mb-3 me-2" onclick="generate_custom()"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
@@ -85,10 +85,10 @@
                     $('.inventory_vol').text(data.inventory_vol)
                     $('.inventory_merk').text(data.inventory_merk)
                     $('#created_at').text(getDateToContext(data.created_at,'calendar'))
-                    $('#days_exist').text(count_time(data.created_at,null,'day'))
+                    $('#days_exist').text(count_time(data.created_at,null))
 
                     if(data.updated_at){
-                        $('#updated_at').html(` And the last updated on ${getDateToContext(data.updated_at,'calendar')} that about <b>${count_time(data.updated_at,null,'day')}</b> days ago.`)
+                        $('#updated_at').html(` And the last updated on ${getDateToContext(data.updated_at,'calendar')} that about <b>${count_time(data.updated_at,null)}</b>.`)
                     }
                     const isExpensive = data.inventory_price > data.inventory_price_analyze.average_inventory_price
                     const capacityClass = isExpensive ? 'bg-danger' : 'bg-success'
@@ -98,7 +98,7 @@
                     $('#expensiveness_holder').html(`<a class='${capacityClass} rounded-pill px-3 py-2 ms-3' style='font-size:var(--textXMD);'>${capacityIcon} ${capacityText}</a>`)
 
                     if(data.inventory_history_analyze){
-                        let report_history = ' This item also had been used in report '
+                        let report_history = ' This inventory also had been used in report '
                         let tbody_report = ''
 
                         data.inventory_history_analyze.forEach(dt => {
@@ -179,9 +179,9 @@
 
                     if(data.inventory_layout){
                         $('#layout-holder').html(`
-                            <h3>8. The Room Layout</h3>
+                            <h2>8. The Room Layout</h2>
                             <p>You can find <span class='text-primary'>${data.inventory_name}</span> at storage <span class='text-primary'>${data.inventory_storage}</span>, layout <span class='text-primary'>${data.inventory_layout.layout}</span>.
-                            This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about ${count_time(data.inventory_layout.created_at,null,'day')} days ago.
+                            This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about <b>${count_time(data.inventory_layout.created_at,null)}</b>.
                             </p>
                             <div id='room_layout_map' class='mx-3 mt-2'></div>
                             <br>
@@ -189,7 +189,7 @@
                         generate_map_room('#room_layout_map',[data.inventory_layout],false,data.inventory_room)
                     } else {
                         $('#layout-holder').html(`
-                            <h3>8. The Room Layout</h3>
+                            <h2>8. The Room Layout</h2>
                             <p class='text-secondary fst-italic'>- This inventory is not assigned to room storage or the storage may not valid -</p>
                             <br>
                         `)

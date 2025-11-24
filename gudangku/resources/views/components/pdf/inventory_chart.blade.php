@@ -31,8 +31,8 @@
 
     <br><hr>
     <div>
-        <h6 class='date-text' style='margin: 0;'>Parts of FlazenApps</h6>
-        <h6 class='date-text' style='margin: 0; float:right; margin-top:-12px;'>Generated at {{$datetime}} by <span style='color:#3b82f6;'>https://gudangku.leonardhors.com</span></h6>
+        <p class='date-text' style='margin: 0;'>Parts of FlazenApps</p>
+        <p class='date-text' style='margin: 0; float:right; margin-top:-12px;'>Generated at {{$datetime}} by <span style='color:#3b82f6;'>https://gudangku.leonardhors.com</span></p>
     </div>
 </body>
 </html>
