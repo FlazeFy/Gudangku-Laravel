@@ -12,7 +12,6 @@
     <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
 
     <script>
-        let token = '<?= session()->get("token_key"); ?>'
         let lend_id = '<?= $lend_id ?>'
         const SELECTED_STORAGE_KEY = `selected_lend_items_${lend_id}`
 

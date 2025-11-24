@@ -18,7 +18,6 @@
         let filter_category = `<?= $filter_category ?>`
         let sorting = `<?= $sorting ?>`
         let page = 1
-        let token = '<?= session()->get("token_key"); ?>'
     </script>
     <div class="content">
         @include('others.profile')

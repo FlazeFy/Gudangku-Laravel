@@ -70,6 +70,10 @@
             <script type="text/javascript" src="{{ asset('/richtexteditor/rte-upload.js')}}"></script>
             <script type="text/javascript" src="{{ asset('/richtexteditor/plugins/all_plugins.js')}}"></script>
         <?php endif; ?>
+
+        <script>
+            let token = '<?= session()->get("token_key"); ?>';
+        </script>
     </head>
     <body class="antialiased">
         @include('others.detect_flazenapps')

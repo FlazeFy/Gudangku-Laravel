@@ -21,7 +21,6 @@
         let search_key = `<?= $search_key ?>`
         let filter_category = `<?= $filter_category ?>`
         let sorting = `<?= $sorting ?>`
-        let token = '<?= session()->get("token_key"); ?>'
     </script>
 
     <div class="content">

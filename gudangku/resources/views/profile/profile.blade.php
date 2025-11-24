@@ -18,7 +18,7 @@
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()
@@ -94,7 +94,7 @@
                 beforeSend: function (xhr) {
                     Swal.showLoading()
                     xhr.setRequestHeader("Accept", "application/json");
-                    xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>");    
+                    xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
                 },
                 success: function(response) {
                     Swal.close()

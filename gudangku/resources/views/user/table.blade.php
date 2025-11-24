@@ -26,7 +26,7 @@
             beforeSend: function (xhr) {
                 Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()
@@ -60,7 +60,7 @@
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">
-                                                <h2><span class="text-danger">Permanently Delete</span> this user "@${el.username}"?</h2>
+                                                <p><span class="text-danger">Permanently Delete</span> this user "@${el.username}"?</p>
                                                 <a class="btn btn-danger mt-4" onclick="destroy_history_by_id('${el.id}')">Yes, Delete</a>
                                             </div>
                                         </div>
@@ -92,7 +92,7 @@
             beforeSend: function (xhr) {
                 Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()

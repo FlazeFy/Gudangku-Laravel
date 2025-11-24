@@ -8,9 +8,6 @@
 @php($role = session()->get('role_key'))
 
 @section('content')
-    <script>
-        let token = '<?= session()->get("token_key"); ?>'
-    </script>
     <script src="{{ asset('/usecases/history_v1.0.js')}}"></script>
 
     <div class="content">

@@ -24,7 +24,7 @@
             type: 'GET',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()
@@ -49,11 +49,9 @@
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="/history/delete/${el.id}" method="POST">
-                                                    @csrf
-                                                    <p>Delete this history about ${el.history_type} from item called ${el.history_context}?</p>
-                                                    <button class="btn btn-danger mt-4" type="submit">Yes, Delete</button>
-                                                </form>
+                                                <p>Delete this history about ${el.history_type} from item called ${el.history_context}?</p>
+                                                <button class="btn btn-danger mt-4" onclick="destroy_history_by_id('${el.id}', '${token}', 
+                                                ()=>get_all_history(${page}))">Yes, Delete</button>
                                             </div>
                                         </div>
                                     </div>

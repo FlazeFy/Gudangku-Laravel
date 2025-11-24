@@ -23,7 +23,6 @@
         let search_key_url = name ? `&search_key=${name}`:''
         let filter_cat_url = category ? `&filter_category=${category}`:''
         let sorting_url = sort ? `&sorting=${sort}`:''
-        const token = '<?= session()->get("token_key"); ?>'
 
         $.ajax({
             url: `/api/v1/report?page=${page}${search_key_url}${filter_cat_url}${sorting_url}`,
@@ -123,7 +122,7 @@
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <h2><span class="text-danger">Permanently Delete</span> this report "${el.report_title}" from user @${el.username}?</h2>
+                                                    <p><span class="text-danger">Permanently Delete</span> this report "${el.report_title}" from user @${el.username}?</p>
                                                     <a class="btn btn-danger mt-4" onclick="destroy_report_by_id('${el.id}', '${token}', 
                                                     ()=>get_my_report_all(${page},'${search_key}','${filter_category}','${sorting}'))">Yes, Delete</a>
                                                 </div>

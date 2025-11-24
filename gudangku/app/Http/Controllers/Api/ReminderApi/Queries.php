@@ -73,11 +73,11 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $res = ScheduleMarkModel::getAllReminderMark(true);
             $check_admin = AdminModel::find($user_id);
             
             if($check_admin){
-                if ($res) {
+                $res = ScheduleMarkModel::getAllReminderMark(true);
+                if($res->count() > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("fetch", 'reminder mark'),

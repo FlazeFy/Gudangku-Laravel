@@ -24,7 +24,7 @@
             type: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer <?= session()->get("token_key"); ?>"
+                "Authorization": `Bearer ${token}`
             },
             success: function(data, textStatus, jqXHR) {
                 sessionStorage.clear()

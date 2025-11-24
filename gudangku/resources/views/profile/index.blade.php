@@ -5,6 +5,7 @@
     use App\Helpers\Generator;
 ?>  
 @php($isMobile = Generator::isMobileDevice())  
+@php($role = session()->get('role_key'))
 
 @section('content')
     <div class="content">
@@ -28,12 +29,14 @@
                     @include('profile.telegram')
                 </div>
             </div>
+            @if($role == 0)
             <div class="col-lg-12 col-sm-12 d-flex">
                 <div class="container-form" id="telegram-section">
                     <h2 class="fw-bold my-3">Lend Your Inventory</h2>
                     @include('profile.qr_lend')
                 </div>
             </div>
+            @endif
         </div>
     </div>
 @endsection

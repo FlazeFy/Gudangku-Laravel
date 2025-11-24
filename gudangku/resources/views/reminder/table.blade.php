@@ -19,15 +19,15 @@
 <script>
     let page = 1
     const get_all_reminder = (page) => {
-        Swal.showLoading()
         const item_holder = 'reminder_tb_body'
         $(`#${item_holder}`).empty()
         $.ajax({
             url: `/api/v1/reminder/mark?page=${page}`,
             type: 'GET',
             beforeSend: function (xhr) {
+                Swal.showLoading()
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()
@@ -70,16 +70,13 @@
 
                 generate_pagination(item_holder, get_all_reminder, total_page, current_page)
             },
-            reminder: function(response, jqXHR, textStatus, reminderThrown) {
+            error: function(response, jqXHR, textStatus, reminderThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the reminder",
-                        icon: "reminder"
-                    });
+                    generate_api_error(response, true)
                 } else {
-                    template_alert_container(item_holder, 'no-data', "No reminder found to show", null, '<i class="fa-solid fa-scroll"></i>')
+                    $(`#${item_holder}`).html(`<tr><td colspan='7' id='err_no_data-msg'></td></tr>`)
+                    template_alert_container('err_no_data-msg', 'no-data', "No reminder found to show", null, '<i class="fa-solid fa-scroll"></i>')
                 }
             }
         });
@@ -96,7 +93,7 @@
             dataType: 'json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", "Bearer <?= session()->get("token_key"); ?>")    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
                 Swal.showLoading()
             },
             success: function(response) {

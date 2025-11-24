@@ -96,7 +96,6 @@
     })
 
     const inventory_id = '<?= $id ?>'
-    const token = '<?= session()->get("token_key"); ?>'
 
     const get_detail_inventory = (id) => {
         const item_holder = 'report_holder'
