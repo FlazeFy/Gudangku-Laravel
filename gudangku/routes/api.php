@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\ReminderApi\Queries as QueriesReminderController;
 use App\Http\Controllers\Api\DictionaryApi\Queries as QueriesDictionaryController;
 use App\Http\Controllers\Api\DictionaryApi\Commands as CommandsDictionaryController;
 use App\Http\Controllers\Api\ErrorApi\Queries as QueriesErrorController;
+use App\Http\Controllers\Api\ErrorApi\Commands as CommandsErrorController;
 use App\Http\Controllers\Api\LendApi\Commands as CommandsLendController;
 use App\Http\Controllers\Api\LendApi\Queries as QueriesLendController;
 
@@ -130,6 +131,7 @@ Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/error')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesErrorController::class, 'get_all_error']);
+    Route::delete('/destroy/{id}', [CommandsErrorController::class, 'hard_delete_error_by_id']);
 });
 
 Route::prefix('/v1/dictionary')->group(function () {

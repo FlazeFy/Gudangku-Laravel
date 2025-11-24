@@ -8,8 +8,8 @@
 
 @section('content')
     <!-- JS Collection -->
-    <script src="{{ asset('/usecases/fav_toogle_inventory_by_id_v1.0.0.js')}}"></script>
-    <script src="{{ asset('/usecases/destroy_reminder_by_id_v1.0.js')}}"></script>
+    <script src="{{ asset('/usecases/inventory_v1.0.js')}}"></script>
+    <script src="{{ asset('/usecases/reminder_v1.0.js')}}"></script>
 
     <div class="content">
         @include('others.profile')

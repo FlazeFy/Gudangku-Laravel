@@ -11,7 +11,7 @@
     <script>
         let token = '<?= session()->get("token_key"); ?>'
     </script>
-    <script src="{{ asset('/usecases/destroy_history_by_id_v1.0.js')}}"></script>
+    <script src="{{ asset('/usecases/history_v1.0.js')}}"></script>
 
     <div class="content">
         @include('others.profile')

@@ -71,4 +71,28 @@ class ErrorTest extends TestCase
         Audit::auditRecordText("Test - Get All Error", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Get All Error", "TC-XXX", 'TC-XXX test_get_all_error', json_encode($data));
     }
+
+    public function test_hard_delete_error_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("admin");
+        $id = "69dc1f34-9d1d-674e-1d7b-1ccfc3880a0c";
+        $response = $this->httpClient->delete("destroy/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('error permentally deleted',$data['message']);
+
+        Audit::auditRecordText("Test - Hard Delete Error By Id", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Hard Delete Error By Id", "TC-XXX", 'TC-XXX test_hard_delete_error_by_id', json_encode($data));
+    }
 }

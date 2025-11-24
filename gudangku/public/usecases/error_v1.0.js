@@ -1,8 +1,8 @@
-const recover_inventory_by_id = (id, token, refreshData) => {
+const destroy_error_by_id = (id, token, refreshData) => {
     Swal.showLoading()
     $.ajax({
-        url: `/api/v1/inventory/recover/${id}`,
-        type: 'PUT',
+        url: `/api/v1/error/destroy/${id}`,
+        type: 'DELETE',
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Accept", "application/json")
             xhr.setRequestHeader("Authorization", `Bearer ${token}`)    

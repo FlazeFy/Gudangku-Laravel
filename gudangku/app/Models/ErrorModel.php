@@ -65,4 +65,8 @@ class ErrorModel extends Model
             'created_at' => date('Y-m-d H:i:s')
         ]);
     }
+
+    public static function hardDeleteErrorByMessage($message){
+        return ErrorModel::where('message',$message)->delete();
+    }
 }
