@@ -1,38 +1,37 @@
 <form action="/login/validate" method="POST" id="form-login">
     @csrf
-    <h1>Welcome to GudangKu</h1><br>
-    <div class="text-start">
-        <div class="mb-3">
+    <div class="text-center mt-5 mt-md-0">
+        <h1>Welcome to GudangKu</h1><br>
+        <div class="mb-3 text-start">
             <label for="exampleInputEmail1" class="form-label text-white">Email / Username</label>
             <input type="text" name="username" id="username-input" class="form-control" id="exampleInputEmail1" onkeydown="return submitOnEnter(event)" aria-describedby="emailHelp">
             <div id="emailHelp" class="form-text">We'll never share your email with anyone else</div>
             <a class="error_input" id="username_msg"></a>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 text-start">
             <label for="exampleInputPassword1" class="form-label text-white">Password</label>
             <input type="password" name="password" id="password-input" class="form-control" onkeydown="return submitOnEnter(event)" id="exampleInputPassword1">
             <a class="error_input" id="pass_msg"></a>
         </div>
         <a class="error_input" id="all_msg"></a><br>
+        <input hidden name="token" value="" id="token">
+        <input hidden name="id" value="" id="id">
+        <input hidden name="email" value="" id="email">
+        <input hidden name="role" value="" id="role">
+        <input hidden name="profile_pic" value="" id="profile_pic">
+        <a onclick="login()" id="submit-login-btn" class="btn btn-success border-0 w-100" style="background:var(--successBG) !important;"><i class="fa-solid fa-paper-plane mx-1"></i> Submit</a>
+        <br><br>
+        <p class='mt-4 mb-2'>New user? please register first to use this app</p>
+        <a href="/register" id="regis_btn" class="btn btn-primary ms-2 w-100 mb-3" style="background:var(--primaryBG) !important;"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Register</a>
+        <a href="/auth/google" class="btn btn-primary ms-2 w-100" style="background:var(--primaryBG) !important;"><i class="fa-brands fa-google mx-1"></i> Sign In With Google</a>
     </div>
-
-    <input hidden name="token" value="" id="token">
-    <input hidden name="id" value="" id="id">
-    <input hidden name="email" value="" id="email">
-    <input hidden name="role" value="" id="role">
-    <input hidden name="profile_pic" value="" id="profile_pic">
-    <a onclick="login()" id="submit-login-btn" class="btn btn-success border-0 w-100" style="background:var(--successBG) !important;"><i class="fa-solid fa-paper-plane mx-1"></i> Submit</a>
-    <br><br>
-    <p class='mt-4 mb-2'>New user? please register first to use this app</p>
-    <a href="/register" id="regis_btn" class="btn btn-primary ms-2 w-100 mb-3" style="background:var(--primaryBG) !important;"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Register</a>
-    <a href="/auth/google" class="btn btn-primary ms-2 w-100" style="background:var(--primaryBG) !important;"><i class="fa-brands fa-google mx-1"></i> Sign In With Google</a>
 </form>
 
 <script>
-    var pwd_input = document.getElementById("password")
-    var btn_pwd = document.getElementById("btn-toogle-pwd")
+    let pwd_input = document.getElementById("password")
+    let btn_pwd = document.getElementById("btn-toogle-pwd")
 
-    function viewPassword(){
+    const viewPassword = () => {
         if(pwd_input.getAttribute('type') == "text"){
             pwd_input.setAttribute('type', 'password')
             btn_pwd.innerHTML = '<i class="fa-sharp fa-solid fa-eye-slash"></i>'
@@ -42,7 +41,7 @@
         }
     }
 
-    function login(){
+    const login = () => {
         $('#username_msg').html("")
         $('#pass_msg').html("")
         $('#all_msg').html("")
@@ -53,7 +52,7 @@
             data: $('#form-login').serialize(),
             dataType: 'json',
             success: function(response) {
-                var found = false
+                let found = false
 
                 if(response.hasOwnProperty('role')){
                     found = true
@@ -77,11 +76,11 @@
                 }
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                var errorMessage = "Unknown error occurred"
-                var usernameMsg = null
-                var passMsg = null
-                var allMsg = null
-                var icon = `<i class='fa-solid fa-triangle-exclamation'></i> `
+                let errorMessage = "Unknown error occurred"
+                let usernameMsg = null
+                let passMsg = null
+                let allMsg = null
+                let icon = `<i class='fa-solid fa-triangle-exclamation'></i> `
 
                 if (response && response.responseJSON && response.responseJSON.hasOwnProperty('message')) {   
                     //Error validation

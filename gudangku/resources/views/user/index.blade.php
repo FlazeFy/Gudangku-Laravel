@@ -11,14 +11,22 @@
         let page = 1
     </script>
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
-        <h1 class="mb-4">User</h1>
-        <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
-        <form action='/user/save_as_csv' method='POST' class='d-inline'>
-            @csrf
-            <button class="btn btn-primary mb-3 me-2" href=""><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print @endif</button>
-        </form>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">User</h1>
+            <div>
+                @include('others.profile')
+                @include('others.notification')
+            </div>
+        </div>
+        <hr>
+        <div class="mb-3">
+            @include('components.back_button', ['route' => '/'])
+            <form action='/user/save_as_csv' method='POST' class='d-inline'>
+                @csrf
+                <button class="btn btn-primary"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</button>
+            </form>
+        </div>
+
         <div class="row">
             <div class="col-lg-4 col-md-5 col-sm-12">
                 <div class="container bordered" id="last_login-section">

@@ -20,28 +20,23 @@
     </script>
     <div class="content" style="width:100vw; max-width:1480px;">
         <div class="row">
-            <div class="col-xl-8 col-lg-7 col-md-6">
-                @if($isMobile)
-                    <br><br>
-                    @include('login.form')
-                    <hr><br>
+            <div class="col-xl-8 col-lg-7 col-md-6 order-2 order-md-1">
+                <br><br>
+                <div class="d-md-none">
                     @include('login.landing')
-                @else
-                    <br><br>
+                    <hr><br>
+                </div>
+                <div class="d-none d-md-block">
                     @include('features.list')
                     <hr><br>
-                @endif
+                </div>
                 @include('components.about')
                 <br><br>
             </div>
-            <div class="col-xl-4 col-lg-5 col-md-6">
-                @if(!$isMobile)
-                <div class="position-sticky" style="top:15vh;">
-                    <div class="container-form">
-                        @include('login.form')
-                    </div>
+            <div class="col-xl-4 col-lg-5 col-md-6 order-1 order-md-2">
+                <div class="container-form position-sticky" style="top:15vh;">
+                    @include('login.form')
                 </div>
-                @endif
             </div>
         </div>
     </div>

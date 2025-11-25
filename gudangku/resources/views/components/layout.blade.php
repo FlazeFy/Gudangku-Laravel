@@ -4,11 +4,34 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>GudangKu</title>
+        <title>
+            @php
+                $path = request()->path();
+                
+                if ($path === '/' || $path === '') {
+                    echo "GudangKu";
+                } else {
+                    $segments = explode('/', trim($path, '/'));
+                    $titleParts = ["GudangKu"];
+
+                    foreach ($segments as $segment) {
+                        // Skip UUID
+                        if (preg_match('/^[0-9a-fA-F-]{36}$/', $segment)) {
+                            continue;
+                        }
+
+                        $clean = str_replace(['-', '_'], ' ', $segment);
+                        $titleParts[] = ucwords($clean);
+                    }
+
+                    echo implode(' | ', $titleParts);
+                }
+            @endphp
+        </title>
         <link rel="icon" type="image/png" href="{{asset('images/logo.png')}}"/>
         
         @php
-            $fullUrl = url()->current(); // Get the full current URL
+            $fullUrl = url()->current(); 
             $cleanedUrl = str_replace("http://127.0.0.1:8000/", "", $fullUrl);
         @endphp
 
@@ -79,7 +102,9 @@
         @include('others.detect_flazenapps')
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
             <div>
-                @yield('content')
+                <div style="min-height: 90vh;">
+                    @yield('content')
+                </div>
                 <?php if(!preg_match('(embed)', $cleanedUrl)): ?>
                 <footer class="py-3 my-4">
                     <ul class="nav justify-content-center border-bottom pb-3 mb-3">

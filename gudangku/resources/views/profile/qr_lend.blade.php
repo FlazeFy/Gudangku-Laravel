@@ -36,7 +36,9 @@
                         <div class="alert alert-success w-100 mt-4">
                             <i class="fa-solid fa-circle-info"></i> ${response.status === 404 ? `There's <b>no active</b> QR, and people can't see your inventory`:`The last QR Code is already <b>expired</b>. Generate a new one?`}
                         </div>
-                        <a class="btn btn-success mt-3" onclick="generate_qr()"><i class="fa-solid fa-qrcode"></i> Generate QR Code</a>
+                        <div class="d-grid d-md-inline-block">
+                            <a class="btn btn-success mt-3 w-100 w-md-auto" onclick="generate_qr()"><i class="fa-solid fa-qrcode"></i> Generate QR Code</a>
+                        </div>
                     `)
                 } else if (response.status === 422) {
                     const json = JSON.parse(response.responseText)
@@ -134,7 +136,7 @@
                                 </div>
                             </div>
                             <p>${el.lend_desc ?? '<span class="fst-italic">- No Description Provided -</span>'}</p>
-                            <p class='date-text mt-2'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
+                            <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
                             ${ 
                                 el.lend_status == 'used' ? 
                                 `<hr class="mb-2"><b>Borrowed Item</b><p class="mb-2">${el.list_inventory}</p>

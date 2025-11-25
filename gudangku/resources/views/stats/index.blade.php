@@ -13,12 +13,18 @@
         const year = year_sess ?? new Date().getFullYear()
     </script>
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
-        <h1 class="main-page-title">Stats</h1>
-        <div class="d-flex justify-content-start">
-            <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">Stats</h1>
+            <div>
+                @include('others.profile')
+                @include('others.notification')
+            </div>
         </div>
+        <hr>
+        <div class="mb-3">
+            @include('components.back_button', ['route' => '/'])
+        </div>
+
         @include('stats.toogle_total')
         <div class="row">
             @if(session()->get('toogle_view_stats') == 'top chart')

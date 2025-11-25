@@ -11,13 +11,19 @@
     <script src="{{ asset('/usecases/history_v1.0.js')}}"></script>
 
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
-        <h1 class="main-page-title">History</h1>
-        <div class="d-flex justify-content-<?php if(!$isMobile){ echo "start"; } else { echo "end"; } ?>">
-            <a class="btn btn-danger btn-main top" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
-            <span id="export-section"></span>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">History</h1>
+            <div>
+                <span id="export-section"></span>
+                @include('others.profile')
+                @include('others.notification')
+            </div>
         </div>
+        <hr>  
+        <div class="mb-3">      
+            @include('components.back_button', ['route' => '/'])
+        </div>
+        
         @if($role == 0)
             @include('history.list')
         @else   

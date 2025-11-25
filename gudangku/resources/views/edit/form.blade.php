@@ -210,7 +210,7 @@
                 } else {
                     $('#reminder_holder').html(`
                         <div class="container-fluid p-3" style="background-color:rgba(59, 131, 246, 0.2);">
-                            <h4><i class="fa-regular fa-clock"></i> This inventory doesn't have reminder</h4>
+                            <h6><i class="fa-regular fa-clock"></i> This inventory doesn't have reminder</h6>
                             <a class="btn btn-primary mt-3" data-bs-toggle='modal' data-bs-target='#modalAddReminder'><i class="fa-solid fa-plus"></i> Add New Reminder</a>
                         </div>
                     `)

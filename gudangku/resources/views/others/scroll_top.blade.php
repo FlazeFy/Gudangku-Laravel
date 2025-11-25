@@ -4,7 +4,7 @@
         if (window.scrollY > window.innerHeight) {
             if ($('#scroll-to-top-btn').length === 0) {
                 $('#nav_scroll-holder').prepend(`
-                    <button class="btn btn-primary mb-2 w-100" id="scroll-to-top-btn"><i class="fa-solid fa-arrow-up"></i> Scroll to Top</button>
+                    <button class="btn btn-primary mb-2 w-100" id="scroll-to-top-btn"><i class="fa-solid fa-arrow-up"></i><span class="d-none d-md-inline"> Scroll to Top</span></button>
                 `);
 
                 $('#scroll-to-top-btn').on('click', function () {

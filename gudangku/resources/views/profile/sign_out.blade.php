@@ -1,4 +1,7 @@
-<a class="btn btn-danger btn-main bottom" data-bs-toggle="modal" data-bs-target="#modalSignOut" id="sign_out_btn"><i class="fa-solid fa-right-from-bracket" style="font-size:var(--textXLG);"></i>@if(!$isMobile)  Sign Out @endif</a>
+<a class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#modalSignOut" id="sign_out_btn">
+    <i class="fa-solid fa-right-from-bracket" style="font-size:var(--textXLG);"></i>
+    <span class="d-none d-md-inline"> Sign Out</span>
+</a>
 <div class="modal fade" id="modalSignOut" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

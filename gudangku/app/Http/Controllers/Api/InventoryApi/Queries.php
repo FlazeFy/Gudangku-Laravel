@@ -712,6 +712,11 @@ class Queries extends Controller
     public function get_inventory_by_id(Request $request, $id){
         try{
             $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+            if($check_admin){
+                $user_id = null;
+            }
+
             $res = InventoryModel::getInventoryDetail($id,$user_id);
             
             if ($res) {

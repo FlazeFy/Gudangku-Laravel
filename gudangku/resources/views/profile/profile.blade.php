@@ -4,9 +4,13 @@
     <input type="text" name="username" id="username_input" onkeydown="return submitOnEnter(event)" class="form-control"/><br>
     <label>Email</label>
     <input type="email" name="email" id="email_input" onkeydown="return submitOnEnter(event)" class="form-control"/><br>
-    <div class="d-flex justify-content-between align-items-center">
-        <p class="fst-italic text-secondary mb-0">Joined since <span id="created_at_holder"></span></p>
-        <a class='btn btn-success' onclick='update_profile()'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
+    <div class="row align-items-center">
+        <div class="col-md-6 col-sm-12">
+            <p class="fst-italic text-secondary mb-0">Joined since <span id="created_at_holder"></span></p>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <a class='btn btn-success mt-3 mt-md-0 w-100' onclick='update_profile()'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
+        </div>
     </div>
 </form>
 
@@ -73,7 +77,11 @@
                     $('#change-pass-button-holder').empty()
                 } else{
                     $('#login_status_box').html(`<div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Your account login using Basic Auth</div>`)
-                    $('#change-pass-button-holder').html(`<a class="btn btn-primary mb-3" href="/forgot"><i class="fa-solid fa-key" style="font-size:var(--textXLG);"></i> Change Password</a>`)
+                    $('#change-pass-button-holder').html(`
+                        <a class="btn btn-primary me-2" href="/forgot">
+                            <i class="fa-solid fa-key" style="font-size:var(--textXLG);"></i> 
+                            <span class="d-none d-md-inline"> Change Password</span>
+                        </a>`)
                 } 
             },
             error: function(response, jqXHR, textStatus, errorThrown) {

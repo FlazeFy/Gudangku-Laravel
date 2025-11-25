@@ -26,7 +26,7 @@ label, .form-label {
 }
 .main-page-title {
     font-weight: bold;
-    margin-bottom: var(--spaceJumbo);
+    margin-bottom: 0;
     font-size: calc(var(--textXJumbo)*1.75);
 }
 .text-secondary, .form-text {
@@ -59,7 +59,6 @@ footer {
 /* Mobile & Tablet style */
 @media screen and (max-width: 1023px) {
     .main-page-title {
-        margin-bottom: var(--spaceXXSM);
         font-size: var(--textXJumbo);
     }
 }

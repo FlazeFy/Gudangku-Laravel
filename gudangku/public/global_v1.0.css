@@ -91,6 +91,14 @@ table tr {
 }
 
 /* Modal */
+.modal {
+    margin-top: 5vh;
+}
+@media screen and (max-width: 1023px) {
+    .modal {
+        margin-top: 10vh;
+    }
+}
 .modal-content, .swal2-popup, .popover {
     border-radius: var(--roundedJumbo) !important;
     background: var(--darkColor);
