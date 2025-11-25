@@ -1,20 +1,13 @@
-<style>
-    #inventory_holder {
-        max-width: 100%;
-        overflow-x: auto;
-    }
-</style>
-
-<div id="inventory_holder">
+<div class="table-responsive">
     <table class="table" id="inventory_tb">
         <thead class="text-center">
             <tr class="tr-header">
-                <th scope="col" style='width:260px;'>Name & Description</th>
+                <th scope="col" style='min-width:200px;'>Name & Description</th>
                 <th scope="col" style='min-width:140px;'>Category & Merk</th>
                 <th scope="col" style='min-width:140px;'>Placement</th>
                 <th scope="col" style='min-width:110px;'>Price</th>
-                <th scope="col">Unit</th>
-                <th scope="col">Capacity</th>
+                <th scope="col" style='min-width:110px;'>Unit</th>
+                <th scope="col" style='min-width:110px;'>Capacity</th>
                 <th scope="col" style='min-width:140px;'>Action</th>
             </tr>
         </thead>
@@ -299,7 +292,7 @@
                 $('#toolbar-button-section').html(`
                     <form class="d-inline" action="/inventory/save_as_csv" method="POST">
                         @csrf
-                        <button class="btn btn-primary mb-3 me-2" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Save as CSV @endif</button>
+                        <button class="btn btn-primary" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</button>
                     </form>
                 `)
             },

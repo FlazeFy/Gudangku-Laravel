@@ -63,9 +63,8 @@
                 $('#export-section').html(`
                     <form class="d-inline" action="/history/save_as_csv" method="POST">
                         @csrf
-                        <button class="btn btn-primary me-2" type="submit" id="save_as_csv_btn">
-                            <i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> 
-                            <span class="d-none d-md-inline">Save as CSV</span>
+                        <button class="btn btn-primary" type="submit" id="save_as_csv_btn">
+                            <i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print
                         </button>
                     </form>
                 `)

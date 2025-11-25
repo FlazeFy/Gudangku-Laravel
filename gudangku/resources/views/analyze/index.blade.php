@@ -21,13 +21,22 @@
     <link rel="stylesheet" href="{{ asset('/room_v1.0.css') }}"/>
 
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
-        <h1 class="main-page-title">Analyze : {{ucfirst($type)}} <b class='inventory_name text-primary'></b></h1>
-        <div class="d-flex justify-content-start">
-            <a class="btn btn-danger mb-3 me-2" href="/inventory/edit/{{$id}}"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
-            <a class="btn btn-primary mb-3 me-2" onclick="generate_custom()"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="main-page-title">Analyze {{ucfirst($type)}}</h1>
+                <h3 class="mb-0"><b class='inventory_name text-primary'></b></h3>
+            </div>
+            <div style="min-width:120px;">
+                @include('others.profile')
+                @include('others.notification')
+            </div>
         </div>
+        <hr>
+        <div class="mb-3 d-flex flex-wrap gap-2">
+            @include('components.back_button', ['route' => '/inventory/edit/'.$id])
+            <a class="btn btn-primary" onclick="generate_custom()"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Custom Print</a>
+        </div>
+
         <div id="render_area">
             <div class="row">
                 <div class="col">

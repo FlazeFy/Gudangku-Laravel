@@ -1,12 +1,12 @@
-<div id="error_holder">
+<div class="table-responsive">
     <table class="table">
         <thead class="text-center">
             <tr>
-                <th scope="col" style='max-width:160px;'>Message</th>
+                <th scope="col" style='min-width:160px;'>Message</th>
                 <th scope="col" style='min-width:80px;'>Stack Trace</th>
-                <th scope="col" style='max-width:180px;'>File</th>
+                <th scope="col" style='min-width:180px;'>File</th>
                 <th scope="col" style='min-width:140px;'>Faced At</th>
-                <th scope="col" style='max-width:140px;'>Action</th>
+                <th scope="col" style='min-width:80px;'>Action</th>
             </tr>
         </thead>
         <tbody id="error_tb_body"></tbody>

@@ -13,13 +13,13 @@
             <h1 class="main-page-title">My Profile</h1>
             <div>
                 @include('profile.sign_out')
-                <span id="change-pass-button-holder"></span>
                 @include('others.notification')
             </div>
         </div>
         <hr>
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-wrap gap-2">
             @include('components.back_button', ['route' => '/'])
+            <span id="change-pass-button-holder"></span>
         </div>
 
         <div class="row d-flex align-items-stretch">

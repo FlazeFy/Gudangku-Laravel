@@ -14,13 +14,19 @@
 
 @section('content')
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
-        <h1 class="main-page-title">3D Room</h1>
-        <div class="d-flex justify-content-start">
-            <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">3D Room</h1>
+            <div>
+                @include('others.profile')
+                @include('others.notification')
+            </div>
+        </div>
+        <hr>
+        <div class="mb-3 d-flex flex-wrap gap-2">
+            @include('components.back_button', ['route' => '/inventory'])
             @include('room.select_room')
         </div>
+
         @include('room.3d.room')
     </div>
 @endsection

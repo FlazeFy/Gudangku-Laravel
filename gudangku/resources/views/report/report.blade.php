@@ -1,20 +1,22 @@
 @if($role == 0)
     <div id="report_holder"></div>
 @else 
-    <table class="table">
-        <thead class="text-center">
-            <tr>
-                <th scope="col" style='width:140px;'>Report Title</th>
-                <th scope="col" style='width:160px;'>Category</th>
-                <th scope="col" style='min-width:140px;'>Description</th>
-                <th scope="col" style='min-width:140px;'>Items</th>
-                <th scope="col" style='min-width:140px;'>Price</th>
-                <th scope="col">Props</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody id="report_holder"></tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col" style='min-width:140px;'>Report Title</th>
+                    <th scope="col" style='min-width:160px;'>Category</th>
+                    <th scope="col" style='min-width:140px;'>Description</th>
+                    <th scope="col" style='min-width:140px;'>Items</th>
+                    <th scope="col" style='min-width:140px;'>Price</th>
+                    <th scope="col" style='min-width:140px;'>Props</th>
+                    <th scope="col" style='min-width:120px;'>Action</th>
+                </tr>
+            </thead>
+            <tbody id="report_holder"></tbody>
+        </table>
+    </div>
 @endif
 <script>
     const get_my_report_all = (page,name,category,sort) => {
@@ -107,28 +109,30 @@
                                     <b>Created At</b>
                                     ${getDateToContext(el.created_at,'calendar')}
                                 </td>
-                                <td style="width:120px;">
-                                    <a class="btn btn-warning me-2" href="/report/detail/${el.id}">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <a class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                    <div class="modal fade" id="modalDelete_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
-                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p><span class="text-danger">Permanently Delete</span> this report "${el.report_title}" from user @${el.username}?</p>
-                                                    <a class="btn btn-danger mt-4" onclick="destroy_report_by_id('${el.id}', '${token}', 
-                                                    ()=>get_my_report_all(${page},'${search_key}','${filter_category}','${sorting}'))">Yes, Delete</a>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <a class="btn btn-warning" href="/report/detail/${el.id}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+                                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                        <div class="modal fade" id="modalDelete_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
+                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p><span class="text-danger">Permanently Delete</span> this report "${el.report_title}" from user @${el.username}?</p>
+                                                        <a class="btn btn-danger mt-4" onclick="destroy_report_by_id('${el.id}', '${token}', 
+                                                        ()=>get_my_report_all(${page},'${search_key}','${filter_category}','${sorting}'))">Yes, Delete</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>  
+                                        </div>  
+                                    </div>
                                 </td>
                             </tr>
                         `);

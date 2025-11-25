@@ -21,7 +21,7 @@
             </div>
         </div>
         <hr>
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-wrap gap-2">
             @include('components.back_button', ['route' => '/'])
         </div>
 

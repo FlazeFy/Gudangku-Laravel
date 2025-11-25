@@ -1,13 +1,13 @@
-<div id="user_holder">
+<div class="table-responsive">
     <table class="table">
         <thead class="text-center">
             <tr>
-                <th scope="col" style='width:160px;'>Username</th>
+                <th scope="col" style='min-width:160px;'>Username</th>
                 <th scope="col" style='min-width:180px;'>Contact</th>
                 <th scope="col" style='min-width:100px;'>Timezone</th>
                 <th scope="col" style='min-width:110px;'>Joined At</th>
                 <th scope="col" style='min-width:110px;'>Last Updated</th>
-                <th scope="col" style='min-width:140px;'>Action</th>
+                <th scope="col" style='min-width:80px;'>Action</th>
             </tr>
         </thead>
         <tbody id="user_tb_body"></tbody>

@@ -20,21 +20,29 @@
         let page = 1
     </script>
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
-        <h1 class="main-page-title">@if($role == 0) My @endif Inventory</h1>
-        <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
-        @include('home.toogle_view')
-        @if($role == 0)
-            <a class="btn btn-primary btn-main bottom" href="/inventory/add" id="add_inventory-button"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Add Inventory @endif</a>
-        @endif
-        <a class="btn btn-primary btn-main" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Stats @endif</a>
-        @if($role == 0)
-            <a class="btn btn-primary btn-main" href="/calendar"><i class="fa-solid fa-calendar" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Calendar @endif</a>
-            <a class="btn btn-primary mb-3 me-2" href="/room/2d"><i class="fa-solid fa-layer-group" style="font-size:var(--textXLG);"></i> @if(!$isMobile) 2D Room @endif</a>
-            <a class="btn btn-primary mb-3 me-2" href="/room/3d"><i class="fa-solid fa-cube" style="font-size:var(--textXLG);"></i> @if(!$isMobile) 3D Room @endif</a>
-        @endif
-        <span id="toolbar-button-section"></span>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">My Inventory</h1>
+            <div>
+                @include('others.profile')
+                @include('others.notification')
+            </div>
+        </div>
+        <hr>
+        <div class="mb-3 d-flex flex-wrap gap-2">
+            @include('components.back_button', ['route' => '/'])
+            @include('home.toogle_view')
+            @if($role == 0)
+                <a class="btn btn-primary" href="/inventory/add" id="add_inventory-button"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Inventory</a>
+            @endif
+            <a class="btn btn-primary" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Stats @endif</a>
+            @if($role == 0)
+                <a class="btn btn-primary" href="/calendar"><i class="fa-solid fa-calendar" style="font-size:var(--textXLG);"></i><span class="d-none d-md-inline"> Calendar</span></a>
+                <a class="btn btn-primary" href="/room/2d"><i class="fa-solid fa-layer-group" style="font-size:var(--textXLG);"></i> 2D Room</a>
+                <a class="btn btn-primary" href="/room/3d"><i class="fa-solid fa-cube" style="font-size:var(--textXLG);"></i> 3D Room</a>
+            @endif
+            <span id="toolbar-button-section"></span>
+        </div>
+
         @php($selected = session()->get('toogle_view_inventory'))
         @include('home.filter')
         @include('home.lend_inventory')

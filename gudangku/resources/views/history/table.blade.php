@@ -1,8 +1,8 @@
-<div id="history_holder">
+<div class="table-responsive">
     <table class="table">
         <thead class="text-center">
             <tr>
-                <th scope="col" style='width:160px;'>Username</th>
+                <th scope="col" style='min-width:160px;'>Username</th>
                 <th scope="col" style='min-width:180px;'>History</th>
                 <th scope="col" style='min-width:110px;'>Created At</th>
                 <th scope="col" style='min-width:140px;'>Action</th>

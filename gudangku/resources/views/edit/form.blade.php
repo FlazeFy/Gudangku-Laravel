@@ -145,7 +145,7 @@
                 }
 
                 $('#btn-toogle-fav-holder').html(`
-                    <a class="btn btn-danger mb-3 me-2 btn-toggle-favorite" onclick="fav_toogle_inventory_by_id('${id}', ${data.is_favorite == 0 ? '1' : '0'}, '<?= session()->get("token_key"); ?>', 
+                    <a class="btn btn-danger btn-toggle-favorite" onclick="fav_toogle_inventory_by_id('${id}', ${data.is_favorite == 0 ? '1' : '0'}, '<?= session()->get("token_key"); ?>', 
                         ()=>get_detail_inventory('${id}'))" style="${data.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
                         <i class="fa-solid fa-heart mx-2" style="font-size:var(--textXLG);"></i>
                     </a>

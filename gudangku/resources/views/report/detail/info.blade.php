@@ -21,7 +21,7 @@
     <div id="report_item_holder" class='table-holder'>
         <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
     </div>
-    <div id="report_check_extra"></div>
+    <div id="report_check_extra" class="mt-3"></div>
 </div>
 
 <script>
@@ -60,11 +60,11 @@
 
             if(data_item.length > 0){
                 $(`#btn-doc-preview-holder`).html(`
-                    <a class="btn btn-primary mb-3 me-2" href="/doc/report/${data.id}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print @endif</a>
-                    <a class="btn btn-primary mb-3 me-2" href="/doc/report/${data.id}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
+                    <a class="btn btn-primary" href="/doc/report/${data.id}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</a>
+                    <a class="btn btn-primary" href="/doc/report/${data.id}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Custom Print</a>
                     <form action='/report/detail/${data.id}/save_as_csv' method='POST' class='d-inline'>
                         @csrf
-                        <button class="btn btn-primary mb-3 me-2" href=""><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print Item @else Item @endif</button>
+                        <button class="btn btn-primary" href=""><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print CSV</button>
                     </form>
                 `)
             }
@@ -240,9 +240,19 @@
                     `)
                 });
                 $('#report_check_extra').html(`
-                    <a class='btn btn-primary me-2' onclick="check_all('.check-inventory','check'); checked_toggle_event();"><i class="fa-solid fa-check style="font-size:var(--textXLG);"></i> @if(!$isMobile) Check All @endif</a>
-                    <a class='btn btn-danger me-2' onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();"><i class="fa-solid fa-xmark style="font-size:var(--textXLG);"></i> @if(!$isMobile) Uncheck All @endif</a>
-                    <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddReport" style="font-size:var(--textXMD);"><i class="fa-solid fa-plus"></i> Add Item</a>
+                    <div class="d-flex gap-2 mb-3">
+                        <a class="btn btn-primary" onclick="check_all('.check-inventory','check'); checked_toggle_event();">
+                            <i class="fa-solid fa-check" style="font-size:var(--textXLG);"></i>
+                            <span class="d-none d-md-inline">Check All</span>
+                        </a>
+                        <a class="btn btn-danger" onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();">
+                            <i class="fa-solid fa-xmark" style="font-size:var(--textXLG);"></i>
+                            <span class="d-none d-md-inline">Uncheck All</span>
+                        </a>
+                        <a class="btn btn-success flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#modalAddReport" style="font-size:var(--textXMD);">
+                            <i class="fa-solid fa-plus"></i> Add Item
+                        </a>
+                    </div>
                 `)
             } else {
                 $('#report_check_extra').html(`
@@ -473,8 +483,8 @@
                     </div>
                     <div class='col text-end'>
                         <h5 class='fw-bold my-4' style='font-size:var(--textXLG);'>What you want to do?</h5>
-                        <a class='btn btn-primary me-2' href="/doc/report/{{$id}}/custom?filter_in=${selected_item_id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
-                        <a class='btn btn-primary me-2' data-bs-toggle="modal" data-bs-target="#modalAddReport" onclick="get_dictionary()"><i class="fa-solid fa-arrows-split-up-and-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Split Report @endif</a>
+                        <a class='btn btn-primary' href="/doc/report/{{$id}}/custom?filter_in=${selected_item_id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
+                        <a class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#modalAddReport" onclick="get_dictionary()"><i class="fa-solid fa-arrows-split-up-and-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Split Report @endif</a>
                         <div class="modal fade" id="modalAddReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -507,8 +517,8 @@
                                 </div>
                             </div>
                         </div>
-                        <a class='btn btn-primary me-2' href="/doc/inventory/${selected_inventory_id}/custom"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print Detail @endif</a>
-                        <a class='btn btn-primary me-2'><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Analyze @endif</a>
+                        <a class='btn btn-primary' href="/doc/inventory/${selected_inventory_id}/custom"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print Detail @endif</a>
+                        <a class='btn btn-primary'><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Analyze @endif</a>
                         <a class='btn btn-danger mt-2' data-bs-toggle="modal" data-bs-target="#modalDeleteManyItem"><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Remove @endif</a>
                         <div class="modal fade" id="modalDeleteManyItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">

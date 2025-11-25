@@ -12,30 +12,27 @@
     <script src="{{ asset('/usecases/reminder_v1.0.js')}}"></script>
 
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
-        <h1 class="main-page-title">Edit Inventory</h1>
-        <div class='d-flex justify-content-between align-items-center'>
-            <div id="edit_toolbar-section">
-                <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
-                <span id='btn-toogle-fav-holder'></span>
-                <a class="btn btn-primary mb-3 me-2" href="/doc/inventory/{{$id}}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print @endif</a>
-                <a class="btn btn-primary mb-3 me-2" href="/doc/inventory/{{$id}}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Print Custom</a>
-                <a class="btn btn-primary mb-3 me-2" href="/analyze/inventory/{{$id}}" id="analyze-button"><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Analyze @endif</a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">Edit Inventory</h1>
+            <div>
+                @include('others.profile')
+                @include('others.notification')
             </div>
-            @if(!$isMobile)
-            <div class='text-end'>
+        </div>
+        <hr>
+        <div class="mb-3 d-flex flex-wrap justify-content-between gap-2">
+            <div class="d-flex flex-wrap gap-2">
+                @include('components.back_button', ['route' => '/inventory'])
+                <span id='btn-toogle-fav-holder'></span>
+                <a class="btn btn-primary" href="/analyze/inventory/{{$id}}" id="analyze-button"><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> Analyze</a>
+                <a class="btn btn-primary" href="/doc/inventory/{{$id}}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</a>
+                <a class="btn btn-primary" href="/doc/inventory/{{$id}}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Custom Print</a>
+            </div>
+            <div class='text-start text-md-end'>
                 <p class='date-text mb-0'>Created At : <span id='created_at'></span></p>
                 <p class='date-text mb-0'>Last Updated : <span id='updated_at'></span></p>
             </div>
-            @endif
         </div>
-        @if($isMobile)
-        <div class='text-start'>
-            <p class='date-text mb-0'>Created At : <span id='created_at'></span></p>
-            <p class='date-text mb-0'>Last Updated : <span id='updated_at'></span></p>
-        </div>
-        @endif
         @include('edit.add_report')
         @include('edit.add_reminder')
         @include('edit.form')
