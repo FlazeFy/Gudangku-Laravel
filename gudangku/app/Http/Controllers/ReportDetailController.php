@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 // Helpers
 use App\Helpers\Generator;
 use App\Helpers\Audit;
+use App\Helpers\TelegramMessage;
 
 // Models
 use App\Models\DictionaryModel;
@@ -90,18 +91,28 @@ class ReportDetailController extends Controller
                 copy($storagePath, $publicPath);
         
                 if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
-                    $inputFile = InputFile::create($publicPath, $file_name);
+                    if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                        $inputFile = InputFile::create($publicPath, $file_name);
         
-                    Telegram::sendDocument([
-                        'chat_id' => $user->telegram_user_id,
-                        'document' => $inputFile,
-                        'caption' => "Your report detail export is ready",
-                        'parse_mode' => 'HTML',
-                    ]);
+                        Telegram::sendDocument([
+                            'chat_id' => $user->telegram_user_id,
+                            'document' => $inputFile,
+                            'caption' => "Your report detail export is ready",
+                            'parse_mode' => 'HTML',
+                        ]);
+                    } else {
+                        if (file_exists($publicPath)) {
+                            unlink($publicPath);
+                        }
+                        return redirect()->back()->with('failed_message', 'Telegram ID is invalid. Please check your Telegram ID');
+                    }
                 }
 
                 return response()->download($publicPath)->deleteFileAfterSend(true);
             } catch (\Exception $e) {
+                if (file_exists($publicPath)) {
+                    unlink($publicPath);
+                }
                 return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
             }
         } else {

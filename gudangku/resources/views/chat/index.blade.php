@@ -1,0 +1,25 @@
+@extends('components.layout')
+
+<!-- PHP Helpers -->
+<?php
+    use App\Helpers\Generator;
+?>  
+@php($isMobile = Generator::isMobileDevice())  
+
+@section('content')
+    <div class="content">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">Chat</h1>
+            <div>
+                @include('others.profile')
+                @include('others.notification')
+            </div>
+        </div>
+        <hr>
+        <div class="mb-3 d-flex flex-wrap gap-2">
+            @include('components.back_button', ['route' => '/'])
+        </div>
+        
+        @include('chat.chat_area')
+    </div>
+@endsection

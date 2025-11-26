@@ -116,7 +116,7 @@
                 `)
             });        
         } else {
-            $('#selected-inventory-holder').html(`<p class="text-white text-center">- No Items Selected -</p>`)
+            $('#selected-inventory-holder').html(`<p class="no-data-message">- No Items Selected -</p>`)
         }
     }
 

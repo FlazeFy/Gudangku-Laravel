@@ -1,15 +1,15 @@
 <label>Username</label>
-<input type="text" name="username" id="username" class="form-control"/><br>
+<input type="text" name="username" id="username" class="form-control"/>
 <label>Email</label>
-<input type="email" name="email" id="email" class="form-control"/><br>
+<input type="email" name="email" id="email" class="form-control"/>
 <label>Password</label>
-<input type="password" name="password" id="password" class="form-control"/><br>
+<input type="password" name="password" id="password" class="form-control"/>
 <label>Re-Type Password</label>
-<input type="password" name="password_validation" id="password_validation" class="form-control"/><br>
-<a class="btn btn-success w-100" id="btn-register-acc"><i class="fa-solid fa-paper-plane"></i> Register Account</a><br>
+<input type="password" name="password_validation" id="password_validation" class="form-control"/>
+<a class="btn btn-success w-100 mt-4" id="btn-register-acc"><i class="fa-solid fa-paper-plane"></i> Register Account</a><br>
 <div class="text-center mt-3 d-none section-form" id="token-section">
-    <h2>Validate</h2><br>
-    <h2 class="my-2 fw-bold" style="font-size:var(--textJumbo);" id="timer">15:00</h2>
+    <h3>Validate</h3><br>
+    <h4 class="my-2 fw-bold" style="font-size:var(--textJumbo);" id="timer">15:00</h4>
     <label>Type the Token that has sended to your email</label><br>
     <div class="pin-code" id="pin-holder">
         <input type="text" maxlength="1" oninput="validatePin()" autofocus>
@@ -107,7 +107,6 @@
     }
 
     function validateToken(token){
-        Swal.showLoading()
         $.ajax({
             url: `/api/v1/register/account`,
             dataType: 'json',
@@ -118,7 +117,10 @@
                 email: $('#email').val(),
                 password: $('#password').val(),
                 token: token
-            })
+            }),
+            beforeSend: function (xhr) {
+                Swal.showLoading()
+            }
         })
         .done(function (response) {            
             const data = response
@@ -137,8 +139,25 @@
                 scrollTop: $('#service_section').offset().top
             }, [])
             localStorage.setItem('token_key',response.token)
+
             $('#indicator-profile').removeClass('step-active').addClass('step-finish')
             $('#indicator-service').addClass('step-active')
+            $('.step-mobile .title').text("Stay Updated!")
+            $('.step-mobile .caption').text('Sync your account to another Platform. Like Telegram and Line')
+            $('.progress-bar').css('width', '66%').attr('aria-valuenow', 66) 
+            $('.step-mobile .caption').html(`
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <a class="btn btn-success px-2 py-1" style="font-size:var(--textSM);" href='/'>
+                        <i class="fa-solid fa-arrow-right"></i> Go to Dashboard
+                    </a>
+                    <a class="btn btn-success px-2 py-1" style="font-size:var(--textSM);" href='/login'>
+                        <i class="fa-solid fa-house"></i> Back to Login
+                    </a>
+                    <a class="btn btn-primary px-2 py-1" style="font-size:var(--textSM);">
+                        <i class="fa-solid fa-mobile-screen"></i> Get Mobile Version
+                    </a>
+                </div>
+            `)
         
             Swal.fire({
                 title: "Success!",
@@ -198,7 +217,6 @@
         });
 
         $('#btn-regenerate-token').on('click', function(){
-            Swal.showLoading()
             $.ajax({
                 url: `/api/v1/register/regen_token`,
                 dataType: 'json',
@@ -209,7 +227,7 @@
                 }), 
                 type: "POST",
                 beforeSend: function (xhr) {
-                    // ...
+                    Swal.showLoading()
                 }
             })
             .done(function (response) {
@@ -244,6 +262,9 @@
                                 email:$('#email').val()
                             }), 
                             type: "POST",
+                            beforeSend: function (xhr) {
+                                Swal.showLoading()
+                            },
                             success: function(response) {
                                 Swal.close()
                                 $('#checkTerm').attr('disabled', true)
@@ -254,7 +275,7 @@
                                 startTimer(900)
                                 $('html, body').animate({
                                     scrollTop: $('#token-section').offset().top
-                                }, []);
+                                }, [])
 
                                 let data = response
                                 Swal.fire({

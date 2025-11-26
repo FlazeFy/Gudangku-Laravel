@@ -3,77 +3,88 @@
         text-align: center;
     }
     .dashboard-title {
-        font-size: calc(var(--textXJumbo) * 3) !important; 
+        font-size: calc(var(--textXJumbo) * 2.75) !important; 
+    }
+    .dashboard-second {
+        font-size: calc(var(--textXJumbo) * 1.5) !important; 
+    }
+    .dashboard-title, .dashboard-second {
         font-weight: bold;
     }
     .dashboard-subtitle {
         font-size: var(--textXLG) !important; 
+        padding: var(--spaceXSM) var(--spaceXMD);
+        margin-top: var(--spaceXSM);
         font-weight: 600;
         background: var(--infoBG);
-        padding: var(--spaceXSM) var(--spaceXMD);
         width: fit-content;
         margin-inline: auto;
         display: block;
         border-radius: var(--roundedXLG);
-        margin-top: var(--spaceXSM);
     }
+    @media screen and (min-width: 768px) and (max-width: 1023px) {
+        .dashboard-title {
+            font-size: calc(var(--textXJumbo) * 2.25) !important; 
+        }
+        .dashboard-second {
+            font-size: calc(var(--textXJumbo) * 1.25) !important; 
+        }
+        .dashboard-subtitle {
+            font-size: var(--textLG) !important; 
+            padding: var(--spaceXXSM) var(--spaceMD);
+            margin-top: var(--spaceXXSM);
+        }
+    }
+    @media screen and (max-width: 767px) {
+        .dashboard-title {
+            font-size: calc(var(--textXJumbo) * 1.75) !important; 
+        }
+        .dashboard-second {
+            font-size: var(--textXJumbo) !important; 
+        }
+        .dashboard-subtitle {
+            font-size: var(--textXMD) !important; 
+            padding: var(--spaceMini) var(--spaceSM);
+            margin-top: var(--spaceMini);
+        }
+    }    
 </style>
 
-<div class="row mb-3">
-    <div class="col-lg-4 col-md-6 col-sm-12" id='total_item-section'>
-        <h2 class="dashboard-title"><span id='total_item'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Total Item</span> @endif</h2>
-        @if(!$isMobile)
-            <h2 class="dashboard-subtitle">Total Item</h2>
-        @endif
+<div class="row g-2 mb-3" id="dashboard-holder">
+    <div class="col-4" id="total_item-section">
+        <h2 class="dashboard-title" id="total_item"></h2>
+        <h2 class="dashboard-subtitle">Total Item</h2>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12" id='total_fav-section'>
-        <h2 class="dashboard-title"><span id='total_fav'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Favorite Item</span> @endif</h2>
-        @if(!$isMobile)
-            <h2 class="dashboard-subtitle">Favorite Item</h2>
-        @endif
+    <div class="col-4" id="total_fav-section">
+        <h2 class="dashboard-title" id="total_fav"></span></h2>
+        <h2 class="dashboard-subtitle">Favorite Item</h2>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12" id='total_low-section'>
-        <h2 class="dashboard-title"><span id='total_low'></span> @if($isMobile) <span style="font-size:var(--textJumbo)">Low Capacity</span> @endif</h2>
-        @if(!$isMobile)
-            <h2 class="dashboard-subtitle">Low Capacity</h2>
-        @endif
+    <div class="col-4" id="total_low-section">
+        <h2 class="dashboard-title" id="total_low"></h2>
+        <h2 class="dashboard-subtitle">Low Capacity</h2>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center" id='last_added-section'>
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center" id="last_added-section">
         <div>
-            @if($isMobile)
-                <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Last Added</h6>
-            @endif
-            <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;"><span id='last_added'></span></h2>
-            @if(!$isMobile)
-                <h2 class="dashboard-subtitle">Last Added</h2>
-            @endif
+            <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Last Added</h6>
+            <h2 class="dashboard-second" id="last_added"></h2>
+            <h2 class="dashboard-subtitle d-none d-md-block">Last Added</h2>
         </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 py-2 d-flex align-items-center justify-content-center text-center" id='most_category_total-section'>
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 py-2 d-flex align-items-center justify-content-center text-center" id="most_category_total-section">
         <div>
-            @if($isMobile)
-                <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Most Category</h6>
-            @endif
-            <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;">
-                (<span id='most_category_total'></span>) <span id='most_category_context'></span>
-            </h2>
-            @if(!$isMobile)
-                <h2 class="dashboard-subtitle">Most Category</h2>
-            @endif
+            <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Most Category</h6>
+            <h2 class="dashboard-second">(<span id="most_category_total"></span>) <span id="most_category_context"></span></h2>
+            <h2 class="dashboard-subtitle d-none d-md-block">Most Category</h2>
         </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center" id='highest_price_name-section'>
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center mx-auto" id="highest_price_name-section">
         <div>
-            @if($isMobile)
-                <h6 class="dashboard-subtitle" style="font-size:var(--textJumbo) !important;">Highest Price</h6>
-            @endif
-            <h2 class="text-center fw-bold" style="font-size: calc(var(--textXJumbo) * 1.2) !important;">(<span id='highest_price_name'></span>) <span id='highest_price'></span> </h2>
-            @if(!$isMobile)
-                <h2 class="dashboard-subtitle">Highest Price</h2>
-            @endif
+            <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Highest Price</h6>
+            <h2 class="dashboard-second" style="font-size: calc(var(--textXJumbo) * 1.2)">(<span id="highest_price_name"></span>) <span id="highest_price"></span></h2>
+            <h2 class="dashboard-subtitle d-none d-md-block">Highest Price</h2><br>
         </div>
     </div>
-</div><br>
+</div>
 
 <script>
     const get_dashboard = () => {
@@ -99,7 +110,11 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                generate_api_error(response, true)
+                if(response.status != 404){
+                    generate_api_error(response, true)
+                } else {
+                    template_alert_container('dashboard-holder', 'no-data', "No stats found to show", null, '<i class="fa-solid fa-warehouse"></i>')
+                }
             }
         });
     }

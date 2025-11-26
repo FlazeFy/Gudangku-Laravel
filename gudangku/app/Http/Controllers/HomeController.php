@@ -17,6 +17,7 @@ use App\Models\AdminModel;
 // Helpers
 use App\Helpers\Generator;
 use App\Helpers\Audit;
+use App\Helpers\TelegramMessage;
 
 // Export
 use App\Exports\ActiveInventoryExport;
@@ -172,18 +173,28 @@ class HomeController extends Controller
                 copy($storagePath, $publicPath);
         
                 if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
-                    $inputFile = InputFile::create($publicPath, $file_name);
-        
-                    Telegram::sendDocument([
-                        'chat_id' => $user->telegram_user_id,
-                        'document' => $inputFile,
-                        'caption' => "Your inventory export is ready",
-                        'parse_mode' => 'HTML',
-                    ]);
+                    if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                        $inputFile = InputFile::create($publicPath, $file_name);
+            
+                        Telegram::sendDocument([
+                            'chat_id' => $user->telegram_user_id,
+                            'document' => $inputFile,
+                            'caption' => "Your inventory export is ready",
+                            'parse_mode' => 'HTML',
+                        ]);
+                    } else {
+                        if (file_exists($publicPath)) {
+                            unlink($publicPath);
+                        }
+                        return redirect()->back()->with('failed_message', 'Telegram ID is invalid. Please check your Telegram ID');
+                    }
                 }
 
                 return response()->download($publicPath)->deleteFileAfterSend(true);
             } catch (\Exception $e) {
+                if (file_exists($publicPath)) {
+                    unlink($publicPath);
+                }
                 return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
             }
         } else {

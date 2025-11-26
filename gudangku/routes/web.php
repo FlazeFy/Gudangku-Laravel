@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FeaturesController;
@@ -44,6 +45,10 @@ Route::prefix('/auth')->group(function (){
 });
 
 ######################### Private Route #########################
+
+Route::prefix('/chat')->middleware(['auth_v2:sanctum'])->group(function () {
+    Route::get('/', [ChatController::class, 'index']);
+});
 
 Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');

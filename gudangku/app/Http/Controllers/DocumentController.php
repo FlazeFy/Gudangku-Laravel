@@ -13,6 +13,7 @@ use Telegram\Bot\FileUpload\InputFile;
 // Helpers
 use App\Helpers\Generator;
 use App\Helpers\Document;
+use App\Helpers\TelegramMessage;
 
 // Models
 use App\Models\ReportModel;
@@ -30,44 +31,52 @@ class DocumentController extends Controller
         $user_id = $request->user()->id ?? null;
 
         if($report){
-            $report_item = ReportItemModel::getReportItem(null,$id,'doc');
-            $options = new DompdfOptions();
-            $options->set('defaultFont', 'Helvetica');
-            $dompdf = new Dompdf($options);
-            $datetime = now();
+            try {
+                $report_item = ReportItemModel::getReportItem(null,$id,'doc');
+                $options = new DompdfOptions();
+                $options->set('defaultFont', 'Helvetica');
+                $dompdf = new Dompdf($options);
+                $datetime = now();
 
-            $html = Document::documentTemplateReport(null,null,null,$report,$report_item);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'portrait');
-            $dompdf->render();
+                $html = Document::documentTemplateReport(null,null,null,$report,$report_item);
+                $dompdf->loadHtml($html);
+                $dompdf->setPaper('A4', 'portrait');
+                $dompdf->render();
 
-            $file_name = "report-$id-$datetime.pdf";
-            if($user_id){
-                $user = UserModel::select('telegram_user_id','username')
-                    ->where('id',$user_id)
-                    ->where('telegram_is_valid',1)
-                    ->first();
+                $file_name = "report-$id-$datetime.pdf";
+                if($user_id){
+                    $user = UserModel::select('telegram_user_id','username')
+                        ->where('id',$user_id)
+                        ->where('telegram_is_valid',1)
+                        ->first();
 
-                if($user && $user->telegram_user_id){
-                    $pdfContent = $dompdf->output();
-                    $pdfFilePath = public_path($file_name);
-                    file_put_contents($pdfFilePath, $pdfContent);
-                    $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+                    if($user && $user->telegram_user_id){
+                        if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                            $pdfContent = $dompdf->output();
+                            $pdfFilePath = public_path($file_name);
+                            file_put_contents($pdfFilePath, $pdfContent);
+                            $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
 
-                    $response = Telegram::sendDocument([
-                        'chat_id' => $user->telegram_user_id,
-                        'document' => $inputFile,
-                        'caption' => "Hello $user->username, you just preview the report document. Here's the document",
-                        'parse_mode' => 'HTML'
-                    ]);
+                            $response = Telegram::sendDocument([
+                                'chat_id' => $user->telegram_user_id,
+                                'document' => $inputFile,
+                                'caption' => "Hello $user->username, you just preview the report document. Here's the document",
+                                'parse_mode' => 'HTML'
+                            ]);
 
-                    unlink($pdfFilePath);
+                            unlink($pdfFilePath);
+                        } else {
+                            return redirect()->back()->with('failed_message', 'Telegram ID is invalid. Please check your Telegram ID');
+                        }
+                    }
                 }
-            }
 
-            return response($dompdf->output(), 200)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename='$file_name'");
+                return response($dompdf->output(), 200)
+                    ->header('Content-Type', 'application/pdf')
+                    ->header('Content-Disposition', "inline; filename='$file_name'");
+            } catch (\Exception $e) {
+                return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
+            }
         } else {
             return redirect("/login");
         }
@@ -94,45 +103,53 @@ class DocumentController extends Controller
         $layout = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
 
         if($inventory || $layout){
-            $options = new DompdfOptions();
-            $options->set('defaultFont', 'Helvetica');
-            $dompdf = new Dompdf($options);
-            $datetime = now();
-    
-            $html = Document::documentTemplateLayout(null,null,null,$layout,$inventory,$room);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'landscape');
-            $dompdf->render();
+            try {
+                $options = new DompdfOptions();
+                $options->set('defaultFont', 'Helvetica');
+                $dompdf = new Dompdf($options);
+                $datetime = now();
+        
+                $html = Document::documentTemplateLayout(null,null,null,$layout,$inventory,$room);
+                $dompdf->loadHtml($html);
+                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->render();
 
-            $user_id = Generator::getUserId(session()->get('role_key'));
-            $file_name = "layout-$room-$datetime.pdf";
+                $user_id = Generator::getUserId(session()->get('role_key'));
+                $file_name = "layout-$room-$datetime.pdf";
 
-            if($user_id){
-                $user = UserModel::select('telegram_user_id','username')
-                    ->where('id',$user_id)
-                    ->where('telegram_is_valid',1)
-                    ->first();
+                if($user_id){
+                    $user = UserModel::select('telegram_user_id','username')
+                        ->where('id',$user_id)
+                        ->where('telegram_is_valid',1)
+                        ->first();
 
-                if($user && $user->telegram_user_id){
-                    $pdfContent = $dompdf->output();
-                    $pdfFilePath = public_path($file_name);
-                    file_put_contents($pdfFilePath, $pdfContent);
-                    $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+                    if($user && $user->telegram_user_id){
+                        if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                            $pdfContent = $dompdf->output();
+                            $pdfFilePath = public_path($file_name);
+                            file_put_contents($pdfFilePath, $pdfContent);
+                            $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
 
-                    $response = Telegram::sendDocument([
-                        'chat_id' => $user->telegram_user_id,
-                        'document' => $inputFile,
-                        'caption' => "Hello $user->username, you just preview the $room layout document. Here's the document",
-                        'parse_mode' => 'HTML'
-                    ]);
+                            $response = Telegram::sendDocument([
+                                'chat_id' => $user->telegram_user_id,
+                                'document' => $inputFile,
+                                'caption' => "Hello $user->username, you just preview the $room layout document. Here's the document",
+                                'parse_mode' => 'HTML'
+                            ]);
 
-                    unlink($pdfFilePath);
+                            unlink($pdfFilePath);
+                        } else {
+                            return redirect()->back()->with('failed_message', 'Telegram ID is invalid. Please check your Telegram ID');
+                        }
+                    }
                 }
-            }
 
-            return response($dompdf->output(), 200)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename='$file_name'");
+                return response($dompdf->output(), 200)
+                    ->header('Content-Type', 'application/pdf')
+                    ->header('Content-Disposition', "inline; filename='$file_name'");
+            } catch (\Exception $e) {
+                return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
+            }
         } else {
             return redirect("/login");
         }
@@ -157,44 +174,52 @@ class DocumentController extends Controller
         $inventory = InventoryModel::getInventoryDetail($id,$user_id);
 
         if($inventory){
-            $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
-            $options = new DompdfOptions();
-            $options->set('defaultFont', 'Helvetica');
-            $dompdf = new Dompdf($options);
-            $datetime = now();
+            try {
+                $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
+                $options = new DompdfOptions();
+                $options->set('defaultFont', 'Helvetica');
+                $dompdf = new Dompdf($options);
+                $datetime = now();
 
-            $html = Document::documentTemplateInventory(null,null,null,$inventory,$reminder);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'portrait');
-            $dompdf->render();
+                $html = Document::documentTemplateInventory(null,null,null,$inventory,$reminder);
+                $dompdf->loadHtml($html);
+                $dompdf->setPaper('A4', 'portrait');
+                $dompdf->render();
 
-            $file_name = "inventory-$id-$datetime.pdf";
-            if($user_id){
-                $user = UserModel::select('telegram_user_id','username')
-                    ->where('id',$user_id)
-                    ->where('telegram_is_valid',1)
-                    ->first();
+                $file_name = "inventory-$id-$datetime.pdf";
+                if($user_id){
+                    $user = UserModel::select('telegram_user_id','username')
+                        ->where('id',$user_id)
+                        ->where('telegram_is_valid',1)
+                        ->first();
 
-                if($user && $user->telegram_user_id){
-                    $pdfContent = $dompdf->output();
-                    $pdfFilePath = public_path($file_name);
-                    file_put_contents($pdfFilePath, $pdfContent);
-                    $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+                    if($user && $user->telegram_user_id){
+                        if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                            $pdfContent = $dompdf->output();
+                            $pdfFilePath = public_path($file_name);
+                            file_put_contents($pdfFilePath, $pdfContent);
+                            $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
 
-                    $response = Telegram::sendDocument([
-                        'chat_id' => $user->telegram_user_id,
-                        'document' => $inputFile,
-                        'caption' => "Hello $user->username, you just preview the inventory document. Here's the document",
-                        'parse_mode' => 'HTML'
-                    ]);
+                            $response = Telegram::sendDocument([
+                                'chat_id' => $user->telegram_user_id,
+                                'document' => $inputFile,
+                                'caption' => "Hello $user->username, you just preview the inventory document. Here's the document",
+                                'parse_mode' => 'HTML'
+                            ]);
 
-                    unlink($pdfFilePath);
+                            unlink($pdfFilePath);
+                        } else {
+                            return redirect()->back()->with('failed_message', 'Telegram ID is invalid. Please check your Telegram ID');
+                        }
+                    }
                 }
-            }
 
-            return response($dompdf->output(), 200)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', "inline; filename='$file_name'");
+                return response($dompdf->output(), 200)
+                    ->header('Content-Type', 'application/pdf')
+                    ->header('Content-Disposition', "inline; filename='$file_name'");
+            } catch (\Exception $e) {
+                return redirect()->back()->with('failed_message', 'Something is wrong. Please try again');
+            }
         } else {
             return redirect("/login");
         }

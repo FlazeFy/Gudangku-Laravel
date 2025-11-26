@@ -6,18 +6,17 @@
 </style>
 
 <div class="container-form" id="edit_report_detail-section">
-    <h3 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Report Detail</h3>
     <div id="report_holder"></div>
     <div id="report_check_action"></div>
 </div>
 
 <div class="container-form" id="edit_attached_image-section">
-    <h3 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Attached Image</h3>
+    <h3>Attached Image</h3>
     <div id="report_img_holder" class='row'></div>
 </div>
 
 <div class="container-form" id="edit_attached_item-section">
-    <h3 class="fw-bold my-3" style="font-size:calc(2*var(--textLG));">Attached Item</h3>
+    <h3>Attached Item</h3>
     <div id="report_item_holder" class='table-holder'>
         <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
     </div>
@@ -77,8 +76,8 @@
                         <th scope="col" style='min-width:60px;'>Qty</th>
                         <th scope="col" style='min-width:140px;'>Price</th>
                         <th scope="col" style='min-width:140px;'>Created At</th>
-                        <th scope="col" style='min-width:60px;'>Edit</th>
-                        <th scope="col" style='min-width:60px;'>Remove</th>
+                        <th scope="col" style='min-width:80px;'>Edit</th>
+                        <th scope="col" style='min-width:80px;'>Remove</th>
                     </tr>
                 `)
             } else {
@@ -110,13 +109,13 @@
             }
 
             $(`#${item_holder}`).html(`
-                <div class="${ !isMobile() && 'd-flex justify-content-between'} mb-2">
+                <div class="${ !isMobile() && 'd-flex justify-content-between'} mb-2 align-items-center">
                     <div>
                         ${is_edit_mode ? 
                             `<label>Title</label>
                             <input class='form-control' id='report_title' style='${ !isMobile() && 'min-width:480px;'}' value='${data.report_title}'>`
                             :
-                            `<h3 style='font-weight:500; font-size:var(--textXJumbo);'>${data.report_title}</h3>`
+                            `<h3 class="mb-2 mb-md-0">${data.report_title}</h3>`
                         }
                     </div>
                     <div>
@@ -129,22 +128,16 @@
                             `<label>Category</label>
                             <select class='form-select' id='report_category' value='${data.report_category}'>${select_cat_el}</select>`
                             :
-                            `<span class="bg-success text-white rounded-pill px-3 py-2">${data.report_category}</span>`
+                            `<span class="bg-success text-white rounded-pill px-3 py-2" style='font-size:var(--textMD); font-weight:500;'>${data.report_category}</span>`
                         }
                     </div>
                 </div>
                 ${is_edit_mode ? 
                     `<label>Description</label>
                     <textarea class='form-control' id='report_desc'>${data.report_desc ?? ''}</textarea>
-                    ${
-                        isMobile() ? `
-                            <div class='mt-4'>
-                                <p class='date-text'>Created At : ${created_at}</p>
-                                <p class='date-text'>Last Updated : ${updated_at}</p>
-                            </div>
-                        ` : ''
-                    }
-                    <a class="btn btn-success my-3 me-2" id='save-edit-modal-btn' data-bs-toggle='modal' data-bs-target='#update-validation-modal'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
+                    <div class="d-grid d-md-inline-block">
+                        <a class="btn btn-success my-3 w-100 w-md-auto" id='save-edit-modal-btn' data-bs-toggle='modal' data-bs-target='#update-validation-modal'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
+                    </div>
                     <div class="modal fade" id="update-validation-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -161,17 +154,13 @@
                     </div>
                     `
                     :
-                    `${data.report_desc ? `<p class="mt-2">${data.report_desc}</p>` : `<p class="text-secondary fst-italic mt-2">- No Description Provided -</p>`}`
+                    `${data.report_desc ? `<p class="mt-3">${data.report_desc}</p>` : `<p class="no-data-message mt-2">- No Description Provided -</p>`}`
                 }
                 <br>
                 ${(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist') ? `
                     <div class="d-flex justify-content-between mt-3">
-                        <div>
-                            <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Price: Rp. ${number_format(data.total_price, 0, ',', '.')}</h3>
-                        </div>
-                        <div>
-                            <h3 class="fw-bold" style="font-size:var(--textJumbo);">Total Item: ${data.total_item}</h3>
-                        </div>
+                        <p class="fw-bold mb-0">Total Price: Rp. ${number_format(data.total_price, 0, ',', '.')}</p>
+                        <p class="fw-bold mb-0">Total Item: ${data.total_item}</p>
                     </div>
                 ` : ''}
             `)
@@ -187,11 +176,12 @@
                                 </div>
                             </td>
                             <td>${dt.item_name}</td>
-                            <td>${dt.item_desc ?? '<span class="fst-italic text-secondary">- No Description Provided -</span>'}</td>
-                            <td>${dt.item_qty}</td>
-                            ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td>Rp. ${number_format(dt.item_price, 0, ',', '.')}</td>` : ''}
-                            <td>${getDateToContext(dt.created_at,'calendar')}</td>
-                            <td><button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit_${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button>
+                            <td>${dt.item_desc ?? '<span class="no-data-message">- No Description Provided -</span>'}</td>
+                            <td class="text-center">${dt.item_qty}</td>
+                            ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td class="text-center">Rp. ${number_format(dt.item_price, 0, ',', '.')}</td>` : ''}
+                            <td class="text-center">${getDateToContext(dt.created_at,'calendar')}</td>
+                            <td>
+                                <button class="btn btn-warning d-block mx-auto" data-bs-toggle="modal" data-bs-target="#modalEdit_${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button>
                                 <div class="modal fade" id="modalEdit_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -220,7 +210,7 @@
                                 </div>
                             </td>
                             <td>
-                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete_${dt.id}"><i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i></button>
+                                <button class="btn btn-danger d-block mx-auto" data-bs-toggle="modal" data-bs-target="#modalDelete_${dt.id}"><i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i></button>
                                 <div class="modal fade" id="modalDelete_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -260,7 +250,7 @@
                 `)
                 $('#report_item_tb tbody').append(`
                     <tr>
-                        <td colspan='7' class="text-center"><p class="text-secondary fst-italic mt-2">- No Item Attached -</p></td>
+                        <td colspan='7' class="text-center"><p class="no-data-message mt-2">- No Item Attached -</p></td>
                     </tr>
                 `)
             }

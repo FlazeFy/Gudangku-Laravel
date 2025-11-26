@@ -135,7 +135,7 @@
                                     <span class="bg-success text-white rounded-pill px-3 py-2 report-category">For ${el.qr_period} hours</span>
                                 </div>
                             </div>
-                            <p>${el.lend_desc ?? '<span class="fst-italic">- No Description Provided -</span>'}</p>
+                            <p>${el.lend_desc ?? '<span class="no-data-message">- No Description Provided -</span>'}</p>
                             <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
                             ${ 
                                 el.lend_status == 'used' ? 

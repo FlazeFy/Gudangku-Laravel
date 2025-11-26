@@ -43,37 +43,23 @@
 </style>
 <link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.0.css') }}"/>
 
-<div class="btn-feature fixed mb-3">
-    <div class="position-relative">
-        @if($isMobile)
-            <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-robot me-2"></i> Analyze Document</h2>
-        @else
-            <i class="fa-solid fa-robot" style="font-size:100px"></i>
-            <h2 class="mt-3" style="font-size:var(--textJumbo);">Analyze Document</h2>
-        @endif
-        <div class="position-absolute" style="right:-20px; bottom:-20px;">
-            <a id="nav_analyze_btn" title="Open Analyze Section"><i class="fa-solid fa-expand fa-xl"></i></a>
-        </div>
+<div id='chat-section' class="ms-4 text-start text-white">
+    <div style="font-size:var(--textLG);" class="bubble bot">Do you have a GudangKu generated document and feel lazy to find what inventory contain in the report?
+        or maybe your friend share their report and you want to import the inventory found on it? or you want to just copy the inventory?
     </div>
-    <div id='chat-section' class="ms-4 d-none text-start">
-        <a class="btn btn-danger" id="nav_analyze_close_btn" title="Close Analyze Section"><i class="fa-solid fa-xmark" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Close @endif</a>
-        <div style="font-size:var(--textLG);" class="bubble bot">Do you have a GudangKu generated document and feel lazy to find what inventory contain in the report?
-            or maybe your friend share their report and you want to import the inventory found on it? or you want to just copy the inventory?
-        </div>
-        <div style="font-size:var(--textLG);" class="bubble me" id="upload-analyze-section">
-            <form id="analyze_form">
-                <div class="img-holder" style="min-height: 80px;">
-                    <div class='no-image-picker' title='Change Image' id='image-picker'>
-                        <label for='file-input'>
-                            <img id='frame' title='Change Image' style='width: var(--spaceXLG);' src="<?= asset('images/change_image.png')?>"/>
-                            <a>No document has been selected</a>
-                        </label>
-                        <input id='file-input' type='file' accept='.png, .jpg, .jpeg, .gif, .pdf, .csv'  name="file" class='d-none'/>
-                    </div>
-                    <div class='no-image-picker d-none' title='Change Image' id='no-image-picker'></div>
-                </div>        
-            </form>
-        </div>
+    <div style="font-size:var(--textLG);" class="bubble me" id="upload-analyze-section">
+        <form id="analyze_form">
+            <div class="img-holder" style="min-height: 80px;">
+                <div class='no-image-picker' title='Change Image' id='image-picker'>
+                    <label for='file-input'>
+                        <img id='frame' title='Change Image' style='width: var(--spaceXLG);' src="<?= asset('images/change_image.png')?>"/>
+                        <a>No document has been selected</a>
+                    </label>
+                    <input id='file-input' type='file' accept='.png, .jpg, .jpeg, .gif, .pdf, .csv'  name="file" class='d-none'/>
+                </div>
+                <div class='no-image-picker d-none' title='Change Image' id='no-image-picker'></div>
+            </div>        
+        </form>
     </div>
 </div>
 
@@ -126,7 +112,6 @@
         $(document).on('click','#nav_analyze_btn',function(){
             if(is_show_analyze == false){
                 $('#col-analyze').addClass('col-lg-12 col-md-12 col-12').removeClass('col-lg-4 col-md-6')
-                $('#chat-section').addClass('d-block').removeClass('d-none')
                 $('#nav_analyze_btn').addClass('d-none').closest('.btn-feature').addClass('d-flex justify-content-start')
                 is_show_analyze = true
             } 
@@ -134,7 +119,6 @@
         $(document).on('click','#nav_analyze_close_btn', function(){
             if(is_show_analyze == true){
                 $('#col-analyze').addClass('col-lg-4 col-md-6').removeClass('col-lg-12 col-md-12 col-12')
-                $('#chat-section').addClass('d-none').removeClass('d-block')
                 $('#nav_analyze_btn').removeClass('d-none').closest('.btn-feature').removeClass('d-flex justify-content-start')
                 is_show_analyze = false
             }
@@ -173,7 +157,7 @@
                                     <span class='bg-primary rounded-pill px-3 py-1'>${ucFirst(el.status)}</span>
                                 </div>
                             </div>
-                            <p>${el.inventory_desc ?? '<span class="text-secondary fst-italic">- No Description Provided -<span>'}</p>
+                            <p>${el.inventory_desc ?? '<span class="no-data-message">- No Description Provided -<span>'}</p>
                             <h6 class='mt-2'>Unit : ${el.inventory_vol} ${el.inventory_unit}</h6>
                             <h6>Placement (Room / Storage) : ${el.inventory_room} / ${el.inventory_storage ?? '-'}</h6>
                             <h6>Price : Rp. ${number_format(el.inventory_price, 0, ',', '.')}</h6>

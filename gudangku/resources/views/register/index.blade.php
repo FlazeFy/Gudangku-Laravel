@@ -1,7 +1,17 @@
 @extends('components.layout')
 
 @section('content')
-    <div class="p-3 d-block mx-auto" style="width:1080px;">
+    <style>
+        .pt-custom {
+            padding-top: 0;
+        }
+        @media screen and (max-width: 767px) {
+            .pt-custom {
+                padding-top: 10vh !important;
+            }
+        }
+    </style>
+    <div class="p-3 d-block mx-auto pt-custom" style="max-width:1080px;">
         <br><br>
         @include('register.form')
     </div>
@@ -13,6 +23,9 @@
                 event.preventDefault()
                 event.returnValue = ''
             }
+        });
+        $(document).ready(function() {
+            formValidation('Account')
         });
     </script>
 @endsection

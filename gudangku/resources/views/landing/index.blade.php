@@ -12,94 +12,67 @@
         @if($role == 0)
             @include('landing.dashboard')
         @endif
-        <div class="row">
+        <div class="row g-3 align-items-stretch">
             @if($role == 0)
-            <div class="col-lg-4 col-md-6 col-12 mx-auto" id="col-analyze">
-                @include('landing.analyze')
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100" id="col-chat">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/chat';" id="nav_chat_btn">
+                    <i class="fa-solid fa-robot d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">Chat</h2>
+                </button>
             </div>
             @endif
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/inventory';" id="nav_inventory_btn">
-                    @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-warehouse me-2"></i> @if($role == 0) My @endif Inventory</h2>
-                    @else
-                        <i class="fa-solid fa-warehouse" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">@if($role == 0) My @endif Inventory</h2>
-                    @endif
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/inventory';" id="nav_inventory_btn">
+                    <i class="fa-solid fa-warehouse d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">@if($role == 0) My @endif Inventory</h2>
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/stats';" id="nav_stats_btn">
-                    @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-pie-chart me-2"></i> Stats</h2>
-                    @else
-                        <i class="fa-solid fa-pie-chart" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">Stats</h2>
-                    @endif
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/stats';" id="nav_stats_btn">
+                    <i class="fa-solid fa-pie-chart d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">Stats</h2>
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/<?php if($role == 0){ echo 'calendar'; } else { echo 'user'; } ?>';">
-                    @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-<?php if($role == 0){ echo "calendar"; } else { echo "user"; } ?> me-2"></i> @if($role == 0) Calendar @else User @endif</h2>
-                    @else
-                        <i class="fa-solid fa-<?php if($role == 0){ echo "calendar"; } else { echo "user"; } ?>" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">@if($role == 0) Calendar @else User @endif</h2>
-                    @endif
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/{{ $role == 0 ? 'calendar' : 'user' }}';">
+                    <i class="fa-solid fa-{{ $role == 0 ? 'calendar' : 'user' }} d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">{{ $role == 0 ? 'Calendar' : 'User' }}</h2>
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/report';" id="nav_report_btn">
-                    @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-scroll me-2"></i> Report</h2>
-                    @else
-                        <i class="fa-solid fa-scroll" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">Report</h2>
-                    @endif
+
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/report';" id="nav_report_btn">
+                    <i class="fa-solid fa-scroll d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">Report</h2>
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/history';" id="nav_history_btn">
-                    @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-clock-rotate-left me-2"></i> History</h2>
-                    @else
-                        <i class="fa-solid fa-clock-rotate-left" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">History</h2>
-                    @endif
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/history';" id="nav_history_btn">
+                    <i class="fa-solid fa-clock-rotate-left d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">History</h2>
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/profile';" id="nav_profile_btn">
-                    @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-user me-2"></i> My Profile</h2>
-                    @else
-                        <i class="fa-solid fa-user" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">My Profile</h2>
-                    @endif
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/profile';" id="nav_profile_btn">
+                    <i class="fa-solid fa-user d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">My Profile</h2>
                 </button>
             </div>
             @if($role == 1)
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/error';" id="nav_error_history_btn">
-                    @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-triangle-exclamation me-2"></i> Error History</h2>
-                    @else
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">Error History</h2>
-                    @endif
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/error';" id="nav_error_history_btn">
+                    <i class="fa-solid fa-triangle-exclamation d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">Error History</h2>
                 </button>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mx-auto">
-                <button class="btn-feature mb-3" onclick="location.href='/reminder';" id="nav_error_history_btn">
-                    @if($isMobile)
-                        <h2 style="font-size:var(--textJumbo);"><i class="fa-solid fa-bell me-2"></i> Reminder Mark</h2>
-                    @else
-                        <i class="fa-solid fa-bell" style="font-size:100px"></i>
-                        <h2 class="mt-3" style="font-size:var(--textJumbo);">Reminder Mark</h2>
-                    @endif
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto h-100">
+                <button class="btn-feature w-100 mb-3 d-flex flex-column justify-content-center align-items-center h-100" onclick="location.href='/reminder';" id="nav_reminder_btn">
+                    <i class="fa-solid fa-bell d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
+                    <h2 class="mt-3 text-center" style="font-size:var(--textJumbo);">Reminder Mark</h2>
                 </button>
             </div>
             @endif
-        </div> 
+        </div>
+
     </div>
 @endsection

@@ -4,6 +4,18 @@
         min-height: 1em;
         color: gray;
     }
+    .step-mobile {
+        position: fixed;
+        top: var(--spaceMD);
+        background: var(--darkColor);
+        border: 1.5px solid var(--whiteColor);
+        padding: var(--spaceLG);
+        z-index: 999;
+        width: 92.5%;
+        color: var(--primaryColor);
+        border-radius: var(--roundedMD);
+        display: block;
+    }
     .step.step-finish .title {
         color: var(--successBG);
     }
@@ -70,10 +82,6 @@
     .step.step-active .circle {
         background-color: #4285f4;
     }
-    h2 {
-        font-size: calc(var(--textJumbo)*1.75);
-        font-weight: bold;
-    }
     .section-form {
         border-top: 2px solid var(--shadowColor);
         padding-top: calc(var(--spaceJumbo)*1.25);
@@ -108,49 +116,66 @@
 <div class="row w-100 h-100">
     <div class="col-lg-5 col-md-5 col-sm-2 col-12">
         <div style="top:5vh; position:sticky;">
+            <div class="step-mobile mb-4 d-md-none">
+                <div class="progress mb-2">
+                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="title">Hello There!</div>
+                <div class="caption">Do you aggree with our terms & condition?</div>
+            </div>
             <div class="d-flex d-inline-block">
                 <a class='btn btn-danger me-2' href='/login'><i class="fa-solid fa-arrow-left"></i> Back to Login</a>
                 <div id='start-browsing-holder-btn'></div>
             </div>
             <hr>
-            <h2 class="text-white fw-bold my-4" style="font-size:36px;">Register</h2>
-            <div class="step step-active" id="indicator-tnc">
-                <div>
-                    <div class="circle"><i class="fa fa-check"></i></div>
+            <h1 class="text-white fw-bold my-4">Register</h1>
+            <div class="d-none d-md-block">
+                <div class="step step-active" id="indicator-tnc">
+                    <div>
+                        <div class="circle"><i class="fa fa-check"></i></div>
+                    </div>
+                    <div>
+                        <div class="title">Hello There!</div>
+                        <div class="caption">Do you aggree with our terms & condition?</div>
+                    </div>
                 </div>
-                <div>
-                    <div class="title">Hello There!</div>
-                    <div class="caption">Do you aggree with our terms & condition?</div>
+                <div class="step" id="indicator-profile">
+                    <div>
+                        <div class="circle">2</div>
+                    </div>
+                    <div>
+                        <div class="title">Let's Us to Know You</div>
+                        <div class="caption">Fill this form to make your account</div>
+                    </div>
                 </div>
-            </div>
-            <div class="step" id="indicator-profile">
-                <div>
-                    <div class="circle">2</div>
+                <div class="step" id="indicator-service">
+                    <div>
+                        <div class="circle">3</div>
+                    </div>
+                    <div>
+                        <div class="title">Stay Updated!</div>
+                        <div class="caption">Sync your account to another Platform. Like Telegram and Line</div>
+                    </div>
                 </div>
-                <div>
-                    <div class="title">Let's Us to Know You</div>
-                    <div class="caption">Fill this form to make your account</div>
-                </div>
-            </div>
-            <div class="step" id="indicator-service">
-                <div>
-                    <div class="circle">3</div>
-                </div>
-                <div>
-                    <div class="title">Stay Updated!</div>
-                    <div class="caption">Sync your account to another Platform. Like Telegram and Line</div>
-                </div>
-            </div>
-            <div class="step">
-                <div>
-                    <div class="circle">4</div>
-                </div>
-                <div>
-                    <div class="title">Finish</div>
-                    <div class="caption py-1 d-none">
-                        <a class="btn btn-success px-2 py-1 me-1 mt-2" style="font-size:var(--textSM);"><i class="fa-solid fa-arrow-right"></i> Go to Dashboard</a>
-                        <a class="btn btn-success px-2 py-1 me-1 mt-2" style="font-size:var(--textSM);"><i class="fa-solid fa-house"></i> Back to Landing</a>
-                        <a class="btn btn-primary px-2 py-1 mt-2" style="font-size:var(--textSM);"><i class="fa-solid fa-mobile-screen"></i> Get Mobile Version</a>
+                <div class="step">
+                    <div>
+                        <div class="circle">4</div>
+                    </div>
+                    <div>
+                        <div class="title">Finish</div>
+                        <div class="caption py-1 d-none">
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <a class="btn btn-success px-2 py-1" style="font-size:var(--textSM);" href='/'>
+                                    <i class="fa-solid fa-arrow-right"></i> Go to Dashboard
+                                </a>
+                                <a class="btn btn-success px-2 py-1" style="font-size:var(--textSM);" href='/login'>
+                                    <i class="fa-solid fa-house"></i> Back to Login
+                                </a>
+                                <a class="btn btn-primary px-2 py-1" style="font-size:var(--textSM);">
+                                    <i class="fa-solid fa-mobile-screen"></i> Get Mobile Version
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

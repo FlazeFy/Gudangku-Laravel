@@ -65,3 +65,10 @@ footer {
 .props-box {
     font-size: var(--textMD) !important;
 }
+
+.no-data-message {
+    font-style: italic;
+    color: var(--greyColor);
+    text-align: center;
+    display: block;
+}

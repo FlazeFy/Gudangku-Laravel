@@ -1505,18 +1505,25 @@ class Queries extends Controller
             $most_category = InventoryModel::getMostCategoryInventory($user_id);
             $highest_price = InventoryModel::getHighestPriceInventory($user_id);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => Generator::getMessageTemplate("fetch", 'stats'),
-                'data' => [
-                    'total_item' => $total_item ? $total_item->total : null,
-                    'total_fav' => $total_fav ? $total_fav->total : null,
-                    'total_low' => $total_low ? $total_low->total : null,
-                    'last_added' => $last_added ? $last_added->inventory_name : null,
-                    'most_category' => $most_category,
-                    'highest_price' => $highest_price
-                ]
-            ], Response::HTTP_OK);
+            if($total_item && $total_item->total != 0){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'data' => [
+                        'total_item' => $total_item ? $total_item->total : null,
+                        'total_fav' => $total_fav ? $total_fav->total : null,
+                        'total_low' => $total_low ? $total_low->total : null,
+                        'last_added' => $last_added ? $last_added->inventory_name : null,
+                        'most_category' => $most_category,
+                        'highest_price' => $highest_price
+                    ]
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',

@@ -55,6 +55,8 @@
                                     <input type='text' class='form-control' name=telegram_token_validation' id='telegram_token_validation' maxlength='7'>
                                 </div>
                             `)
+                            $('.progress-bar').css('width', '100%').attr('aria-valuenow', 100) 
+                            $('.step-mobile .title').text("Finish!")
                         }
                     });
                 },

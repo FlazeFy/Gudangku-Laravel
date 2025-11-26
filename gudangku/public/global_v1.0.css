@@ -267,3 +267,7 @@ table tr {
 .apexcharts-legend-text, .apexcharts-tooltip {
     font-weight: 500 !important;
 }
+
+.progress-bar {
+    background: var(--successBG);
+}

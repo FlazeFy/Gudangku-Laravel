@@ -63,19 +63,17 @@
                                         <span class="bg-success text-white rounded-pill px-3 py-2 report-category">${el.report_category}</span>
                                     </div>
                                 </div>
-                                <div class="report-desc">
-                                ${el.report_desc ? `<p class="mt-2">${el.report_desc}</p>` : `<p class="text-secondary fst-italic mt-2">- No Description Provided -</p>`}
-                                </div>
+                                ${el.report_desc ? `<p class="mt-2">${el.report_desc}</p>` : `<p class="no-data-message mt-2">- No Description Provided -</p>`}
                                 <br>
                                 <h6>Items : </h6>
                                 <div class='d-flex justify-content-start mt-2 report-items'>${el.report_items ?? '<span class="text-secondary fst-italic mt-2">- No Items Found -</span>'}</div>
                                 ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
-                                    <hr><div class="d-flex justify-content-between mt-2">
+                                    <div class="d-flex justify-content-between mt-2">
                                         <div class='total-price'>
                                             ${
                                                 isMobile() ?
-                                                    `<h6 class="fw-bold" style="font-size:var(--textLG);">Total Price</h6>
-                                                    <p style="font-size:var(--textLG);">Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</p>`
+                                                    `<h6 class="fw-bold">Total Price</h6>
+                                                    <p class="mb-0">Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</p>`
                                                 :
                                                     `<h6 class="fw-bold" style="font-size:var(--textJumbo);">Total Price : Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</h6>`
                                             }
@@ -83,15 +81,15 @@
                                         <div class='total-item'>
                                             ${
                                                 isMobile() ?
-                                                    `<h6 class="fw-bold" style="font-size:var(--textLG);">Total Item</h6>
-                                                    <p style="font-size:var(--textLG);">${el.total_item ?? '0'}</p>`
+                                                    `<h6 class="fw-bold">Total Item</h6>
+                                                    <p class="mb-0">${el.total_item ?? '0'}</p>`
                                                 :
                                                     `<h6 class="fw-bold" style="font-size:var(--textJumbo);">Total Item : ${el.total_item ?? '0'}</h6>`
                                             }
                                         </div>
                                     </div>
                                 ` : ''}
-                                <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
+                                <hr><p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
                                 ${ role == 1 ? `<p class='date-text mt-2 mb-0'>Created By : @${el.username}</p>` : ''}
                             </button>
                         `);
@@ -100,8 +98,8 @@
                             <tr>
                                 <td>${el.report_title}</td>
                                 <td class='text-center pt-3'><span class="bg-success text-white rounded-pill px-3 py-2 w-100">${el.report_category}</span></td>
-                                <td>${el.report_desc ?? '<span class="text-secondary fst-italic mt-2">- No Description Provided -</span>'}</td>
-                                <td>${el.report_items ?? '<span class="text-secondary fst-italic mt-2">- No items found -</span>'}</td>
+                                <td>${el.report_desc ?? '<span class="no-data-message mt-2">- No Description Provided -</span>'}</td>
+                                <td>${el.report_items ?? '<span class="no-data-message mt-2">- No items found -</span>'}</td>
                                 <td>Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</td>
                                 <td>
                                     <b>Created By</b>
