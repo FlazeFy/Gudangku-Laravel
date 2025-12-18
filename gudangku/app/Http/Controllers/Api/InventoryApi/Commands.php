@@ -29,6 +29,7 @@ use App\Helpers\Audit;
 use App\Helpers\Generator;
 use App\Helpers\Validation;
 use App\Helpers\Firebase;
+use App\Helpers\TelegramMessage;
 
 // Jobs
 use App\Jobs\ProcessMailer;
@@ -92,7 +93,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function soft_delete_inventory_by_id(Request $request, $id)
+    public function softDeleteInventoryById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -184,7 +185,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function edit_image_by_id(Request $request, $id)
+    public function putEditImageById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -330,7 +331,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hard_delete_inventory_by_id(Request $request, $id)
+    public function hardDeleteInventoryById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -417,7 +418,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function fav_toogle_inventory_by_id(Request $request, $id)
+    public function putFavToogleInventoryById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -504,7 +505,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function recover_inventory_by_id(Request $request, $id)
+    public function putRecoverInventoryById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -588,7 +589,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function post_inventory(Request $request)
+    public function postInventory(Request $request)
     {
         try{
             $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
@@ -658,7 +659,7 @@ class Commands extends Controller
                         Audit::createHistory('Create', $request->inventory_name, $user_id);
                         $inventory_price = $request->inventory_price ? number_format($request->inventory_price, 2, ',', '.') : "-" ;
                         $user = UserModel::getSocial($user_id);
-
+                        $extra_msg = '';
                         $options = new DompdfOptions();
                         $options->set('defaultFont', 'Helvetica');
                         $dompdf = new Dompdf($options);
@@ -757,18 +758,22 @@ class Commands extends Controller
                         $message = "inventory created, its called '$request->inventory_name'";
 
                         if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
-                            $pdfContent = $dompdf->output();
-                            $pdfFilePath = public_path("inventory-$id-$request->inventory_name.pdf");
-                            file_put_contents($pdfFilePath, $pdfContent);
-                            $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
-                            
-                            $response = Telegram::sendDocument([
-                                'chat_id' => $user->telegram_user_id,
-                                'document' => $inputFile,
-                                'caption' => $message,
-                                'parse_mode' => 'HTML'
-                            ]);
-                            unlink($pdfFilePath);
+                            if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                $pdfContent = $dompdf->output();
+                                $pdfFilePath = public_path("inventory-$id-$request->inventory_name.pdf");
+                                file_put_contents($pdfFilePath, $pdfContent);
+                                $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+                                
+                                $response = Telegram::sendDocument([
+                                    'chat_id' => $user->telegram_user_id,
+                                    'document' => $inputFile,
+                                    'caption' => $message,
+                                    'parse_mode' => 'HTML'
+                                ]);
+                                unlink($pdfFilePath);
+                            } else {
+                                $extra_msg = ' Telegram ID is invalid. Please check your Telegram ID';
+                            }
                         }
                         if($user->firebase_fcm_token){
                             $messaging = $factory->createMessaging();
@@ -785,7 +790,7 @@ class Commands extends Controller
                         
                         return response()->json([
                             'status' => 'success',
-                            'message' => $message,
+                            'message' => $message."".$extra_msg,
                             'data' => $res
                         ], Response::HTTP_CREATED);
                     } else {
@@ -857,7 +862,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function edit_inventory_by_id(Request $request,$id)
+    public function putEditInventoryById(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
@@ -983,7 +988,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function edit_layout_by_id(Request $request, $id)
+    public function putEditLayoutById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -1078,7 +1083,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function post_inventory_layout(Request $request)
+    public function postInventoryLayout(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -1197,7 +1202,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hard_del_inventory_layout_by_id_coor(Request $request, $id, $coor){
+    public function hardDeleteInventoryLayoutByIdCoor(Request $request, $id, $coor){
         try{
             $user_id = $request->user()->id;
             $extra_msg = "";

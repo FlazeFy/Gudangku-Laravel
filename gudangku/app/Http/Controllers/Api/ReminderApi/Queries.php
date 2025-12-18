@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 // Models
 use App\Models\ScheduleMarkModel;
 use App\Models\AdminModel;
-
 // Helper
 use App\Helpers\Generator;
 
@@ -69,7 +68,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_reminder_mark(Request $request)
+    public function getReminderMark(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -156,7 +155,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_reminder_history(Request $request)
+    public function getReminderHistory(Request $request)
     {
         try{
             $user_id = $request->user()->id;

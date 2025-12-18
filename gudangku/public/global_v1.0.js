@@ -112,6 +112,7 @@ const generate_pagination = (items_holder, fetch_callback, total_page, current_p
 };
 
 const generate_api_error = (response, is_list_format) => {
+    Swal.close()
     if (response.status === 422) {
         let msg = response.responseJSON.message
         
@@ -133,7 +134,7 @@ const generate_api_error = (response, is_list_format) => {
             html: msg,
             icon: "error"
         });
-    } else if(response.status === 422){
+    } else if(response.status === 404){
         Swal.fire({
             title: "Oops!",
             html: "Data not found",
@@ -175,7 +176,6 @@ const get_dct_by_type = (type) => {
                 resolve(res)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
                 generate_api_error(response, true)
                 reject(errorThrown)
             }

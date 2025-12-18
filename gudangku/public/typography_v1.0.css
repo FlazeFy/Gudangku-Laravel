@@ -17,7 +17,7 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
 }
 label, .form-label {
     font-weight: 600 !important;
-    margin-bottom: var(--spaceSM);
+    margin-bottom: var(--spaceXSM);
 }
 .date-text {
     font-size: var(--textXMD);

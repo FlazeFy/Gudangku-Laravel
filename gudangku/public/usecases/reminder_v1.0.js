@@ -22,7 +22,6 @@ const delete_reminder_by_id = (id, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            Swal.close()
             generate_api_error(response, true)
         }
     });

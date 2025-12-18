@@ -13,7 +13,6 @@ use App\Models\ReportModel;
 use App\Models\UserModel;
 use App\Models\InventoryModel;
 use App\Models\AdminModel;
-
 // Helpers
 use App\Helpers\Audit;
 use App\Helpers\Validation;
@@ -83,7 +82,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hard_delete_report_item_by_id(Request $request, $id)
+    public function hardDeleteReportItemById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -166,7 +165,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hard_delete_report_by_id(Request $request, $id)
+    public function hardDeleteReportById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -260,7 +259,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function update_report_by_id(Request $request, $id)
+    public function putUpdateReportById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -360,7 +359,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function update_report_item_by_id(Request $request, $id)
+    public function putUpdateReportItemById(Request $request, $id)
     {
         try{
             $validator = Validation::getValidateReportItem($request,'update');
@@ -472,7 +471,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function update_split_report_item_by_id(Request $request, $id){
+    public function putUpdateSplitReportItemById(Request $request, $id){
         try{
             $validator = Validation::getValidateReport($request,'create');
 
@@ -617,7 +616,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function post_report(Request $request){
+    public function postReport(Request $request){
         try{
             // Validator
             $validator = Validation::getValidateReport($request,'create');
@@ -780,7 +779,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function post_report_item(Request $request,$id){
+    public function postReportItem(Request $request,$id){
         try{
             // Validator
             $validator = Validation::getValidateReportItem($request,'create');
@@ -939,7 +938,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function post_analyze_report(Request $request){
+    public function postAnalyzeReport(Request $request){
         try{ 
             $user_id = $request->user()->id;
             $validation_image_failed = "";
@@ -1198,7 +1197,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function post_create_analyzed_report(Request $request){
+    public function postCreateAnalyzedReport(Request $request){
         try{ 
             $user_id = $request->user()->id;
             $validation_image_failed = "";
@@ -1452,7 +1451,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function post_analyze_bill(Request $request){
+    public function postAnalyzeBill(Request $request){
         try{ 
             $user_id = $request->user()->id;
             $validation_image_failed = "";

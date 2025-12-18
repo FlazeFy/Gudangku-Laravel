@@ -166,7 +166,6 @@
             });
         })
         .fail(function (response, xhr, ajaxOptions, thrownError) {
-            Swal.hideLoading()
             generate_api_error(response, true)
             var pins = pin_holder.querySelectorAll('input')
             var is_empty = false
@@ -285,7 +284,6 @@
                                 });
                             },
                             error: function(response, jqXHR, textStatus, errorThrown) {
-                                Swal.close()
                                 generate_api_error(response, true)
                             }
                         })

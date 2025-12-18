@@ -100,7 +100,6 @@
                     });
                 },
                 error: function(response, textStatus, errorThrown) {
-                    Swal.close()
                     generate_api_error(response, true)
                 }
             });

@@ -61,7 +61,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hard_delete_history_by_id(Request $request, $id)
+    public function hardDeleteHistoryById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;

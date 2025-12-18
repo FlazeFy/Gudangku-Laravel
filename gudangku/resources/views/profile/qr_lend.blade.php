@@ -87,7 +87,6 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
                 generate_api_error(response, true)
             }
         });
@@ -227,7 +226,6 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
                 generate_api_error(response, true)
             }
         });

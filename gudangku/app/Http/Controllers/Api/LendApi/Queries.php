@@ -81,7 +81,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_lend_active(Request $request)
+    public function getLendActive(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -185,7 +185,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_lend_history(Request $request)
+    public function getLendHistory(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -309,7 +309,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_lend_inventory(Request $request, $lend_id)
+    public function getLendInventory(Request $request, $lend_id)
     {
         try{
             $perPage = $request->query('per_page_key') ?? 12;

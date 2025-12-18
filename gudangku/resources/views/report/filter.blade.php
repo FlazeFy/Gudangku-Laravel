@@ -1,6 +1,6 @@
 <div class='control-panel <?php if(!$isMobile){ echo 'position-sticky'; } ?>' style='<?php if(!$isMobile){ echo 'top:var(--spaceMD)'; } ?>'>
-    <div class="position-relative py-2">
-        <a class="fw-bold" style='font-size:var(--textXJumbo);' data-bs-toggle="collapse" href="#collapseControl">Control Panel</a>
+    <div class="position-relative pt-2">
+        <a class="fw-bold" style='font-size:var(--textJumbo);' data-bs-toggle="collapse" href="#collapseControl">Control Panel</a>
         <div class="mt-1 mb-2 row collapse show" id="collapseControl">
             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <label>Search by Title</label>
@@ -31,9 +31,9 @@
                 </div>
             </div>
         </div>
-        <div id="total-holder">
-            <h5 class='fw-bold' style='font-size:var(--textXLG);'>Showing</h5>
-            <h2 class='text-primary fw-bold' style='font-size:calc(var(--textXLG)*2);'><span id='total-item'>0</span> Items</h2>
+        <div id="total-holder" class="mt-2">
+            <h6 class='mb-0'>Showing</h6>
+            <h5 class='text-primary mb-0' style='font-size:calc(var(--textXLG)*1.5);'><span id='total-item'>0</span> Items</h5>
         </div>
     </div>
 </div>

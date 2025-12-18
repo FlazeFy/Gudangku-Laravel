@@ -260,7 +260,6 @@
                     calendar.addEventSource(events)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    Swal.close()
                     if(response.status != 404){
                         generate_api_error(response, true)
                     }

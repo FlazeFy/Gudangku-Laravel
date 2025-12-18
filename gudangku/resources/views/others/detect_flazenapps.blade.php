@@ -89,7 +89,6 @@
                 window.location.href = '/'
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.hideLoading()
                 generate_api_error(response, true)
             }
         });

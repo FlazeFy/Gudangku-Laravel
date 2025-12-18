@@ -67,10 +67,9 @@ class ErrorController extends Controller
                     if (!file_exists($storagePath)) {
                         throw new \Exception("File not found: $storagePath");
                     }
-                    copy($storagePath, $publicPath);
             
                     if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
-                        $inputFile = InputFile::create($publicPath, $file_name);
+                        $inputFile = InputFile::create($storagePath, $file_name);
             
                         Telegram::sendDocument([
                             'chat_id' => $user->telegram_user_id,

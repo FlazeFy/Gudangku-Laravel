@@ -61,7 +61,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hard_delete_error_by_id(Request $request, $id)
+    public function hardDeleteErrorById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -90,7 +90,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

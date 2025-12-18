@@ -11,7 +11,6 @@ use Illuminate\Http\Response;
 // Helpers
 use App\Helpers\Document;
 use App\Helpers\Generator;
-
 // Models
 use App\Models\InventoryModel;
 use App\Models\InventoryLayoutModel;
@@ -96,7 +95,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_all_inventory(Request $request)
+    public function getAllInventory(Request $request)
     {
         try{
             // Attribute
@@ -597,7 +596,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_inventory_by_storage(Request $request,$room,$storage){
+    public function getInventoryByStorage(Request $request,$room,$storage){
         try{
             $user_id = $request->user()->id;
 

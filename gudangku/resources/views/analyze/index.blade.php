@@ -215,7 +215,6 @@
                     generate_heatmap_inventory_activity(data_heatmap_inventory_activity)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    Swal.close()
                     if(response.status != 404){
                         generate_api_error(response, true)
                     } 

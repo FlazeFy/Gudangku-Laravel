@@ -78,7 +78,6 @@
                             <td colspan='4' class='text-secondary fst-italic text-center'>- No inventory to show -</td>
                         </tr>
                     `)
-                    Swal.close()
                     generate_api_error(response, true)
                 }
             });

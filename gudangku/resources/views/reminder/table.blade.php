@@ -71,7 +71,6 @@
                 generate_pagination(item_holder, get_all_reminder, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, reminderThrown) {
-                Swal.close()
                 if(response.status != 404){
                     generate_api_error(response, true)
                 } else {
@@ -110,7 +109,6 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
                 generate_api_error(response, true)
             }
         });

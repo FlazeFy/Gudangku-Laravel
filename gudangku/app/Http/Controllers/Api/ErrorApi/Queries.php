@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 
 // Helper
 use App\Helpers\Generator;
-
 // Model
 use App\Models\ErrorModel;
 use App\Models\AdminModel;
@@ -69,7 +68,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_all_error(Request $request)
+    public function getAllError(Request $request)
     {
         try{
             $user_id = $request->user()->id;

@@ -7,7 +7,6 @@ use Illuminate\Http\Response;
 
 // Model
 use App\Models\DictionaryModel;
-
 // Helper
 use App\Helpers\Generator;
 
@@ -58,7 +57,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_dictionary_by_type(Request $request,$type)
+    public function getDictionaryByType(Request $request,$type)
     {
         try{
             $res = DictionaryModel::select('dictionary_name','dictionary_type');

@@ -264,7 +264,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function get_register_validation_token(Request $request)
+    public function postRegisterValidationToken(Request $request)
     {
         try{
             $username = $request->username;
@@ -371,7 +371,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function post_validate_register(Request $request)
+    public function postValidateRegister(Request $request)
     {
         try{
             $validator = Validation::getValidateUser($request,'create');
@@ -479,7 +479,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function regenerate_register_token(Request $request)
+    public function postRegenerateRegisterToken(Request $request)
     {
         try{
             $username = $request->username;

@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 // Model
 use App\Models\HistoryModel;
 use App\Models\AdminModel;
-
 // Helper
 use App\Helpers\Generator;
 
@@ -66,7 +65,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_all_history(Request $request)
+    public function getAllHistory(Request $request)
     {
         try{
             $user_id = $request->user()->id;

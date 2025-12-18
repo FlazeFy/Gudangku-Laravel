@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 
 // Model
 use App\Models\DictionaryModel;
-
 // Helper
 use App\Helpers\Validation;
 use App\Helpers\Generator;
@@ -70,7 +69,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hard_delete_dictionary_by_id(Request $request, $id)
+    public function hardDeleteDictionaryById(Request $request, $id)
     {
         try{
             // Validator
@@ -169,7 +168,7 @@ class Commands extends Controller
      * )
      */
 
-    public function post_dictionary(Request $request)
+    public function postDictionary(Request $request)
     {
         try{
             // Validator

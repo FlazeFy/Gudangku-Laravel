@@ -120,7 +120,6 @@
                 $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
                 $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
                 $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
                 $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
@@ -192,7 +191,6 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
                 $(`#modalAddReport`).modal('hide')
                 generate_api_error(response, true)
             }
@@ -246,7 +244,6 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
                 generate_api_error(response, true)
             }
         });

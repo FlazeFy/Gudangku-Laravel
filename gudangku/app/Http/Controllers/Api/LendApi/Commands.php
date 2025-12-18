@@ -24,7 +24,6 @@ use App\Models\UserModel;
 use App\Models\LendModel;
 use App\Models\InventoryModel;
 use App\Models\LendInventoryRelModel;
-
 // Helpers
 use App\Helpers\Audit;
 use App\Helpers\QRGenerate;
@@ -82,7 +81,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function post_lend_qr(Request $request)
+    public function postLendQr(Request $request)
     {
         try{
             $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
@@ -225,7 +224,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function post_borrow_inventory(Request $request,$lend_id)
+    public function postBorrowInventory(Request $request,$lend_id)
     {
         try{
             $validator = Validation::getValidateLend($request,'create_borrow');
@@ -416,7 +415,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function put_confirmation_returned(Request $request, $lend_id)
+    public function putConfirmationReturned(Request $request, $lend_id)
     {
         try{
             $user_id = $request->user()->id;

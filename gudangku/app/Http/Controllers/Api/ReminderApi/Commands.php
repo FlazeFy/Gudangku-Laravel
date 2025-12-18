@@ -17,7 +17,6 @@ use App\Models\InventoryModel;
 use App\Models\UserModel;
 use App\Models\AdminModel;
 use App\Models\GoogleTokensModel;
-
 // Helpers
 use App\Helpers\Audit;
 use App\Helpers\Generator;
@@ -85,7 +84,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function post_reminder(Request $request)
+    public function postReminder(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -251,7 +250,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function copy_reminder(Request $request){
+    public function postCopyReminder(Request $request){
         try{
             $user_id = $request->user()->id;
 
@@ -358,7 +357,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function post_re_remind(Request $request)
+    public function postReRemind(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -475,7 +474,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function delete_reminder_by_id(Request $request, $id)
+    public function hardDeleteReminderById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;

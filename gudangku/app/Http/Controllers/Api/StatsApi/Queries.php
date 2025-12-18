@@ -81,7 +81,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_inventory_by_category(Request $request, $type)
+    public function getTotalInventoryByCategory(Request $request, $type)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -165,7 +165,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_most_expensive_inventory_per_context(Request $request, $context){
+    public function getMostExpensiveInventoryPerContext(Request $request, $context){
         try {
             $contexts = explode(',', $context); 
             foreach ($contexts as $ctx) {
@@ -273,7 +273,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_inventory_by_favorite(Request $request, $type)
+    public function getTotalInventoryByFavorite(Request $request, $type)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -381,7 +381,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_inventory_by_room(Request $request, $type)
+    public function getTotalInventoryByRoom(Request $request, $type)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -476,7 +476,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_inventory_by_merk(Request $request, $type)
+    public function getTotalInventoryByMerk(Request $request, $type)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -566,7 +566,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_report_created_per_month(Request $request, $year)
+    public function getTotalReportCreatedPerMonth(Request $request, $year)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -679,7 +679,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_inventory_created_per_month(Request $request, $year)
+    public function getTotalInventoryCreatedPerMonth(Request $request, $year)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -779,7 +779,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_favorite_inventory_comparison(Request $request)
+    public function getTotalFavoriteInventoryComparison(Request $request)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -870,7 +870,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_low_capacity_inventory_comparison(Request $request)
+    public function getTotalLowCapacityInventoryComparison(Request $request)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -971,7 +971,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_activity_per_month(Request $request, $year)
+    public function getTotalActivityPerMonth(Request $request, $year)
     {
         try{
             if ($request->hasHeader('Authorization')) {
@@ -1023,7 +1023,7 @@ class Queries extends Controller
         }
     }
 
-    public function get_inventory_tree_map(Request $request)
+    public function getInventoryTreeMap(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -1097,7 +1097,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_last_login_user(Request $request)
+    public function getLastLoginUser(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -1186,7 +1186,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_leaderboard(Request $request){
+    public function getLeaderboard(Request $request){
         try{
             $user_id = $request->user()->id;
             $limit = $request->query('limit') ?? 7;
@@ -1284,7 +1284,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_report_spending_per_month(Request $request, $year)
+    public function getTotalReportSpendingPerMonth(Request $request, $year)
     {
         try{
             $user_id = $request->user()->id;
@@ -1389,7 +1389,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_total_report_used_per_month(Request $request, $year){
+    public function getTotalReportUsedPerMonth(Request $request, $year){
         try{
             $user_id = $request->user()->id;
             $check_admin = AdminModel::find($user_id);
@@ -1489,7 +1489,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_dashboard(Request $request){
+    public function getDashboard(Request $request){
         try{
             $user_id = $request->user()->id;
 

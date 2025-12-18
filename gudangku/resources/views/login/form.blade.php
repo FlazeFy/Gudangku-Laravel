@@ -1,14 +1,14 @@
 <form action="/login/validate" method="POST" id="form-login">
     @csrf
-    <div class="text-center mt-5 mt-md-0">
-        <h1>Welcome to GudangKu</h1><br>
-        <div class="mb-3 text-start">
+    <div class="mt-5 mt-md-0">
+        <h1 class="text-center">Welcome to GudangKu</h1><br>
+        <div class="mb-2">
             <label for="exampleInputEmail1" class="form-label text-white">Email / Username</label>
             <input type="text" name="username" id="username-input" class="form-control" id="exampleInputEmail1" onkeydown="return submitOnEnter(event)" aria-describedby="emailHelp">
             <div id="emailHelp" class="form-text">We'll never share your email with anyone else</div>
             <a class="error_input" id="username_msg"></a>
         </div>
-        <div class="mb-3 text-start">
+        <div class="mb-2">
             <label for="exampleInputPassword1" class="form-label text-white">Password</label>
             <input type="password" name="password" id="password-input" class="form-control" onkeydown="return submitOnEnter(event)" id="exampleInputPassword1">
             <a class="error_input" id="pass_msg"></a>
@@ -21,7 +21,7 @@
         <input hidden name="profile_pic" value="" id="profile_pic">
         <a onclick="login()" id="submit-login-btn" class="btn btn-success border-0 w-100" style="background:var(--successBG) !important;"><i class="fa-solid fa-paper-plane mx-1"></i> Submit</a>
         <br><br>
-        <p class='mt-4 mb-2'>New user? please register first to use this app</p>
+        <p class='mt-4 mb-2 text-center'>New user? please register first to use this app</p>
         <a href="/register" id="regis_btn" class="btn btn-primary ms-2 w-100 mb-3" style="background:var(--primaryBG) !important;"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Register</a>
         <a href="/auth/google" class="btn btn-primary ms-2 w-100" style="background:var(--primaryBG) !important;"><i class="fa-brands fa-google mx-1"></i> Sign In With Google</a>
     </div>
@@ -137,7 +137,6 @@
                     $('#form-login').submit()
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    Swal.close()
                     sessionStorage.clear()
                     localStorage.clear()
                     generate_api_error(response, true)

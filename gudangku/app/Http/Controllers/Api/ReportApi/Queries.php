@@ -84,7 +84,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_all_report(Request $request)
+    public function getAllReport(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -224,7 +224,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_my_report_by_inventory(Request $request,$search,$id)
+    public function getMyReportByInventory(Request $request,$search,$id)
     {
         try{
             $user_id = $request->user()->id;
@@ -334,7 +334,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_my_report_detail(Request $request,$id)
+    public function getMyReportDetail(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
@@ -435,7 +435,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_document(Request $request,$id)
+    public function getDocumentById(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
