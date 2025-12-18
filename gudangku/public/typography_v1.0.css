@@ -38,10 +38,10 @@ thead th {
     text-align: center;
 }
 table td {
-    font-size: var(--textXMD) !important;
+    font-size: var(--textMD) !important;
 }
 table th {
-    font-size: var(--textLG) !important;
+    font-size: var(--textXMD) !important;
     font-weight: 600 !important;
 }
 table tr:hover {
@@ -68,7 +68,7 @@ footer {
 
 .no-data-message {
     font-style: italic;
-    color: var(--greyColor);
+    color: var(--greyColor) !important;
     text-align: center;
     display: block;
 }

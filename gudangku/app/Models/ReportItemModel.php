@@ -108,7 +108,7 @@ class ReportItemModel extends Model
             'item_name' => $item_name, 
             'item_desc' => $item_desc,  
             'item_qty' => $item_qty, 
-            'item_price' => $item_price, 
+            'item_price' => $item_price ? $item_price > 0 ? $item_price : null : null, 
             'created_at' => date('Y-m-d H:i:s'), 
             'created_by' => $user_id, 
         ]);

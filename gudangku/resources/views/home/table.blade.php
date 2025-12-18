@@ -1,6 +1,6 @@
 <div class="table-responsive">
     <table class="table" id="inventory_tb">
-        <thead class="text-center">
+        <thead>
             <tr class="tr-header">
                 <th scope="col" style='min-width:200px;'>Name & Description</th>
                 <th scope="col" style='min-width:140px;'>Category & Merk</th>

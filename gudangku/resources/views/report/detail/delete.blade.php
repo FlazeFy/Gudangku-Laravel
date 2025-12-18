@@ -1,4 +1,4 @@
-<a class="btn btn-danger" id="delete-report-modal-btn" data-bs-toggle="modal" data-bs-target="#deleteReportModal"> <i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i>Delete</a>
+<a class="btn btn-danger" id="delete-report-modal-btn" data-bs-toggle="modal" data-bs-target="#deleteReportModal"><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i> Delete</a>
 <div class="modal fade" id="deleteReportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

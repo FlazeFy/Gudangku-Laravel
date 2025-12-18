@@ -169,8 +169,8 @@
             if(data_item.length > 0){
                 data_item.forEach(dt => {
                     $('#report_item_tb tbody').append(`
-                        <tr>
-                            <td>
+                        <tr class="align-middle">
+                            <td class="text-center">
                                 <div class="form-check">
                                     <input class="form-check-input check-inventory" type="checkbox" value="${dt.id}_${dt.item_name}_${dt.inventory_id}">
                                 </div>

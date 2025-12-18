@@ -682,7 +682,7 @@ class Commands extends Controller
                         // Model : Create Report Item
                         foreach ($report_item as $idx => $dt) {
                             $res = ReportItemModel::createReportItem(
-                                $dt->inventory_id ?? null, $id_report, $dt->item_name, $dt->item_desc, $dt->item_qty, $dt->item_price ?? null, $user_id
+                                $dt->inventory_id ?? null, $id_report, $dt->item_name, $dt->item_desc, $dt->item_qty, ($dt->item_price && $dt->item_price) > 0 ?? null, $user_id
                             );
 
                             if($res){

@@ -261,6 +261,32 @@ class Generator
         return $res;
     }
 
+    private static function tidyValidationMessage(string $message): string
+    {
+        $clean = trim($message);
+
+        if(str_starts_with($clean, '"') && str_ends_with($clean, '"')){
+            $clean = trim($clean, '"');
+        }
+
+        $clean = stripslashes($clean);
+        $errors = json_decode($clean, true);
+
+        if (!is_array($errors)) {
+            return $message;
+        }
+
+        $messages = [];
+
+        foreach ($errors as $fieldErrors) {
+            foreach ((array) $fieldErrors as $err) {
+                $messages[] = $err;
+            }
+        }
+
+        return implode(' ', $messages);
+    }
+
     public static function getMessageTemplate($type, $ctx){
         if (in_array($type, ['create', 'update', 'delete', 'permentally delete', 'fetch','recover','analyze','generate'])) {
             $ext = in_array($type, ['fetch','recover']) ? "ed" : "d";
@@ -274,6 +300,7 @@ class Generator
         } else if($type == "custom"){
             $res = "$ctx";
         } else if($type == "validation_failed"){
+            $ctx = self::tidyValidationMessage($ctx);
             $res = "validation failed : $ctx";
         } else if($type == "permission"){
             $res = "permission denied. only $ctx can use this feature";

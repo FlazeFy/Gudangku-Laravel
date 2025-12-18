@@ -50,6 +50,19 @@ input, textarea, select{
     border: 1.75px solid var(--whiteColor);
     border-radius: var(--roundedLG);
 }
+@media (min-width: 576px) and (max-width: 767px) {
+    .container-form, .btn-page-holder, .control-panel {
+        padding: var(--spaceXMD);
+        border: 1.5px solid var(--whiteColor);
+    }
+}
+@media (max-width: 575px) {
+    .container-form, .btn-page-holder, .control-panel {
+        padding: var(--spaceMD);
+        border: 1.25px solid var(--whiteColor);
+    }
+}
+
 input:focus {
     background: transparent !important;
 }

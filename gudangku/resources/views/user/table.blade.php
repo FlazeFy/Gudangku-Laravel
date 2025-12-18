@@ -1,6 +1,6 @@
 <div class="table-responsive">
     <table class="table">
-        <thead class="text-center">
+        <thead>
             <tr>
                 <th scope="col" style='min-width:160px;'>Username</th>
                 <th scope="col" style='min-width:180px;'>Contact</th>
