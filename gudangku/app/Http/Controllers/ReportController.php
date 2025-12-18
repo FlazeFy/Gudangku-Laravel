@@ -10,7 +10,6 @@ use App\Helpers\Audit;
 // Models
 use App\Models\ReportModel;
 use App\Models\ReportItemModel;
-use App\Models\DictionaryModel;
 
 class ReportController extends Controller
 {
@@ -23,14 +22,10 @@ class ReportController extends Controller
             $filter_category = $request->query('filter_category');
             $sorting = $request->query('sorting');
 
-            $dct_cat = DictionaryModel::where('dictionary_type', 'report_category')
-                ->get();
-                
             return view('report.index')
                 ->with('search_key',$search_key)
                 ->with('sorting',$sorting)
-                ->with('filter_category',$filter_category)
-                ->with('dct_cat',$dct_cat);
+                ->with('filter_category',$filter_category);
         } else {
             return redirect("/login");
         }

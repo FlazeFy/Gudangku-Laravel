@@ -40,12 +40,12 @@
         @if(session()->get('toogle_view_stats') == "tree distribution map")
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
             <label>Set Layout</label><br>
-            <div class="d-inline-block">
+            <div class="d-flex flex-wrap gap-2">
                 <button class="btn btn-primary" id="layoutTop">Top</button>
                 <button class="btn btn-primary" id="layoutBottom">Bottom</button>
                 <button class="btn btn-primary" id="layoutLeft">Left</button>
                 <button class="btn btn-primary" id="layoutRight">Right</button>
-                <button class="btn btn-primary" id="fitScreen">Fit Screen</button>
+                <button class="btn btn-primary" id="fitScreen">Fit</button>
             </div>
         </div>
         @endif

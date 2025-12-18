@@ -35,10 +35,7 @@
         <div class="mb-3 d-flex flex-wrap gap-2">
             @include('components.back_button', ['route' => '/'])
             @if($role == 0)
-                <a class="btn btn-primary" id="add_report-btn" data-bs-toggle="modal" data-bs-target="#modalAddReport" >
-                    <i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Report
-                </a>
-                @include('report.add')  
+                <a class="btn btn-primary" id="add_report-btn" href="/report/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Report</a>
             @endif
         </div>
 

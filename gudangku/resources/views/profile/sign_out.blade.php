@@ -21,10 +21,10 @@
 </div>
 
 <script>
-    function sign_out() {
+    const sign_out = () => {
         $.ajax({
             url: "/api/v1/logout",
-            type: "GET",
+            type: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`

@@ -9,7 +9,7 @@
             <p class="fst-italic text-secondary mb-0">Joined since <span id="created_at_holder"></span></p>
         </div>
         <div class="col-md-6 col-sm-12">
-            <a class='btn btn-success mt-3 mt-md-0 w-100' onclick='update_profile()'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
+            <a class='btn btn-success mt-3 mt-md-0 w-100' onclick='update_profile()'><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
         </div>
     </div>
 </form>

@@ -10,6 +10,7 @@ use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\AddController;
+use App\Http\Controllers\AddReportController;
 use App\Http\Controllers\EditController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\HistoryController;
@@ -120,6 +121,10 @@ Route::prefix('/lend')->group(function () {
 
 Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ReportController::class, 'index']);
+
+    Route::prefix('/add')->group(function (){
+        Route::get('/', [AddReportController::class, 'index']);
+    });
 
     Route::prefix('/detail/{id}')->group(function (){
         Route::get('/', [ReportDetailController::class, 'index']);

@@ -252,7 +252,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_list_inventory(Request $request)
+    public function getListInventory(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -332,7 +332,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_list_calendar(Request $request)
+    public function getListCalendar(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -409,7 +409,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_list_room(Request $request)
+    public function getListRoom(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -498,7 +498,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_room_layout(Request $request,$room)
+    public function getRoomLayout(Request $request,$room)
     {
         try{
             $user_id = $request->user()->id;
@@ -708,7 +708,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_inventory_by_id(Request $request, $id){
+    public function getInventoryById(Request $request, $id){
         try{
             $user_id = $request->user()->id;
             $check_admin = AdminModel::find($user_id);
@@ -791,7 +791,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_inventory_detail_document(Request $request,$id)
+    public function getInventoryDetailDocument(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
@@ -876,7 +876,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function get_room_document(Request $request,$room)
+    public function getRoomDocument(Request $request,$room)
     {
         try{
             $user_id = $request->user()->id;
@@ -1018,7 +1018,7 @@ class Queries extends Controller
      * )
      */
 
-    public function get_analyze_inventory(Request $request,$id)
+    public function getAnalyzeInventory(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;

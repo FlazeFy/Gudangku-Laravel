@@ -192,6 +192,7 @@
             flex-direction: column; 
             max-width: 100vh; 
             overflow-x: scroll;
+            padding-top: var(--spaceMD);
         }
         .fc-toolbar-title {
             font-size: var(--textLG) !important;

@@ -35,53 +35,48 @@
     }
 </style>
 
-<div class="modal fade" id="modalAddReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="exampleModalLabel">Add Report</h5>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
+<div class="container-form">
+    <form id="add_report">
+        <h2 class="mt-3">Report Detail</h2><hr>
+        <div class="row">
+            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                <label>Title</label>
+                <input name="report_title" class="form-control" type="text" id="report_title" required>
+                <label>Description</label>
+                <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
                 <div class="row">
-                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <label>Title</label>
-                        <input name="report_title" class="form-control" type="text" id="report_title" required>
-                        <label>Description</label>
-                        <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <label>Category</label>
-                                <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
-                                    @foreach($dct_cat as $dct)
-                                        <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <label>Created At</label>
-                                <input type="datetime-local" name="created_at" id="created_at" class="form-control form-validated"/>
-                            </div>
-                        </div>
-                        <hr>
-                        <label>Item</label>
-                        <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
-                        <div id="item_form"></div>
-                        <hr>
-                        <label>Upload Shopping Bills</label>
-                        <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv'>
-                        <a class="btn btn-success mt-4 w-100 mb-2" onclick="post_report()"><i class="fa-solid fa-floppy-disk"></i> Save</a>
+                    <div class="col-md-6 col-sm-12">
+                        <label>Category</label>
+                        <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
+                            @foreach($dct_cat as $dct)
+                                <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <label>List Selected Item</label>
-                        <div id="item_holder">
-                            <div class="alert alert-danger w-100"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
-                        </div>
+                    <div class="col-md-6 col-sm-12">
+                        <label>Created At</label>
+                        <input type="datetime-local" name="created_at" id="created_at" class="form-control form-validated"/>
                     </div>
+                </div>
+                <hr>
+                <label>Item</label>
+                <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
+                <div id="item_form"></div>
+                <hr>
+                <label>Upload Shopping Bills</label>
+                <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv'>
+            </div>
+            <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                <label>List Selected Item</label>
+                <div id="item_holder">
+                    <div class="alert alert-danger w-100"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
+                </div>
+                <div class="d-grid d-md-inline-block">
+                    <a class="btn btn-success mt-4 w-100 w-md-auto mb-2" onclick="post_report()"><i class="fa-solid fa-floppy-disk"></i> Save Report</a>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script>
@@ -92,9 +87,7 @@
             $('#item_holder').empty()
         } 
     }
-    $(document).on('click','#add_report-btn', function(){
-        get_list_inventory()
-    })
+
     const get_list_inventory = () => {
         $.ajax({
             url: "/api/v1/inventory/list",
@@ -127,6 +120,7 @@
             }
         })
     }
+    get_list_inventory()
 
     const post_report = () => {
         const report_items = []
@@ -177,7 +171,6 @@
             },
             dataType:'json',
             success: function(response) {
-                $(`#modalAddReport`).modal('hide')
                 Swal.fire({
                     title: "Success!",
                     text: response.message,
@@ -191,7 +184,6 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                $(`#modalAddReport`).modal('hide')
                 generate_api_error(response, true)
             }
         });
@@ -219,11 +211,11 @@
                 clean_alert_item()
                 data.forEach(el => {
                     $('#item_holder').append(`
-                        <div class="container-light mt-3 item-holder-div bill-item">
+                        <div class="container-light mt-2 item-holder-div bill-item">
                             <input hidden name="item_name[]" value="${el.item_name ?? ''}">
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <span class="item_name_selected">${el.item_name ?? ''}</span>
-                                <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>
+                                <a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i> Remove</a>
                             </div>
                             <div class="my-2">
                                 <label>Notes</label>
@@ -346,9 +338,9 @@
                     $('#item_holder').append(`
                         <div class="container-light mt-3 item-holder-div">
                             <input hidden name="item_name[]" value="${$('#item_name').val()}">
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <span class="item_name_selected">${$('#item_name').val()}</span>
-                                <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>
+                                <a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i> Remove</a>
                             </div>
                             <div class="my-2">
                                 <label>Notes</label>
@@ -371,9 +363,9 @@
                     $('#item_holder').append(`
                         <div class="container-light mt-3 item-holder-div">
                             <input hidden name="item_name[]" value="${el}">
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <span class="item_name_selected">${el}</span>
-                                <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>
+                                <a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i> Remove</a>
                             </div>
                             <div class="my-2">
                                 <label>Notes</label>
@@ -394,9 +386,9 @@
                     <div class="container-light mt-3 item-holder-div">
                         <input hidden name="item_name[]" value="${val}">
                         <input hidden name="inventory_id[]" value="${inventory_id}">
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between align-items-center">
                             <span class="item_name_selected">${val}</span>
-                            <a class="btn btn-danger delete-item"><i class="fa-solid fa-trash"></i> Remove</a>
+                            <a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i> Remove</a>
                         </div>
                         <div class="my-2">
                             <label>Notes</label>

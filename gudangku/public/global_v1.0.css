@@ -196,7 +196,7 @@ table tr {
     padding: var(--spaceJumbo);
     display: block;
     margin-inline: auto;
-    width:1280px;
+    max-width:1280px;
 }
 
 /* Tablet style */
@@ -266,6 +266,9 @@ table tr {
 }
 .apexcharts-legend-text, .apexcharts-tooltip {
     font-weight: 500 !important;
+}
+.apexcharts-canvas {
+    margin-inline: auto;
 }
 
 .progress-bar {

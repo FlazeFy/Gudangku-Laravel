@@ -15,6 +15,7 @@ input, button, .btn, textarea, select{
 }
 input, textarea, select{
     background: transparent !important;
+    margin-bottom: var(--spaceXSM);
 }
 .error_input {
     color: var(--dangerBG) !important;

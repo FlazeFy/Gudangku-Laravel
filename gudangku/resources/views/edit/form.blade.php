@@ -73,8 +73,8 @@
             <input type="text" name="inventory_rack" id="inventory_rack" class="form-control"/>
         </div>
     </div>
-    <div class="d-flex justify-content-end">
-        <a id="save_changes" class="btn btn-success mt-3 border-0" style="background:var(--successBG) !important; min-width:160px;"><i class="fa-solid fa-floppy-disk"></i> Submit</a>
+    <div class="d-grid d-md-inline-block mt-3">
+        <a id="save_changes" class="btn btn-success w-100 w-md-auto"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
     </div>
 </form>
 

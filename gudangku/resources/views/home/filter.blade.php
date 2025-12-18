@@ -41,8 +41,8 @@
             </div>
         </div>
         <div id="total-holder" class="mt-2">
-            <h6 class="mb-0">Showing</h6>
-            <h5 class='text-primary fw-bold mb-0' style='font-size:calc(var(--textXLG)*1.5);'><span id='total-item'>0</span> Items</h5>
+            <p class="mb-0">Showing</p>
+            <h5 class='text-primary mb-0' style='font-size:calc(var(--textXLG)*1.5);'><span id='total-item'>0</span> Items</h5>
         </div>
     </div>
 </div>

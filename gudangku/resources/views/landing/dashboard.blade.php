@@ -52,36 +52,36 @@
 
 <div class="row g-2 mb-3" id="dashboard-holder">
     <div class="col-4" id="total_item-section">
-        <h2 class="dashboard-title" id="total_item"></h2>
-        <h2 class="dashboard-subtitle">Total Item</h2>
+        <h3 class="dashboard-title" id="total_item"></h3>
+        <h3 class="dashboard-subtitle">Total Item</h3>
     </div>
     <div class="col-4" id="total_fav-section">
-        <h2 class="dashboard-title" id="total_fav"></span></h2>
-        <h2 class="dashboard-subtitle">Favorite Item</h2>
+        <h3 class="dashboard-title" id="total_fav"></span></h3>
+        <h3 class="dashboard-subtitle">Favorite Item</h3>
     </div>
     <div class="col-4" id="total_low-section">
-        <h2 class="dashboard-title" id="total_low"></h2>
-        <h2 class="dashboard-subtitle">Low Capacity</h2>
+        <h3 class="dashboard-title" id="total_low"></h3>
+        <h3 class="dashboard-subtitle">Low Capacity</h3>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center" id="last_added-section">
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-2 d-flex align-items-center justify-content-center text-center" id="last_added-section">
         <div>
             <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Last Added</h6>
-            <h2 class="dashboard-second" id="last_added"></h2>
-            <h2 class="dashboard-subtitle d-none d-md-block">Last Added</h2>
+            <h3 class="dashboard-second" id="last_added"></h3>
+            <h3 class="dashboard-subtitle d-none d-md-block">Last Added</h3>
         </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 py-2 d-flex align-items-center justify-content-center text-center" id="most_category_total-section">
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-2 d-flex align-items-center justify-content-center text-center" id="most_category_total-section">
         <div>
             <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Most Category</h6>
-            <h2 class="dashboard-second">(<span id="most_category_total"></span>) <span id="most_category_context"></span></h2>
-            <h2 class="dashboard-subtitle d-none d-md-block">Most Category</h2>
+            <h3 class="dashboard-second">(<span id="most_category_total"></span>) <span id="most_category_context"></span></h3>
+            <h3 class="dashboard-subtitle d-none d-md-block">Most Category</h3>
         </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 pt-4 d-flex align-items-center justify-content-center text-center mx-auto" id="highest_price_name-section">
+    <div class="col-lg-4 col-md-6 col-sm-12 pt-2 d-flex align-items-center justify-content-center text-center mx-auto" id="highest_price_name-section">
         <div>
             <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Highest Price</h6>
-            <h2 class="dashboard-second" style="font-size: calc(var(--textXJumbo) * 1.2)">(<span id="highest_price_name"></span>) <span id="highest_price"></span></h2>
-            <h2 class="dashboard-subtitle d-none d-md-block">Highest Price</h2><br>
+            <h3 class="dashboard-second" style="font-size: calc(var(--textXJumbo) * 1.2)">(<span id="highest_price_name"></span>) <span id="highest_price"></span></h3>
+            <h3 class="dashboard-subtitle d-none d-md-block">Highest Price</h3><br>
         </div>
     </div>
 </div>

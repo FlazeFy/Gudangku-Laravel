@@ -6,10 +6,17 @@
     </script>
 
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
-        <h1 class="main-page-title">Add Inventory</h1>
-        <a class="btn btn-danger mb-3" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">Add Inventory</h1>
+            <div>
+                @include('others.profile')
+                @include('others.notification')
+            </div>
+        </div>
+        <hr>  
+        <div class="mb-3 d-flex flex-wrap gap-2">      
+            @include('components.back_button', ['route' => '/inventory'])
+        </div>       
         @include('add.form')
     </div>
 

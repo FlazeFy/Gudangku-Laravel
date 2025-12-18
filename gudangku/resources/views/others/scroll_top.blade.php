@@ -1,10 +1,10 @@
-<div id="nav_scroll-holder" style="position:fixed; right:20px; bottom:20px; z-index:1000; width: 11vw;"></div>
+<div id="nav_scroll-holder" style="position:fixed; right:20px; bottom:20px; z-index:1000;"></div>
 <script>
     const handle_scroll_top_btn = () => {
         if (window.scrollY > window.innerHeight) {
             if ($('#scroll-to-top-btn').length === 0) {
                 $('#nav_scroll-holder').prepend(`
-                    <button class="btn btn-primary mb-2 w-100" id="scroll-to-top-btn"><i class="fa-solid fa-arrow-up"></i><span class="d-none d-md-inline"> Scroll to Top</span></button>
+                    <button class="btn btn-primary mb-2 w-100 text-nowrap" id="scroll-to-top-btn"><i class="fa-solid fa-arrow-up"></i><span class="d-none d-md-inline"> Scroll to Top</span></button>
                 `);
 
                 $('#scroll-to-top-btn').on('click', function () {

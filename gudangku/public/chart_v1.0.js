@@ -91,6 +91,7 @@ const generate_bar_chart = (title, holder, data) => {
                 }]
             };
 
+            $(`#${holder}`).wrap(`<div style='overflow-x:auto;' class="p-2"><div style='min-width:560px;'></div></div>`)
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
         } else {
@@ -158,6 +159,7 @@ const generate_line_column_chart = (title, holder, data) => {
                 }
             };
 
+            $(`#${holder}`).wrap(`<div style='overflow-x:auto;' class="p-2"><div style='min-width:560px;'></div></div>`)
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
         } else {
@@ -204,6 +206,9 @@ const generate_gauge_chart = (title, holder, data, type_color = 'single_color') 
                 chart: {
                     height: 350,
                     type: "radialBar",
+                    sparkline: {
+                        enabled: true
+                    }
                 },
                 plotOptions: {
                     radialBar: {
@@ -288,7 +293,7 @@ const generate_table_context_total = (holder, data, key_currency) => {
 const export_button_data = (holder, data) => {
     if(data.length > 0){
         $(`#${holder}`).append(`
-            <button id='download-btn-data-${holder}' class='btn btn-primary'>
+            <button id='download-btn-data-${holder}' class='btn btn-primary w-100'>
                 <i class="fa-solid fa-download"></i> Download CSV
             </button>
         `);
