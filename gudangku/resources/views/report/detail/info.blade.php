@@ -30,7 +30,6 @@
     const get_detail_report = async (id) => {
         try {
             Swal.showLoading()
-            const list_cat = await get_dct_by_type('report_category')
             const response = await $.ajax({
                 url: `/api/v1/report/detail/item/${id}`,
                 type: 'GET',
@@ -45,7 +44,6 @@
             const data = response.data
             const data_item = response.data_item
             report_title = data.report_title
-            let select_cat_el = ''
             const created_at = getDateToContext(data.created_at,'calendar',false)
             const updated_at = data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-'
 
@@ -53,9 +51,6 @@
                 $('#created_at').text(created_at)
                 $('#updated_at').text(updated_at)
             }
-            list_cat.forEach(el => {
-                select_cat_el += `<option value='${el}' ${el == data.report_category && 'selected'}>${el}</option>`
-            });
 
             if(data_item.length > 0){
                 $(`#btn-doc-preview-holder`).html(`
@@ -126,7 +121,7 @@
                     <div>
                         ${is_edit_mode ? 
                             `<label>Category</label>
-                            <select class='form-select' id='report_category' value='${data.report_category}'>${select_cat_el}</select>`
+                            <select class='form-select' id='report_category_holder'></select>`
                             :
                             `<span class="bg-success text-white rounded-pill px-3 py-2" style='font-size:var(--textMD); font-weight:500;'>${data.report_category}</span>`
                         }
@@ -159,7 +154,7 @@
                 <br>
                 ${(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist') ? `
                     <div class="d-flex justify-content-between mt-3">
-                        <p class="fw-bold mb-0">Total Price: Rp. ${number_format(data.total_price, 0, ',', '.')}</p>
+                        <p class="fw-bold mb-0">Total Price: Rp. ${data.total_price ? number_format(data.total_price, 0, ',', '.'):'-'}</p>
                         <p class="fw-bold mb-0">Total Item: ${data.total_item}</p>
                     </div>
                 ` : ''}
@@ -178,7 +173,7 @@
                             <td>${dt.item_name}</td>
                             <td>${dt.item_desc ?? '<span class="no-data-message">- No Description Provided -</span>'}</td>
                             <td class="text-center">${dt.item_qty}</td>
-                            ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td class="text-center">Rp. ${number_format(dt.item_price, 0, ',', '.')}</td>` : ''}
+                            ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td class="text-center">Rp. ${dt.item_price ? number_format(dt.item_price, 0, ',', '.'): '-'}</td>` : ''}
                             <td class="text-center">${getDateToContext(dt.created_at,'calendar')}</td>
                             <td>
                                 <button class="btn btn-warning d-block mx-auto" data-bs-toggle="modal" data-bs-target="#modalEdit_${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button>
@@ -254,6 +249,9 @@
                     </tr>
                 `)
             }
+
+            await get_context_opt('report_category',token)
+            $('#report_category_holder').val(data.report_category)
 
             zoomableModal()
         } catch (error) {
@@ -340,7 +338,7 @@
             data: JSON.stringify({
                 report_title: $('#report_title').val(),
                 report_desc: $('#report_desc').val(),
-                report_category: $('#report_category').val(),
+                report_category: $('#report_category_holder').val(),
                 created_at: createdAtOpposite
             }),
             beforeSend: function (xhr) {
@@ -362,35 +360,6 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generate_api_error(response, true)
-            }
-        });
-    }
-
-    const get_dictionary = () => {
-        const type = 'report_category'
-        Swal.showLoading()
-        $.ajax({
-            url: `/api/v1/dictionary/type/${type}`,
-            type: 'GET',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
-            },
-            success: function(response) {
-                Swal.close()
-                const data = response.data
-                
-                data.forEach(dt => {
-                    $( document ).ready(function() {
-                        $(`#${dt.dictionary_type}_split`).append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
-                    });
-                });
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
-                if(response.status != 404){
-                    generate_api_error(response, true)
-                }
             }
         });
     }

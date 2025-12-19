@@ -41,7 +41,6 @@ class Validation
                 'inventory_storage' => 'nullable|string|max:36',
                 'inventory_rack' => 'nullable|string|max:36',
                 'inventory_price' => 'nullable|numeric|min:0|max:999999999',
-                'inventory_image' => 'nullable|string|max:500',
                 'inventory_unit' => 'required|string|max:36',
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
                 'inventory_capacity_unit' => 'nullable|string|max:36',
@@ -72,10 +71,6 @@ class Validation
             self::validateInventoryVolumeRelation($validator, $request);
 
             return $validator;
-        } else if($type == 'update_image'){
-            return Validator::make($request->all(), [
-                'inventory_image' => 'nullable|string|max:500'
-            ]);
         } else if($type == 'update_layout'){
             return Validator::make($request->all(), [
                 'inventory_storage' => 'required|string|max:36',

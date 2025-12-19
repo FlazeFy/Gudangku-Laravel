@@ -7,6 +7,92 @@ const template_alert_container = (target, type, msg, btn_title, icon, href) => {
     `)
 }
 
+const get_context_opt = (context, token, selected = null) => {
+    return new Promise((resolve, reject) => {
+        Swal.showLoading()
+        let ctx_holder
+
+        if (context.includes(',')) {
+            ctx_holder = []
+            context = context.split(',')
+            context.forEach(el => {
+                ctx_holder.push(`${el}_holder`)
+            })
+        } else {
+            ctx_holder = `${context}_holder`
+        }
+
+        const generate_context_list = (holder, data, selected = null) => {
+            if (Array.isArray(holder)) {
+                holder.forEach(dt => {
+                    $(`#${dt}`).empty().append(`<option>-</option>`)
+                    data.forEach(el => {
+                        if (el.dictionary_type === dt.replace('_holder','')) {
+                            $(`#${dt}`).append(`<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`)
+                        }
+                    })
+                })
+            } else {
+                $(`#${holder}`).empty().append(`<option>-</option>`)
+                data.forEach(el => {
+                    $(`#${holder}`).append(
+                        `<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`
+                    )
+                })
+            }
+
+            resolve()
+        }
+
+        const fetchData = () => {
+            $.ajax({
+                url: `/api/v1/dictionary/type/${context}`,
+                type: 'GET',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Accept", "application/json")
+                    xhr.setRequestHeader("Authorization", `Bearer ${token}`)
+                },
+                success: function (response) {
+                    Swal.close()
+                    const data = response.data
+
+                    localStorage.setItem(ctx_holder, JSON.stringify(data))
+                    localStorage.setItem(`last-hit-${ctx_holder}`, Date.now())
+
+                    generate_context_list(ctx_holder, data, selected)
+                },
+                error: function (response) {
+                    Swal.close()
+                    generateApiError(response, true)
+                    reject(response)
+                }
+            })
+        }
+
+        if (ctx_holder in localStorage) {
+            const lastHit = parseInt(localStorage.getItem(`last-hit-${ctx_holder}`))
+            const now = Date.now()
+
+            if (((now - lastHit) / 1000) < statsFetchRestTime) {
+                const data = JSON.parse(localStorage.getItem(ctx_holder))
+
+                if (data) {
+                    Swal.close()
+                    generate_context_list(ctx_holder, data, selected)
+                } else {
+                    Swal.close()
+                    failedMsg(`get the ${context} list`)
+                    reject("No cached data")
+                }
+            } else {
+                fetchData()
+            }
+        } else {
+            fetchData()
+        }
+    })
+}
+
 const generate_floor_range = (data) => {
     let rawLetter = []
     let rawNum = [] 

@@ -157,32 +157,6 @@ const generate_last_page_error = () => {
     });
 }
 
-const get_dct_by_type = (type) => {
-    return new Promise((resolve, reject) => {
-        Swal.showLoading();
-        $.ajax({
-            url: `/api/v1/dictionary/type/${type}`,
-            type: 'GET',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json")
-            },
-            success: function(response) {
-                Swal.close()
-                const data = response.data
-                let res = []
-                data.forEach(dt => {
-                    res.push(dt.dictionary_name)
-                });
-                resolve(res)
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
-                reject(errorThrown)
-            }
-        });
-    });
-};
-
 const number_format = (number, decimals, dec_point, thousands_sep) => {
     number = number.toFixed(decimals);
 

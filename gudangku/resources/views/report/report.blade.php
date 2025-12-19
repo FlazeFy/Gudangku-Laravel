@@ -23,7 +23,7 @@
         Swal.showLoading()
         const item_holder = 'report_holder'
         let search_key_url = name ? `&search_key=${name}`:''
-        let filter_cat_url = category ? `&filter_category=${category}`:''
+        let filter_cat_url = category && category != "-" ? `&filter_category=${category}`:''
         let sorting_url = sort ? `&sorting=${sort}`:''
 
         $.ajax({

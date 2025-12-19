@@ -54,7 +54,7 @@ button:hover, .btn:hover {
     justify-content: center; 
     gap: var(--spaceXSM); 
     padding: var(--spaceXSM);
-    margin-bottom: var(--spaceSM);
+    margin: var(--spaceSM) 0;
 }
 .btn-page {
     border: 1.5px solid var(--primaryColor) !important;

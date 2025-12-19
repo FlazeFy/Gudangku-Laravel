@@ -62,11 +62,7 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-12">
                         <label>Category</label>
-                        <select class="form-select" name="report_category"  id="report_category" aria-label="Default select example">
-                            @foreach($dct_cat as $dct)
-                                <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                            @endforeach
-                        </select>
+                        <select class="form-select" name="report_category"  id="report_category_holder" aria-label="Default select example"></select>
                     </div>
                     <div class="col-md-6 col-sm-6 col-12">
                         <label>Created At</label>
@@ -112,6 +108,10 @@
 
 <script>
     setCurrentLocalDateTime('created_at')
+
+    $(async function () {
+        await get_context_opt('report_category',token)
+    })
 
     const clean_alert_item = () => {
         if ($('#item_holder').find('div.alert').length) {

@@ -5,7 +5,7 @@
             <label>Name</label>
             <input type="text" name="inventory_name" id="inventory_name" class="form-control my-2"/>
             <label>Category</label>
-            <select class="form-select my-2" name="inventory_category" id="inventory_category" aria-label="Default select example"></select>
+            <select class="form-select my-2" name="inventory_category" id="inventory_category_holder" aria-label="Default select example"></select>
             <div id='inventory_color_holder'></div>
         </div>
         <div class="col-lg-6 col-md-6">
@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-lg-9 col-md-8 col-sm-8 col-8">
                     <label>Unit</label>
-                    <select class="form-select" name="inventory_unit" id="inventory_unit" aria-label="Default select example"></select>
+                    <select class="form-select" name="inventory_unit" id="inventory_unit_holder" aria-label="Default select example"></select>
                 </div>
             </div><hr>
         </div>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-lg-9 col-md-8 col-sm-8 col-8">
                     <label>Unit</label>
-                    <select class="form-select" name="inventory_capacity_unit" id="inventory_capacity_unit" aria-label="Default select example"></select>
+                    <select class="form-select" name="inventory_capacity_unit" id="inventory_capacity_unit_holder" aria-label="Default select example"></select>
                 </div>
             </div><hr>   
         </div>
@@ -62,7 +62,7 @@
     <div class="row">
         <div class="col-md-4 col-sm-6 col-6">
             <label>Room</label>
-            <select class="form-select" name="inventory_room" id="inventory_room" aria-label="Default select example"></select>
+            <select class="form-select" name="inventory_room" id="inventory_room_holder" aria-label="Default select example"></select>
         </div>
         <div class="col-md-4 col-sm-6 col-6">
             <label>Storage</label>
@@ -135,7 +135,7 @@
                             <div class='no-image-picker' title='Change Image' id='image-picker'>
                                 <label for='file-input'>
                                     <img id='frame' class='m-2' title='Change Image' style='width: var(--spaceXLG);' src='<?= asset('images/change_image.png') ?>' />
-                                    <a>No image has been selected</a>
+                                    <a class="bg-transparent">No image has been selected</a>
                                 </label>
                                 <input id='file-input' name='file' type='file' accept='image/*' class='d-none'/>
                             </div>
@@ -225,10 +225,10 @@
                 $('#item_price').val(data.inventory_price)
                 $('#inventory_vol').val(data.inventory_vol)
                 $('#inventory_capacity_vol').val(data.inventory_capacity_vol)
-                $('#inventory_room').val(data.inventory_room)
-                $('#inventory_unit').val(data.inventory_unit)
-                $('#inventory_capacity_unit').val(data.inventory_capacity_unit)
-                $('#inventory_category').val(data.inventory_category)
+                $('#inventory_room_holder').val(data.inventory_room)
+                $('#inventory_unit_holder').val(data.inventory_unit)
+                $('#inventory_capacity_unit_holder').val(data.inventory_capacity_unit)
+                $('#inventory_category_holder').val(data.inventory_category)
                 $('#reminder_type').val(data.reminder_type)
                 $('#reminder_context').val(data.reminder_context)
                 $('#reminder_desc').text(data.reminder_desc)
@@ -269,48 +269,10 @@
         });
     }
     
-    const get_dictionary = () => {
-        const type = 'inventory_room,inventory_unit,inventory_category,reminder_type,reminder_context,report_category'
-        $.ajax({
-            url: `/api/v1/dictionary/type/${type}`,
-            type: 'GET',
-            beforeSend: function (xhr) {
-                Swal.showLoading()
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
-            },
-            success: function(response) {
-                Swal.close()
-                const data = response.data
-                
-                $('#inventory_unit').empty()
-                $('#inventory_capacity_unit').empty()
-                $('#inventory_capacity_unit').append('<option>-</option>')
-                data.forEach(dt => {
-                    $( document ).ready(function() {
-                        if(dt.dictionary_type == 'inventory_unit'){
-                            $('#inventory_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
-                            $('#inventory_capacity_unit').append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
-                        } else if(dt.dictionary_type == 'reminder_type' || dt.dictionary_type == 'reminder_context'){
-                            $(`select[name="${dt.dictionary_type}"]`).each(function() {
-                                const isFirst = $(this).children('option').length === 0
-                                const selectedAttr = isFirst ? 'selected' : ''
-                                $(this).append(`<option value='${dt.dictionary_name}' ${selectedAttr}>${dt.dictionary_name}</option>`)
-                            })
-                        } else {
-                            $(`#${dt.dictionary_type}`).append(`<option value='${dt.dictionary_name}'>${dt.dictionary_name}</option>`)
-                        }
-                    });
-                });
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
-            }
-        });
-    }
-
-    get_dictionary()
-    get_detail_inventory(inventory_id)
+    $(async function () {
+        await get_context_opt('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
+        get_detail_inventory(inventory_id)
+    })
 
     const save_update = () => {
         const id = `<?= $id ?>`
@@ -318,13 +280,13 @@
             url: `/api/v1/inventory/edit/${id}`,
             type: 'PUT',
             data: $('#form_edit_inventory').serialize().replace(
-                /created_at=[^&]+/, 
+                /created_at=[^&]+/,
                 "created_at=" + tidyUpDateTimeFormat($('#created_at_edit').val())
             ),
             dataType: 'json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)
                 Swal.showLoading()
             },
             success: function(response) {
@@ -335,10 +297,10 @@
                     icon: "success",
                     allowOutsideClick: false,
                     confirmButtonText: "Ok"
-                }).then((result) => {
+                }).then(async (result) => {
                     if (result.isConfirmed) {
-                        get_dictionary();
-                        get_detail_inventory(id);
+                        await get_context_opt('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
+                        get_detail_inventory(id)
                     }
                 });
             },

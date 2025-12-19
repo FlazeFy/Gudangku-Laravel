@@ -4,14 +4,8 @@
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <input type="text" name="inventory_name" id='inventory_name' class="form-control form-validated mb-2" maxlength="75"/>
-
                 <label>Category</label>
-                <select class="form-select mb-2" name="inventory_category" aria-label="Default select example">
-                    @foreach($dct_cat as $dct)
-                        <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                    @endforeach
-                </select>
-
+                <select class="form-select mb-2" name="inventory_category" aria-label="Default select example" id="inventory_category_holder"></select>
                 <label>Color</label>
                 <input type="text" name="inventory_color" id="inventory_color" class="form-control"/>
             </div>
@@ -46,11 +40,7 @@
                     </div>
                     <div class="col-lg-9 col-md-8 col-sm-8 col-8">
                         <label>Unit</label>
-                        <select class="form-select" name="inventory_unit" aria-label="Default select example">
-                            @foreach($dct_unit as $dct)
-                                <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                            @endforeach
-                        </select>
+                        <select class="form-select" name="inventory_unit" aria-label="Default select example" id="inventory_unit_holder"></select>
                     </div>
                 </div><hr>
             </div>
@@ -62,13 +52,7 @@
                     </div>
                     <div class="col-lg-9 col-md-8 col-sm-8 col-8">
                         <label>Unit</label>
-                        <select class="form-select" name="inventory_capacity_unit" aria-label="Default select example">
-                            <option value='-' selected>-</option>
-                            <option value="percentage">Percentage</option>
-                            @foreach($dct_unit as $dct)
-                                <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                            @endforeach
-                        </select>
+                        <select class="form-select" name="inventory_capacity_unit" id="inventory_capacity_unit_holder" aria-label="Default select example"></select>
                     </div>
                 </div><hr>
             </div>
@@ -78,11 +62,7 @@
         <div class="row">
             <div class="col-md-4 col-sm-6 col-6">
                 <label>Room</label>
-                <select class="form-select" name="inventory_room" aria-label="Default select example">
-                    @foreach($dct_room as $dct)
-                        <option value="{{$dct['dictionary_name']}}">{{$dct['dictionary_name']}}</option>
-                    @endforeach
-                </select>
+                <select class="form-select" name="inventory_room" aria-label="Default select example" id="inventory_room_holder"></select>
             </div>
             <div class="col-md-4 col-sm-6 col-6">
                 <input type="text" name="inventory_storage" id="inventory_storage" class="form-control form-validated" maxlength="36"/>
@@ -105,10 +85,16 @@
     $('#inventory_name').val(inventory_name)
     setCurrentLocalDateTime('created_at')
 
+    $(async function () {
+        await get_context_opt('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
+    })
+
     const submit_add = () => {
         const form = $('#add_inventory')[0]
         const formData = new FormData(form)
         formData.set('created_at', tidyUpDateTimeFormat(formData.get('created_at')))
+        const img = $("#file-input")[0] ? $("#file-input")[0].files[0] : null
+        formData.append("inventory_image", img ? img : null)
 
         $.ajax({
             url: '/api/v1/inventory',

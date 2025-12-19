@@ -12,10 +12,7 @@
             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <label>Search by Category</label>
                 <div class="position-relative">
-                    <select class="form-select" aria-label="Default select example" id='search_by_category'>
-                        <option value="all" <?= ($filter_category == 'all') ? 'selected':'' ?>>All</option>
-                        <hr>
-                    </select>
+                    <select class="form-select" aria-label="Default select example" id='report_category_holder'></select>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
@@ -48,14 +45,11 @@
             `)
         }
     }
-    const fetch_dct = async () => {
-        const list_cat = await get_dct_by_type('report_category')
-        list_cat.forEach(el => {
-            $('#search_by_category').append(`<option value='${el}' ${el == filter_category && 'selected'}>${el}</option>`)
-        });
-    }
+    
+    $(async function () {
+        await get_context_opt('report_category',token,"<?= $filter_category ?? "all" ?>")
+    })
     place_reset_btn()
-    fetch_dct()
 
     const search_by_title = (val) => {
         const url = new URL(window.location)
@@ -89,7 +83,7 @@
         search_by_title($(this).val())
     })
 
-    $(document).on('change', '#search_by_category',function(){
+    $(document).on('change', '#report_category_holder',function(){
         if($(this).val() != 'all'){
             const url = new URL(window.location)
             const search_val = $(this).val()
