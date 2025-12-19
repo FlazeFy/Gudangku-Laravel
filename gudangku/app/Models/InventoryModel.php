@@ -57,9 +57,7 @@ class InventoryModel extends Model
     ];
 
     public static function getInventoryNameById($id){
-        return InventoryModel::select('inventory_name')
-            ->where('id',$id)
-            ->first();
+        return InventoryModel::select('inventory_name')->where('id',$id)->first();
     }
 
     public static function getInventoryPlanDestroy($days){
@@ -562,7 +560,7 @@ class InventoryModel extends Model
     public static function createInventory(
         $inventory_name, $inventory_category, $inventory_desc, $inventory_merk, $inventory_color, $inventory_room, 
         $inventory_storage, $inventory_rack, $inventory_price, $inventory_image, $inventory_unit, $inventory_vol, 
-        $inventory_capacity_unit, $inventory_capacity_vol, $is_favorite, $user_id, $created_at) {
+        $inventory_capacity_unit, $inventory_capacity_vol, $is_favorite, $user_id, $created_at = null) {
         
         return InventoryModel::create([
             'id' => Generator::getUUID(), 
@@ -583,7 +581,7 @@ class InventoryModel extends Model
             'is_favorite' => $is_favorite, 
             'is_reminder' => 0, 
             'created_by' => $user_id, 
-            'created_at' => $created_at,
+            'created_at' => $created_at ?? date('Y-m-d H:i:s'),
             'updated_at' => null, 
             'deleted_at' => null
         ]);
@@ -599,7 +597,18 @@ class InventoryModel extends Model
         if($user_id){
             $rows = $rows->where('created_by', $user_id);
         }
+        $data['updated_at'] = date('Y-m-d H:i:s');
 
         return $rows->update($data);
+    }
+
+    public static function isInventoryNameUsed($inventory_name,$user_id,$exception_id = null){
+        $res = InventoryModel::where('inventory_name',$inventory_name)->where('created_by',$user_id);
+
+        if($exception_id){
+            $res = $res->whereNot('id',$exception_id);
+        }
+        
+        return $res->exists();
     }
 }

@@ -36,11 +36,13 @@ use App\Jobs\ProcessMailer;
 
 class Commands extends Controller
 {
+    private $module;
     private $max_size_file;
     private $allowed_file_type;
 
     public function __construct()
     {
+        $this->module = "inventory";
         $this->max_size_file = 10000000; // 10 Mb
         $this->allowed_file_type = ['jpg','jpeg','gif','png'];
     }
@@ -48,7 +50,8 @@ class Commands extends Controller
     /**
      * @OA\DELETE(
      *     path="/api/v1/inventory/delete/{id}",
-     *     summary="Soft delete inventory by id",
+     *     summary="Soft Delete Inventory By ID",
+     *     description="This request is used to delete an inventory based on the provided `ID`. This request interacts with the MySQL database, broadcast message with Telegram, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -97,20 +100,22 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name')->where('id',$id)->first();
 
+            // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            }
+            $user_id = $check_admin ? null : $user_id;
 
+            // Get inventory name
+            $inventory = InventoryModel::getInventoryNameById($id);
+            // Soft Delete inventory by ID
             $rows = InventoryModel::updateInventoryById($user_id,$id,['deleted_at' => date('Y-m-d H:i:s')]);
             if($rows > 0){
                 if(!$check_admin){
-                    // History
+                    // Create history
                     Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
                 }
                 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("delete", 'inventory'),
@@ -132,9 +137,20 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/inventory/edit_image/{id}",
-     *     summary="Edit inventory image by id",
+     *     summary="Post Edit Inventory Image By ID",
+     *     description="This request is used to update inventory image by given vehicle's `ID`. And the updated field is `inventory_image`. This request interacts with the MySQL database, firebase storage, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  required={"inventory_image"},
+     *                  @OA\Property(property="inventory_image", type="string", format="binary"),
+     *              )
+     *          )
+     *     ),
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -190,12 +206,10 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $inventory = InventoryModel::select('inventory_name','inventory_image')
-                ->where('id',$id)
-                ->where('created_by',$user_id)
-                ->first();
-
+            // Get inventory by ID
+            $inventory = InventoryModel::getInventoryDetail($id,$user_id);
             if($inventory){
+                // Check if a inventory image exists in the old inventory data
                 $inventory_image = $inventory->inventory_image;
                 if($inventory_image){
                     if(Firebase::deleteFile($inventory_image)){
@@ -207,6 +221,8 @@ class Commands extends Controller
                         ], Response::HTTP_NOT_FOUND);
                     }
                 } 
+
+                // Check if file attached
                 if ($request->hasFile('inventory_image')) {
                     $file = $request->file('inventory_image');
                     if ($file->isValid()) {
@@ -226,9 +242,10 @@ class Commands extends Controller
                             ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
         
-                        // Helper: Upload inventory image
                         try {
-                            $user = UserModel::find($user_id);
+                            // Get user data
+                            $user = UserModel::getSocial($user_id);
+                            // Upload file to Firebase storage
                             $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
                         } catch (\Exception $e) {
                             return response()->json([
@@ -241,17 +258,13 @@ class Commands extends Controller
                     $inventory_image = null;
                 }
 
-                $rows = InventoryModel::where('id', $id)
-                    ->where('created_by', $user_id)
-                    ->update([
-                        'inventory_image' => $inventory_image,
-                        'updated_at' => date('Y-m-d H:i:s'),
-                ]);
-
+                // Update inventory by ID
+                $rows = InventoryModel::updateInventoryById($user_id,$id,['inventory_image' => $inventory_image]);
                 if($rows > 0){
-                    // History
+                    // Create history
                     Audit::createHistory('Update Image', $inventory->inventory_name, $user_id);
                     
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'inventory image'),
@@ -328,23 +341,26 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::getInventoryNameById($id);
-
+            
+            // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            }
+            $user_id = $check_admin ? null : $user_id;
 
+            // Get inventory name by ID
+            $inventory = InventoryModel::getInventoryNameById($id);
+            // Hard Delete inventory by ID
             $rows = InventoryModel::deleteInventoryById($id, $user_id);
             if($rows > 0){
+                // Hard Delete inventory relation by ID
                 ReminderModel::deleteReminderByInventoryId($id, $user_id);
                 ReportItemModel::deleteReportItemByInventoryId($id, $user_id);
 
                 if(!$check_admin){
-                    // History
+                    // Create history
                     Audit::createHistory('Permentally delete', $inventory->inventory_name, $user_id);
                 }
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("permentally delete", 'inventory'),
@@ -415,23 +431,18 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::select('inventory_name')
-                ->where('id',$id)
-                ->first();
-            $rows = InventoryModel::where('id',$id)
-                ->where('created_by', $user_id)
-                ->update([
-                    'is_favorite' => $request->is_favorite
-            ]);
-
+            
+            // Update inventory by ID
+            $rows = InventoryModel::updateInventoryById($user_id,$id,['is_favorite' => $request->is_favorite]);;
             if($rows > 0){
-                // History
-                $ctx = 'Set';
-                if($request->is_favorite == 0){
-                    $ctx = 'Unset';
-                }
+                // Get inventory name by ID
+                $inventory = InventoryModel::getInventoryNameById($id);
+
+                // Create history
+                $ctx = $request->is_favorite == 0 ? 'Unset' : 'Set';
                 Audit::createHistory($ctx.' to favorite', $inventory->inventory_name, $user_id);
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("update", 'inventory'),
@@ -502,20 +513,23 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::find($id);
 
+            // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            } 
+            $user_id = $check_admin ? null : $user_id; 
             
+            // Update inventory by ID
             $rows = InventoryModel::updateInventoryById($user_id,$id,['deleted_at' => null]);
             if($rows > 0){
                 if(!$check_admin){
-                    // History
+                    // Get inventory name by ID
+                    $inventory = InventoryModel::getInventoryNameById($id);
+
+                    // Create history
                     Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
                 }
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("recover", 'inventory'),
@@ -585,12 +599,15 @@ class Commands extends Controller
     public function postInventory(Request $request)
     {
         try{
-            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
             $user_id = $request->user()->id;
-            $request->merge([
-                'is_favorite' => $request->is_favorite == 'off' ? 0 : 1
-            ]);
 
+            // Firebase Init
+            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+            
+            // True / False safety
+            $request->merge(['is_favorite' => $request->is_favorite == 'off' ? 0 : 1]);
+
+            // Validate request body
             $validator = Validation::getValidateInventory($request,'create');
             if ($validator->fails()) {
                 return response()->json([
@@ -599,6 +616,7 @@ class Commands extends Controller
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $inventory_image = null;  
+                // Check if file attached
                 if ($request->hasFile('inventory_image')) {
                     $file = $request->file('inventory_image');
                     if ($file->isValid()) {
@@ -618,9 +636,10 @@ class Commands extends Controller
                             ], Response::HTTP_UNPROCESSABLE_ENTITY);
                         }
         
-                        // Helper: Upload inventory image
                         try {
-                            $user = UserModel::find($user_id);
+                            // Get user data
+                            $user = UserModel::getSocial($user_id);
+                            // Upload file to Firebase storage
                             $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
                         } catch (\Exception $e) {
                             return response()->json([
@@ -631,33 +650,36 @@ class Commands extends Controller
                     }
                 }
 
-                $is_exist = InventoryModel::selectRaw('1')
-                    ->where('inventory_name',$request->inventory_name)
-                    ->where('created_by',$user_id)
-                    ->first();
-
+                // Check if inventory name already exist
+                $is_exist = InventoryModel::isInventoryNameUsed($request->inventory_name,$user_id);
                 if(!$is_exist){
+                    // Create inventory
                     $res = InventoryModel::createInventory(
                         $request->inventory_name, $request->inventory_category, $request->inventory_desc, $request->inventory_merk, $request->inventory_color, $request->inventory_room, 
                         $request->inventory_storage, $request->inventory_rack, $request->inventory_price, $inventory_image, $request->inventory_unit, $request->inventory_vol, 
                         $request->inventory_capacity_unit, $request->inventory_capacity_vol, $request->is_favorite, $user_id, $request->created_at
                     );
                     $id = $res->id;
-
                     if($res){
-                        // History
+                        // Create history
                         Audit::createHistory('Create', $request->inventory_name, $user_id);
-                        $inventory_price = $request->inventory_price ? number_format($request->inventory_price, 2, ',', '.') : "-" ;
+                        // Get user's contact to broadcast
                         $user = UserModel::getSocial($user_id);
-                        $extra_msg = '';
+                                                
+                        // Init Doc
                         $options = new DompdfOptions();
                         $options->set('defaultFont', 'Helvetica');
                         $dompdf = new Dompdf($options);
                         $datetime = now();
+                        $extra_msg = '';
+
+                        // Document Template
                         $header_template = Generator::getDocTemplate('header');
                         $style_template = Generator::getDocTemplate('style');
                         $footer_template = Generator::getDocTemplate('footer');
                         $imageOnTableDoc = "";
+
+                        // Column inventory image if exist
                         if($inventory_image){
                             $imageOnTableDoc = "
                             <tr>
@@ -665,6 +687,10 @@ class Commands extends Controller
                                 <td style='text-align:center'><img style='margin:10px; width:500px;' src='$inventory_image'></td>
                             </tr>";
                         }
+                        // Price format if exist
+                        $inventory_price = $request->inventory_price ? number_format($request->inventory_price, 2, ',', '.') : "-" ;
+
+                        // Build HTML document
                         $html = "
                             <html>
                                 <head>
@@ -740,7 +766,7 @@ class Commands extends Controller
                                 </body>
                             </html>";
 
-
+                        // Render document
                         $dompdf->loadHtml($html);
                         $dompdf->setPaper('A4', 'portrait');
                         $dompdf->render();
@@ -748,24 +774,30 @@ class Commands extends Controller
                         $message = "inventory created, its called '$request->inventory_name'";
 
                         if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                            // Check if user Telegram ID is valid
                             if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                // Prepare document to send via Telegram
                                 $pdfContent = $dompdf->output();
                                 $pdfFilePath = public_path("inventory-$id-$request->inventory_name.pdf");
                                 file_put_contents($pdfFilePath, $pdfContent);
                                 $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
                                 
+                                // Send telegram message with file
                                 $response = Telegram::sendDocument([
                                     'chat_id' => $user->telegram_user_id,
                                     'document' => $inputFile,
                                     'caption' => $message,
                                     'parse_mode' => 'HTML'
                                 ]);
+
+                                // Delete after send
                                 unlink($pdfFilePath);
                             } else {
                                 $extra_msg = ' Telegram ID is invalid. Please check your Telegram ID';
                             }
                         }
                         if($user->firebase_fcm_token){
+                            // Send Firebase notification (mobile)
                             $messaging = $factory->createMessaging();
                             $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
                                 ->withNotification(Notification::create($message))
@@ -774,10 +806,12 @@ class Commands extends Controller
                                 ]);
                             $response = $messaging->send($fcm);
                         }
+
                         // Send email
                         $ctx = 'Create item';
                         dispatch(new ProcessMailer($ctx, $res, $user->username, $user->email));
                         
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
                             'message' => $message."".$extra_msg,
@@ -857,6 +891,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateInventory($request,'update');
             if ($validator->fails()) {
                 return response()->json([
@@ -864,16 +899,12 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                // Check Inventory Name
-                $is_exist = InventoryModel::selectRaw('1')
-                    ->where('inventory_name',$request->inventory_name)
-                    ->whereNot('id',$id)
-                    ->where('created_by',$user_id)
-                    ->first();
+                // Check inventory name
+                $is_exist = InventoryModel::isInventoryNameUsed($inventory_name,$user_id,$id);
 
                 if(!$is_exist){
-                    // Update Inventory
-                    $res = InventoryModel::where('id',$id)->update([
+                    // Update inventory by ID
+                    $res = InventoryModel::updateInventoryById($user_id,$id,[
                         'inventory_name' => $request->inventory_name, 
                         'inventory_category' => $request->inventory_category, 
                         'inventory_desc' => $request->inventory_desc, 
@@ -887,15 +918,14 @@ class Commands extends Controller
                         'inventory_vol' => $request->inventory_vol, 
                         'inventory_capacity_unit' => $request->inventory_capacity_unit, 
                         'inventory_capacity_vol' => $request->inventory_capacity_vol, 
-                        'is_favorite' => $request->is_favorite, 
-                        'created_at' => $request->created_at,
-                        'updated_at' => date('Y-m-d H:i:s')
+                        'created_at' => $request->created_at
                     ]);
 
                     if($res){
-                        // History
+                        // Create history
                         Audit::createHistory('Update', $request->inventory_name, $user_id);
                         
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
                             'message' => "inventory '$request->inventory_name' is updated",
@@ -925,7 +955,7 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/inventory/edit_layout/{id}",
-     *     summary="Update inventory layout by id",
+     *     summary="Put Update Inventory Layout By ID",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -983,6 +1013,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateInventory($request,'update_layout');
             if ($validator->fails()) {
                 return response()->json([
@@ -1008,11 +1039,14 @@ class Commands extends Controller
                         ]);
                         
                         Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
+                        
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", "inventory layout updated and impacted to $rows_inventory inventory"),
                         ], Response::HTTP_OK);
                     } else {
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", "inventory layout updated. but nothing has changed"),
@@ -1036,7 +1070,7 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/inventory/layout",
-     *     summary="Post inventory layout",
+     *     summary="Post Create Inventory Layout",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -1078,6 +1112,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateInventory($request,'create_layout');
             if ($validator->fails()) {
                 return response()->json([
@@ -1111,6 +1146,7 @@ class Commands extends Controller
                         
                         if($rows_layout > 0){
                             $is_success = true;
+                            // Create history
                             Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
                         }
                     } else {
@@ -1119,8 +1155,11 @@ class Commands extends Controller
                         if($rows_layout){
                             $is_success = true;
 
+                            // Create history
                             Audit::createHistory('Create Storage', $request->inventory_storage, $user_id);
+                            
                             $user = UserModel::getSocial($user_id);
+                            
                             $message = "inventory storage has been created, its called '$request->inventory_storage'";
                             if($user->firebase_fcm_token){
                                 $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
@@ -1140,6 +1179,7 @@ class Commands extends Controller
                     }
                     
                     if($is_success){
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("create", 'inventory layout coordinate'),
@@ -1163,7 +1203,7 @@ class Commands extends Controller
     /**
      * @OA\DELETE(
      *     path="/api/v1/inventory/delete_layout/{id}/{coor}",
-     *     summary="Delete inventory layout",
+     *     summary="Hard Delete Inventory Layout",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -1256,6 +1296,7 @@ class Commands extends Controller
             }
             
             if($is_success){
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("custom", "inventory layout coordinate deleted$extra_msg"),

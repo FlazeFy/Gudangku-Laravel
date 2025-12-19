@@ -13,11 +13,17 @@ use App\Helpers\Generator;
 
 class Queries extends Controller
 {
+    private $module;
+    public function __construct()
+    {
+        $this->module = "history";
+    }
+
     /**
      * @OA\GET(
      *     path="/api/v1/history",
-     *     summary="Get all history",
-     *     description="This request is used to get all history when user use the App. This request is using MySql database, have a protected routes, and have template pagination.",
+     *     summary="Get All History",
+     *     description="This request is used to get all history when user use the App. This request interacts with the MySQL database, has a protected routes, and has a pagination.",
      *     tags={"History"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -69,9 +75,10 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
             $paginate = $request->query('per_page_key') ?? 12;
 
+            // Define user id by role
+            $check_admin = AdminModel::find($user_id);
             if($check_admin){
                 $user_id = $request->query('user_id') ?? null;
                 $res = HistoryModel::getAllHistory('admin', $user_id, $paginate);
@@ -80,6 +87,7 @@ class Queries extends Controller
             }
             
             if (count($res) > 0) {
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'history'),

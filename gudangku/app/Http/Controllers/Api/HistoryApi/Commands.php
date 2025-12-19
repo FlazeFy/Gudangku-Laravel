@@ -13,10 +13,17 @@ use App\Helpers\Generator;
 
 class Commands extends Controller
 {
+    private $module;
+    public function __construct()
+    {
+        $this->module = "history";
+    }
+
     /**
      * @OA\DELETE(
      *     path="/api/v1/history/destroy/{id}",
-     *     summary="Delete history by id",
+     *     summary="Hard Delete History By ID",
+     *     description="This request is used to permanently delete a system history based on the provided `ID`. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"History"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -66,21 +73,22 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            }
+            $user_id = $check_admin ? null : $user_id;
 
+            // Hard Delete history by ID
             $rows = HistoryModel::hardDeleteHistory($id, $user_id);
             if($rows > 0){
+                // Return response code
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("permentally delete", 'history'),
+                    'message' => Generator::getMessageTemplate("permentally delete", $this->module),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'history'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
