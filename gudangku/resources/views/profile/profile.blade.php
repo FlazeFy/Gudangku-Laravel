@@ -1,10 +1,10 @@
 <form id="profile-form">
     <div id="login_status_box"></div>
     <label>Username</label>
-    <input type="text" name="username" id="username_input" onkeydown="return submitOnEnter(event)" class="form-control"/><br>
+    <input type="text" name="username" id="username_input" onkeydown="return submitOnEnter(event)" class="form-control"/>
     <label>Email</label>
-    <input type="email" name="email" id="email_input" onkeydown="return submitOnEnter(event)" class="form-control"/><br>
-    <div class="row align-items-center">
+    <input type="email" name="email" id="email_input" onkeydown="return submitOnEnter(event)" class="form-control"/>
+    <div class="row align-items-center mt-3">
         <div class="col-md-6 col-sm-12">
             <p class="fst-italic text-secondary mb-0">Joined since <span id="created_at_holder"></span></p>
         </div>

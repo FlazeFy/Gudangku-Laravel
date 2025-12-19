@@ -1,6 +1,6 @@
 <div class="container-form">
     <form id="add_inventory">
-        <h2 class="mt-3">Inventory Detail</h2><hr>
+        <h2>Inventory Detail</h2><hr>
         <div class="row">
             <div class="col-lg-6 col-md-6">
                 <input type="text" name="inventory_name" id='inventory_name' class="form-control form-validated mb-2" maxlength="75"/>

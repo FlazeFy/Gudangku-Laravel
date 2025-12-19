@@ -52,7 +52,7 @@
 
 <div class="container-form">
     <form id="add_report">
-        <h2 class="mt-3">Report Detail</h2><hr>
+        <h2>Report Detail</h2><hr>
         <div class="row">
             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
                 <label>Title</label>

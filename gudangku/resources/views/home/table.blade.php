@@ -56,8 +56,10 @@
                     if (el.deleted_at != null) {
                         styletr = `style="background:rgba(221, 0, 33, 0.15);"`
                     }
+                    const idCollapse = el.reminder ? `collapseReminder-${el.id}` : null
+
                     if(el.reminder){
-                        reminders += `<tr style="border-style: hidden !important;"><td colspan="5">`
+                        reminders += `<tr class="collapse" id="${idCollapse}" style="border-style: hidden !important;"><td colspan="5">`
                         el.reminder.forEach(rm => {
                             reminders += `
                                 <div class="box-reminder mb-3">
@@ -145,30 +147,33 @@
                                 ${el.is_favorite ? `<span class='bg-success rounded-pill px-3 py-1 favorite-status'><i class="fa-solid fa-bookmark" title="Favorite"></i> Favorite</span>` : ''}
                                 <h6 class='mt-2 inventory-name' style='font-size:var(--textLG); font-weight:600;'>${el.inventory_name}</h6>
                                 <hr class='my-2'>
-                                <h6 class='fw-bold mt-2'>Description</h6>
-                                <p class='inventory-desc'>${el.inventory_desc || '-'}</p>
+                                <h6 class='mt-2'>Description</h6>
+                                <p class='inventory-desc'>${el.inventory_desc || '<span class="no-data-message">- No Description Provided -<span>'}</p>
                                 ${role == 1 ? `
-                                    <h6 class='fw-bold mt-2'>Created By</h6>
+                                    <h6 class='mt-2'>Created By</h6>
                                     <p>@${el.username}</p>
                                 ` : ''}
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
-                                <h6 class='fw-bold'>Category</h6>
+                                <h6>Category</h6>
                                 <p class='inventory-category'>${el.inventory_category}</p>
-                                <h6 class='fw-bold mt-2'>Merk</h6>
+                                <h6 class='mt-2'>Merk</h6>
                                 <p class='inventory-merk'>${el.inventory_merk || '-'}</p>
                             </td>
                             <td ${el.reminder ? 'rowspan="2"' : ''}>
-                                <h6 class='fw-bold'>Room</h6>
+                                <h6>Room</h6>
                                 <p class='inventory-room'>${el.inventory_room}</p>
-                                <h6 class='fw-bold mt-2'>Storage</h6>
+                                <h6 class='mt-2'>Storage</h6>
                                 <p class='inventory-storage'>${el.inventory_storage ?? '-'}</p>
-                                <h6 class='fw-bold mt-2'>Rack</h6>
-                                <p class='inventory-rack mb-0'>${el.inventory_rack ?? '-'}</p>
+                                ${el.inventory_rack ? `
+                                    <h6 class='mt-2'>Rack</h6>
+                                    <p class='inventory-rack mb-0'>${el.inventory_rack ?? '-'}</p>
+                                    `:''
+                                }
                             </td>
-                            <td ${el.reminder ? 'rowspan="2"' : ''}>Rp. ${el.inventory_price ? number_format(el.inventory_price, 0, ',', '.') : '-'}</td>
-                            <td ${el.reminder ? 'rowspan="2"' : ''}>${el.inventory_vol} ${el.inventory_unit}</td>
-                            <td ${el.reminder ? 'rowspan="2"' : ''}>
+                            <td ${el.reminder ? 'rowspan="2"' : ''} class="text-center">Rp. ${el.inventory_price ? number_format(el.inventory_price, 0, ',', '.') : '-'}</td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''} class="text-center">${el.inventory_vol} ${el.inventory_unit === 'Kilogram' ? 'Kg':el.inventory_unit}</td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''} class="text-center">
                                 ${el.inventory_capacity_unit === 'percentage' ? `${el.inventory_capacity_vol}%` : '-'}
                             </td>
                             <td>
@@ -179,16 +184,22 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title fw-bold">Properties</h5>
+                                                <h5 class="modal-title">Properties</h5>
                                                 <button type="button" class="btn btn-danger btn-close" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">
-                                                <h6 class='fw-bold'>Created At</h6>
-                                                <p class="mb-0">${getDateToContext(el.created_at,'calendar')}</p>
-                                                <h6 class='fw-bold mt-2'>Updated At</h6>
-                                                <p class="mb-0">${el.updated_at ? getDateToContext(el.updated_at,'calendar') : '-'}</p>
-                                                <h6 class='fw-bold mt-2'>Deleted At</h6>
-                                                <p class="mb-0">${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</p>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <h6>Created At</h6>
+                                                        <p>${getDateToContext(el.created_at,'calendar')}</p>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <h6>Updated At</h6>
+                                                        <p>${el.updated_at ? getDateToContext(el.updated_at,'calendar') : '-'}</p>
+                                                    </div>
+                                                </div>
+                                                <h6>Deleted At</h6>
+                                                <p>${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</p>
                                                 <div class="alert alert-primary mt-3" role="alert">
                                                     <h6 class='fw-bold' style="font-size:var(--textXLG);"><i class="fa-solid fa-circle-info"></i> For Your Information</h6>
                                                     <p class='mt-2 mb-0'><b class="text-primary">${el.inventory_name}</b> is been existed in your inventory for about <b>${count_time(el.created_at,null)}</b></p>
@@ -257,12 +268,15 @@
                                             </div>
                                         </div>` : ''}
                                     </div>
-                                    <div class='col p-0 ps-1'>
-                                        <button class="btn btn-success ${el.reminder && "bg-success border-0"} w-100 btn-reminder">
-                                            <i class="fa-solid ${el.reminder ? "fa-bell" : "fa-bell-slash"}" style="font-size:var(--textXLG);"></i>
-                                        </button>
-                                        ${reminders}
-                                    </div>
+                                    ${idCollapse ? `
+                                        <div class='col p-0 ps-1'>
+                                            <button class="btn btn-success ${el.reminder && "bg-success border-0"} w-100 btn-reminder" data-bs-toggle="collapse" href="#${idCollapse}">
+                                                <i class="fa-solid ${el.reminder ? "fa-bell" : "fa-bell-slash"}" style="font-size:var(--textXLG);"></i>
+                                            </button>
+                                            ${reminders}
+                                        </div>
+                                        `:''
+                                    }
                                 </div>
                             </td>
                         </tr>

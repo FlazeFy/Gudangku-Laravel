@@ -1,3 +1,6 @@
+a {
+    text-decoration: none;
+}
 a, label, h1, h2, h3, h4, h5, h6, p, table {
     color: var(--whiteColor) !important;
 }
@@ -15,6 +18,8 @@ span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hov
     border: 2px solid var(--primaryColor);
     color: var(--whiteColor);
 }
+
+/* Form */
 label, .form-label {
     font-weight: 600 !important;
     margin-bottom: var(--spaceXSM);
@@ -24,15 +29,35 @@ label, .form-label {
     color: var(--greyColor) !important;
     font-style: italic;
 }
+.text-secondary, .form-text {
+    color: var(--greyColor) !important;
+}
+
+/* Section Title */
 .main-page-title {
     font-weight: bold;
     margin-bottom: 0;
     font-size: calc(var(--textXJumbo)*1.75);
 }
-.text-secondary, .form-text {
-    color: var(--greyColor) !important;
+@media screen and (max-width: 1023px) {
+    .main-page-title {
+        font-size: var(--textXJumbo);
+    }
 }
+.title-chart {
+    font-weight: bold;
+    text-align: center;
+    font-size: var(--spaceLG);
+    margin-bottom: var(--spaceMD);
+}
+.modal-content h2 {
+    font-weight: 600;
+}
+
 /* Table */
+table tr {
+    word-break: break-word;
+}
 thead th {
     vertical-align: middle;
     text-align: center;
@@ -47,28 +72,24 @@ table th {
 table tr:hover {
     background-color: rgba(131, 129, 129, 0.15);
 }
+
+/* List */
 li::marker {
     color: white !important;
     font-size: 1.5em !important; 
 }
 
+/* Footer */
 footer {
     color: var(--whiteColor) !important;
 }
 
-/* Mobile & Tablet style */
-@media screen and (max-width: 1023px) {
-    .main-page-title {
-        font-size: var(--textXJumbo);
-    }
-}
+/* Feature Box */
 .props-box {
     font-size: var(--textMD) !important;
 }
-
 .no-data-message {
     font-style: italic;
     color: var(--greyColor) !important;
-    text-align: center;
     display: block;
 }

@@ -1,0 +1,95 @@
+/* Container, Feature Box */
+.container, .container-fluid {
+    border-radius: var(--roundedMD);
+    margin-top: var(--spaceMD);
+}
+.container.bordered {
+    border: 1.5px solid var(--whiteColor);
+    padding: var(--spaceXMD);
+}
+.container-light {
+    border: 1.5px solid var(--whiteColor);
+    border-radius: var(--roundedLG);
+    padding: var(--spaceMD);
+}
+.alert {
+    border-radius: var(--roundedLG);
+    margin: 0;
+    padding: var(--spaceXMD);
+    border: 1.5px solid var(--whiteColor);
+}
+@media (max-width: 575px) {
+    .alert {
+        padding: var(--spaceMD);
+    }
+}
+.alert-primary {
+    background: var(--infoBG);
+}
+.box-reminder,.box-danger  {
+    padding: var(--spaceMD);
+    border-radius: var(--roundedMD);
+}
+.box-danger {
+    background-color:rgba(221, 0, 33, 0.2);
+}
+.box-reminder {
+    background-color:rgba(0, 195, 99, 0.2);
+}
+.box-reminder p, .box-reminder h5 {
+    font-size: var(--textMD);
+}
+.control-panel {
+    z-index:997;
+    width: 100%;
+    background: var(--darkColor);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.report-box {
+    border: 2px solid var(--primaryColor);
+    padding: var(--spaceLG);
+    border-radius: var(--roundedLG);
+    width: 100%;
+    text-align: start;
+    margin-bottom: var(--spaceMD);
+}
+@media (min-width: 576px) and (max-width: 767px) {
+    .report-box {
+        padding: var(--spaceXMD);
+        border: 1.75px solid var(--primaryColor);
+    }
+}
+@media (max-width: 575px) {
+    .report-box {
+        padding: var(--spaceMD);
+        border: 1.5px solid var(--primaryColor);
+    }
+}
+
+/* Modal */
+.modal {
+    margin-top: 5vh;
+}
+@media screen and (max-width: 1023px) {
+    .modal {
+        margin-top: 10vh;
+    }
+}
+.modal-content, .swal2-popup, .popover {
+    border-radius: var(--roundedJumbo) !important;
+    background: var(--darkColor);
+    border: 1.75px solid var(--primaryColor);
+    color: var(--whiteColor);
+    box-shadow: rgba(59, 130, 246, 0.35) 0px 6px 17px;
+}
+.popover{
+    max-width: 360px !important;
+}
+.popover .popover-header {
+    background: transparent;
+    margin-top: var(--spaceMD);
+    margin-bottom: 0 !important;
+    font-weight: bold;
+    padding-bottom: 0;
+    font-size: var(--spaceXMD);
+}

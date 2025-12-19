@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between">
-    <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Report</h6>
+    <h2>Report</h2>
     <span id="add_report-holder"></span>
 </div>
 <div id="report_holder"></div>

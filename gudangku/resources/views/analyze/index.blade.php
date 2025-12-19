@@ -7,17 +7,6 @@
 @php($isMobile = Generator::isMobileDevice())  
 
 @section('content')
-    <style>
-        p {
-            font-size:var(--textLG);
-            font-weight:500;
-        }
-        h3 {
-            font-size:var(--textXJumbo);
-            font-weight:bold;
-            margin-bottom:var(--spaceMD);
-        }
-    </style>
     <link rel="stylesheet" href="{{ asset('/room_v1.0.css') }}"/>
 
     <div class="content">
@@ -27,8 +16,8 @@
                 <h3 class="mb-0"><b class='inventory_name text-primary'></b></h3>
             </div>
             <div style="min-width:120px;">
-                @include('others.profile')
-                @include('others.notification')
+                @include('components.profile')
+                @include('components.notification')
             </div>
         </div>
         <hr>

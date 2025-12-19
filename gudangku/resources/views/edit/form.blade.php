@@ -1,5 +1,5 @@
 <form class="container-form" id="form_edit_inventory">
-    <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Inventory Detail</h6>
+    <h2>Inventory Detail</h2>
     <div class="row">
         <div class="col-lg-6 col-md-6">
             <label>Name</label>
@@ -80,7 +80,7 @@
 
 <div class="container-form">
     <div class="d-flex justify-content-between">
-        <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Reminder</h6>
+        <h2>Reminder</h2>
         <span id="add_reminder-holder"></span>
     </div>
     <div id='reminder_holder'></div>

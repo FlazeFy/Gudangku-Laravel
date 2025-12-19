@@ -7,7 +7,7 @@ label {
     font-size: var(--textLG);
 }
 input, button, .btn, textarea, select{
-    padding: var(--spaceMD) !important;
+    padding: var(--spaceMD);
     background: transparent;
     color: var(--whiteColor) !important;
     border-radius: var(--roundedLG) !important;
@@ -54,17 +54,22 @@ input, textarea, select{
     .container-form, .btn-page-holder, .control-panel {
         padding: var(--spaceXMD);
         border: 1.5px solid var(--whiteColor);
+        margin-bottom: var(--spaceXLG);
     }
 }
 @media (max-width: 575px) {
     .container-form, .btn-page-holder, .control-panel {
         padding: var(--spaceMD);
         border: 1.25px solid var(--whiteColor);
+        margin-bottom: var(--spaceLG);
     }
 }
 
 input:focus {
     background: transparent !important;
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 
 /* Input File */

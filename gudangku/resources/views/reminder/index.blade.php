@@ -12,8 +12,8 @@
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="main-page-title">Reminder Mark</h1>
             <div>
-                @include('others.profile')
-                @include('others.notification')
+                @include('components.profile')
+                @include('components.notification')
             </div>
         </div>
         <hr>

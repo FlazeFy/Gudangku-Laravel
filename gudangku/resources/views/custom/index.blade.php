@@ -14,8 +14,8 @@
                 <h3 class="mb-0">{{ucfirst($type)}}</h3>
             </div>
             <div>
-                @include('others.profile')
-                @include('others.notification')
+                @include('components.profile')
+                @include('components.notification')
             </div>
         </div>
         <hr>

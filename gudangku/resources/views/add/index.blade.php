@@ -9,8 +9,8 @@
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="main-page-title">Add Inventory</h1>
             <div>
-                @include('others.profile')
-                @include('others.notification')
+                @include('components.profile')
+                @include('components.notification')
             </div>
         </div>
         <hr>  

@@ -9,8 +9,8 @@
 
 @section('content')
     <div class="content">
-        @include('others.profile')
-        @include('others.notification')
+        @include('components.profile')
+        @include('components.notification')
         <h1 class="main-page-title">My Inventory</h1>
         <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
         <a class="btn btn-primary mb-3 me-2" href="/inventory/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Inventory</a>

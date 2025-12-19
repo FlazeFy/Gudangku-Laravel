@@ -1,5 +1,5 @@
-<div class="d-flex justify-content-between">
-    <label class="mt-3">Telegram User ID</label>
+<div class="d-flex justify-content-between mb-2 align-items-center">
+    <label>Telegram User ID</label>
     <span id="label-validate-holder"></span>
     <span id="update-tele-holder" style="display:none;"></span>
 </div>
@@ -37,7 +37,7 @@
                 $("#update-tele-holder").css({
                     'display':'block'
                 }).empty().append(`
-                    <a type="button" class="btn btn-primary" onclick="validate_telegram_change()" data-bs-toggle="modal" data-bs-target="#updateTelegramIdModal"><i class="fa-solid fa-pen-to-square"></i> Update Telegram ID</a>
+                    <a type="button" class="btn btn-primary py-1" onclick="validate_telegram_change()" data-bs-toggle="modal" data-bs-target="#updateTelegramIdModal"><i class="fa-solid fa-pen-to-square"></i> Update Telegram ID</a>
                     <div class="modal fade" id="updateTelegramIdModal" tabindex="-1" aria-labelledby="updateTelegramIdModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">

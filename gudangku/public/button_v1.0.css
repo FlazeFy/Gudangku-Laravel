@@ -8,6 +8,8 @@ button:hover, .btn:hover {
 .btn-primary {
     background: var(--darkColor) !important;
 }
+
+/* Feature Button */
 .btn-feature {
     cursor: pointer;
     text-align: center;
@@ -29,6 +31,7 @@ button:hover, .btn:hover {
     box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
     border: calc(var(--spaceMini) / 2) solid var(--primaryColor) !important;
 }
+
 /* Image */
 .btn-image {
     padding: 0 !important;
@@ -43,7 +46,8 @@ button:hover, .btn:hover {
     margin: 0;
     border-radius: var(--roundedMD) !important;
 }
-/* Pagination generator */
+
+/* Pagination */
 .btn-page-holder {
     display: flex;
     flex-wrap: wrap;
@@ -67,10 +71,16 @@ button:hover, .btn:hover {
     margin-bottom: var(--spaceLG);
     background: var(--darkColor);
 }
+
+/* Nav */
 .btn-link {
     text-decoration: none !important;
     color: var(--primaryColor);
 }
+#nav_scroll-holder button {
+    font-size: var(--textXMD);
+}
+
 /* Pagination */
 .paginate_button .page-link {
     background: transparent !important;
@@ -81,7 +91,6 @@ button:hover, .btn:hover {
     background: var(--primaryColor) !important;
 }
 
-/* Mobile & Tablet style */
 @media screen and (max-width: 1023px) {
     .btn-main.top, .btn-main.bottom{
         position: fixed;

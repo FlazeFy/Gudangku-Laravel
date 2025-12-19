@@ -63,7 +63,7 @@
                                         <span class="bg-success text-white rounded-pill px-3 py-2 report-category">${el.report_category}</span>
                                     </div>
                                 </div>
-                                ${el.report_desc ? `<p>${el.report_desc}</p>` : `<p class="no-data-message text-start">- No Description Provided -</p>`}
+                                ${el.report_desc ? `<p>${el.report_desc}</p>` : `<p class="no-data-message">- No Description Provided -</p>`}
                                 <br>
                                 <h6>Items : </h6>
                                 <div class='d-flex justify-content-start mt-2 report-items'>${el.report_items ?? '<span class="text-secondary fst-italic mt-2">- No Items Found -</span>'}</div>

@@ -13,7 +13,7 @@
             <h1 class="main-page-title">My Profile</h1>
             <div>
                 @include('profile.sign_out')
-                @include('others.notification')
+                @include('components.notification')
             </div>
         </div>
         <hr>

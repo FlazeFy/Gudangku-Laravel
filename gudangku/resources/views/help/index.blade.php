@@ -9,8 +9,8 @@
 @section('content')
     <div class="content">
         @if(session()->get("token_key"))
-            @include('others.profile')
-            @include('others.notification')
+            @include('components.profile')
+            @include('components.notification')
         @endif
         <h1 class="main-page-title">Help</h1>
         <div class="d-flex justify-content-<?php if(!$isMobile){ echo "start"; } else { echo "end"; } ?>">
