@@ -14,8 +14,33 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Sign in to the Apps",
-                "operationId": "26ae6f7a2668f358293a502309985206",
+                "summary": "Post Login (Basic Auth)",
+                "description": "This authentication request is used to access the application and obtain an authorization token for accessing all protected APIs. This request interacts with the MySQL database.",
+                "operationId": "c313af52425c515aed59e62cb41e35cb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "flazefy"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "nopass123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "login successfully",
@@ -156,13 +181,13 @@
             }
         },
         "/api/v1/logout": {
-            "get": {
+            "post": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Sign out from Apps",
-                "description": "This request is used to get sign out from the Apps (sign out from the session). This request is using MySql database, and have a protected routes.",
-                "operationId": "8859fad6cbeb2081a7611f5b944b4630",
+                "summary": "Post Log Out",
+                "description": "This authentication request is used to sign out from application or reset current session. This request interacts with the MySQL database.",
+                "operationId": "d0674a59369a9381c3b1913d665ec2fe",
                 "responses": {
                     "200": {
                         "description": "Logout success",
@@ -237,13 +262,14 @@
                 "tags": [
                     "Dictionary"
                 ],
-                "summary": "Delete dictionary by id",
-                "operationId": "94583b591fc7e23ec7439dce49b57f64",
+                "summary": "Delete Dictionary By ID",
+                "description": "This request is used to permanently delete a dictionary entry based on the provided `ID`. This request interacts with the MySQL database, and have a protected routes.",
+                "operationId": "25d7fe2b0417deefbeb7998921a48ffe",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "dictionary ID",
+                        "description": "Dictionary ID",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -365,9 +391,33 @@
                 "tags": [
                     "Dictionary"
                 ],
-                "summary": "Post dictionary",
-                "description": "Create a new dictionary using the given name and category. This request is using MySQL database.",
-                "operationId": "79c44bfafbba7c5f26183942072c5dbb",
+                "summary": "Post Create Dictionary",
+                "description": "This request is used to created a dictionary by using given `dictionary_type`, and `dictionary_name`. This request interacts with the MySQL database, and have a protected routes.",
+                "operationId": "6577d5dad15a6096cca1f0954f5794e0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "dictionary_type",
+                                    "dictionary_name"
+                                ],
+                                "properties": {
+                                    "dictionary_type": {
+                                        "type": "string",
+                                        "example": "trip_category"
+                                    },
+                                    "dictionary_name": {
+                                        "type": "string",
+                                        "example": "test category"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Dictionary created successfully",
@@ -489,9 +539,9 @@
                 "tags": [
                     "Dictionary"
                 ],
-                "summary": "Get dictionary by type",
-                "description": "This request is used to get dictionary by type. Can be multiple dictionary type if separate using `,`. This request is using MySql database",
-                "operationId": "6d288a61d84cc02cf8edd8417d8b36f8",
+                "summary": "Get Dictionary By Type",
+                "description": "This request is used to get dictionary by its `dictionary_type`, that can be inventory_category, inventory_room, inventory_unit, report_category, or inventory_capacity_unit. This request interacts with the MySQL databases.",
+                "operationId": "c6cd36c8c3508387249c596947b82e6f",
                 "parameters": [
                     {
                         "name": "type",
@@ -506,7 +556,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "dictionary fetched",
+                        "description": "Dictionary fetched successfully. Ordered in ascending order by `dictionary_type` and `dictionary_name`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -585,8 +635,9 @@
                 "tags": [
                     "Error"
                 ],
-                "summary": "Delete error by id",
-                "operationId": "cebb279c5d0f0f7e53c5563ec1612044",
+                "summary": "Hard Delete Error By ID",
+                "description": "This request is used to permanently delete an error history based on the provided `ID`. However, it will also search for all errors with the same `message` and delete them. This request interacts with the MySQL database, and has a protected routes (Admin only).",
+                "operationId": "79ffb8a9e5e2cf116445bb978339ab9a",
                 "parameters": [
                     {
                         "name": "id",
@@ -693,12 +744,12 @@
                 "tags": [
                     "Error"
                 ],
-                "summary": "Get all error history",
-                "description": "This request is used to get all error history recorded. This request is using MySql database, have a protected routes, and have template pagination.",
-                "operationId": "bf33aba81463d0c5fa3c23cfacc409aa",
+                "summary": "Get All Error",
+                "description": "This request is used to get all error audit. This request interacts with the MySQL database, has a protected routes (Admin only), and a pagination.",
+                "operationId": "febe4acefbf67eaa9f1333612bd1863f",
                 "responses": {
                     "200": {
-                        "description": "history fetched",
+                        "description": "Error fetched successfully. Ordered in ascending order by `created_at`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -837,7 +888,7 @@
                     "History"
                 ],
                 "summary": "Delete history by id",
-                "operationId": "b777472bb6f3263bd117c26cfecd4dd4",
+                "operationId": "4d5036ffd8580da35bf9d00c5d2c6050",
                 "parameters": [
                     {
                         "name": "id",
@@ -946,7 +997,7 @@
                 ],
                 "summary": "Get all history",
                 "description": "This request is used to get all history when user use the App. This request is using MySql database, have a protected routes, and have template pagination.",
-                "operationId": "0f4b533e7eecea6a89a6388545c72dd8",
+                "operationId": "b51b619e3c45ec6458bcca590a3a70e8",
                 "responses": {
                     "200": {
                         "description": "history fetched",
@@ -1076,7 +1127,7 @@
                     "Inventory"
                 ],
                 "summary": "Soft delete inventory by id",
-                "operationId": "d65b6267122c2410dff781b1461cae47",
+                "operationId": "4ed1755d8f77358138dfc7ba5b8b879c",
                 "parameters": [
                     {
                         "name": "id",
@@ -1179,12 +1230,12 @@
             }
         },
         "/api/v1/inventory/edit_image/{id}": {
-            "put": {
+            "post": {
                 "tags": [
                     "Inventory"
                 ],
                 "summary": "Edit inventory image by id",
-                "operationId": "dc13b76471a2a85fec8a5770f52cfd53",
+                "operationId": "46f0b8d4f240dc8307f5eddb138cf889",
                 "parameters": [
                     {
                         "name": "id",
@@ -1312,7 +1363,7 @@
                     "Inventory"
                 ],
                 "summary": "Hard delete inventory by id",
-                "operationId": "ae5f98a956e96b3d5bae34c2deeecc7f",
+                "operationId": "344d7c237f1e008bee49ac4e624c2e10",
                 "parameters": [
                     {
                         "name": "id",
@@ -1420,7 +1471,7 @@
                     "Inventory"
                 ],
                 "summary": "Toogle favorite inventory by id",
-                "operationId": "dffa279787dd7b1382bd1a05d2d5f0ca",
+                "operationId": "81906bbe568dc9307d76a94b18463c38",
                 "parameters": [
                     {
                         "name": "id",
@@ -1528,7 +1579,7 @@
                     "Inventory"
                 ],
                 "summary": "Recover inventory by id",
-                "operationId": "6e035ca103c77ff0b063ef9ade841f95",
+                "operationId": "c2f1bcc0e4bdf1411d89ffdd729a1fe0",
                 "parameters": [
                     {
                         "name": "id",
@@ -1637,7 +1688,7 @@
                 ],
                 "summary": "Get all inventory",
                 "description": "This request is used to get all inventory data. This request is using MySql database, has protected routes, and supports pagination.",
-                "operationId": "72cde67a8149d3cf2ca3da99f4ba6f8b",
+                "operationId": "ba8b3005bed7008380df0cdd8724f8f3",
                 "responses": {
                     "200": {
                         "description": "inventory fetched",
@@ -1847,7 +1898,7 @@
                     "Inventory"
                 ],
                 "summary": "Create inventory",
-                "operationId": "1331e3da20b1fb761c3225c7c994df88",
+                "operationId": "4674b1921101b03eb103dc6acea8108b",
                 "responses": {
                     "201": {
                         "description": "inventory created",
@@ -1963,7 +2014,7 @@
                     "Inventory"
                 ],
                 "summary": "Update inventory By Id",
-                "operationId": "184a8e256064c66ebd611786134c034d",
+                "operationId": "f0c25c0ad9d2e40518e20e7845e4e3ee",
                 "responses": {
                     "200": {
                         "description": "inventory updated",
@@ -2079,7 +2130,7 @@
                     "Inventory"
                 ],
                 "summary": "Update inventory layout by id",
-                "operationId": "bd5ddb16fd44194f530b68bf1bc479cf",
+                "operationId": "18c8436a761d4d03ebe1246ce3ea5a72",
                 "parameters": [
                     {
                         "name": "id",
@@ -2207,7 +2258,7 @@
                     "Inventory"
                 ],
                 "summary": "Post inventory layout",
-                "operationId": "301030d32cd3c3ee9b3a5ec047594e5e",
+                "operationId": "722adb50f0a52461825fd86cb9350b2e",
                 "responses": {
                     "201": {
                         "description": "inventory layout coordinate created",
@@ -2303,7 +2354,7 @@
                     "Inventory"
                 ],
                 "summary": "Delete inventory layout",
-                "operationId": "ae80b67dad513d00fbb6277ca9ad5095",
+                "operationId": "829413fefcd37183ef16c8bae3c96f02",
                 "responses": {
                     "200": {
                         "description": "inventory layout coordinate deleted",
@@ -2380,7 +2431,7 @@
                 ],
                 "summary": "Get list inventory",
                 "description": "This request is used to get all inventory data but in shot format for selection. This request is using MySql database, and has protected routes",
-                "operationId": "cf662e6cbceaa6dd82ec4154ff84057d",
+                "operationId": "4768e6fde3cee55d3f6502ed00444621",
                 "responses": {
                     "200": {
                         "description": "inventory fetched",
@@ -2501,7 +2552,7 @@
                 ],
                 "summary": "Get inventory as calendar format",
                 "description": "This request is used to get all inventory data but in calendar format. This request is using MySql database, and has protected routes",
-                "operationId": "2db05fcbb4f2038bd4d17acd939bf5d5",
+                "operationId": "965986adf81e0a64e0ea67f68b036cb1",
                 "responses": {
                     "200": {
                         "description": "inventory fetched",
@@ -2623,7 +2674,7 @@
                 ],
                 "summary": "Get inventory room",
                 "description": "This request is used to get all inventory room. This request is using MySql database, and has protected routes",
-                "operationId": "f8e78db937554a9da1f9d3efad054fac",
+                "operationId": "01dad4018d5d7e6320e0eeb4bf31299a",
                 "responses": {
                     "200": {
                         "description": "inventory fetched",
@@ -2732,7 +2783,7 @@
                 ],
                 "summary": "Get inventory layout by room",
                 "description": "This request is used to get inventory layout to show storage by room. This request is using MySql database, and has protected routes",
-                "operationId": "ccf4f45e46de0d504d18be3f7a68ad7f",
+                "operationId": "b1031d93a4fd7ef5e6d372e9afc525a1",
                 "parameters": [
                     {
                         "name": "room",
@@ -2865,7 +2916,7 @@
                 ],
                 "summary": "Get inventory in storage",
                 "description": "This request is used to get all inventory data in layout page. This request is using MySql database, and has protected routes",
-                "operationId": "538429ed92457a5e9731a5e8b5f0c572",
+                "operationId": "e4d2f57f2dbe6abd765e8d25b682daa9",
                 "parameters": [
                     {
                         "name": "room",
@@ -3016,7 +3067,7 @@
                 ],
                 "summary": "Get inventory detail",
                 "description": "Fetch inventory details and reminders by the given inventory's `id`. This request uses a MySQL database and requires authentication with a protected route.",
-                "operationId": "5e02e110b3ba4e5334cfa9d4eff6281a",
+                "operationId": "29aef768ceea735f87633baef0200b64",
                 "parameters": [
                     {
                         "name": "id",
@@ -3246,7 +3297,7 @@
                 ],
                 "summary": "Get inventory detail html format by id",
                 "description": "This request is used to get inventory detail html format for document generate. This request is using MySQL database, and has protected routes.",
-                "operationId": "5dee1199250f2019993360b86e3955dd",
+                "operationId": "f7faa7d141966e95e2d1b5d746b39915",
                 "parameters": [
                     {
                         "name": "id",
@@ -3359,7 +3410,7 @@
                 ],
                 "summary": "Get room layout html format by id",
                 "description": "This request is used to get room layout html format for document generate. This request is using MySQL database, and has protected routes.",
-                "operationId": "e18d00f2d972674816715f288776385b",
+                "operationId": "2f5a2885248c5672dabea5b0b7616149",
                 "parameters": [
                     {
                         "name": "id",
@@ -3472,7 +3523,7 @@
                 ],
                 "summary": "Get analyze data of inventory by id",
                 "description": "This request is used to get analyze data of inventory. This request is using MySQL database, and has protected routes.",
-                "operationId": "08cb649c09363567a1580cd526190c30",
+                "operationId": "2803a16397d82eb3c835795682a36506",
                 "parameters": [
                     {
                         "name": "id",
@@ -3782,7 +3833,7 @@
                     "Lend"
                 ],
                 "summary": "Create lend QR",
-                "operationId": "9bf37bf370c9fdb0889e8d1fe0d44ef8",
+                "operationId": "8658940c0d0d6f8eb30755835faa746a",
                 "responses": {
                     "201": {
                         "description": "lend created",
@@ -3899,7 +3950,7 @@
                 ],
                 "summary": "Get lend inventory",
                 "description": "This request is used to get lend inventory by lend id (QR Code). This request is using MySQL database, and has protected routes.",
-                "operationId": "be3b68c7289d41e6fa46a4385c33d4f7",
+                "operationId": "cc5691eb1f7281d39e8accede1aae315",
                 "responses": {
                     "200": {
                         "description": "lend inventory fetched",
@@ -4085,7 +4136,7 @@
                     "Lend"
                 ],
                 "summary": "Create request borrow",
-                "operationId": "5c1edd5ad056072b8a66098e2f405b24",
+                "operationId": "40a2da24615cf414820905ac4fe5a214",
                 "responses": {
                     "201": {
                         "description": "borrow created",
@@ -4205,7 +4256,7 @@
                     "Lend"
                 ],
                 "summary": "Update Returned Status Of Lend Inventory",
-                "operationId": "227474d972f3722f8901ce7f2fd56d7c",
+                "operationId": "4bf3ff93e3369e875fbd028ffb53c25a",
                 "responses": {
                     "200": {
                         "description": "lend created",
@@ -4302,7 +4353,7 @@
                 ],
                 "summary": "Get active qr code",
                 "description": "This request is used to get active qr code. This request is using MySQL database, and has protected routes.",
-                "operationId": "029e54323b95a830c4b34ccde6c4d1be",
+                "operationId": "54523e2886fa42b5d8747fd30b5f2b24",
                 "responses": {
                     "200": {
                         "description": "lend qr code fetched",
@@ -4476,7 +4527,7 @@
                 ],
                 "summary": "Get history qr code",
                 "description": "This request is used to get history of qr code. This request is using MySQL database, and has protected routes.",
-                "operationId": "f12bc945a874c0f200a9311a5a872951",
+                "operationId": "24cd51da38658b51299e49bd279fc187",
                 "responses": {
                     "200": {
                         "description": "lend qr code fetched",
@@ -4636,7 +4687,7 @@
                     "Reminder"
                 ],
                 "summary": "Create a reminder",
-                "operationId": "0d8df3357f5e549d080b43568c02a0ac",
+                "operationId": "d976dc76a89edab9b2bce746c019980f",
                 "responses": {
                     "201": {
                         "description": "reminder created",
@@ -4772,7 +4823,7 @@
                     "Reminder"
                 ],
                 "summary": "Create a copy of reminder to another inventory",
-                "operationId": "2e976960f4d1c5818abebf4342ab5caa",
+                "operationId": "84552ee1611046c2f8b0ff5d5b856098",
                 "responses": {
                     "201": {
                         "description": "reminder created",
@@ -4908,7 +4959,7 @@
                     "Reminder"
                 ],
                 "summary": "Create a reminder",
-                "operationId": "14e3b1365d2e58696172944e27165623",
+                "operationId": "cef41d154649965736071105de025207",
                 "responses": {
                     "201": {
                         "description": "reminder re-executed",
@@ -5004,7 +5055,7 @@
                     "Reminder"
                 ],
                 "summary": "Delete reminder by id",
-                "operationId": "7123e739147cbc99531f035b9a207d32",
+                "operationId": "080d9e96cd48c94effbcbeecd4ae36ac",
                 "parameters": [
                     {
                         "name": "id",
@@ -5113,7 +5164,7 @@
                 ],
                 "summary": "Get all reminder scheduler mark",
                 "description": "This request is used to get all executed reminder mark. This request is using MySql database, have a protected routes, and have template pagination.",
-                "operationId": "d84b6728220b2eda4272f27320dc36b8",
+                "operationId": "df2ea15c1b976d9be46c64a1429a9e67",
                 "responses": {
                     "200": {
                         "description": "reminder mark fetched",
@@ -5257,7 +5308,7 @@
                 ],
                 "summary": "Get all reminder scheduler history",
                 "description": "This request is used to get all executed reminder history. This request is using MySql database, have a protected routes, and have template pagination.",
-                "operationId": "41e551edb776ca689743cbbbefc98b10",
+                "operationId": "e853e8e887b76252b3490dfe44901186",
                 "responses": {
                     "200": {
                         "description": "reminder history fetched",
@@ -5391,7 +5442,7 @@
                     "Report"
                 ],
                 "summary": "Hard delete report item by id",
-                "operationId": "c34be0425e5d835998032cc959162f9c",
+                "operationId": "36f0d3a58d1ac36209a85a71b2babb4b",
                 "parameters": [
                     {
                         "name": "id",
@@ -5499,7 +5550,7 @@
                     "Report"
                 ],
                 "summary": "Hard delete report by id",
-                "operationId": "7cdf0bd847708c5176cb9630ca860e54",
+                "operationId": "bec185fa169b15285915e29e0ea56dda",
                 "parameters": [
                     {
                         "name": "id",
@@ -5607,7 +5658,7 @@
                     "Report"
                 ],
                 "summary": "Update report detail by id",
-                "operationId": "a1a607770381785c9425be35e8f1eaaa",
+                "operationId": "1771f2dccd8c82250c0e2aa4cf1ebe6e",
                 "parameters": [
                     {
                         "name": "id",
@@ -5735,7 +5786,7 @@
                     "Report"
                 ],
                 "summary": "Update report item by id",
-                "operationId": "1335e0924ab1aa5159c288838934925b",
+                "operationId": "1c03434d7e7b99ef4528a26facbc6938",
                 "parameters": [
                     {
                         "name": "id",
@@ -5863,7 +5914,7 @@
                     "Report"
                 ],
                 "summary": "Update report item by splitting it into a new report",
-                "operationId": "7a8928b7180b28333c6c7837b17f9085",
+                "operationId": "90efa2a9dd1812ff2b626e3eb5b810ff",
                 "parameters": [
                     {
                         "name": "id",
@@ -6029,7 +6080,7 @@
                 ],
                 "summary": "Get all report",
                 "description": "This request is used to get all report. This request is using MySql database, have a protected routes, and have template pagination.",
-                "operationId": "d029cd8980b4c01c157b8677b1b61621",
+                "operationId": "cc5fbd80a556bbcf9e6f7d1c2555ef40",
                 "responses": {
                     "200": {
                         "description": "report fetched",
@@ -6197,7 +6248,7 @@
                     "Report"
                 ],
                 "summary": "Create a new report",
-                "operationId": "cb40684ef38c6cab29e6f6f46eaf38f2",
+                "operationId": "fe19bb3ce474a8c9ef7b45d099f68d36",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6338,7 +6389,7 @@
                     "Report"
                 ],
                 "summary": "Create a new report item",
-                "operationId": "592f269ed33b23ec6098a6d3e2c89c8a",
+                "operationId": "a434c923bbb2177407a16bbd1eec3448",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6454,7 +6505,7 @@
                     "Analyze"
                 ],
                 "summary": "Analyze report",
-                "operationId": "024bee4dd9e741cab81d01c114ea3edb",
+                "operationId": "5e9d79a0cad0751d65c2caa08e7246f1",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6694,7 +6745,7 @@
                     "Analyze"
                 ],
                 "summary": "Create Analyze report",
-                "operationId": "b0bab1b5d7eea9b06fc7860a66f75c91",
+                "operationId": "e7f5774112196c242f794fb9a153c998",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6935,7 +6986,7 @@
                     "Analyze"
                 ],
                 "summary": "Analyze bill or receipt",
-                "operationId": "8a990c07957372bd39bea2cc025e90a4",
+                "operationId": "887eb03d21f04a4985959ef1de122747",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -7089,7 +7140,7 @@
                 ],
                 "summary": "Get all report by inventory",
                 "description": "This request is used to get all report found in a inventory by inventory name and report id. This request is using MySql database, have a protected routes, and have template pagination.",
-                "operationId": "3ae3972762a57830e21afb9058f0cfba",
+                "operationId": "a1cb0630dcbcb1daf9d91e827dec2aec",
                 "parameters": [
                     {
                         "name": "id",
@@ -7266,7 +7317,7 @@
                 ],
                 "summary": "Get report detail by id",
                 "description": "This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
-                "operationId": "94a001b2888362d49f99eea06f083a52",
+                "operationId": "913aff2ee4e565e025fe9d7cd080208c",
                 "parameters": [
                     {
                         "name": "id",
@@ -7451,7 +7502,7 @@
                 ],
                 "summary": "Get report detail document html format by id",
                 "description": "This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
-                "operationId": "df215c71971892dcd3be176911f5dd11",
+                "operationId": "3378c5da101c77d310276fbee9682f46",
                 "parameters": [
                     {
                         "name": "id",
@@ -7564,7 +7615,7 @@
                 ],
                 "summary": "Get total inventory by category",
                 "description": "This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
-                "operationId": "315a78bddbeb2b8b9468fd261406b387",
+                "operationId": "d6ccad86a5101bbbd40f3b77a4c92525",
                 "parameters": [
                     {
                         "name": "type",
@@ -7693,7 +7744,7 @@
                 ],
                 "summary": "Get most expensive inventory per context",
                 "description": "This request is used to get most expensive inventory for each category. This request is using MySql database, and have a protected routes.",
-                "operationId": "73302dd1448db32eb2ca72c26f5c15d2",
+                "operationId": "4056ec8fbe0589a81b6b3652ae5213da",
                 "responses": {
                     "200": {
                         "description": "stats fetched",
@@ -7806,7 +7857,7 @@
                 ],
                 "summary": "Get total inventory by favorite",
                 "description": "This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
-                "operationId": "f70fdeaf248cf6bf8ad4d04b757d5346",
+                "operationId": "bc79591baa35e55bfb913d10e8abf4aa",
                 "parameters": [
                     {
                         "name": "type",
@@ -7935,7 +7986,7 @@
                 ],
                 "summary": "Get total inventory by room",
                 "description": "This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
-                "operationId": "9035d1bb4430f8120c7764c4551f0e02",
+                "operationId": "4a6e35dd46a5269dffc1acf92d476262",
                 "parameters": [
                     {
                         "name": "type",
@@ -8064,7 +8115,7 @@
                 ],
                 "summary": "Get total inventory by merk",
                 "description": "This request is used to get total inventory by its merk. This request is using MySql database, and have a protected routes.",
-                "operationId": "b72cac1e9b4940bbadbe7d513ca40b6b",
+                "operationId": "6d3d766f587025fdf2fd54cdb81eaada",
                 "parameters": [
                     {
                         "name": "type",
@@ -8193,7 +8244,7 @@
                 ],
                 "summary": "Get total report created per month",
                 "description": "This request is used to get total report created per month by given `year`. This request is using MySql database, and have a protected routes.",
-                "operationId": "b0542a17b6b2e7cc415e69f13d00b66d",
+                "operationId": "8b3e785764844003129ce1388ec6597d",
                 "parameters": [
                     {
                         "name": "year",
@@ -8322,7 +8373,7 @@
                 ],
                 "summary": "Get total inventory created per month",
                 "description": "This request is used to get total inventory created per month by given `year`. This request is using MySql database, and have a protected routes.",
-                "operationId": "8b4c8a4a948fd044d03ef932ce6c8770",
+                "operationId": "81f129b1461b08056a95802349523494",
                 "parameters": [
                     {
                         "name": "year",
@@ -8447,7 +8498,7 @@
                 ],
                 "summary": "Get total inventory favorited comparison",
                 "description": "This request is used to get total inventory comparison by if its favorited or not. This request is using MySql database, and have a protected routes.",
-                "operationId": "eea3d3ebee519159d03062659363a9b1",
+                "operationId": "ca64d7612a8d3d5a41f6301ad30e08d5",
                 "responses": {
                     "200": {
                         "description": "stats fetched",
@@ -8560,7 +8611,7 @@
                 ],
                 "summary": "Get total inventory low capacity comparison",
                 "description": "This request is used to get total inventory comparison by if its low capacity or not. This request is using MySql database, and have a protected routes.",
-                "operationId": "f4d078602df0ef2b0266ce94f3545a5c",
+                "operationId": "f9eba9a1128c3d12655a4a9c02e0da3c",
                 "responses": {
                     "200": {
                         "description": "stats fetched",
@@ -8673,7 +8724,7 @@
                 ],
                 "summary": "Get total activity per month",
                 "description": "This request is used to get total activity per month by given `year`. This request is using MySql database, and have a protected routes.",
-                "operationId": "f3709c0324e990d2d0f6b055730ae96c",
+                "operationId": "5ffdf1204028969960ed8d82db19c10c",
                 "parameters": [
                     {
                         "name": "year",
@@ -8798,7 +8849,7 @@
                 ],
                 "summary": "Get last user login",
                 "description": "This request is used to get list of last user login. This request is using MySql database, and have a protected routes.",
-                "operationId": "5ef1c834e01529f13eb8200c3c95bb14",
+                "operationId": "7697f4d5e54564be7b8cac58111af9c2",
                 "responses": {
                     "200": {
                         "description": "stats fetched",
@@ -8912,7 +8963,7 @@
                 ],
                 "summary": "Get user leaderboard",
                 "description": "This request is used to get user leaderboard. This request is using MySql database, and have a protected routes.",
-                "operationId": "ffe23aab9a5c9e83bb9e07d32cb29e37",
+                "operationId": "989e7a6e38673b0cf1bea3153ffd7be1",
                 "responses": {
                     "200": {
                         "description": "stats fetched",
@@ -9042,7 +9093,7 @@
                 ],
                 "summary": "Get total report spending per month",
                 "description": "This request is used to get total report created per month by given `year`. This request is using MySql database, and have a protected routes.",
-                "operationId": "a5d69a0810b3436246daa68a793d2929",
+                "operationId": "894a3246ab3457a92625d08f40e368c1",
                 "parameters": [
                     {
                         "name": "year",
@@ -9175,7 +9226,7 @@
                 ],
                 "summary": "Get total report spending per month",
                 "description": "This request is used to get total report created per month by given `year`. This request is using MySql database, and have a protected routes.",
-                "operationId": "f0b74aeb34555c517f1ef3ef94b25946",
+                "operationId": "5f76ad6ae1dbe9ae74cc616ccef337e6",
                 "parameters": [
                     {
                         "name": "year",
@@ -9304,7 +9355,7 @@
                 ],
                 "summary": "Get dashboard",
                 "description": "This request is used to get inventory dashboard. This request is using MySql database, and have a protected routes.",
-                "operationId": "2eb4a30c320e91085f38931b2fbe87c0",
+                "operationId": "c763e3efef5bda821cc59cf5867d29bf",
                 "responses": {
                     "200": {
                         "description": "stats fetched",
@@ -9659,7 +9710,7 @@
                     "User"
                 ],
                 "summary": "Check and send validation token to the user who in registration process",
-                "operationId": "f9a08af4b40b9ac720ec6222bb337c0f",
+                "operationId": "ef6f3e60adfc3031ca81c0d3363d6592",
                 "responses": {
                     "200": {
                         "description": "the validation token has been sended to {email} email account",
@@ -9730,7 +9781,7 @@
                     "User"
                 ],
                 "summary": "Register account and accept validation",
-                "operationId": "29226b21d6a5a79d2e87ade3dfed667f",
+                "operationId": "8fc614cf74a052718c41f56bf5e9bf3c",
                 "responses": {
                     "200": {
                         "description": "account is registered",
@@ -9849,7 +9900,7 @@
                     "User"
                 ],
                 "summary": "Regenerate registration token",
-                "operationId": "de83a252f4cbd7f245743ba8e36c2da2",
+                "operationId": "25f376358b6ab0d223b28d3243c09410",
                 "responses": {
                     "200": {
                         "description": "the validation token has been sended to {email} email account",
@@ -10132,7 +10183,7 @@
                 ],
                 "summary": "Get my profile",
                 "description": "This request is used to get user profile info. This request is using MySql database, and have a protected routes",
-                "operationId": "c286fe042f9492a53f1a424547fa83e4",
+                "operationId": "b2acc664d9f1c1787fe8c4f3ecc7d583",
                 "responses": {
                     "200": {
                         "description": "user fetched",
@@ -10285,7 +10336,7 @@
                 ],
                 "summary": "Get all user",
                 "description": "This request is used to get all user. This endpoint for Admin only. This request is using MySql database, and have a protected routes",
-                "operationId": "0068e396297c4f55d9c717181a67e82b",
+                "operationId": "40b8390ae98ad1b43f5079d74a902e0b",
                 "responses": {
                     "200": {
                         "description": "user fetched",
@@ -10419,7 +10470,7 @@
                 ],
                 "summary": "Get My Content's Year",
                 "description": "This request is used to get all available year to selected in filter based on created date inventory or report. This request is using MySql database, and have a protected routes",
-                "operationId": "8f8d65302095f16adbc3960a60221f37",
+                "operationId": "2e2557e28eb79cefb6dc58450258afd3",
                 "responses": {
                     "200": {
                         "description": "user year fetched",

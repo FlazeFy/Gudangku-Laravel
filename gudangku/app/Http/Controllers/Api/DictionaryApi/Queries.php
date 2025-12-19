@@ -12,11 +12,17 @@ use App\Helpers\Generator;
 
 class Queries extends Controller
 {
+    private $module;
+    public function __construct()
+    {
+        $this->module = "dictionary";
+    }
+
     /**
      * @OA\GET(
      *     path="/api/v1/dictionary/type/{type}",
-     *     summary="Get dictionary by type",
-     *     description="This request is used to get dictionary by type. Can be multiple dictionary type if separate using `,`. This request is using MySql database",
+     *     summary="Get Dictionary By Type",
+     *     description="This request is used to get dictionary by its `dictionary_type`, that can be inventory_category, inventory_room, inventory_unit, report_category, or inventory_capacity_unit. This request interacts with the MySQL databases.",
      *     tags={"Dictionary"},
      *     @OA\Parameter(
      *         name="type",
@@ -28,7 +34,7 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="dictionary fetched",
+     *         description="Dictionary fetched successfully. Ordered in ascending order by `dictionary_type` and `dictionary_name`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="dictionary fetched"),
@@ -60,30 +66,19 @@ class Queries extends Controller
     public function getDictionaryByType(Request $request,$type)
     {
         try{
-            $res = DictionaryModel::select('dictionary_name','dictionary_type');
-            if(strpos($type, ',')){
-                $dcts = explode(",", $type);
-                foreach ($dcts as $dt) {
-                    $res = $res->orwhere('dictionary_type',$dt); 
-                }
-            } else {
-                $res = $res->where('dictionary_type',$type); 
-            }
-
-            $res = $res->orderby('dictionary_type', 'ASC')
-                ->orderby('dictionary_name', 'ASC')
-                ->get();
-            
+            // Get dictionary by type
+            $res = DictionaryModel::getDictionaryByType($type);
             if (count($res) > 0) {
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'dictionary'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'dictionary'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

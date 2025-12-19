@@ -130,7 +130,7 @@ class Commands extends Controller
     }
 
     /**
-     * @OA\PUT(
+     * @OA\POST(
      *     path="/api/v1/inventory/edit_image/{id}",
      *     summary="Edit inventory image by id",
      *     tags={"Inventory"},
@@ -188,6 +188,8 @@ class Commands extends Controller
     public function putEditImageById(Request $request, $id)
     {
         try{
+            $user_id = $request->user()->id;
+
             $inventory = InventoryModel::select('inventory_name','inventory_image')
                 ->where('id',$id)
                 ->where('created_by',$user_id)
@@ -205,8 +207,8 @@ class Commands extends Controller
                         ], Response::HTTP_NOT_FOUND);
                     }
                 } 
-                if ($request->hasFile('file')) {
-                    $file = $request->file('file');
+                if ($request->hasFile('inventory_image')) {
+                    $file = $request->file('inventory_image');
                     if ($file->isValid()) {
                         $file_ext = $file->getClientOriginalExtension();
                         // Validate file type
@@ -269,7 +271,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

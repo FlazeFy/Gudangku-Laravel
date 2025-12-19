@@ -35,11 +35,12 @@ class ErrorModel extends Model
         'is_fixed' => 'integer'
     ];
 
-    public static function getAllError($is_paginate){
-        $res = ErrorModel::select('*')
-            ->orderby('created_at','DESC');
-        
-        return $is_paginate ? $res->paginate(12) : $res->get();
+    public static function getAllError($paginate){
+        $res = ErrorModel::selectRaw('*')
+            ->orderby('created_at','asc')
+            ->paginate($paginate);
+
+        return count($res) > 0 ? $res : null;
     }
 
     public static function getAllErrorAudit(){

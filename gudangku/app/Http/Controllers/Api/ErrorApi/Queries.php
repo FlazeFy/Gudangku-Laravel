@@ -13,16 +13,22 @@ use App\Models\AdminModel;
 
 class Queries extends Controller
 {
+    private $module;
+    public function __construct()
+    {
+        $this->module = "error";
+    }
+    
     /**
      * @OA\GET(
      *     path="/api/v1/error",
-     *     summary="Get all error history",
-     *     description="This request is used to get all error history recorded. This request is using MySql database, have a protected routes, and have template pagination.",
+     *     summary="Get All Error",
+     *     description="This request is used to get all error audit. This request interacts with the MySQL database, has a protected routes (Admin only), and a pagination.",
      *     tags={"Error"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="history fetched",
+     *         description="Error fetched successfully. Ordered in ascending order by `created_at`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="error history fetched"),
@@ -72,26 +78,30 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $res = ErrorModel::getAllError(true);
+            $paginate = $request->query('per_page_key') ?? 12;
+
+            // Make sure only admin can access the request
             $check_admin = AdminModel::find($user_id);
-            
             if($check_admin){
-                if ($res) {
+                // Get all error
+                $res = ErrorModel::getAllError($paginate);
+                if (count($res) > 0) {
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
-                        'message' => Generator::getMessageTemplate("fetch", 'error history'),
+                        'message' => Generator::getMessageTemplate("fetch", $this->module),
                         'data' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'error history'),
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("permission", 'admin'),
+                    'message' => Generator::getMessageTemplate("custom", "you dont have permission to access the $this->module data"),
                 ], Response::HTTP_UNAUTHORIZED);
             }
         } catch(\Exception $e) {

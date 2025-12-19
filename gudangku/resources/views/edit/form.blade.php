@@ -118,29 +118,25 @@
                         <input type="text" name="inventory_color" id="inventory_color" value='${data.inventory_color ?? ''}' class="form-control my-2" readonly/>
                     `)
                     $('#img_holder').empty().prepend(`
-                        <form id='edit-image'>
-                            <div class='no-image-picker' title='Change Image' id='image-picker'>
-                                <label for='file-input'>
-                                    <img id='frame' class='img-responsive img-zoomable-modal d-block mx-auto' title='Change Image' src='${data.inventory_image}' data-bs-toggle='modal' data-bs-target='#zoom_image'/>
-                                </label>
-                                <input id='file-input' name='file' type='file' accept='image/*' class='d-none'/>
-                            </div>
-                            <div class='no-image-picker d-none' title='Change Image' id='no-image-picker'></div>
-                        </form>
+                        <div class='no-image-picker' title='Change Image' id='image-picker'>
+                            <label for='file-input'>
+                                <img id='frame' class='img-responsive img-zoomable-modal d-block mx-auto' title='Change Image' src='${data.inventory_image}' data-bs-toggle='modal' data-bs-target='#zoom_image'/>
+                            </label>
+                            <input id='file-input' name='file' type='file' accept='image/*' class='d-none'/>
+                        </div>
+                        <div class='no-image-picker d-none' title='Change Image' id='no-image-picker'></div>
                     `)
                     $('#reset_img_btn_handler').html(`<a class="btn btn-danger px-2 shadow" id='reset-image-btn' title="Reset to default image"><i class="fa-solid fa-trash-can"></i> Reset Image</a>`)
                 } else {
                     $('#img_holder').empty().prepend(`
-                        <form id='edit-image'>
-                            <div class='no-image-picker' title='Change Image' id='image-picker'>
-                                <label for='file-input'>
-                                    <img id='frame' class='m-2' title='Change Image' style='width: var(--spaceXLG);' src='<?= asset('images/change_image.png') ?>' />
-                                    <a class="bg-transparent">No image has been selected</a>
-                                </label>
-                                <input id='file-input' name='file' type='file' accept='image/*' class='d-none'/>
-                            </div>
-                            <div class='no-image-picker d-none' title='Change Image' id='no-image-picker'></div>
-                        </form>
+                        <div class='no-image-picker' title='Change Image' id='image-picker'>
+                            <label for='file-input'>
+                                <img id='frame' class='m-2' title='Change Image' style='width: var(--spaceXLG);' src='<?= asset('images/change_image.png') ?>' />
+                                <a class="bg-transparent">No image has been selected</a>
+                            </label>
+                            <input id='file-input' name='file' type='file' accept='image/*' class='d-none'/>
+                        </div>
+                        <div class='no-image-picker d-none' title='Change Image' id='no-image-picker'></div>
                     `)
                 }
 

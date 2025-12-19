@@ -37,8 +37,17 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/login",
-     *     summary="Sign in to the Apps",
+     *     summary="Post Login (Basic Auth)",
+     *     description="This authentication request is used to access the application and obtain an authorization token for accessing all protected APIs. This request interacts with the MySQL database.",
      *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username", "password"},
+     *             @OA\Property(property="username", type="string", example="flazefy"),
+     *             @OA\Property(property="password", type="string", example="nopass123")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="login successfully",
@@ -90,34 +99,35 @@ class Commands extends Controller
     public function postLogin(Request $request)
     {
         try {
+            // Validate request body
             $validator = Validation::getValidateLogin($request);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => $validator->messages(),
-                    'token' => null,
-                    'role' => null,  
+                    'message' => $validator->messages()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                $user = AdminModel::where('username', $request->username)->first();
+                // Check for Admin account
+                $user = AdminModel::getByUsername($request->username);
                 $role = 1;
                 if($user == null){
-                    $user = UserModel::where('username', $request->username)->first();
+                    // Check for User account
+                    $user = UserModel::getByUsername($request->username);
                     $role = 0;
                 }
 
+                // Verify username and password
                 if (!$user || !Hash::check($request->password, $user->password)) {
-                    //if (!$user || ($request->password != $user->password)) {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("custom", 'wrong username or password'),
-                        'token' => null, 
-                        'role' => null,                
+                        'message' => Generator::getMessageTemplate("custom", 'wrong username or password')       
                     ], Response::HTTP_UNAUTHORIZED);
                 } else {
+                    // Create Token
                     $token = $user->createToken('login')->plainTextToken;
                     unset($user->password);
 
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => $user,
@@ -137,8 +147,8 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/logout",
-     *     summary="Sign out from Apps",
-     *     description="This request is used to get sign out from the Apps (sign out from the session). This request is using MySql database, and have a protected routes.",
+     *     summary="Post Log Out",
+     *     description="This authentication request is used to sign out from application or reset current session. This request interacts with the MySQL database.",
      *     tags={"Auth"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -171,22 +181,16 @@ class Commands extends Controller
     {
         try {
             $user_id = $request->user()->id;
-            $check = AdminModel::where('id', $user_id)->first();
+            
+            // Reset session & token
+            session()->flush();
+            $request->user()->currentAccessToken()->delete();
 
-            if($check == null){
-                $request->user()->currentAccessToken()->delete();
-                return response()->json([
-                    'status' => 'success',
-                    'message' => Generator::getMessageTemplate("custom", 'logout success')
-                ], Response::HTTP_OK);
-            } else {
-                // Admin
-                $request->user()->currentAccessToken()->delete();
-                return response()->json([
-                    'status' => 'success',
-                    'message' => Generator::getMessageTemplate("custom", 'logout success')
-                ], Response::HTTP_OK);
-            }
+            // Return success response
+            return response()->json([
+                'status' => 'success',
+                'message' => Generator::getMessageTemplate("custom", 'logout success')
+            ], Response::HTTP_OK);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',

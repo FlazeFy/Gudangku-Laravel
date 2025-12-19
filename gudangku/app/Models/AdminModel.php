@@ -49,8 +49,11 @@ class AdminModel extends Authenticatable
     ];
 
     public static function  getAllContact(){
-        return AdminModel::select('id','username','email','telegram_user_id','telegram_is_valid','line_user_id','firebase_fcm_token')
-            ->get();
+        return AdminModel::select('id','username','email','telegram_user_id','telegram_is_valid','line_user_id','firebase_fcm_token')->get();
+    }
+
+    public static function getByUsername($username){
+        return AdminModel::where('username',$username)->first();
     }
 
     public static function getAppsSummaryForLastNDays($days){

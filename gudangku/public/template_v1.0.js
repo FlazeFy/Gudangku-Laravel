@@ -50,7 +50,6 @@ const get_context_opt = (context, token, selected = null) => {
                 type: 'GET',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Accept", "application/json")
-                    xhr.setRequestHeader("Authorization", `Bearer ${token}`)
                 },
                 success: function (response) {
                     Swal.close()

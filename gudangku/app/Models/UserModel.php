@@ -55,6 +55,10 @@ class UserModel extends Authenticatable
         return UserModel::select('id','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')->get();
     }
 
+    public static function getByUsername($username){
+        return UserModel::where('username',$username)->first();
+    }
+
     public static function getSocial($id){
         $res = UserModel::select('username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
             ->where('id',$id)

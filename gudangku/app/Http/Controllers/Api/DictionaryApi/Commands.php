@@ -13,10 +13,17 @@ use App\Helpers\Generator;
 
 class Commands extends Controller
 {
+    private $module;
+    public function __construct()
+    {
+        $this->module = "dictionary";
+    }
+
     /**
      * @OA\DELETE(
      *     path="/api/v1/dictionary/destroy/{id}",
-     *     summary="Delete dictionary by id",
+     *     summary="Delete Dictionary By ID",
+     *     description="This request is used to permanently delete a dictionary entry based on the provided `ID`. This request interacts with the MySQL database, and have a protected routes.",
      *     tags={"Dictionary"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -24,7 +31,7 @@ class Commands extends Controller
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="string"),
-     *         description="dictionary ID",
+     *         description="Dictionary ID",
      *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
      *     ),
      *     @OA\Response(
@@ -72,7 +79,7 @@ class Commands extends Controller
     public function hardDeleteDictionaryById(Request $request, $id)
     {
         try{
-            // Validator
+            // Validate param
             $request->merge(['id' => $id]);
             $validator = Validation::getValidateDictionary($request,'delete');
             if ($validator->fails()) {
@@ -81,19 +88,19 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                // Service : Delete
+                // Delete dictionary
                 $rows = DictionaryModel::destroy($id);
 
-                // Respond
                 if($rows > 0){
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
-                        'message' => Generator::getMessageTemplate("permentally delete", 'dictionary'),
+                        'message' => Generator::getMessageTemplate("permentally delete", $this->module),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'dictionary'),
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } 
@@ -108,10 +115,18 @@ class Commands extends Controller
    /**
      * @OA\POST(
      *     path="/api/v1/dictionary",
-     *     summary="Post dictionary",
-     *     description="Create a new dictionary using the given name and category. This request is using MySQL database.",
+     *     summary="Post Create Dictionary",
+     *     description="This request is used to created a dictionary by using given `dictionary_type`, and `dictionary_name`. This request interacts with the MySQL database, and have a protected routes.",
      *     tags={"Dictionary"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"dictionary_type", "dictionary_name"},
+     *             @OA\Property(property="dictionary_type", type="string", example="trip_category"),
+     *             @OA\Property(property="dictionary_name", type="string", example="test category")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=201,
      *         description="Dictionary created successfully",
@@ -171,7 +186,7 @@ class Commands extends Controller
     public function postDictionary(Request $request)
     {
         try{
-            // Validator
+            // Validate request body
             $validator = Validation::getValidateDictionary($request,'create');
             if ($validator->fails()) {
                 return response()->json([
@@ -179,10 +194,11 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
+                // Request body
                 $dictionary_type = $request->dictionary_type;
                 $dictionary_name = $request->dictionary_name;
 
-                // Model : Check name dictionary name avaiability
+                // Check dictionary name availability
                 $isUsedName = DictionaryModel::isUsedName($dictionary_name, $dictionary_type);
                 if($isUsedName){
                     return response()->json([
@@ -190,14 +206,14 @@ class Commands extends Controller
                         'message' => Generator::getMessageTemplate("conflict", 'dictionary name'),
                     ], Response::HTTP_CONFLICT);
                 } else {
-                    // Service : Create
+                    // Create dictionary
                     $rows = DictionaryModel::createDictionary($dictionary_type, $dictionary_name);
 
-                    // Respond
                     if($rows){
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
-                            'message' => Generator::getMessageTemplate("create", 'dictionary'),
+                            'message' => Generator::getMessageTemplate("create", $this->module),
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
