@@ -60,6 +60,26 @@ class InventoryModel extends Model
         return InventoryModel::select('inventory_name')->where('id',$id)->first();
     }
 
+    public static function getInventoryRoom($user_id){
+        return InventoryModel::select('inventory_room')->where('created_by',$user_id)->groupby('inventory_room')->get();
+    }
+
+    public static function getInventoryCalendar($user_id){
+        return InventoryModel::select('id','inventory_name','inventory_price','created_at')
+            ->where('created_by',$user_id)
+            ->whereNull('deleted_at')
+            ->orderby('created_at','DESC')
+            ->get();
+    }
+
+    public static function getListInventory($user_id){
+        return InventoryModel::select('id','inventory_name','inventory_vol','inventory_unit')
+            ->where('created_by',$user_id)
+            ->whereNull('deleted_at')
+            ->orderBy('inventory_name', 'asc')
+            ->get();
+    }
+
     public static function getInventoryPlanDestroy($days){
         return InventoryModel::select('inventory.id','inventory_name','deleted_at','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id')
             ->join('users','users.id','=','inventory.created_by')
@@ -103,8 +123,7 @@ class InventoryModel extends Model
                 $res = $res->where('created_by',$user_id);
             }
 
-            return $res->where('id',$id)
-                ->first();
+            return $res->where('id',$id)->first();
         } else {
             $ids = explode(',',$id);
             $res = InventoryModel::select('id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_color', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'created_at', 'updated_at');
@@ -113,8 +132,7 @@ class InventoryModel extends Model
                 $res = $res->where('created_by',$user_id);
             }
             
-            return $res->whereIn('id',$ids)
-                ->get();
+            return $res->whereIn('id',$ids)->get();
         }
     }
 
@@ -322,11 +340,9 @@ class InventoryModel extends Model
             $res = $res->where('created_by', $user_id);
         }
 
-        $res = $res->whereRaw("YEAR(created_at) = '$year'")
+        return $res->whereRaw("YEAR(created_at) = '$year'")
             ->groupByRaw('MONTH(created_at)')
             ->get();
-
-        return $res;
     }
 
     public static function getTotalInventory($user_id,$type){
@@ -354,10 +370,7 @@ class InventoryModel extends Model
             $res = $res->where('created_by', $user_id);
         }
             
-        $res = $res->orderBy('created_at','DESC')
-            ->first();
-
-        return $res;
+        return $res->orderBy('created_at','DESC')->first();
     }
 
     public static function getMostCategoryInventory($user_id){
@@ -368,11 +381,9 @@ class InventoryModel extends Model
             $res = $res->where('created_by', $user_id);
         }
 
-        $res = $res->groupBy('inventory_category')
+        return $res->groupBy('inventory_category')
             ->orderBy('total','DESC')
             ->first();
-
-        return $res;
     }
 
     public static function getHighestPriceInventory($user_id){
@@ -383,10 +394,7 @@ class InventoryModel extends Model
             $res = $res->where('created_by', $user_id);
         }
 
-        $res = $res->orderBy('inventory_price','DESC')
-            ->first();
-
-        return $res;
+        return $res->orderBy('inventory_price','DESC')->first();
     }
 
     public static function getInventoryExport($user_id, $is_admin, $type){
@@ -553,8 +561,7 @@ class InventoryModel extends Model
             $res = $res->where('created_by',$user_id);
         }
         
-        return $res->whereNotNull('deleted_at')
-            ->delete();
+        return $res->whereNotNull('deleted_at')->delete();
     } 
 
     public static function createInventory(
@@ -593,6 +600,17 @@ class InventoryModel extends Model
 
     public static function updateInventoryById($user_id = null,$inventory_id,$data){
         $rows = InventoryModel::where('id', $inventory_id);
+        
+        if($user_id){
+            $rows = $rows->where('created_by', $user_id);
+        }
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        return $rows->update($data);
+    }
+
+    public static function updateInventoryByStorage($user_id = null,$storage,$data){
+        $rows = InventoryModel::where('inventory_storage',$storage);
         
         if($user_id){
             $rows = $rows->where('created_by', $user_id);

@@ -186,4 +186,9 @@ class UserModel extends Authenticatable
             ->limit(3)
             ->get();
     }
+
+    public static function updateUserById($data,$id){
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        return UserModel::where('id',$id)->update($data);
+    }
 }

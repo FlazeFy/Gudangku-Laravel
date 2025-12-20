@@ -887,7 +887,8 @@
                 "tags": [
                     "History"
                 ],
-                "summary": "Delete history by id",
+                "summary": "Hard Delete History By ID",
+                "description": "This request is used to permanently delete a system history based on the provided `ID`. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "4d5036ffd8580da35bf9d00c5d2c6050",
                 "parameters": [
                     {
@@ -995,8 +996,8 @@
                 "tags": [
                     "History"
                 ],
-                "summary": "Get all history",
-                "description": "This request is used to get all history when user use the App. This request is using MySql database, have a protected routes, and have template pagination.",
+                "summary": "Get All History",
+                "description": "This request is used to get all history when user use the App. This request interacts with the MySQL database, has a protected routes, and has a pagination.",
                 "operationId": "b51b619e3c45ec6458bcca590a3a70e8",
                 "responses": {
                     "200": {
@@ -1126,7 +1127,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Soft delete inventory by id",
+                "summary": "Soft Delete Inventory By ID",
+                "description": "This request is used to delete an inventory based on the provided `ID`. This request interacts with the MySQL database, broadcast message with Telegram, has a protected routes, and audited activity (history).",
                 "operationId": "4ed1755d8f77358138dfc7ba5b8b879c",
                 "parameters": [
                     {
@@ -1234,7 +1236,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Edit inventory image by id",
+                "summary": "Post Edit Inventory Image By ID",
+                "description": "This request is used to update inventory image by given vehicle's `ID`. And the updated field is `inventory_image`. This request interacts with the MySQL database, firebase storage, has a protected routes, and audited activity (history).",
                 "operationId": "46f0b8d4f240dc8307f5eddb138cf889",
                 "parameters": [
                     {
@@ -1248,6 +1251,25 @@
                         "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "inventory_image"
+                                ],
+                                "properties": {
+                                    "inventory_image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "inventory image updated",
@@ -1362,7 +1384,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Hard delete inventory by id",
+                "summary": "Hard Delete Inventory By ID",
+                "description": "This request is used to permanently delete an inventory by given `ID`. This request interacts with the MySQL database, firebase storage, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
                 "operationId": "344d7c237f1e008bee49ac4e624c2e10",
                 "parameters": [
                     {
@@ -1470,7 +1493,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Toogle favorite inventory by id",
+                "summary": "Put Toogle Favorite Inventory By ID",
+                "description": "This request is used to toggle (favorite) an inventory based on the provided `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "81906bbe568dc9307d76a94b18463c38",
                 "parameters": [
                     {
@@ -1484,6 +1508,25 @@
                         "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "is_favorite"
+                                ],
+                                "properties": {
+                                    "is_favorite": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "inventory updated",
@@ -1578,7 +1621,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Recover inventory by id",
+                "summary": "Recover Inventory By Id",
+                "description": "This request is used to recover deleted inventory based on the provided `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "c2f1bcc0e4bdf1411d89ffdd729a1fe0",
                 "parameters": [
                     {
@@ -1686,12 +1730,12 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get all inventory",
+                "summary": "Get All Inventory",
                 "description": "This request is used to get all inventory data. This request is using MySql database, has protected routes, and supports pagination.",
                 "operationId": "ba8b3005bed7008380df0cdd8724f8f3",
                 "responses": {
                     "200": {
-                        "description": "inventory fetched",
+                        "description": "Inventory fetched successfully. Ordered in descending order by `is_favorite`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1897,8 +1941,105 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Create inventory",
+                "summary": "Post Create Inventory",
+                "description": "This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, firebase storage, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
                 "operationId": "4674b1921101b03eb103dc6acea8108b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "inventory_name",
+                                    "inventory_category",
+                                    "inventory_room",
+                                    "inventory_unit",
+                                    "inventory_vol",
+                                    "is_favorite",
+                                    "created_at"
+                                ],
+                                "properties": {
+                                    "inventory_name": {
+                                        "type": "string",
+                                        "example": "Wooden Dining Table"
+                                    },
+                                    "inventory_category": {
+                                        "type": "string",
+                                        "example": "Furniture"
+                                    },
+                                    "inventory_desc": {
+                                        "type": "string",
+                                        "example": "Solid wood dining table for six people",
+                                        "nullable": true
+                                    },
+                                    "inventory_merk": {
+                                        "type": "string",
+                                        "example": "IKEA",
+                                        "nullable": true
+                                    },
+                                    "inventory_color": {
+                                        "type": "string",
+                                        "example": "Brown",
+                                        "nullable": true
+                                    },
+                                    "inventory_room": {
+                                        "type": "string",
+                                        "example": "Dining Room"
+                                    },
+                                    "inventory_storage": {
+                                        "type": "string",
+                                        "example": "Main House",
+                                        "nullable": true
+                                    },
+                                    "inventory_rack": {
+                                        "type": "string",
+                                        "example": "Rack B2",
+                                        "nullable": true
+                                    },
+                                    "inventory_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 3500000,
+                                        "nullable": true
+                                    },
+                                    "inventory_image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
+                                    },
+                                    "inventory_unit": {
+                                        "type": "string",
+                                        "example": "unit"
+                                    },
+                                    "inventory_vol": {
+                                        "type": "number",
+                                        "example": 1
+                                    },
+                                    "inventory_capacity_unit": {
+                                        "type": "string",
+                                        "example": "kg",
+                                        "nullable": true
+                                    },
+                                    "inventory_capacity_vol": {
+                                        "type": "number",
+                                        "example": 80,
+                                        "nullable": true
+                                    },
+                                    "is_favorite": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-12-19 10:30:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "inventory created",
@@ -2013,8 +2154,100 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Update inventory By Id",
+                "summary": "Put Update Inventory By ID",
+                "description": "This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "f0c25c0ad9d2e40518e20e7845e4e3ee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "inventory_name",
+                                    "inventory_category",
+                                    "inventory_room",
+                                    "inventory_unit",
+                                    "inventory_vol",
+                                    "is_favorite",
+                                    "created_at"
+                                ],
+                                "properties": {
+                                    "inventory_name": {
+                                        "type": "string",
+                                        "example": "Wooden Dining Table"
+                                    },
+                                    "inventory_category": {
+                                        "type": "string",
+                                        "example": "Furniture"
+                                    },
+                                    "inventory_desc": {
+                                        "type": "string",
+                                        "example": "Solid wood dining table for six people",
+                                        "nullable": true
+                                    },
+                                    "inventory_merk": {
+                                        "type": "string",
+                                        "example": "IKEA",
+                                        "nullable": true
+                                    },
+                                    "inventory_color": {
+                                        "type": "string",
+                                        "example": "Brown",
+                                        "nullable": true
+                                    },
+                                    "inventory_room": {
+                                        "type": "string",
+                                        "example": "Dining Room"
+                                    },
+                                    "inventory_storage": {
+                                        "type": "string",
+                                        "example": "Main House",
+                                        "nullable": true
+                                    },
+                                    "inventory_rack": {
+                                        "type": "string",
+                                        "example": "Rack B2",
+                                        "nullable": true
+                                    },
+                                    "inventory_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 3500000,
+                                        "nullable": true
+                                    },
+                                    "inventory_unit": {
+                                        "type": "string",
+                                        "example": "unit"
+                                    },
+                                    "inventory_vol": {
+                                        "type": "number",
+                                        "example": 1
+                                    },
+                                    "inventory_capacity_unit": {
+                                        "type": "string",
+                                        "example": "kg",
+                                        "nullable": true
+                                    },
+                                    "inventory_capacity_vol": {
+                                        "type": "number",
+                                        "example": 80,
+                                        "nullable": true
+                                    },
+                                    "is_favorite": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-12-19 10:30:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "inventory updated",
@@ -2129,7 +2362,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Update inventory layout by id",
+                "summary": "Put Update Inventory Layout By ID",
+                "description": "This request is used to update an inventory by given inventory layout's `id`. The updated fields are `inventory_storage` and `storage_desc`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "18c8436a761d4d03ebe1246ce3ea5a72",
                 "parameters": [
                     {
@@ -2143,6 +2377,30 @@
                         "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "inventory_storage",
+                                    "storage_desc"
+                                ],
+                                "properties": {
+                                    "inventory_storage": {
+                                        "type": "string",
+                                        "example": "Fridge"
+                                    },
+                                    "storage_desc": {
+                                        "type": "string",
+                                        "example": "Storage food & drink"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "inventory layout updated",
@@ -2257,8 +2515,42 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Post inventory layout",
+                "summary": "Post Create Inventory Layout",
+                "description": "This request is used to create an inventory layout by given `inventory_storage`, `inventory_room`, `layout`, and `storage_desc`. This request interacts with the MySQL database, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
                 "operationId": "722adb50f0a52461825fd86cb9350b2e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "inventory_storage",
+                                    "inventory_room",
+                                    "layout"
+                                ],
+                                "properties": {
+                                    "inventory_room": {
+                                        "type": "string",
+                                        "example": "Kitchen"
+                                    },
+                                    "inventory_storage": {
+                                        "type": "string",
+                                        "example": "Fridge"
+                                    },
+                                    "layout": {
+                                        "type": "string",
+                                        "example": "A1:B1"
+                                    },
+                                    "storage_desc": {
+                                        "type": "string",
+                                        "example": "Storage food & drink"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "inventory layout coordinate created",
@@ -2353,7 +2645,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Delete inventory layout",
+                "summary": "Hard Delete Inventory Layout By ID and Coordinate",
+                "description": "This request is used to permanently delete an inventory layout by given `ID` and `coordinate`. This request interacts with the MySQL database, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
                 "operationId": "829413fefcd37183ef16c8bae3c96f02",
                 "responses": {
                     "200": {
@@ -2429,12 +2722,12 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get list inventory",
+                "summary": "Get List Inventory",
                 "description": "This request is used to get all inventory data but in shot format for selection. This request is using MySql database, and has protected routes",
                 "operationId": "4768e6fde3cee55d3f6502ed00444621",
                 "responses": {
                     "200": {
-                        "description": "inventory fetched",
+                        "description": "Inventory fetched successfully. Ordered in ascending order by `inventory_name`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2550,12 +2843,12 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get inventory as calendar format",
+                "summary": "Get Inventory As Calendar Format",
                 "description": "This request is used to get all inventory data but in calendar format. This request is using MySql database, and has protected routes",
                 "operationId": "965986adf81e0a64e0ea67f68b036cb1",
                 "responses": {
                     "200": {
-                        "description": "inventory fetched",
+                        "description": "Inventory fetched successfully. Ordered in descending order by `created_at`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2672,12 +2965,12 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get inventory room",
-                "description": "This request is used to get all inventory room. This request is using MySql database, and has protected routes",
+                "summary": "Get Inventory Room",
+                "description": "This request is used to get all inventory room. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "01dad4018d5d7e6320e0eeb4bf31299a",
                 "responses": {
                     "200": {
-                        "description": "inventory fetched",
+                        "description": "Inventory fetched successfully. Ordered in descending order by `created_at`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2781,8 +3074,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get inventory layout by room",
-                "description": "This request is used to get inventory layout to show storage by room. This request is using MySql database, and has protected routes",
+                "summary": "Get Inventory Layout By Room",
+                "description": "This request is used to get inventory layout to show storage by room. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "b1031d93a4fd7ef5e6d372e9afc525a1",
                 "parameters": [
                     {
@@ -2798,7 +3091,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "inventory fetched",
+                        "description": "Inventory fetched successfully. Ordered in descending order by `created_at`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2914,8 +3207,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get inventory in storage",
-                "description": "This request is used to get all inventory data in layout page. This request is using MySql database, and has protected routes",
+                "summary": "Get Inventory In Storage",
+                "description": "This request is used to get all inventory data in layout page. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "e4d2f57f2dbe6abd765e8d25b682daa9",
                 "parameters": [
                     {
@@ -2941,7 +3234,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "inventory fetched",
+                        "description": "Inventory fetched successfully. Ordered in descending order by `inventory_name`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3065,8 +3358,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get inventory detail",
-                "description": "Fetch inventory details and reminders by the given inventory's `id`. This request uses a MySQL database and requires authentication with a protected route.",
+                "summary": "Get Inventory Detail By ID",
+                "description": "This request is used to get inventory details and reminders by the given inventory's `id`. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "29aef768ceea735f87633baef0200b64",
                 "parameters": [
                     {
@@ -3295,8 +3588,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get inventory detail html format by id",
-                "description": "This request is used to get inventory detail html format for document generate. This request is using MySQL database, and has protected routes.",
+                "summary": "Get Inventory Detail Document Format By ID",
+                "description": "This request is used to get inventory detail html format for document generate. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "f7faa7d141966e95e2d1b5d746b39915",
                 "parameters": [
                     {
@@ -3408,8 +3701,8 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get room layout html format by id",
-                "description": "This request is used to get room layout html format for document generate. This request is using MySQL database, and has protected routes.",
+                "summary": "Get Room Layout Doc Format By ID",
+                "description": "This request is used to get room layout html format for document generate. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "2f5a2885248c5672dabea5b0b7616149",
                 "parameters": [
                     {
@@ -3521,7 +3814,7 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get analyze data of inventory by id",
+                "summary": "Get Analyze Data Of Inventory By ID",
                 "description": "This request is used to get analyze data of inventory. This request is using MySQL database, and has protected routes.",
                 "operationId": "2803a16397d82eb3c835795682a36506",
                 "parameters": [

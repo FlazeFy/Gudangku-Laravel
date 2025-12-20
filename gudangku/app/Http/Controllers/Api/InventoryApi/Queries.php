@@ -21,16 +21,23 @@ use App\Models\LendInventoryRelModel;
 
 class Queries extends Controller
 {
+    private $module;
+
+    public function __construct()
+    {
+        $this->module = "inventory";
+    }
+
     /**
      * @OA\GET(
      *     path="/api/v1/inventory",
-     *     summary="Get all inventory",
+     *     summary="Get All Inventory",
      *     description="This request is used to get all inventory data. This request is using MySql database, has protected routes, and supports pagination.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="inventory fetched",
+     *         description="Inventory fetched successfully. Ordered in descending order by `is_favorite`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="inventory fetched"),
@@ -183,22 +190,23 @@ class Queries extends Controller
                 // Get Lend Item
                 $res_lend = LendInventoryRelModel::getAllLendActiveInventory($user_id);
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res_final,
                     'lend_data' => $res_lend
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -206,13 +214,13 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/list",
-     *     summary="Get list inventory",
+     *     summary="Get List Inventory",
      *     description="This request is used to get all inventory data but in shot format for selection. This request is using MySql database, and has protected routes",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="inventory fetched",
+     *         description="Inventory fetched successfully. Ordered in ascending order by `inventory_name`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="inventory fetched"),
@@ -257,22 +265,19 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::select('id','inventory_name','inventory_vol','inventory_unit')
-                ->where('created_by',$user_id)
-                ->whereNull('deleted_at')
-                ->orderBy('inventory_name', 'asc')
-                ->get();
-            
+            // Get list inventory
+            $res = InventoryModel::getListInventory($user_id);
             if (count($res) > 0) {
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -286,13 +291,13 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/calendar",
-     *     summary="Get inventory as calendar format",
+     *     summary="Get Inventory As Calendar Format",
      *     description="This request is used to get all inventory data but in calendar format. This request is using MySql database, and has protected routes",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="inventory fetched",
+     *         description="Inventory fetched successfully. Ordered in descending order by `created_at`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="inventory fetched"),
@@ -337,22 +342,19 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::select('id','inventory_name','inventory_price','created_at')
-                ->where('created_by',$user_id)
-                ->whereNull('deleted_at')
-                ->orderby('created_at','DESC')
-                ->get();
-            
+            // Get inventory calendar format
+            $res = InventoryModel::getInventoryCalendar($user_id);
             if (count($res) > 0) {
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -366,13 +368,13 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/room",
-     *     summary="Get inventory room",
-     *     description="This request is used to get all inventory room. This request is using MySql database, and has protected routes",
+     *     summary="Get Inventory Room",
+     *     description="This request is used to get all inventory room. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="inventory fetched",
+     *         description="Inventory fetched successfully. Ordered in descending order by `created_at`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="inventory room fetched"),
@@ -414,21 +416,19 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = InventoryModel::select('inventory_room')
-                ->where('created_by',$user_id)
-                ->groupby('inventory_room')
-                ->get();
-            
+            // Get inventory room
+            $res = InventoryModel::getInventoryRoom($user_id);
             if (count($res) > 0) {
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -442,8 +442,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/layout/{room}",
-     *     summary="Get inventory layout by room",
-     *     description="This request is used to get inventory layout to show storage by room. This request is using MySql database, and has protected routes",
+     *     summary="Get Inventory Layout By Room",
+     *     description="This request is used to get inventory layout to show storage by room. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -458,7 +458,7 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="inventory fetched",
+     *         description="Inventory fetched successfully. Ordered in descending order by `created_at`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="inventory layout fetched"),
@@ -503,9 +503,10 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Get inventory by room
             $res = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
-            
             if (count($res) > 0) {
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'inventory layout'),
@@ -528,8 +529,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/search/by_room_storage/{room}/{storage}",
-     *     summary="Get inventory in storage",
-     *     description="This request is used to get all inventory data in layout page. This request is using MySql database, and has protected routes",
+     *     summary="Get Inventory In Storage",
+     *     description="This request is used to get all inventory data in layout page. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -554,7 +555,7 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="inventory fetched",
+     *         description="Inventory fetched successfully. Ordered in descending order by `inventory_name`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="inventory fetched"),
@@ -600,21 +601,23 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Get inventory by storage
             $res = InventoryModel::getInventoryByStorage($storage,$room,$user_id);
-            
             if (count($res) > 0) {
+                // Get inventory stats by storage
                 $stats = InventoryModel::getInventoryStatsByStorage($storage,$room,$user_id);
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res,
                     'stats' => $stats
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -628,8 +631,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/detail/{id}",
-     *     summary="Get inventory detail",
-     *     description="Fetch inventory details and reminders by the given inventory's `id`. This request uses a MySQL database and requires authentication with a protected route.",
+     *     summary="Get Inventory Detail By ID",
+     *     description="This request is used to get inventory details and reminders by the given inventory's `id`. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -711,26 +714,28 @@ class Queries extends Controller
     public function getInventoryById(Request $request, $id){
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            }
 
+            // Define user id by role
+            $check_admin = AdminModel::find($user_id);
+            $user_id = $check_admin ? null : $user_id;
+
+            // Get inventory detail by ID
             $res = InventoryModel::getInventoryDetail($id,$user_id);
-            
             if ($res) {
+                // Get Reminder by inventory ID
                 $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'inventory'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res,
                     'reminder' => count($reminder) > 0 ? $reminder : null
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -744,8 +749,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/detail/{id}/doc",
-     *     summary="Get inventory detail html format by id",
-     *     description="This request is used to get inventory detail html format for document generate. This request is using MySQL database, and has protected routes.",
+     *     summary="Get Inventory Detail Document Format By ID",
+     *     description="This request is used to get inventory detail html format for document generate. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -796,17 +801,19 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            }
+            $user_id = $check_admin ? null : $user_id;
 
+            // Get inventory detail by ID
             $inventory = InventoryModel::getInventoryDetail($id,$user_id);
-
             if (is_array($inventory) ? count($inventory) > 0 : $inventory) {    
+                // Get reminder by inventory ID
                 $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
+                // Generate document
                 $html = Document::documentTemplateInventory(null,null,null,$inventory,$reminder);
      
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("generate", "inventory detail document"),
@@ -815,7 +822,7 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -829,8 +836,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/layout/{room}/doc",
-     *     summary="Get room layout html format by id",
-     *     description="This request is used to get room layout html format for document generate. This request is using MySQL database, and has protected routes.",
+     *     summary="Get Room Layout Doc Format By ID",
+     *     description="This request is used to get room layout html format for document generate. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -880,12 +887,17 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::getInventoryByRoom($room,$user_id);
-            $layout = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
 
+            // Get inventory by room
+            $inventory = InventoryModel::getInventoryByRoom($room,$user_id);
+
+            // Get inventory by layout
+            $layout = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
             if (is_array($inventory) ? count($inventory) > 0 : $inventory && $layout) {    
+                // Generate document html
                 $html = Document::documentTemplateLayout(null,null,null,$layout,$inventory,$room);
      
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("generate", "inventory room document"),
@@ -894,7 +906,7 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -908,7 +920,7 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/analyze/{id}",
-     *     summary="Get analyze data of inventory by id",
+     *     summary="Get Analyze Data Of Inventory By ID",
      *     description="This request is used to get analyze data of inventory. This request is using MySQL database, and has protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
@@ -1022,10 +1034,12 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $inventory = InventoryModel::find($id);
             $year = $request->query('year', date('Y'));
 
-            if ($inventory) {    
+            // Get inventory by ID
+            $inventory = InventoryModel::find($id);
+            if ($inventory) {
+                // Get inventory analyze    
                 $res_price = InventoryModel::getAnalyzeMost($user_id, 'inventory_price');
                 $diff_price_avg = $res_price->average_inventory_price - $inventory->inventory_price;
                 $res_price->diff_ammount_average_to_price = $diff_price_avg;
@@ -1037,7 +1051,7 @@ class Queries extends Controller
                 $res_history = InventoryModel::getAnalyzeHistory($user_id,$inventory->id);
                 $res_report = ReportModel::getLastFoundInventoryReport($user_id,$inventory->id);
                 $res_montly_in_report = ReportModel::getInventoryMonthlyInReport($user_id,$inventory->id,$year);
-                $res_layout = InventoryLayoutModel::getFindInventoryByRoomStorage($user_id,$inventory->inventory_room,$inventory->inventory_storage);
+                $res_layout = InventoryLayoutModel::getInventoryByRoomStorage($user_id,$inventory->inventory_room,$inventory->inventory_storage);
                 $res_inventory_activity_report = InventoryModel::getAnalyzeActivityInReport($user_id,$inventory->id);
 
                 $res_info = [
@@ -1068,6 +1082,8 @@ class Queries extends Controller
                     'inventory_layout' => $res_layout,
                     'inventory_activity_report' => $res_inventory_activity_report
                 ]);
+
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("analyze", "inventory"),
@@ -1076,7 +1092,7 @@ class Queries extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

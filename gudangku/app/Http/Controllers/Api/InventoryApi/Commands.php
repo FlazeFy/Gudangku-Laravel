@@ -39,12 +39,15 @@ class Commands extends Controller
     private $module;
     private $max_size_file;
     private $allowed_file_type;
+    private $firebaseMessaging;
 
     public function __construct()
     {
         $this->module = "inventory";
         $this->max_size_file = 10000000; // 10 Mb
         $this->allowed_file_type = ['jpg','jpeg','gif','png'];
+        $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+        $this->firebaseMessaging = $factory->createMessaging();
     }
 
     /**
@@ -118,12 +121,12 @@ class Commands extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("delete", 'inventory'),
+                    'message' => Generator::getMessageTemplate("delete", $this->module),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -249,7 +252,7 @@ class Commands extends Controller
                             $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
                         } catch (\Exception $e) {
                             return response()->json([
-                                'status' => 'failed',
+                                'status' => 'error',
                                 'message' => Generator::getMessageTemplate("unknown_error", null),
                             ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
@@ -272,19 +275,19 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -292,7 +295,8 @@ class Commands extends Controller
     /**
      * @OA\DELETE(
      *     path="/api/v1/inventory/destroy/{id}",
-     *     summary="Hard delete inventory by id",
+     *     summary="Hard Delete Inventory By ID",
+     *     description="This request is used to permanently delete an inventory by given `ID`. This request interacts with the MySQL database, firebase storage, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -351,11 +355,31 @@ class Commands extends Controller
             // Hard Delete inventory by ID
             $rows = InventoryModel::deleteInventoryById($id, $user_id);
             if($rows > 0){
+                // Delete Firebase uploaded image
+                if($inventory->inventory_image){
+                    // Delete failed if file not found (already gone)
+                    if(!Firebase::deleteFile($inventory->inventory_image)){
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => Generator::getMessageTemplate("not_found", 'failed to delete inventory image'),
+                        ], Response::HTTP_NOT_FOUND);
+                    }
+                }
+
                 // Hard Delete inventory relation by ID
                 ReminderModel::deleteReminderByInventoryId($id, $user_id);
                 ReportItemModel::deleteReportItemByInventoryId($id, $user_id);
 
                 if(!$check_admin){
+                    // Get user's contact to broadcast
+                    $user = UserModel::getSocial($user_id);
+
+                    // Send Firebase notification (mobile)
+                    if($user->firebase_fcm_token){
+                        $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($message));
+                        $response = $this->firebaseMessaging->send($fcm);
+                    }
+                    
                     // Create history
                     Audit::createHistory('Permentally delete', $inventory->inventory_name, $user_id);
                 }
@@ -363,12 +387,12 @@ class Commands extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("permentally delete", 'inventory'),
+                    'message' => Generator::getMessageTemplate("permentally delete", $this->module),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -382,7 +406,8 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/inventory/fav_toggle/{id}",
-     *     summary="Toogle favorite inventory by id",
+     *     summary="Put Toogle Favorite Inventory By ID",
+     *     description="This request is used to toggle (favorite) an inventory based on the provided `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -392,6 +417,13 @@ class Commands extends Controller
      *         @OA\Schema(type="string"),
      *         description="Inventory ID",
      *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"is_favorite"},
+     *              @OA\Property(property="is_favorite", type="integer", example=1)
+     *          )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -445,12 +477,12 @@ class Commands extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("update", 'inventory'),
+                    'message' => Generator::getMessageTemplate("update", $this->module),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -464,7 +496,8 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/inventory/recover/{id}",
-     *     summary="Recover inventory by id",
+     *     summary="Recover Inventory By Id",
+     *     description="This request is used to recover deleted inventory based on the provided `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -532,12 +565,12 @@ class Commands extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("recover", 'inventory'),
+                    'message' => Generator::getMessageTemplate("recover", $this->module),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'inventory'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -551,9 +584,35 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/inventory",
-     *     summary="Create inventory",
+     *     summary="Post Create Inventory",
+     *     description="This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, firebase storage, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"inventory_name","inventory_category","inventory_room","inventory_unit","inventory_vol","is_favorite","created_at"},
+     *                 @OA\Property(property="inventory_name", type="string", example="Wooden Dining Table"),
+     *                 @OA\Property(property="inventory_category", type="string", example="Furniture"),
+     *                 @OA\Property(property="inventory_desc", type="string", nullable=true, example="Solid wood dining table for six people"),
+     *                 @OA\Property(property="inventory_merk", type="string", nullable=true, example="IKEA"),
+     *                 @OA\Property(property="inventory_color", type="string", nullable=true, example="Brown"),
+     *                 @OA\Property(property="inventory_room", type="string", example="Dining Room"),
+     *                 @OA\Property(property="inventory_storage", type="string", nullable=true, example="Main House"),
+     *                 @OA\Property(property="inventory_rack", type="string", nullable=true, example="Rack B2"),
+     *                 @OA\Property(property="inventory_price", type="number", format="float", nullable=true, example=3500000),
+     *                 @OA\Property(property="inventory_image", type="string", format="binary", nullable=true),
+     *                 @OA\Property(property="inventory_unit", type="string", example="unit"),
+     *                 @OA\Property(property="inventory_vol", type="number", example=1),
+     *                 @OA\Property(property="inventory_capacity_unit", type="string", nullable=true, example="kg"),
+     *                 @OA\Property(property="inventory_capacity_vol", type="number", nullable=true, example=80),
+     *                 @OA\Property(property="is_favorite", type="integer", example=1),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-19 10:30:00")
+     *             )
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=201,
      *         description="inventory created",
@@ -600,9 +659,6 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-
-            // Firebase Init
-            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
             
             // True / False safety
             $request->merge(['is_favorite' => $request->is_favorite == 'off' ? 0 : 1]);
@@ -793,18 +849,18 @@ class Commands extends Controller
                                 // Delete after send
                                 unlink($pdfFilePath);
                             } else {
+                                // Reset telegram from user account if not valid
+                                UserModel::updateUserById([ 'telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
                                 $extra_msg = ' Telegram ID is invalid. Please check your Telegram ID';
                             }
                         }
+
+                        // Send Firebase notification (mobile)
                         if($user->firebase_fcm_token){
-                            // Send Firebase notification (mobile)
-                            $messaging = $factory->createMessaging();
                             $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
                                 ->withNotification(Notification::create($message))
-                                ->withData([
-                                    'inventory_id' => $id,
-                                ]);
-                            $response = $messaging->send($fcm);
+                                ->withData(['inventory_id' => $id]);
+                            $response = $this->firebaseMessaging->send($fcm);
                         }
 
                         // Send email
@@ -841,9 +897,31 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/inventory/edit/{id}",
-     *     summary="Update inventory By Id",
+     *     summary="Put Update Inventory By ID",
+     *     description="This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"inventory_name","inventory_category","inventory_room","inventory_unit","inventory_vol","is_favorite","created_at"},
+     *             @OA\Property(property="inventory_name", type="string", example="Wooden Dining Table"),
+     *             @OA\Property(property="inventory_category", type="string", example="Furniture"),
+     *             @OA\Property(property="inventory_desc", type="string", nullable=true, example="Solid wood dining table for six people"),
+     *             @OA\Property(property="inventory_merk", type="string", nullable=true, example="IKEA"),
+     *             @OA\Property(property="inventory_color", type="string", nullable=true, example="Brown"),
+     *             @OA\Property(property="inventory_room", type="string", example="Dining Room"),
+     *             @OA\Property(property="inventory_storage", type="string", nullable=true, example="Main House"),
+     *             @OA\Property(property="inventory_rack", type="string", nullable=true, example="Rack B2"),
+     *             @OA\Property(property="inventory_price", type="number", format="float", nullable=true, example=3500000),
+     *             @OA\Property(property="inventory_unit", type="string", example="unit"),
+     *             @OA\Property(property="inventory_vol", type="number", example=1),
+     *             @OA\Property(property="inventory_capacity_unit", type="string", nullable=true, example="kg"),
+     *             @OA\Property(property="inventory_capacity_vol", type="number", nullable=true, example=80),
+     *             @OA\Property(property="is_favorite", type="integer", example=1),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-19 10:30:00")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="inventory updated",
@@ -956,6 +1034,7 @@ class Commands extends Controller
      * @OA\PUT(
      *     path="/api/v1/inventory/edit_layout/{id}",
      *     summary="Put Update Inventory Layout By ID",
+     *     description="This request is used to update an inventory by given inventory layout's `id`. The updated fields are `inventory_storage` and `storage_desc`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -965,6 +1044,14 @@ class Commands extends Controller
      *         @OA\Schema(type="string"),
      *         description="Inventory Layout ID",
      *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"inventory_storage","storage_desc"},
+     *             @OA\Property(property="inventory_storage", type="string", example="Fridge"),
+     *             @OA\Property(property="storage_desc", type="string", example="Storage food & drink")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -1021,23 +1108,21 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {  
+                // Get inventory layout by ID
                 $old_data = InventoryLayoutModel::find($id);
 
                 if($old_data){
-                    $rows = InventoryLayoutModel::where('id',$id)
-                        ->where('created_by', $user_id)
-                        ->update([
-                            'inventory_storage' => $request->inventory_storage,
-                            'storage_desc' => $request->storage_desc
+                    // Update inventory layout by ID
+                    $rows = InventoryLayoutModel::updateInventoryLayoutById($user_id, $id, [
+                        'inventory_storage' => $request->inventory_storage,
+                        'storage_desc' => $request->storage_desc
                     ]);
 
                     if($rows > 0){
-                        $rows_inventory = InventoryModel::where('inventory_storage',$old_data->inventory_storage)
-                            ->where('created_by', $user_id)
-                            ->update([
-                                'inventory_storage' => $request->inventory_storage,
-                        ]);
+                        // Update inventory by storage
+                        $rows_inventory = InventoryModel::updateInventoryByStorage($user_id,$old_data->inventory_storage,['inventory_storage' => $request->inventory_storage]);
                         
+                        // Create history
                         Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
                         
                         // Return success response
@@ -1071,8 +1156,19 @@ class Commands extends Controller
      * @OA\POST(
      *     path="/api/v1/inventory/layout",
      *     summary="Post Create Inventory Layout",
+     *     description="This request is used to create an inventory layout by given `inventory_storage`, `inventory_room`, `layout`, and `storage_desc`. This request interacts with the MySQL database, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"inventory_storage","inventory_room","layout"},
+     *             @OA\Property(property="inventory_room", type="string", example="Kitchen"),
+     *             @OA\Property(property="inventory_storage", type="string", example="Fridge"),
+     *             @OA\Property(property="layout", type="string", example="A1:B1"),
+     *             @OA\Property(property="storage_desc", type="string", example="Storage food & drink")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=201,
      *         description="inventory layout coordinate created",
@@ -1120,29 +1216,24 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {  
-                $rows = InventoryLayoutModel::where('inventory_room',$request->inventory_room)
-                    ->where('created_by', $user_id)
-                    ->where('layout', 'like', '%' . $request->layout . '%')
-                    ->first();
-
-                if($rows){
+                // Check if layout in specific room has been used
+                $exist = InventoryLayoutModel::isLayoutRoomUsedByCoordinate($user_id, $request->inventory_room, $request->layout);
+                if($exist){
                     return response()->json([
-                        'status' => 'success',
+                        'status' => 'failed',
                         'message' => Generator::getMessageTemplate("conflict", "inventory layout"),
                     ], Response::HTTP_CONFLICT);
                 } else {
                     $is_success = false;
-                    $check_layout = InventoryLayoutModel::where('inventory_storage',$request->inventory_storage)
-                        ->where('inventory_room',$request->inventory_room)
-                        ->where('created_by', $user_id)
-                        ->first();
 
+                    // Check if layout with same room & storage already exist
+                    $check_layout = InventoryLayoutModel::getInventoryByRoomStorage($user_id,$request->inventory_room,$request->inventory_storage);
                     if($check_layout){
-                        $rows_layout = InventoryLayoutModel::where('id',$check_layout->id)
-                            ->update([
-                                'layout' => $check_layout->layout.':'.$request->layout,
-                                'storage_desc' => $request->storage_desc
-                            ]);
+                        // Update inventory layout by ID
+                        $rows_layout = InventoryLayoutModel::updateInventoryLayoutById($user_id, $check_layout->id, [
+                            'layout' => $check_layout->layout.':'.$request->layout,
+                            'storage_desc' => $request->storage_desc
+                        ]);
                         
                         if($rows_layout > 0){
                             $is_success = true;
@@ -1150,6 +1241,7 @@ class Commands extends Controller
                             Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
                         }
                     } else {
+                        // Create inventory layout
                         $rows_layout = InventoryLayoutModel::createInventoryLayout($request->inventory_room, $request->inventory_storage, $request->storage_desc, $request->layout, $user_id);
 
                         if($rows_layout){
@@ -1157,23 +1249,30 @@ class Commands extends Controller
 
                             // Create history
                             Audit::createHistory('Create Storage', $request->inventory_storage, $user_id);
-                            
+                            // Get user's contact to broadcast
                             $user = UserModel::getSocial($user_id);
                             
                             $message = "inventory storage has been created, its called '$request->inventory_storage'";
+                            
+                            // Send Firebase notification (mobile)
                             if($user->firebase_fcm_token){
-                                $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
-                                $messaging = $factory->createMessaging();
-                                $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
-                                    ->withNotification(Notification::create($message));
-                                $response = $messaging->send($fcm);
+                                $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($message));
+                                $response = $this->firebaseMessaging->send($fcm);
                             }
-                            if($user->telegram_user_id){
-                                $response = Telegram::sendMessage([
-                                    'chat_id' => $user->telegram_user_id,
-                                    'text' => $message,
-                                    'parse_mode' => 'HTML'
-                                ]);
+
+                            if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                                // Check if user Telegram ID is valid
+                                if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                    // Send telegram message
+                                    $response = Telegram::sendMessage([
+                                        'chat_id' => $user->telegram_user_id,
+                                        'text' => $message,
+                                        'parse_mode' => 'HTML'
+                                    ]);
+                                } else {
+                                    // Reset telegram from user account if not valid
+                                    UserModel::updateUserById([ 'telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                                }
                             }
                         }
                     }
@@ -1203,7 +1302,8 @@ class Commands extends Controller
     /**
      * @OA\DELETE(
      *     path="/api/v1/inventory/delete_layout/{id}/{coor}",
-     *     summary="Hard Delete Inventory Layout",
+     *     summary="Hard Delete Inventory Layout By ID and Coordinate",
+     *     description="This request is used to permanently delete an inventory layout by given `ID` and `coordinate`. This request interacts with the MySQL database, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -1236,40 +1336,45 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
             $extra_msg = "";
-            $check_layout = InventoryLayoutModel::getLayoutByCoor($id, $user_id, $coor);
-            $layout = $check_layout->layout;
-            $storage = $check_layout->inventory_storage;
-            $find = ':'; // Coordinate separate
+            $find = ':'; // Coordinate separator
             $is_success = false;
             $msg = '';
+
+            // Get inventory layout by ID
+            $check_layout = InventoryLayoutModel::getLayoutByCoor($id, $user_id, $coor);
+            $layout = $check_layout->layout;
+            $storage = $check_layout->inventory_storage;            
 
             if(substr_count($layout, $find) > 0){
                 $new_layout = str_replace($coor, "", $layout);
                 $new_layout = trim($new_layout, ":");
-                $rows_layout = InventoryLayoutModel::where('id',$id)
-                    ->update([
-                        'layout' => $new_layout
-                    ]);
-                $msg = "$storage's coordinate is updated";
-                
+
+                // Update inventory layout by ID
+                $rows_layout = InventoryLayoutModel::updateInventoryLayoutById($user_id,$id,['layout' => $new_layout]);
                 if($rows_layout > 0){
+                    $msg = "$storage's coordinate is updated";
                     $is_success = true;
+
+                    // Create history
                     Audit::createHistory('Update Layout', $msg, $user_id);
                 }
             } else {
+                // Hard Delete inventory layout by id (layout)
                 $rows_layout = InventoryLayoutModel::destroy($id);
+
                 $msg = Generator::getMessageTemplate("delete", $storage);
                 if($rows_layout > 0){
                     $is_success = true;
+                    
+                    // Create history
                     Audit::createHistory('Delete Storage', $msg, $user_id);
+                    // Get user's contact to broadcast
+                    $user = UserModel::getSocial($user_id);
 
-                    $res_inv = InventoryModel::where('inventory_storage',$storage)
-                        ->where('created_by',$user_id)
-                        ->update([
-                            'inventory_storage' => null,
-                            'updated_at' => date('Y-m-d H:i:s') 
-                        ]);
+                    // Update inventory by storage
+                    $res_inv = InventoryModel::updateInventoryByStorage($user_id,$storage,['inventory_storage' => null]);
 
+                    // Define message based on impacted inventory after layout change
                     if($res_inv > 0){
                         $extra_msg = ". At least $res_inv item in inventory has been updated due to storage deletion";
                     } else {
@@ -1277,20 +1382,25 @@ class Commands extends Controller
                     }
                     $msg = "$msg$extra_msg";
 
-                    $user = UserModel::getSocial($user_id);
+                    // Send Firebase notification (mobile)
                     if($user->firebase_fcm_token){
-                        $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
-                        $messaging = $factory->createMessaging();
-                        $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
-                            ->withNotification(Notification::create($msg));
-                        $response = $messaging->send($fcm);
+                        $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($msg));
+                        $response = $this->firebaseMessaging->send($fcm);
                     }
-                    if($user->telegram_user_id){
-                        $response = Telegram::sendMessage([
-                            'chat_id' => $user->telegram_user_id,
-                            'text' => $msg,
-                            'parse_mode' => 'HTML'
-                        ]);
+
+                    if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                        // Check if user Telegram ID is valid
+                        if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                            // Send telegram message
+                            $response = Telegram::sendMessage([
+                                'chat_id' => $user->telegram_user_id,
+                                'text' => $msg,
+                                'parse_mode' => 'HTML'
+                            ]);
+                        } else {
+                            // Reset telegram from user account if not valid
+                            UserModel::updateUserById([ 'telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                        }
                     }
                 }
             }

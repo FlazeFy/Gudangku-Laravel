@@ -30,9 +30,20 @@ use App\Helpers\QRGenerate;
 use App\Helpers\Generator;
 use App\Helpers\Validation;
 use App\Helpers\Firebase;
+use App\Helpers\TelegramMessage;
 
 class Commands extends Controller
 {
+    private $module;
+    private $firebaseMessaging;
+
+    public function __construct()
+    {
+        $this->module = "inventory lend";
+        $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+        $this->firebaseMessaging = $factory->createMessaging();
+    }
+
     /**
      * @OA\POST(
      *     path="/api/v1/lend",
@@ -84,9 +95,9 @@ class Commands extends Controller
     public function postLendQr(Request $request)
     {
         try{
-            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateLend($request,'create_qr');
             if ($validator->fails()) {
                 return response()->json([
@@ -94,6 +105,7 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
+                // Get active lend
                 $check_lend = LendModel::getLendActive($user_id);
                 $is_expired = true;
 
@@ -116,17 +128,20 @@ class Commands extends Controller
                     $lend = LendModel::createLend(null, $qrPeriodHours, null, 'open', $user_id);
                     $lend_expired_datetime = Carbon::parse($lend->created_at)->addHours($qrPeriodHours);
                     $lend_id = $lend->id;
+
+                    // Generate QR
                     $qr_path = QRGenerate::generateQR("https://gudangku.leonardhors.com/lend/$lend_id");
 
                     $file = new File($qr_path);
                     $file_ext = pathinfo($qr_path, PATHINFO_EXTENSION);
-
                     try {
-                        $user = UserModel::find($user_id);
+                        // Upload qr image
                         $qr_image = Firebase::uploadFile('lend', $user_id, $user->username, $file, $file_ext);
 
+                        // Get user's contact to broadcast
                         $user = UserModel::getSocial($user_id);
                         if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                            // Send telegram message with image
                             $response = Telegram::sendPhoto([
                                 'chat_id' => $user->telegram_user_id,
                                 'photo' => fopen($file, 'rb'),
@@ -143,19 +158,18 @@ class Commands extends Controller
                         ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
 
-                    // Mark the old lend as expired
+                    // Update lend by user ID
                     if ($check_lend && $is_expired) {
-                        $data = ['lend_status' => 'expired'];
-                        LendModel::updateLendByUserId($data, $user_id, $check_lend->id);
+                        LendModel::updateLendByUserId(['lend_status' => 'expired'], $user_id, $check_lend->id);
                     }
 
-                    // Save new QR image
-                    $data = ['lend_qr_url' => $qr_image];
-                    LendModel::updateLendByUserId($data, $user_id, $lend_id);
+                    // Update lend by user ID
+                    LendModel::updateLendByUserId(['lend_qr_url' => $qr_image], $user_id, $lend_id);
 
-                    // History
+                    // Create history
                     Audit::createHistory('Create', 'QR Generate', $user_id);
 
+                    // Return success
                     return response()->json([
                         'status' => 'success',
                         'message' => $message,
@@ -227,6 +241,7 @@ class Commands extends Controller
     public function postBorrowInventory(Request $request,$lend_id)
     {
         try{
+            // Validate request body
             $validator = Validation::getValidateLend($request,'create_borrow');
             if ($validator->fails()) {
                 return response()->json([
@@ -235,14 +250,15 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
+                // Get lend by ID
                 $check_lend = LendModel::find($lend_id);
+
                 $lend_expired_datetime = Carbon::parse($check_lend->created_at)->addHours($check_lend->qr_period);
                 $is_expired = Carbon::now()->greaterThan($lend_expired_datetime);
 
                 if($is_expired){
-                    // Update lend status
-                    $data = ['lend_status' => 'expired'];
-                    LendModel::updateLendByUserId($data, null, $lend_id);
+                    // Update lend by ID
+                    LendModel::updateLendByUserId(['lend_status' => 'expired'], null, $lend_id);
 
                     return response()->json([
                         'status' => 'failed',
@@ -278,16 +294,18 @@ class Commands extends Controller
 
                     if($success_add > 0){
                         // Update lend status
-                        $data = ['lend_status' => 'used'];
-                        LendModel::updateLendByUserId($data, null, $lend_id);
+                        LendModel::updateLendByUserId(['lend_status' => 'used'], null, $lend_id);
 
-                        // Get owner 
+                        // Get user's contact to broadcast
                         $owner = UserModel::getSocial($check_lend->created_by);
 
+                        // Init Doc
                         $options = new DompdfOptions();
                         $options->set('defaultFont', 'Helvetica');
                         $dompdf = new Dompdf($options);
                         $datetime = now();
+
+                        // Document template
                         $header_template = Generator::getDocTemplate('header');
                         $style_template = Generator::getDocTemplate('style');
                         $footer_template = Generator::getDocTemplate('footer');
@@ -321,6 +339,7 @@ class Commands extends Controller
                                 </body>
                             </html>";
 
+                        // Render document
                         $dompdf->loadHtml($html);
                         $dompdf->setPaper('A4', 'portrait');
                         $dompdf->render();
@@ -330,20 +349,27 @@ class Commands extends Controller
                         file_put_contents($pdfFilePath, $pdfContent);
 
                         if($owner && $owner->telegram_is_valid == 1 && $owner->telegram_user_id){
-                            $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
-                            
-                            $response = Telegram::sendDocument([
-                                'chat_id' => $owner->telegram_user_id,
-                                'document' => $inputFile,
-                                'caption' => "$borrower_name has been requested you to borrow some item from your inventory",
-                                'parse_mode' => 'HTML'
-                            ]);
+                            // Check if user Telegram ID is valid
+                            if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                // Send telegram message with document
+                                $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
+                                $response = Telegram::sendDocument([
+                                    'chat_id' => $owner->telegram_user_id,
+                                    'document' => $inputFile,
+                                    'caption' => "$borrower_name has been requested you to borrow some item from your inventory",
+                                    'parse_mode' => 'HTML'
+                                ]);
+                            } else {
+                                // Reset telegram from user account if not valid
+                                UserModel::updateUserById(['telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                                $extra_msg = ' Telegram ID is invalid. Please check your Telegram ID';
+                            }
                         }
 
                         $file = new File($pdfFilePath);
                         $file_ext = pathinfo($pdfFilePath, PATHINFO_EXTENSION);
-
                         try {
+                            // Upload file
                             $url_evidence = Firebase::uploadFile('lend', $owner->id, $owner->username, $file, $file_ext);
 
                             unlink($pdfFilePath);
@@ -354,6 +380,7 @@ class Commands extends Controller
                             ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
 
+                        // Return success
                         return response()->json([
                             'status' => 'success',
                             'message' => 'borrow has sended, we also give you the evidence',
@@ -370,7 +397,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -420,6 +447,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateLend($request,'update_returned');
             if ($validator->fails()) {
                 return response()->json([
@@ -439,6 +467,7 @@ class Commands extends Controller
                         $returned_at = null;
                     }
 
+                    // Update lend inventory by ID
                     $inventory_rel = LendInventoryRelModel::updateLendInventoryById($dt['id'],$lend_id,[
                         'returned_at' => $returned_at
                     ]);
@@ -449,12 +478,11 @@ class Commands extends Controller
                 }
                     
                 if($returned_all){
-                    $lend = LendModel::updateLendByUserId(
-                        ['lend_status' => 'finished'],
-                    $user_id,$lend_id);
+                    // Uodate lend by user ID
+                    $lend = LendModel::updateLendByUserId(['lend_status' => 'finished'], $user_id,$lend_id);
 
                     if($lend){
-                        // History
+                        // Create history
                         Audit::createHistory('Returned', 'Lend is finished', $user_id);
                     } else {
                         return response()->json([
@@ -464,6 +492,7 @@ class Commands extends Controller
                     }
                 }
 
+                // Return success
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("update", 'lend'),
@@ -472,7 +501,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

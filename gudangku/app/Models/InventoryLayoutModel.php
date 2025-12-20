@@ -41,7 +41,7 @@ class InventoryLayoutModel extends Model
             ->get();
     }
 
-    public static function getFindInventoryByRoomStorage($user_id,$room,$storage){
+    public static function getInventoryByRoomStorage($user_id,$room,$storage){
         return InventoryLayoutModel::select('inventory_storage','layout','storage_desc','created_at')
             ->where('created_by',$user_id)
             ->where('inventory_room',$room)
@@ -71,5 +71,16 @@ class InventoryLayoutModel extends Model
     
     public static function deleteInventoryLayoutByUserId($user_id){
         return InventoryLayoutModel::where('created_by',$user_id)->delete();
+    }
+
+    public static function updateInventoryLayoutById($user_id = null, $id, $data){
+        return InventoryLayoutModel::where('id', $id)->where('created_by', $user_id)->update($data);
+    }
+
+    public static function isLayoutRoomUsedByCoordinate($user_id, $inventory_room, $layout){
+        return InventoryLayoutModel::where('inventory_room',$inventory_room)
+            ->where('created_by', $user_id)
+            ->where('layout', 'like', '%' . $layout . '%')
+            ->exists();
     }
 }
