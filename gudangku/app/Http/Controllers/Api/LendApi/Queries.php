@@ -18,8 +18,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/lend/qr",
-     *     summary="Get active qr code",
-     *     description="This request is used to get active qr code. This request is using MySQL database, and has protected routes.",
+     *     summary="Get Active QR Code",
+     *     description="This request is used to get active qr code.  This request interacts with the MySQL database, has protected routes.",
      *     tags={"Lend"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -95,12 +95,14 @@ class Queries extends Controller
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
+            // Get active lend
             $res = LendModel::getLendActive($user_id);
             if($res) { 
                 $res->lend_expired_datetime = Carbon::parse($res->created_at)->addHours($res->qr_period);
                 $res->is_expired = Carbon::now()->greaterThan($res->lend_expired_datetime);
 
                 if(!$res->is_expired){
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("fetch", "lend qr code"),
@@ -129,8 +131,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/lend/history",
-     *     summary="Get history qr code",
-     *     description="This request is used to get history of qr code. This request is using MySQL database, and has protected routes.",
+     *     summary="Get History QR Code",
+     *     description="This request is used to get history of qr code.  This request interacts with the MySQL database, has a pagination, and has protected routes.",
      *     tags={"Lend"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -191,6 +193,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $perPage = $request->query('per_page_key') ?? 12;
 
+            // Get all lend
             $res = LendModel::getAllLend($user_id,$perPage);
             if ($res->count() > 0){
                 $final_res = [];
@@ -209,6 +212,7 @@ class Queries extends Controller
                     ];
                 }
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", "lend qr code"),
@@ -245,8 +249,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/lend/inventory/{lend_id}",
-     *     summary="Get lend inventory",
-     *     description="This request is used to get lend inventory by lend id (QR Code). This request is using MySQL database, and has protected routes.",
+     *     summary="Get Lend Inventory",
+     *     description="This request is used to get lend inventory by lend id (QR Code).  This request interacts with the MySQL database, has a pagination, and has protected routes.",
      *     tags={"Lend"},
      *     @OA\Response(
      *         response=200,
@@ -314,8 +318,8 @@ class Queries extends Controller
         try{
             $perPage = $request->query('per_page_key') ?? 12;
 
+            // Get lend by ID
             $check = LendModel::find($lend_id);
-
             if($check->lend_status == 'expired' || $check->lend_status == 'used' || $check->is_finished){
                 $extra = $check->lend_status == 'expired' ? 'expired' : 'used';
                 return response()->json([
@@ -324,10 +328,13 @@ class Queries extends Controller
                 ], Response::HTTP_BAD_REQUEST);
             }
 
+            // Get lend attached inventory by lend's ID
             $res = LendModel::getAllLendInventory($lend_id,$perPage);
             if(count($res) > 0) { 
+                // Get lend owner by lend's ID
                 $user = LendModel::getLendOwnerById($lend_id);
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", "lend inventory"),

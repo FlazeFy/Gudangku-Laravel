@@ -28,12 +28,34 @@ use App\Service\GoogleCalendar;
 
 class Commands extends Controller
 {
+    private $module;
+    private $firebaseMessaging;
+
+    public function __construct()
+    {
+        $this->module = "reminder";
+        $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
+        $this->firebaseMessaging = $factory->createMessaging();
+    }
+
     /**
      * @OA\POST(
      *     path="/api/v1/reminder",
-     *     summary="Create a reminder",
+     *     summary="Post Create Reminder",
+     *     description="This request is used to create a reminder by using given `reminder_type`, `reminder_context`, `inventory_id`, and `reminder_desc`. This request interacts with the MySQL database, sync with Google Calendar, broadcast message using Firebase FCM and Telegram, has a protected routes, and audited activity (history).",
      *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"reminder_type","reminder_context","reminder_desc","inventory_id"},
+     *             @OA\Property(property="reminder_type", type="string", example="Every Week"),
+     *             @OA\Property(property="reminder_context", type="string", example="Every Day 1"),
+     *             @OA\Property(property="reminder_desc", type="string", example="testing reminder"),
+     *             @OA\Property(property="send_demo", type="boolean", example=true),
+     *             @OA\Property(property="inventory_id", type="string", example="5994fb22-30ae-c088-3543-8d12f487539a"),
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=201,
      *         description="reminder created",
@@ -89,6 +111,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateReminder($request,'create');
             if ($validator->fails()) {
                 return response()->json([
@@ -101,23 +124,22 @@ class Commands extends Controller
                 $inventory_id = $request->inventory_id;
                 $reminder_desc = $request->reminder_desc;
 
+                // Get reminder data
                 $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id);
-
                 if(!$is_exist){
-                    $inventory = InventoryModel::select('inventory_name')
-                        ->where('created_by', $user_id)
-                        ->where('id', $request->inventory_id)
-                        ->first();
-
+                    // Get inventory name by ID
+                    $inventory = InventoryModel::getInventoryNameById($request->inventory_id);
                     if($inventory){
+                        // Create reminder
                         ReminderModel::createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id);
 
+                        // Get google token by user
                         $google_token = GoogleTokensModel::getGoogleTokensByUserId($user_id);
                         $reminder_desc = "$reminder_desc for inventory $inventory->inventory_name";
                         if($google_token){
                             $access_token = $google_token->access_token;
 
-                            // Google Calendar
+                            // Define event in google calendar
                             if($reminder_type == 'Every Day'){
                                 $hour = (int) str_replace("Every ", "", $reminder_context);
                                 $start = now()->setTime($hour, 0)->toRfc3339String();
@@ -152,31 +174,38 @@ class Commands extends Controller
                         $msg = "You have create a reminder. Here's the reminder description for [DEMO]. $reminder_desc";
                         if($request->send_demo == "true"){
                             // Demo Reminder
+                            // Get user data
                             $user = UserModel::getSocial($user_id);
+                            // Send Firebase notification (mobile)
                             if($user->firebase_fcm_token){
-                                $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
-                                $messaging = $factory->createMessaging();
-                                $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
-                                    ->withNotification(Notification::create($msg));
+                                $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($msg));
                                 $response = $messaging->send($fcm);
                             }
-                            if($user->telegram_user_id){
-                                $response = Telegram::sendMessage([
-                                    'chat_id' => $user->telegram_user_id,
-                                    'text' => $msg,
-                                    'parse_mode' => 'HTML'
-                                ]);
+                            if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                                // Check if user Telegram ID is valid
+                                if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                    // Send telegram message
+                                    $response = Telegram::sendMessage([
+                                        'chat_id' => $user->telegram_user_id,
+                                        'text' => $msg,
+                                        'parse_mode' => 'HTML'
+                                    ]);
+                                } else {
+                                    // Reset telegram from user account if not valid
+                                    UserModel::updateUserById([ 'telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                                }
                             }
                         }
 
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
-                            'message' => Generator::getMessageTemplate("create", 'reminder'),
+                            'message' => Generator::getMessageTemplate("create", $this->module),
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => Generator::getMessageTemplate("not_found", 'reminder'),
+                            'message' => Generator::getMessageTemplate("not_found", $this->module),
                         ], Response::HTTP_NOT_FOUND);
                     }
                 } else {
@@ -197,9 +226,26 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/reminder/copy",
-     *     summary="Create a copy of reminder to another inventory",
+     *     summary="Post Create Copy Reminder",
+     *     description="This request is used to create a copy reminder to another inventory by using given `list_inventory_id`, `reminder_context`, `reminder_type`, and `reminder_desc`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"reminder_type","reminder_context","reminder_desc","list_inventory_id"},
+     *             @OA\Property(property="reminder_type", type="string", example="Every Week"),
+     *             @OA\Property(property="reminder_context", type="string", example="Every Day 1"),
+     *             @OA\Property(property="reminder_desc", type="string", example="testing reminder"),
+     *             @OA\Property(
+     *                 property="list_inventory_id",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440000"
+     *                 )
+     *             )
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=201,
      *         description="reminder created",
@@ -254,6 +300,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateReminder($request,'create_copy');
             if ($validator->fails()) {
                 return response()->json([
@@ -267,11 +314,14 @@ class Commands extends Controller
                 $names = [];
 
                 foreach ($list_inventory_id as $id) {
+                    // Get reminder data
                     $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($id, $request->reminder_type, $request->reminder_context, $user_id);
 
                     if (!$is_exist) {
+                        // Get inventory name by ID
                         $inventory = InventoryModel::getInventoryNameById($id);    
                         if ($inventory) {
+                            // Create reminder
                             $res = ReminderModel::createReminder($id, $request->reminder_desc, $request->reminder_type, $request->reminder_context, $user_id);
 
                             if ($res) {
@@ -285,6 +335,7 @@ class Commands extends Controller
                 $list_inventory_name = '';
                 $count_names = count($names);
 
+                // Tidy up sentence
                 if ($count_names === 1) {
                     $list_inventory_name = $names[0];
                 } elseif ($count_names === 2) {
@@ -295,9 +346,10 @@ class Commands extends Controller
                 }
                 
                 if($total_success > 0){
-                    // History
+                    // Create history
                     Audit::createHistory('Create Reminder', "$request->reminder_desc for inventory $list_inventory_name", $user_id);
 
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => "reminder created for inventory : $list_inventory_name",
@@ -320,9 +372,17 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/reminder/re_remind",
-     *     summary="Create a reminder",
+     *     summary="Post Create Re-Reminder",
+     *     description="This request is used to resend a reminder by given `reminder_id`. This request interacts with the MySQL database, broadcast using Firebase FCM, Telegram, and Line, has a protected routes, and audited activity (history).",
      *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"reminder_id"},
+     *             @OA\Property(property="reminder_id", type="string", example="5994fb22-30ae-c088-3543-8d12f487539a"),
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=201,
      *         description="reminder re-executed",
@@ -361,41 +421,52 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
 
+            // Make user only admin can use this request
+            $check_admin = AdminModel::find($user_id);
             if($check_admin){
                 $id = $request->reminder_id;
-                $reminder = ReminderModel::getReminderJob($id);
 
+                // Get reminder by ID
+                $reminder = ReminderModel::getReminderJob($id);
                 if($reminder){
+                    // Hard delete schedule (reminder) mark
                     $deleted = ScheduleMarkModel::deleteScheduleMarkById($id);
 
                     if($deleted > 0){
+                        // Re insert schedule (reminder) mark
                         ScheduleMarkModel::createScheduleMark($id);
 
                         $message = "Hello $reminder->username, your inventory $reminder->inventory_name has remind $reminder->reminder_desc";
-
                         if($reminder->telegram_user_id){
-                            $response = Telegram::sendMessage([
-                                'chat_id' => $reminder->telegram_user_id,
-                                'text' => $message,
-                                'parse_mode' => 'HTML'
-                            ]);
+                            // Check if user Telegram ID is valid
+                            if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                // Send telegram message
+                                $response = Telegram::sendMessage([
+                                    'chat_id' => $reminder->telegram_user_id,
+                                    'text' => $message,
+                                    'parse_mode' => 'HTML'
+                                ]);
+                            } else {
+                                // Reset telegram from user account if not valid
+                                UserModel::updateUserById([ 'telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                            }
                         }
+
+                        // Send line message
                         if($reminder->line_user_id){
                             LineMessage::sendMessage('text',$message,$reminder->line_user_id);
                         }
+                        
+                        // Send Firebase notification (mobile)
                         if($reminder->firebase_fcm_token){
-                            $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
-                            $messaging = $factory->createMessaging();
-                            $message = CloudMessage::withTarget('token', $reminder->firebase_fcm_token)
+                            $fcm = CloudMessage::withTarget('token', $reminder->firebase_fcm_token)
                                 ->withNotification(Notification::create($message, $id))
-                                ->withData([
-                                    'id_context' => $id,
-                                ]);
-                            $response = $messaging->send($message);
+                                ->withData(['id_context' => $id]);
+                            $response = $this->firebaseMessaging->send($fcm);
                         }
 
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
                             'message' => 'reminder re-executed',
@@ -403,13 +474,13 @@ class Commands extends Controller
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => Generator::getMessageTemplate("not_found", 'reminder'),
+                            'message' => Generator::getMessageTemplate("not_found", $this->module),
                         ], Response::HTTP_NOT_FOUND);
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'reminder'),
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
@@ -429,7 +500,8 @@ class Commands extends Controller
     /**
      * @OA\DELETE(
      *     path="/api/v1/reminder/{id}",
-     *     summary="Delete reminder by id",
+     *     summary="Hard Delete Reminder By ID",
+     *     description="This request is used to permanently delete a reminder by given `id`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -479,20 +551,24 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Get reminder by ID
             $reminder = ReminderModel::getReminderAndInventoryById($id,$user_id);
+            
+            // Hard delete reminder by ID
             $res = ReminderModel::hardDeleteReminder($id, $user_id);
             if($reminder && $res > 0){
-                // History
+                // Create history
                 Audit::createHistory('Delete Reminder', "$reminder->reminder_desc for inventory $reminder->inventory_name", $user_id);
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("permentally delete", 'reminder'),
+                    'message' => Generator::getMessageTemplate("permentally delete", $this->module),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'reminder'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

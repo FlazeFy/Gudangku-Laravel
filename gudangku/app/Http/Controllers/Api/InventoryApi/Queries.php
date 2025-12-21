@@ -32,7 +32,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/inventory",
      *     summary="Get All Inventory",
-     *     description="This request is used to get all inventory data. This request is using MySql database, has protected routes, and supports pagination.",
+     *     description="This request is used to get all inventory data.  This request interacts with the MySQL database, has protected routes, and has a pagination.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -215,7 +215,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/inventory/list",
      *     summary="Get List Inventory",
-     *     description="This request is used to get all inventory data but in shot format for selection. This request is using MySql database, and has protected routes",
+     *     description="This request is used to get all inventory data but in shot format for selection.  This request interacts with the MySQL database, and has protected routes",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -292,7 +292,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/inventory/calendar",
      *     summary="Get Inventory As Calendar Format",
-     *     description="This request is used to get all inventory data but in calendar format. This request is using MySql database, and has protected routes",
+     *     description="This request is used to get all inventory data but in calendar format.  This request interacts with the MySQL database, and has protected routes",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -921,7 +921,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/inventory/analyze/{id}",
      *     summary="Get Analyze Data Of Inventory By ID",
-     *     description="This request is used to get analyze data of inventory. This request is using MySQL database, and has protected routes.",
+     *     description="This request is used to get analyze data of inventory.  This request interacts with the MySQL database, and has protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(

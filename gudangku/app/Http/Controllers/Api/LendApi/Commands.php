@@ -47,9 +47,17 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/lend",
-     *     summary="Create lend QR",
+     *     summary="Post Create Lend QR",
+     *     description="This request is used to create an inventory lend by using given `qr_period`. This request interacts with the MySQL database, firebase storage, broadcast message using Telegram, has a protected routes, and audited activity (history).",
      *     tags={"Lend"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"qr_period"},
+     *             @OA\Property(property="qr_period", type="integer", example="3")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=201,
      *         description="lend created",
@@ -141,13 +149,20 @@ class Commands extends Controller
                         // Get user's contact to broadcast
                         $user = UserModel::getSocial($user_id);
                         if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
-                            // Send telegram message with image
-                            $response = Telegram::sendPhoto([
-                                'chat_id' => $user->telegram_user_id,
-                                'photo' => fopen($file, 'rb'),
-                                'caption' => $message,
-                                'parse_mode' => 'HTML'
-                            ]);
+                            // Check if user Telegram ID is valid
+                            if(TelegramMessage::checkTelegramID($owner->telegram_user_id)){
+                                // Send telegram message with image
+                                $response = Telegram::sendPhoto([
+                                    'chat_id' => $user->telegram_user_id,
+                                    'photo' => fopen($file, 'rb'),
+                                    'caption' => $message,
+                                    'parse_mode' => 'HTML'
+                                ]);
+                            } else {
+                                // Reset telegram from user account if not valid
+                                UserModel::updateUserById(['telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                                $extra_msg = ' Telegram ID is invalid. Please check your Telegram ID';
+                            }
                         }
                         
                         unlink($qr_path);
@@ -192,9 +207,24 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/lend/inventory/{lend_id}",
-     *     summary="Create request borrow",
+     *     summary="Post Create Request Borrow",
+     *     description="This request is used to create an inventory request borrow by using given `borrower_name` and `inventory_list`. This request interacts with the MySQL database, firebase storage, returned document, broadcast message using Telegram, has a protected routes, and audited activity (history).",
      *     tags={"Lend"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"borrower_name","inventory_list"},
+     *             @OA\Property(property="borrower_name", type="string", example="Leo"),
+     *             @OA\Property(
+     *                 property="inventory_list",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440000"
+     *                 )
+     *             )
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=201,
      *         description="borrow created",
@@ -310,6 +340,7 @@ class Commands extends Controller
                         $style_template = Generator::getDocTemplate('style');
                         $footer_template = Generator::getDocTemplate('footer');
 
+                        // Build HTML document
                         $html = "
                             <html>
                                 <head>
@@ -344,13 +375,14 @@ class Commands extends Controller
                         $dompdf->setPaper('A4', 'portrait');
                         $dompdf->render();
 
+                        // Export local document
                         $pdfContent = $dompdf->output();
                         $pdfFilePath = public_path("lend inventory-$lend_id-$borrower_name.pdf");
                         file_put_contents($pdfFilePath, $pdfContent);
 
                         if($owner && $owner->telegram_is_valid == 1 && $owner->telegram_user_id){
                             // Check if user Telegram ID is valid
-                            if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                            if(TelegramMessage::checkTelegramID($owner->telegram_user_id)){
                                 // Send telegram message with document
                                 $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
                                 $response = Telegram::sendDocument([
@@ -405,9 +437,23 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/lend/update_status/{lend_id}",
-     *     summary="Update Returned Status Of Lend Inventory",
+     *     summary="Put Update Returned Status Of Lend Inventory",
+     *     description="This request is used to update returned inventory that has been borrowed by using given `lend_id`, and the updated field is `inventory_list`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Lend"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"inventory_list"},
+     *             @OA\Property(
+     *                 property="inventory_list",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440000"
+     *                 )
+     *             )
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="lend created",
@@ -461,17 +507,10 @@ class Commands extends Controller
                 $returned_all = true;
 
                 foreach ($list_inventory as $dt) {
-                    if($dt['is_returned']){
-                        $returned_at = date('Y-m-d H:i:s');
-                    } else {
-                        $returned_at = null;
-                    }
+                    $returned_at = $dt['is_returned'] ? date('Y-m-d H:i:s') : null;
 
                     // Update lend inventory by ID
-                    $inventory_rel = LendInventoryRelModel::updateLendInventoryById($dt['id'],$lend_id,[
-                        'returned_at' => $returned_at
-                    ]);
-
+                    $inventory_rel = LendInventoryRelModel::updateLendInventoryById($dt['id'], $lend_id, ['returned_at' => $returned_at]);
                     if (!$dt['is_returned']) {
                         $returned_all = false;
                     }
@@ -479,7 +518,7 @@ class Commands extends Controller
                     
                 if($returned_all){
                     // Uodate lend by user ID
-                    $lend = LendModel::updateLendByUserId(['lend_status' => 'finished'], $user_id,$lend_id);
+                    $lend = LendModel::updateLendByUserId(['lend_status' => 'finished'], $user_id, $lend_id);
 
                     if($lend){
                         // Create history

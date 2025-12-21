@@ -585,7 +585,7 @@ class Commands extends Controller
      * @OA\POST(
      *     path="/api/v1/inventory",
      *     summary="Post Create Inventory",
-     *     description="This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, firebase storage, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
+     *     description="This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, firebase storage, returned a document, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(

@@ -1731,7 +1731,7 @@
                     "Inventory"
                 ],
                 "summary": "Get All Inventory",
-                "description": "This request is used to get all inventory data. This request is using MySql database, has protected routes, and supports pagination.",
+                "description": "This request is used to get all inventory data.  This request interacts with the MySQL database, has protected routes, and has a pagination.",
                 "operationId": "ba8b3005bed7008380df0cdd8724f8f3",
                 "responses": {
                     "200": {
@@ -1942,7 +1942,7 @@
                     "Inventory"
                 ],
                 "summary": "Post Create Inventory",
-                "description": "This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, firebase storage, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
+                "description": "This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, firebase storage, returned a document, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
                 "operationId": "4674b1921101b03eb103dc6acea8108b",
                 "requestBody": {
                     "required": true,
@@ -2723,7 +2723,7 @@
                     "Inventory"
                 ],
                 "summary": "Get List Inventory",
-                "description": "This request is used to get all inventory data but in shot format for selection. This request is using MySql database, and has protected routes",
+                "description": "This request is used to get all inventory data but in shot format for selection.  This request interacts with the MySQL database, and has protected routes",
                 "operationId": "4768e6fde3cee55d3f6502ed00444621",
                 "responses": {
                     "200": {
@@ -2844,7 +2844,7 @@
                     "Inventory"
                 ],
                 "summary": "Get Inventory As Calendar Format",
-                "description": "This request is used to get all inventory data but in calendar format. This request is using MySql database, and has protected routes",
+                "description": "This request is used to get all inventory data but in calendar format.  This request interacts with the MySQL database, and has protected routes",
                 "operationId": "965986adf81e0a64e0ea67f68b036cb1",
                 "responses": {
                     "200": {
@@ -3815,7 +3815,7 @@
                     "Inventory"
                 ],
                 "summary": "Get Analyze Data Of Inventory By ID",
-                "description": "This request is used to get analyze data of inventory. This request is using MySQL database, and has protected routes.",
+                "description": "This request is used to get analyze data of inventory.  This request interacts with the MySQL database, and has protected routes.",
                 "operationId": "2803a16397d82eb3c835795682a36506",
                 "parameters": [
                     {
@@ -4125,8 +4125,28 @@
                 "tags": [
                     "Lend"
                 ],
-                "summary": "Create lend QR",
+                "summary": "Post Create Lend QR",
+                "description": "This request is used to create an inventory lend by using given `qr_period`. This request interacts with the MySQL database, firebase storage, broadcast message using Telegram, has a protected routes, and audited activity (history).",
                 "operationId": "8658940c0d0d6f8eb30755835faa746a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "qr_period"
+                                ],
+                                "properties": {
+                                    "qr_period": {
+                                        "type": "integer",
+                                        "example": "3"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "lend created",
@@ -4241,8 +4261,8 @@
                 "tags": [
                     "Lend"
                 ],
-                "summary": "Get lend inventory",
-                "description": "This request is used to get lend inventory by lend id (QR Code). This request is using MySQL database, and has protected routes.",
+                "summary": "Get Lend Inventory",
+                "description": "This request is used to get lend inventory by lend id (QR Code).  This request interacts with the MySQL database, has a pagination, and has protected routes.",
                 "operationId": "cc5691eb1f7281d39e8accede1aae315",
                 "responses": {
                     "200": {
@@ -4428,8 +4448,37 @@
                 "tags": [
                     "Lend"
                 ],
-                "summary": "Create request borrow",
+                "summary": "Post Create Request Borrow",
+                "description": "This request is used to create an inventory request borrow by using given `borrower_name` and `inventory_list`. This request interacts with the MySQL database, firebase storage, returned document, broadcast message using Telegram, has a protected routes, and audited activity (history).",
                 "operationId": "40a2da24615cf414820905ac4fe5a214",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "borrower_name",
+                                    "inventory_list"
+                                ],
+                                "properties": {
+                                    "borrower_name": {
+                                        "type": "string",
+                                        "example": "Leo"
+                                    },
+                                    "inventory_list": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "borrow created",
@@ -4548,8 +4597,32 @@
                 "tags": [
                     "Lend"
                 ],
-                "summary": "Update Returned Status Of Lend Inventory",
+                "summary": "Put Update Returned Status Of Lend Inventory",
+                "description": "This request is used to update returned inventory that has been borrowed by using given `lend_id`, and the updated field is `inventory_list`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "4bf3ff93e3369e875fbd028ffb53c25a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "inventory_list"
+                                ],
+                                "properties": {
+                                    "inventory_list": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "lend created",
@@ -4644,8 +4717,8 @@
                 "tags": [
                     "Lend"
                 ],
-                "summary": "Get active qr code",
-                "description": "This request is used to get active qr code. This request is using MySQL database, and has protected routes.",
+                "summary": "Get Active QR Code",
+                "description": "This request is used to get active qr code.  This request interacts with the MySQL database, has protected routes.",
                 "operationId": "54523e2886fa42b5d8747fd30b5f2b24",
                 "responses": {
                     "200": {
@@ -4818,8 +4891,8 @@
                 "tags": [
                     "Lend"
                 ],
-                "summary": "Get history qr code",
-                "description": "This request is used to get history of qr code. This request is using MySQL database, and has protected routes.",
+                "summary": "Get History QR Code",
+                "description": "This request is used to get history of qr code.  This request interacts with the MySQL database, has a pagination, and has protected routes.",
                 "operationId": "24cd51da38658b51299e49bd279fc187",
                 "responses": {
                     "200": {
@@ -4979,8 +5052,47 @@
                 "tags": [
                     "Reminder"
                 ],
-                "summary": "Create a reminder",
+                "summary": "Post Create Reminder",
+                "description": "This request is used to create a reminder by using given `reminder_type`, `reminder_context`, `inventory_id`, and `reminder_desc`. This request interacts with the MySQL database, sync with Google Calendar, broadcast message using Firebase FCM and Telegram, has a protected routes, and audited activity (history).",
                 "operationId": "d976dc76a89edab9b2bce746c019980f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reminder_type",
+                                    "reminder_context",
+                                    "reminder_desc",
+                                    "inventory_id"
+                                ],
+                                "properties": {
+                                    "reminder_type": {
+                                        "type": "string",
+                                        "example": "Every Week"
+                                    },
+                                    "reminder_context": {
+                                        "type": "string",
+                                        "example": "Every Day 1"
+                                    },
+                                    "reminder_desc": {
+                                        "type": "string",
+                                        "example": "testing reminder"
+                                    },
+                                    "send_demo": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "inventory_id": {
+                                        "type": "string",
+                                        "example": "5994fb22-30ae-c088-3543-8d12f487539a"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "reminder created",
@@ -5115,8 +5227,47 @@
                 "tags": [
                     "Reminder"
                 ],
-                "summary": "Create a copy of reminder to another inventory",
+                "summary": "Post Create Copy Reminder",
+                "description": "This request is used to create a copy reminder to another inventory by using given `list_inventory_id`, `reminder_context`, `reminder_type`, and `reminder_desc`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "84552ee1611046c2f8b0ff5d5b856098",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reminder_type",
+                                    "reminder_context",
+                                    "reminder_desc",
+                                    "list_inventory_id"
+                                ],
+                                "properties": {
+                                    "reminder_type": {
+                                        "type": "string",
+                                        "example": "Every Week"
+                                    },
+                                    "reminder_context": {
+                                        "type": "string",
+                                        "example": "Every Day 1"
+                                    },
+                                    "reminder_desc": {
+                                        "type": "string",
+                                        "example": "testing reminder"
+                                    },
+                                    "list_inventory_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid",
+                                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "reminder created",
@@ -5251,8 +5402,28 @@
                 "tags": [
                     "Reminder"
                 ],
-                "summary": "Create a reminder",
+                "summary": "Post Create Re-Reminder",
+                "description": "This request is used to resend a reminder by given `reminder_id`. This request interacts with the MySQL database, broadcast using Firebase FCM, Telegram, and Line, has a protected routes, and audited activity (history).",
                 "operationId": "cef41d154649965736071105de025207",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reminder_id"
+                                ],
+                                "properties": {
+                                    "reminder_id": {
+                                        "type": "string",
+                                        "example": "5994fb22-30ae-c088-3543-8d12f487539a"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "reminder re-executed",
@@ -5347,7 +5518,8 @@
                 "tags": [
                     "Reminder"
                 ],
-                "summary": "Delete reminder by id",
+                "summary": "Hard Delete Reminder By ID",
+                "description": "This request is used to permanently delete a reminder by given `id`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "080d9e96cd48c94effbcbeecd4ae36ac",
                 "parameters": [
                     {
