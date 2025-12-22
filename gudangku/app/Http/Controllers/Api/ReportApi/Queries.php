@@ -23,13 +23,13 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/report",
-     *     summary="Get all report",
-     *     description="This request is used to get all report. This request is using MySql database, have a protected routes, and have template pagination.",
+     *     summary="Get All Report",
+     *     description="This request is used to get all report. This request interacts with the MySQL database, have a protected routes, and a pagination.",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="report fetched",
+     *         description="report fetched successfully. Ordered in descending / ascending order by `report_title` or `created_at`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="history fetched"),
@@ -88,14 +88,14 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
             $search_key = $request->query('search_key');
             $filter_category = $request->query('filter_category') ?? null;
             $sorting = $request->query('sorting') ?? 'desc_created';
 
-            // Report fetching
+            // Define user id by role
+            $check_admin = AdminModel::find($user_id);
+            // Get my report
             $res = ReportModel::getMyReport(!$check_admin ? $user_id : null,null,$search_key,null,$filter_category);
-            
             if (count($res) > 0) {
                 $res_header = [];
                 foreach($res as $dt){
@@ -130,6 +130,7 @@ class Queries extends Controller
                 );
                 $res = $paginator->appends(request()->except('page'));
                 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'report'),
@@ -153,8 +154,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/report/{search}/{id}",
-     *     summary="Get all report by inventory",
-     *     description="This request is used to get all report found in a inventory by inventory name and report id. This request is using MySql database, have a protected routes, and have template pagination.",
+     *     summary="Get All Report By Inventory",
+     *     description="This request is used to get all report found in a inventory by inventory name and report id. This request interacts with the MySQL database, have a protected routes, and a pagination.",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -175,7 +176,7 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="report fetched",
+     *         description="report fetched successfully. Ordered in descending order by `created_at`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="history fetched"),
@@ -229,9 +230,10 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Get my report
             $res = ReportModel::getMyReport($user_id,$search,null,$id,null);
-            
             if (count($res) > 0) {
+                // Build pagination
                 $collection = collect($res);
                 $collection = $collection->sortBy('created_at')->values();
                 $perPage = 12;
@@ -245,6 +247,7 @@ class Queries extends Controller
                 );
                 $res = $paginator->appends(request()->except('page'));
                 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' =>  Generator::getMessageTemplate("fetch", 'report'),
@@ -268,7 +271,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/report/detail/item/{id}",
      *     summary="Get report detail by id",
-     *     description="This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
+     *     description="This request is used to get report detail by id and all items found in the report. This request interacts with the MySQL database, and has protected routes.",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -338,12 +341,15 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            } 
 
+            // Define user id by role
+            $check_admin = AdminModel::find($user_id);
+            $user_id = $check_admin ? null : $user_id; 
+
+            // Get report detail by ID
             $res = ReportModel::getReportDetail($user_id,$id,'data');
+            
+            // Get report item by report ID
             $res_item = ReportItemModel::getReportItem($user_id,$id,'data');
             
             if ($res) {      
@@ -361,10 +367,12 @@ class Queries extends Controller
                 $res['total_price'] = $total_price; 
 
                 if($check_admin){
-                    $user = UserModel::find($res->created_by);
+                    // Get user data
+                    $user = UserModel::getSocial($res->created_by);
                     $res['username'] = $user->username;
                 }
                    
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'report'),
@@ -389,7 +397,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/report/detail/item/{id}/doc",
      *     summary="Get report detail document html format by id",
-     *     description="This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
+     *     description="This request is used to get report detail by id and all items found in the report. This request interacts with the MySQL database, and has protected routes.",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -439,7 +447,6 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $report = ReportModel::getReportDetail(null,$id,'doc');
             $filter_in = $request->query('filter_in', null);
 
             if($filter_in){
@@ -451,10 +458,16 @@ class Queries extends Controller
                 }
             }
 
-            if ($report) {                
+            // Get report detail by ID
+            $report = ReportModel::getReportDetail(null,$id,'doc');
+            if ($report) {           
+                // Get report item by Report ID
                 $report_item = ReportItemModel::getReportItem(null,$id,'doc',$filter_in);
+
+                // Generate document html format
                 $res = Document::documentTemplateReport(null,null,null,$report,$report_item);
-     
+    
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("generate", 'report'),

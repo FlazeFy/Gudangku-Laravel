@@ -19,7 +19,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/lend/qr",
      *     summary="Get Active QR Code",
-     *     description="This request is used to get active qr code.  This request interacts with the MySQL database, has protected routes.",
+     *     description="This request is used to get active qr code.  This request interacts with the MySQL database, and has protected routes.",
      *     tags={"Lend"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -132,7 +132,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/lend/history",
      *     summary="Get History QR Code",
-     *     description="This request is used to get history of qr code.  This request interacts with the MySQL database, has a pagination, and has protected routes.",
+     *     description="This request is used to get history of qr code. This request interacts with the MySQL database, has a pagination, and has protected routes.",
      *     tags={"Lend"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(

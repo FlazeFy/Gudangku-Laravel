@@ -13,16 +13,23 @@ use App\Helpers\Generator;
 
 class Queries extends Controller
 {
+    private $module;
+
+    public function __construct()
+    {
+        $this->module = "reminder mark";
+    }
+
     /**
      * @OA\GET(
      *     path="/api/v1/reminder/mark",
-     *     summary="Get all reminder scheduler mark",
-     *     description="This request is used to get all executed reminder mark. This request is using MySql database, have a protected routes, and have template pagination.",
+     *     summary="Get All Reminder Scheduler Mark",
+     *     description="This request is used to get all executed reminder mark. This request interacts with the MySQL database, has protected routes, and has a pagination",
      *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="reminder mark fetched",
+     *         description="Reminder mark fetched successfully. Ordered in descending order by `last_execute`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="reminder mark fetched"),
@@ -72,20 +79,22 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
             
+            // Make sure only admin can access the request
+            $check_admin = AdminModel::find($user_id);
             if($check_admin){
+                // Get all reminder mark with pagination
                 $res = ScheduleMarkModel::getAllReminderMark(true);
                 if($res->count() > 0) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => Generator::getMessageTemplate("fetch", 'reminder mark'),
+                        'message' => Generator::getMessageTemplate("fetch", $this->module),
                         'data' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'reminder mark'),
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
@@ -105,13 +114,13 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/reminder/history",
-     *     summary="Get all reminder scheduler history",
-     *     description="This request is used to get all executed reminder history. This request is using MySql database, have a protected routes, and have template pagination.",
+     *     summary="Get All Reminder Scheduler History",
+     *     description="This request is used to get all executed reminder history. This request interacts with the MySql database, has protected routes, and has a pagination.",
      *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="reminder history fetched",
+     *         description="Reminder history fetched successfully. Ordered in descending order by `last_execute`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="reminder history fetched"),
@@ -159,18 +168,20 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
+
+            // Get all reminder history
             $res = ScheduleMarkModel::getAllReminderHistory($user_id,true);
-            
-            if ($res->isNotEmpty()) {
+            if($res->isNotEmpty()) {
+                // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'reminder history'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'reminder history'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

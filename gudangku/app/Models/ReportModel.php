@@ -222,6 +222,17 @@ class ReportModel extends Model
         ]);
     }
 
+    public static function updateReportById($user_id = null, $id, $data){
+        $rows = ReportModel::where('id', $id);
+        
+        if($user_id){
+            $rows = $rows->where('created_by', $user_id);
+        }
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        return $rows->update($data);
+    }
+
     public static function deleteReportByUserId($user_id){
         return ReportModel::where('created_by',$user_id)->delete();
     }

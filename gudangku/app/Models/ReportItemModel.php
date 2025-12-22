@@ -58,6 +58,13 @@ class ReportItemModel extends Model
         return $res->get();
     }  
 
+    public static function getReportItemByIdAndReportId($id, $user_id, $report_id){
+        return ReportItemModel::where('id', $id)
+            ->where('created_by', $user_id)
+            ->where('report_id', $report_id)
+            ->first();
+    }
+
     public static function getReportInventoryDetailExport($user_id, $is_admin, $report_id){
         $res = ReportItemModel::selectRaw("inventory_name,inventory_category,inventory_desc,inventory_merk,inventory_color,inventory_room,inventory_storage,inventory_rack,inventory_price,inventory_image,inventory_unit,inventory_vol,inventory_capacity_unit,inventory_capacity_vol,is_favorite,is_reminder,inventory.created_at,inventory.updated_at")
             ->join('inventory','inventory.id','=','report_item.inventory_id');
@@ -112,6 +119,16 @@ class ReportItemModel extends Model
             'created_at' => date('Y-m-d H:i:s'), 
             'created_by' => $user_id, 
         ]);
+    }
+
+    public static function updateReportItemById($user_id = null, $id, $data){
+        $rows = ReportItemModel::where('id', $id);
+        
+        if($user_id){
+            $rows = $rows->where('created_by', $user_id);
+        }
+
+        return $rows->update($data);
     }
 
     public static function deleteReportItemByUserId($user_id){

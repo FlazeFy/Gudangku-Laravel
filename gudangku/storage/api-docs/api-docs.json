@@ -4718,7 +4718,7 @@
                     "Lend"
                 ],
                 "summary": "Get Active QR Code",
-                "description": "This request is used to get active qr code.  This request interacts with the MySQL database, has protected routes.",
+                "description": "This request is used to get active qr code.  This request interacts with the MySQL database, and has protected routes.",
                 "operationId": "54523e2886fa42b5d8747fd30b5f2b24",
                 "responses": {
                     "200": {
@@ -4892,7 +4892,7 @@
                     "Lend"
                 ],
                 "summary": "Get History QR Code",
-                "description": "This request is used to get history of qr code.  This request interacts with the MySQL database, has a pagination, and has protected routes.",
+                "description": "This request is used to get history of qr code. This request interacts with the MySQL database, has a pagination, and has protected routes.",
                 "operationId": "24cd51da38658b51299e49bd279fc187",
                 "responses": {
                     "200": {
@@ -5627,12 +5627,12 @@
                 "tags": [
                     "Reminder"
                 ],
-                "summary": "Get all reminder scheduler mark",
-                "description": "This request is used to get all executed reminder mark. This request is using MySql database, have a protected routes, and have template pagination.",
+                "summary": "Get All Reminder Scheduler Mark",
+                "description": "This request is used to get all executed reminder mark. This request interacts with the MySQL database, has protected routes, and has a pagination",
                 "operationId": "df2ea15c1b976d9be46c64a1429a9e67",
                 "responses": {
                     "200": {
-                        "description": "reminder mark fetched",
+                        "description": "Reminder mark fetched successfully. Ordered in descending order by `last_execute`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5771,12 +5771,12 @@
                 "tags": [
                     "Reminder"
                 ],
-                "summary": "Get all reminder scheduler history",
-                "description": "This request is used to get all executed reminder history. This request is using MySql database, have a protected routes, and have template pagination.",
+                "summary": "Get All Reminder Scheduler History",
+                "description": "This request is used to get all executed reminder history. This request interacts with the MySql database, has protected routes, and has a pagination.",
                 "operationId": "e853e8e887b76252b3490dfe44901186",
                 "responses": {
                     "200": {
-                        "description": "reminder history fetched",
+                        "description": "Reminder history fetched successfully. Ordered in descending order by `last_execute`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5906,7 +5906,8 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Hard delete report item by id",
+                "summary": "Hard Delete Report Item By ID",
+                "description": "This request is used to delete a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "36f0d3a58d1ac36209a85a71b2babb4b",
                 "parameters": [
                     {
@@ -6014,7 +6015,8 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Hard delete report by id",
+                "summary": "Hard Delete Report By ID",
+                "description": "This request is used to delete a report based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "bec185fa169b15285915e29e0ea56dda",
                 "parameters": [
                     {
@@ -6122,7 +6124,8 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Update report detail by id",
+                "summary": "Put Update Report Detail By ID",
+                "description": "This request is used to update a report based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "1771f2dccd8c82250c0e2aa4cf1ebe6e",
                 "parameters": [
                     {
@@ -6136,6 +6139,41 @@
                         "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "report_title",
+                                    "report_category",
+                                    "created_at"
+                                ],
+                                "properties": {
+                                    "report_title": {
+                                        "type": "string",
+                                        "example": "Do the dishes"
+                                    },
+                                    "report_category": {
+                                        "type": "string",
+                                        "example": "Maintenance"
+                                    },
+                                    "report_desc": {
+                                        "type": "string",
+                                        "example": "Wash the dishes",
+                                        "nullable": true
+                                    },
+                                    "created_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-12-19 10:30:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "report updated",
@@ -6250,7 +6288,8 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Update report item by id",
+                "summary": "Put Update Report Item By ID",
+                "description": "This request is used to update a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "1c03434d7e7b99ef4528a26facbc6938",
                 "parameters": [
                     {
@@ -6264,6 +6303,41 @@
                         "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "item_name",
+                                    "item_qty",
+                                    "item_price"
+                                ],
+                                "properties": {
+                                    "item_name": {
+                                        "type": "string",
+                                        "example": "Desk"
+                                    },
+                                    "item_desc": {
+                                        "type": "string",
+                                        "example": "clean the desk"
+                                    },
+                                    "item_qty": {
+                                        "type": "integer",
+                                        "example": 2,
+                                        "nullable": true
+                                    },
+                                    "item_price": {
+                                        "type": "integer",
+                                        "example": 10000,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "report item updated",
@@ -6378,7 +6452,8 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Update report item by splitting it into a new report",
+                "summary": "Update Report Item By Splitting It Into A New Report",
+                "description": "This request is used to update a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
                 "operationId": "90efa2a9dd1812ff2b626e3eb5b810ff",
                 "parameters": [
                     {
@@ -6543,12 +6618,12 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Get all report",
-                "description": "This request is used to get all report. This request is using MySql database, have a protected routes, and have template pagination.",
+                "summary": "Get All Report",
+                "description": "This request is used to get all report. This request interacts with the MySQL database, have a protected routes, and a pagination.",
                 "operationId": "cc5fbd80a556bbcf9e6f7d1c2555ef40",
                 "responses": {
                     "200": {
-                        "description": "report fetched",
+                        "description": "report fetched successfully. Ordered in descending / ascending order by `report_title` or `created_at`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -6712,13 +6787,20 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Create a new report",
+                "summary": "Post Create Report",
+                "description": "This request is used to create a report based on the given `report_title`, `report_desc`, `report_category`, and `report_item`. This request interacts with the MySQL database, firebase storage, has a protected routes, and audited activity (history).",
                 "operationId": "fe19bb3ce474a8c9ef7b45d099f68d36",
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
+                                "required": [
+                                    "report_title",
+                                    "report_desc",
+                                    "report_category",
+                                    "report_item"
+                                ],
                                 "properties": {
                                     "report_title": {
                                         "type": "string",
@@ -6734,7 +6816,7 @@
                                     },
                                     "report_item": {
                                         "type": "string",
-                                        "example": "[{'inventory_id': '0216dd75-8ea6-3779-2ea6-9121c1a8c447','item_name': 'New Balance','item_desc': 'Sepatu','item_qty': 1,'item_price': 2249000}]"
+                                        "example": "[{\\'inventory_id\\':\\'0216dd75-8ea6-3779-2ea6-9121c1a8c447\\',\\'item_name\\':\\'New Balance\\',\\'item_desc\\':\\'Sepatu\\',\\'item_qty\\':1,\\'item_price\\':2249000}]"
                                     },
                                     "is_reminder": {
                                         "type": "integer",
@@ -6743,11 +6825,13 @@
                                     "remind_at": {
                                         "type": "string",
                                         "format": "date-time",
-                                        "example": "2024-12-01T12:00:00Z"
+                                        "example": "2024-12-01T12:00:00Z",
+                                        "nullable": true
                                     },
-                                    "file": {
-                                        "type": "file",
-                                        "example": "image.png"
+                                    "report_image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -6853,8 +6937,21 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Create a new report item",
+                "summary": "Post Create Report Item",
+                "description": "This request is used to create a report item based on the given `report_item`. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "a434c923bbb2177407a16bbd1eec3448",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Report ID to attach the item",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6969,7 +7066,8 @@
                 "tags": [
                     "Analyze"
                 ],
-                "summary": "Analyze report",
+                "summary": "Post Analyze Report",
+                "description": "This request is used to create an analyze report based on the given `file`. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "5e9d79a0cad0751d65c2caa08e7246f1",
                 "requestBody": {
                     "required": true,
@@ -7209,7 +7307,8 @@
                 "tags": [
                     "Analyze"
                 ],
-                "summary": "Create Analyze report",
+                "summary": "Post Create Analyze Report (New)",
+                "description": "This request is used to create an analyze report based on the given `file`. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "e7f5774112196c242f794fb9a153c998",
                 "requestBody": {
                     "required": true,
@@ -7450,7 +7549,8 @@
                 "tags": [
                     "Analyze"
                 ],
-                "summary": "Analyze bill or receipt",
+                "summary": "Post Analyze Bill / Receipt",
+                "description": "This request is used to create an analyze from bill / receipt based on the given `file`. This request interacts with the MySQL database, and has a protected routes.",
                 "operationId": "887eb03d21f04a4985959ef1de122747",
                 "requestBody": {
                     "required": true,
@@ -7603,8 +7703,8 @@
                 "tags": [
                     "Report"
                 ],
-                "summary": "Get all report by inventory",
-                "description": "This request is used to get all report found in a inventory by inventory name and report id. This request is using MySql database, have a protected routes, and have template pagination.",
+                "summary": "Get All Report By Inventory",
+                "description": "This request is used to get all report found in a inventory by inventory name and report id. This request interacts with the MySQL database, have a protected routes, and a pagination.",
                 "operationId": "a1cb0630dcbcb1daf9d91e827dec2aec",
                 "parameters": [
                     {
@@ -7630,7 +7730,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "report fetched",
+                        "description": "report fetched successfully. Ordered in descending order by `created_at`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -7781,7 +7881,7 @@
                     "Report"
                 ],
                 "summary": "Get report detail by id",
-                "description": "This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
+                "description": "This request is used to get report detail by id and all items found in the report. This request interacts with the MySQL database, and has protected routes.",
                 "operationId": "913aff2ee4e565e025fe9d7cd080208c",
                 "parameters": [
                     {
@@ -7966,7 +8066,7 @@
                     "Report"
                 ],
                 "summary": "Get report detail document html format by id",
-                "description": "This request is used to get report detail by id and all items found in the report. This request is using MySQL database, and has protected routes.",
+                "description": "This request is used to get report detail by id and all items found in the report. This request interacts with the MySQL database, and has protected routes.",
                 "operationId": "3378c5da101c77d310276fbee9682f46",
                 "parameters": [
                     {

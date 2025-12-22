@@ -37,7 +37,8 @@ class Commands extends Controller
     /**
      * @OA\DELETE(
      *     path="/api/v1/report/delete/item/{id}",
-     *     summary="Hard delete report item by id",
+     *     summary="Hard Delete Report Item By ID",
+     *     description="This request is used to delete a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -88,11 +89,11 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $list_id = explode(",", $id);
 
+            // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            } 
+            $user_id = $check_admin ? null : $user_id;
 
+            // Hard Delete report item
             $rows = ReportItemModel::deleteManyReportItemById($list_id, $user_id);
             if($rows > 0){
                 $extra = "";
@@ -120,7 +121,8 @@ class Commands extends Controller
     /**
      * @OA\DELETE(
      *     path="/api/v1/report/delete/report/{id}",
-     *     summary="Hard delete report by id",
+     *     summary="Hard Delete Report By ID",
+     *     description="This request is used to delete a report based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -169,22 +171,26 @@ class Commands extends Controller
     {
         try{
             $user_id = $request->user()->id;
+
+            // Get report by ID
             $report = ReportModel::find($id);            
 
+            // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
-                $user_id = null;
-            } 
+            $user_id = $check_admin ? null : $user_id; 
 
+            // Hard delete report by ID
             $rows = ReportModel::deleteReportById($user_id,$id);
             if($rows > 0){
                 if(!$check_admin){
-                    // History
+                    // Create history
                     Audit::createHistory('Delete Report', $report->report_title, $user_id);
                 }
                 
+                // Hard delete report item by report ID
                 ReportItemModel::deleteReportItemByReportId($id, $user_id);
 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("delete", 'report'),
@@ -206,7 +212,8 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/report/update/report/{id}",
-     *     summary="Update report detail by id",
+     *     summary="Put Update Report Detail By ID",
+     *     description="This request is used to update a report based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -216,6 +223,16 @@ class Commands extends Controller
      *         @OA\Schema(type="string"),
      *         description="Report ID",
      *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"report_title","report_category","created_at"},
+     *             @OA\Property(property="report_title", type="string", example="Do the dishes"),
+     *             @OA\Property(property="report_category", type="string", example="Maintenance"),
+     *             @OA\Property(property="report_desc", type="string", nullable=true, example="Wash the dishes"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-19 10:30:00")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -264,6 +281,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateReport($request,'update');
             if ($validator->fails()) {
                 return response()->json([
@@ -271,19 +289,19 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {  
-                $rows = ReportModel::where('id', $id)
-                    ->where('created_by', $user_id)
-                    ->update([
-                        'report_title' => $request->report_title,
-                        'report_desc' => $request->report_desc,
-                        'report_category' => $request->report_category,
-                        'created_at' => $request->created_at
-                    ]);
+                // Update report by ID
+                $rows = ReportModel::updateReportById($user_id, $id, [
+                    'report_title' => $request->report_title,
+                    'report_desc' => $request->report_desc,
+                    'report_category' => $request->report_category,
+                    'created_at' => $request->created_at
+                ]);
 
                 if($rows > 0){
-                    // History
+                    // Create history
                     Audit::createHistory('Update Report', $request->report_title, $user_id);
 
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'report'),
@@ -306,7 +324,8 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/report/update/report_item/{id}",
-     *     summary="Update report item by id",
+     *     summary="Put Update Report Item By ID",
+     *     description="This request is used to update a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -316,6 +335,16 @@ class Commands extends Controller
      *         @OA\Schema(type="string"),
      *         description="Report Item ID",
      *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"item_name","item_qty","item_price"},
+     *             @OA\Property(property="item_name", type="string", example="Desk"),
+     *             @OA\Property(property="item_desc", type="string", example="clean the desk"),
+     *             @OA\Property(property="item_qty", type="integer", nullable=true, example=2),
+     *             @OA\Property(property="item_price", type="integer", nullable=true, example=10000)
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -362,8 +391,8 @@ class Commands extends Controller
     public function putUpdateReportItemById(Request $request, $id)
     {
         try{
+            // Validate request body
             $validator = Validation::getValidateReportItem($request,'update');
-
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -372,19 +401,18 @@ class Commands extends Controller
             } else {   
                 $user_id = $request->user()->id;
 
-                $rows = ReportItemModel::where('id', $id)
-                    ->where('created_by', $user_id)
-                    ->update([
-                        'item_name' => $request->item_name,
-                        'item_desc' => $request->item_desc,
-                        'item_qty' => $request->item_qty,
-                        'item_price' => $request->item_price
-                    ]);
-
+                // Update report item by ID
+                $rows = ReportItemModel::updateReportItemById($user_id, $id, [
+                    'item_name' => $request->item_name,
+                    'item_desc' => $request->item_desc,
+                    'item_qty' => $request->item_qty,
+                    'item_price' => $request->item_price
+                ]);
                 if($rows > 0){
-                    // History
+                    // Create history
                     Audit::createHistory('Update Report Item', $request->item_name, $user_id);
 
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'report item'),
@@ -407,7 +435,8 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/report/update/report_split/{id}",
-     *     summary="Update report item by splitting it into a new report",
+     *     summary="Update Report Item By Splitting It Into A New Report",
+     *     description="This request is used to update a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -475,6 +504,7 @@ class Commands extends Controller
         try{
             $validator = Validation::getValidateReport($request,'create');
 
+            // Validate request body
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -484,9 +514,10 @@ class Commands extends Controller
                 $user_id = $request->user()->id;
                 $list_item_id = explode(',',$request->list_id);
 
+                // Get report by ID
                 $old_check_report = ReportModel::find($id);
-
                 if($old_check_report){
+                    // Validate uuid
                     if (Validation::getValidateUUID($request->list_id)) {
                         return response()->json([
                             'status' => 'error',
@@ -494,6 +525,7 @@ class Commands extends Controller
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
+                    // Create report
                     $report = ReportModel::createReport($request->report_title, $request->report_desc, $request->report_category, null, $request->is_reminder, $request->remind_at, $user_id, null);
                     if($report){
                         $success_migrate = 0;
@@ -501,18 +533,15 @@ class Commands extends Controller
                         $list_item_name = "";
 
                         foreach ($list_item_id as $dt) {
-                            $old_report_item = ReportItemModel::where('id', $dt)
-                                ->where('created_by', $user_id)
-                                ->where('report_id', $id)
-                                ->first();
-
+                            // Get report item by ID and report ID
+                            $old_report_item = ReportItemModel::getReportItemByIdAndReportId($dt, $user_id, $id);
                             if ($old_report_item) {
+                                // Update report item by ID (move to a new report)
                                 $list_item_name .= "$old_report_item->item_name,";
-                                $updated = ReportItemModel::where('id', $dt)
-                                    ->update([
-                                        'report_id' => $report->id,
-                                        'created_at' => date('Y-m-d H:i:s'),
-                                    ]);
+                                $updated = ReportItemModel::updateReportItemById($user_id, $dt, [
+                                    'report_id' => $report->id,
+                                    'created_at' => date('Y-m-d H:i:s'),
+                                ]);
                                 if ($updated > 0) {
                                     $success_migrate++;
                                 } else {
@@ -528,10 +557,11 @@ class Commands extends Controller
                             Audit::createHistory('Split Report', "From $old_check_report->report_title has been removed item of $list_item_name to $report->report_title", $user_id);
                             Audit::createHistory('Create Report', $request->report_title, $user_id);
         
-                            if ($success_migrate > 0) {
+                            if($success_migrate > 0) {
                                 $status_message = $failed_migrate == 0 ? 'all report items updated' : 'some report items updated';
                             }
                             
+                            // Return success response
                             return response()->json([
                                 'status' => 'success',
                                 'message' => $status_message,
@@ -566,19 +596,24 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/report",
-     *     summary="Create a new report",
+     *     summary="Post Create Report",
+     *     description="This request is used to create a report based on the given `report_title`, `report_desc`, `report_category`, and `report_item`. This request interacts with the MySQL database, firebase storage, has a protected routes, and audited activity (history).",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(
-     *             @OA\Property(property="report_title", type="string", example="New Balance"),
-     *             @OA\Property(property="report_desc", type="string", example="Sepatu track"),
-     *             @OA\Property(property="report_category", type="string", example="Checkout"),
-     *             @OA\Property(property="report_item", type="string", example="[{'inventory_id': '0216dd75-8ea6-3779-2ea6-9121c1a8c447','item_name': 'New Balance','item_desc': 'Sepatu','item_qty': 1,'item_price': 2249000}]"),
-     *             @OA\Property(property="is_reminder", type="integer", example=1),
-     *             @OA\Property(property="remind_at", type="string", format="date-time", example="2024-12-01T12:00:00Z"),
-     *             @OA\Property(property="file", type="file", example="image.png")
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"report_title","report_desc","report_category","report_item"},
+     *                 @OA\Property(property="report_title", type="string", example="New Balance"),
+     *                 @OA\Property(property="report_desc", type="string", example="Sepatu track"),
+     *                 @OA\Property(property="report_category", type="string", example="Checkout"),
+     *                 @OA\Property(property="report_item", type="string", example="[{\'inventory_id\':\'0216dd75-8ea6-3779-2ea6-9121c1a8c447\',\'item_name\':\'New Balance\',\'item_desc\':\'Sepatu\',\'item_qty\':1,\'item_price\':2249000}]"),
+     *                 @OA\Property(property="is_reminder", type="integer", example=1),
+     *                 @OA\Property(property="remind_at", type="string", format="date-time", nullable=true, example="2024-12-01T12:00:00Z"),
+     *                 @OA\Property(property="report_image", type="string", format="binary", nullable=true)
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -618,9 +653,8 @@ class Commands extends Controller
      */
     public function postReport(Request $request){
         try{
-            // Validator
+           // Validate request body
             $validator = Validation::getValidateReport($request,'create');
-
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -630,19 +664,16 @@ class Commands extends Controller
                 $user_id = $request->user()->id;
                 $validation_image_failed = "";
 
-                // Report image handling
-                $report_image = null;  
-                if($request->report_image){
-                    $report_image = $request->report_image;  
-                } 
-                if ($request->hasFile('file')) {
-                    $files = is_array($request->file('file')) ? $request->file('file') : [$request->file('file')];
-                    $user = UserModel::find($user_id);
-                
-                    $report_image = []; 
+                $report_image = []; 
+                if ($request->hasFile('report_image')) {                    
+                    // Get user's contact
+                    $user = UserModel::getSocial($user_id);
+
+                    // Iterate to upload file
                     foreach ($files as $idx => $file) {
                         if ($file->isValid()) {
                             $file_ext = $file->getClientOriginalExtension();
+
                             // Validate file type
                             if (!in_array($file_ext, $this->allowed_file_type)) {
                                 $validation_image_failed .= 'The '.$idx.'-th file must be a ' . implode(', ', $this->allowed_file_type) . ' file type, ';
@@ -654,10 +685,13 @@ class Commands extends Controller
                                 continue; 
                             }
                 
-                            // Helper: Upload report image
                             try {
+                                // Upload file to Firebase storage
                                 $fileUrl = Firebase::uploadFile('report', $user_id, $user->username, $file, $file_ext);
-                                $report_image[] = ['url' => $fileUrl]; 
+                                $report_image[] = [
+                                    'image_id' => Generator::getUUID(),
+                                    'image_url' => $fileUrl
+                                ]; 
                             } catch (\Exception $e) {
                                 $validation_image_failed .= 'Failed to upload the '.$idx.'-th file';
                             }
@@ -665,7 +699,7 @@ class Commands extends Controller
                     }
                 }
 
-                // Model : Create Report
+                // Create report
                 $report = ReportModel::createReport(
                     $request->report_title, $request->report_desc, $request->report_category, $report_image ? json_encode($report_image,true) : null, 0, $request->remind_at, $user_id, $request->created_at ?? date('Y-m-d H:i:s')
                 );
@@ -679,8 +713,9 @@ class Commands extends Controller
                         $report_item = json_decode($request->report_item);
                         $item_count = count($report_item);
 
-                        // Model : Create Report Item
+                        // Iterate to create report item
                         foreach ($report_item as $idx => $dt) {
+                            // Create report item
                             $res = ReportItemModel::createReportItem(
                                 $dt->inventory_id ?? null, $id_report, $dt->item_name, $dt->item_desc, $dt->item_qty, ($dt->item_price && $dt->item_price) > 0 ?? null, $user_id
                             );
@@ -694,11 +729,11 @@ class Commands extends Controller
                     }
 
                     if($success_exec > 0 || $request->report_item == null){
-                        // History
+                        // Create history
                         Audit::createHistory('Create', $report->report_title, $user_id);
                     }
 
-                    // Respond
+                    // Return success response
                     if($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == ""){
                         return response()->json([
                             'status' => 'success',
@@ -735,9 +770,18 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/report/item/{id}",
-     *     summary="Create a new report item",
+     *     summary="Post Create Report Item",
+     *     description="This request is used to create a report item based on the given `report_item`. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Report ID to attach the item",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -781,9 +825,8 @@ class Commands extends Controller
      */
     public function postReportItem(Request $request,$id){
         try{
-            // Validator
+            // Validate request body
             $validator = Validation::getValidateReportItem($request,'create');
-
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -796,8 +839,9 @@ class Commands extends Controller
                 $success_exec = 0;
                 $failed_exec = 0;
 
-                // Model : Create Report Item
+                // Iterate to create report item
                 foreach ($report_item as $idx => $dt) {
+                    // Create report item
                     $res = ReportItemModel::createReportItem(
                         $dt->inventory_id ?? null, $id, $dt->item_name, $dt->item_desc, $dt->item_qty, $dt->item_price ?? null, $user_id
                     );
@@ -809,7 +853,7 @@ class Commands extends Controller
                     }
                 }
 
-                // Respond
+                // Return success response
                 if($failed_exec == 0 && $success_exec == $item_count){
                     return response()->json([
                         'status' => 'success',
@@ -838,7 +882,8 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/analyze/report",
-     *     summary="Analyze report",
+     *     summary="Post Analyze Report",
+     *     description="This request is used to create an analyze report based on the given `file`. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Analyze"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
@@ -943,7 +988,7 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $validation_image_failed = "";
 
-            // Report file handling
+            // Check if file attached
             $report_doc = null;  
             if ($request->hasFile('file') && $request->report_doc == null) {
                 $file = $request->file('file');
@@ -998,14 +1043,14 @@ class Commands extends Controller
                         ], Response::HTTP_NOT_FOUND);
                     } else {
                         $search = implode(',', $items);
-                        // Query : Find Similar Inventory by List Item
+                        // Get similar inventory by list item
                         $mapping_inventory = InventoryModel::getInventoryByNameSearch($search);
 
                         if($mapping_inventory){
                             $category_count = [];
                             $total_matched = 0;
 
-                            // Analyze : Inventory Price
+                            // Analyze inventory price
                             $total_price = 0;
                             $total_item = count($mapping_inventory);
                             foreach ($mapping_inventory as $dt) {
@@ -1015,7 +1060,7 @@ class Commands extends Controller
 
                                 $total_price = $total_price + $dt['inventory_price'];
 
-                                // Analyze : Inventory Category
+                                // Analyze inventory category
                                 $category = $dt['inventory_category'];
                                 if (!isset($category_count[$category])) {
                                     $category_count[$category] = 0;
@@ -1024,7 +1069,7 @@ class Commands extends Controller
                             }
                             $average_price = $total_price / $total_item;     
                             
-                            // Analyze : Inventory Category
+                            // Analyze inventory category
                             $final_category_result = [];
                             foreach ($category_count as $category => $total) {
                                 $final_category_result[] = (object)[
@@ -1033,7 +1078,7 @@ class Commands extends Controller
                                 ];
                             }
 
-                            // Analyze : Not Existing Items Mapping
+                            // Analyze items that not exist
                             $not_existing_item = [];
                             if(count($items) != $total_matched){
                                 foreach ($items as $dt) {
@@ -1047,6 +1092,7 @@ class Commands extends Controller
                             }
                             $not_existing_item = count($not_existing_item) > 0 ? $not_existing_item : null;
 
+                            // Return success response
                             return response()->json([
                                 'status' => 'success',
                                 'message' => Generator::getMessageTemplate("analyze", 'report'),
@@ -1089,7 +1135,8 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/analyze/report/new",
-     *     summary="Create Analyze report",
+     *     summary="Post Create Analyze Report (New)",
+     *     description="This request is used to create an analyze report based on the given `file`. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Analyze"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
@@ -1202,7 +1249,7 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $validation_image_failed = "";
 
-            // Report file handling
+            // Check if file attached
             $report_doc = null;  
             if ($request->hasFile('file') && $request->report_doc == null) {
                 $file = $request->file('file');
@@ -1265,7 +1312,7 @@ class Commands extends Controller
                         ], Response::HTTP_NOT_FOUND);
                     } else {
                         $search = implode(',', $items);
-                        // Query : Find Similar Inventory by List Item
+                        // Get inventory by name
                         $mapping_inventory = InventoryModel::getInventoryByNameSearch($search);
 
                         if($mapping_inventory){
@@ -1297,11 +1344,10 @@ class Commands extends Controller
                                 }
                             }
 
-                            // Model : Create Report
+                            // Create report
                             $report_image = null;
                             $report = ReportModel::createReport($report_title, $report_desc, $report_category, $report_image, 0, null, $user_id, null);
                             $id_report = $report->id;
-
                             if($report){
                                 $success_exec = 0;
                                 $failed_exec = 0;
@@ -1309,7 +1355,7 @@ class Commands extends Controller
                                 if($existing_inventory){
                                     $item_count = count($existing_inventory);
 
-                                    // Model : Create Report Item
+                                    // Create report item
                                     foreach ($existing_inventory as $idx => $dt) {
                                         $res = ReportItemModel::createReportItem(
                                             $dt['inventory_id'] ?? null, $id_report, $dt['item_name'],$dt['item_desc'], $dt['item_qty'], $dt['item_price'] ?? null, $user_id
@@ -1324,11 +1370,11 @@ class Commands extends Controller
                                 }
 
                                 if($success_exec > 0 || $request->report_item == null){
-                                    // History
+                                    // Create history
                                     Audit::createHistory('Create', $report->report_title, $user_id);
                                 }
 
-                                // Respond
+                                // Return success response
                                 if($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == ""){
                                     return response()->json([
                                         'status' => 'success',
@@ -1382,7 +1428,8 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/analyze/report/bill",
-     *     summary="Analyze bill or receipt",
+     *     summary="Post Analyze Bill / Receipt",
+     *     description="This request is used to create an analyze from bill / receipt based on the given `file`. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"Analyze"},
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(
@@ -1406,8 +1453,7 @@ class Commands extends Controller
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="File analyzed successfully"),
      *             @OA\Property(
-     *                 property="data",
-     *                 type="array",
+     *                 property="data", type="array",
      *                 @OA\Items(
      *                     type="object",
      *                     @OA\Property(property="item_name", type="string", example="New Balance"),
@@ -1490,6 +1536,7 @@ class Commands extends Controller
                         $items_text = [];
                         $items_num = [];
 
+                        // Extract information
                         foreach ($lines as $ln) {
                             if (trim($ln) != "" && ((strpos($ln, ":") === false && strpos($ln, ";") === false))) {
                                 $ln = str_replace(", ", ",", $ln);
@@ -1510,6 +1557,7 @@ class Commands extends Controller
                         $items =  $total_text > $total_num ? $items_text : $items_num;
                         $itemQty = 1;
                         $res = [];
+
                         foreach ($items as $idx => $dt) {
                             $res[] = (object)[
                                 "item_name" => $items_text[$idx] ?? null,
@@ -1518,7 +1566,7 @@ class Commands extends Controller
                             ];
                         }
                     } else {
-                        // Parse the PDF
+                        // Parse the PDF (Generate from GudangKu)
                         $parser = new Parser();
                         $pdf = $parser->parseFile($file);
                         $text = $pdf->getText();
@@ -1536,6 +1584,7 @@ class Commands extends Controller
                                     $itemQty = 1;
 
                                     if(count($columns) > 2){
+                                        // Extract information
                                         $itemPrice = trim($columns[2]); 
                                         if (!empty($itemPrice) && $itemPrice !== "Description" && $itemPrice !== "Parts of FlazenApps") {
                                             $founded_price_raw = explode(" Rp. ", $itemPrice);
@@ -1553,6 +1602,7 @@ class Commands extends Controller
                         }
                     }
 
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("analyze", 'file'),

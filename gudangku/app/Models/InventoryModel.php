@@ -598,8 +598,8 @@ class InventoryModel extends Model
         return InventoryModel::where('created_by',$user_id)->delete();
     }
 
-    public static function updateInventoryById($user_id = null,$inventory_id,$data){
-        $rows = InventoryModel::where('id', $inventory_id);
+    public static function updateInventoryById($user_id = null,$id,$data){
+        $rows = InventoryModel::where('id', $id);
         
         if($user_id){
             $rows = $rows->where('created_by', $user_id);
