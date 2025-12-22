@@ -8178,8 +8178,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total inventory by category",
-                "description": "This request is used to get total inventory by its category. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Inventory By Category",
+                "description": "This request is used to get total inventory by its category. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "d6ccad86a5101bbbd40f3b77a4c92525",
                 "parameters": [
                     {
@@ -8199,7 +8199,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "stats fetched successfully. Ordered in descending order by `total`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8302,17 +8302,17 @@
                 ]
             }
         },
-        "/api/v1/stats/inventory/category/most_expensive": {
+        "/api/v1/stats/inventory/category/most_expensive/{context}": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
                 "summary": "Get most expensive inventory per context",
-                "description": "This request is used to get most expensive inventory for each category. This request is using MySql database, and have a protected routes.",
-                "operationId": "4056ec8fbe0589a81b6b3652ae5213da",
+                "description": "This request is used to get most expensive inventory for each category. This request interacts with the MySQL database, and have a protected routes.",
+                "operationId": "4a2205a3b308f55b67770ba9c60ec218",
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "stats fetched successfully. Ordered in descending order by `total`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8421,7 +8421,7 @@
                     "Stats"
                 ],
                 "summary": "Get total inventory by favorite",
-                "description": "This request is used to get total inventory by its favorite. This request is using MySql database, and have a protected routes.",
+                "description": "This request is used to get total inventory by its favorite. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "bc79591baa35e55bfb913d10e8abf4aa",
                 "parameters": [
                     {
@@ -8441,7 +8441,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "stats fetched successfully. Ordered in descending order by `total`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8549,8 +8549,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total inventory by room",
-                "description": "This request is used to get total inventory by its room. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Inventory By Room",
+                "description": "This request is used to get total inventory by its room. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "4a6e35dd46a5269dffc1acf92d476262",
                 "parameters": [
                     {
@@ -8570,7 +8570,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "stats fetched successfully. Ordered in descending order by `total`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8678,8 +8678,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total inventory by merk",
-                "description": "This request is used to get total inventory by its merk. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Inventory By Merk",
+                "description": "This request is used to get total inventory by its merk. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "6d3d766f587025fdf2fd54cdb81eaada",
                 "parameters": [
                     {
@@ -8699,7 +8699,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "stats fetched successfully. Ordered in descending order by `total`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8807,8 +8807,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total report created per month",
-                "description": "This request is used to get total report created per month by given `year`. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Report Created Per Month",
+                "description": "This request is used to get total report created per month by given `year`. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "8b3e785764844003129ce1388ec6597d",
                 "parameters": [
                     {
@@ -8824,7 +8824,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "stats fetched successfully. Ordered in ascending order by `context` (month order format)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8936,8 +8936,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total inventory created per month",
-                "description": "This request is used to get total inventory created per month by given `year`. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Inventory Created Per Month",
+                "description": "This request is used to get total inventory created per month by given `year`. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "81f129b1461b08056a95802349523494",
                 "parameters": [
                     {
@@ -8953,7 +8953,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "stats fetched successfully. Ordered in ascending order by `context` (month order format)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9061,8 +9061,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total inventory favorited comparison",
-                "description": "This request is used to get total inventory comparison by if its favorited or not. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Inventory Favorited Comparison",
+                "description": "This request is used to get total inventory comparison by if its favorited or not. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "ca64d7612a8d3d5a41f6301ad30e08d5",
                 "responses": {
                     "200": {
@@ -9174,12 +9174,12 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total inventory low capacity comparison",
-                "description": "This request is used to get total inventory comparison by if its low capacity or not. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Inventory Low Capacity Comparison",
+                "description": "This request is used to get total inventory comparison by if its low capacity or not. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "f9eba9a1128c3d12655a4a9c02e0da3c",
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "Stats fetched successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9287,8 +9287,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total activity per month",
-                "description": "This request is used to get total activity per month by given `year`. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Activity Per Month",
+                "description": "This request is used to get total activity per month by given `year`. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "5ffdf1204028969960ed8d82db19c10c",
                 "parameters": [
                     {
@@ -9304,7 +9304,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "Stats fetched successfully. Ordered in ascending order by `context` (month order format)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9407,17 +9407,178 @@
                 ]
             }
         },
+        "/api/v1/stats/inventory/tree_map": {
+            "get": {
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Get Inventory Tree Map",
+                "description": "This request is used to get inventory mapping in tree map format. This request interacts with the MySQL database, and have a protected routes.",
+                "operationId": "22bd907373fe0c0ec4b4c2756ec93dea",
+                "responses": {
+                    "200": {
+                        "description": "Stats fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "stats fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "room_ddd072238abb3528f043222882b92c03"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Main Room"
+                                                    },
+                                                    "children": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "string",
+                                                                    "example": "storage_d399fd2dbae5d34c249a34287dfcb9bb"
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "Wardrobe"
+                                                                },
+                                                                "children": {
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "properties": {
+                                                                            "id": {
+                                                                                "type": "string",
+                                                                                "example": "rack_f8129906877dbc7b50bf30bc79a2129d"
+                                                                            },
+                                                                            "name": {
+                                                                                "type": "string",
+                                                                                "example": "Shoes & Sandals - Bottom"
+                                                                            },
+                                                                            "children": {
+                                                                                "type": "array",
+                                                                                "items": {
+                                                                                    "properties": {
+                                                                                        "id": {
+                                                                                            "type": "string",
+                                                                                            "example": "item_387722ed612ed175f47cc906e0e1fdf9"
+                                                                                        },
+                                                                                        "name": {
+                                                                                            "type": "string",
+                                                                                            "example": "New Balance2112"
+                                                                                        }
+                                                                                    },
+                                                                                    "type": "object"
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "type": "object"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "stats failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "stats not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/stats/user/last_login": {
             "get": {
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get last user login",
-                "description": "This request is used to get list of last user login. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Last User Login",
+                "description": "This request is used to get list of last user login. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "7697f4d5e54564be7b8cac58111af9c2",
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "Stats fetched successfully. Ordered in descending order by `login_at`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9526,8 +9687,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get user leaderboard",
-                "description": "This request is used to get user leaderboard. This request is using MySql database, and have a protected routes.",
+                "summary": "Get User Leaderboard",
+                "description": "This request is used to get user leaderboard. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "989e7a6e38673b0cf1bea3153ffd7be1",
                 "responses": {
                     "200": {
@@ -9656,8 +9817,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total report spending per month",
-                "description": "This request is used to get total report created per month by given `year`. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Report Spending Per Month",
+                "description": "This request is used to get total report created per month by given `year`. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "894a3246ab3457a92625d08f40e368c1",
                 "parameters": [
                     {
@@ -9673,7 +9834,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "Stats fetched successfully. Ordered in ascending order by `context` (month order format)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9789,8 +9950,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get total report spending per month",
-                "description": "This request is used to get total report created per month by given `year`. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Total Report Spending Per Month",
+                "description": "This request is used to get total report created per month by given `year`. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "5f76ad6ae1dbe9ae74cc616ccef337e6",
                 "parameters": [
                     {
@@ -9806,7 +9967,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "stats fetched",
+                        "description": "Stats fetched successfully. Ordered in ascending order by `context` (month order format)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9918,8 +10079,8 @@
                 "tags": [
                     "Stats"
                 ],
-                "summary": "Get dashboard",
-                "description": "This request is used to get inventory dashboard. This request is using MySql database, and have a protected routes.",
+                "summary": "Get Dashboard",
+                "description": "This request is used to get inventory dashboard. This request interacts with the MySQL database, and have a protected routes.",
                 "operationId": "c763e3efef5bda821cc59cf5867d29bf",
                 "responses": {
                     "200": {

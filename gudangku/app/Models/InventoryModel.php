@@ -56,6 +56,14 @@ class InventoryModel extends Model
         'inventory_capacity_vol' => 'integer',
     ];
 
+    private static function get_inventory_stats_view($type){
+        if($type == "price"){
+            return "CAST(SUM(inventory_price) as UNSIGNED)";
+        } else if($type == "item") {
+            return "COUNT(1)";
+        }
+    }
+
     public static function getInventoryNameById($id){
         return InventoryModel::select('inventory_name')->where('id',$id)->first();
     }
@@ -198,13 +206,6 @@ class InventoryModel extends Model
         return count($res) > 0 ? $res : null;
     }
 
-    private static function get_inventory_stats_view($type){
-        if($type == "price"){
-            return "CAST(SUM(inventory_price) as UNSIGNED)";
-        } else if($type == "item") {
-            return "COUNT(1)";
-        }
-    }
     public static function getContextTotalStats($context,$type,$user_id = null){
         $res = InventoryModel::selectRaw("$context as context, ".self::get_inventory_stats_view($type)." as total");
         if($user_id){
@@ -360,6 +361,22 @@ class InventoryModel extends Model
         }
        
         return $res->first();
+    }
+
+    public static function getTotalInventoryByFavorite($user_id, $type){
+        $res = InventoryModel::selectRaw("
+            CASE 
+                WHEN is_favorite = 1 THEN 'Favorite' 
+                ELSE 'Normal Item' 
+            END AS context, 
+            ".self::get_inventory_stats_view($type)." as total");
+        if($user_id){
+            $res->where('created_by',$user_id);
+        }
+
+        return $res->groupby('is_favorite')
+            ->orderby('total','desc')
+            ->get();
     }
 
     public static function getLastAddedInventory($user_id){
