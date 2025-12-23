@@ -59,6 +59,23 @@ class UserModel extends Authenticatable
         return UserModel::where('username',$username)->first();
     }
 
+    public static function isTelegramIDUsed($telegram_id){
+        return UserModel::where('telegram_user_id',$telegram_id)->exists();
+    }
+
+    public static function isUsernameUsed($username){
+        return UserModel::where('username',$username)->exists();
+    }
+
+    public static function isUsernameEmailUsedWithExceptionalId($email, $username, $user_id){
+        return UserModel::where(function ($query) use ($email, $username) {
+                $query->where('email', $email)
+                    ->orWhere('username', $username);
+            })
+            ->where('id', '!=', $user_id)
+            ->exists();
+    }
+
     public static function getSocial($id){
         $res = UserModel::select('username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
             ->where('id',$id)

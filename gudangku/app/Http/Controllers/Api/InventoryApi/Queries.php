@@ -32,7 +32,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/inventory",
      *     summary="Get All Inventory",
-     *     description="This request is used to get all inventory data.  This request interacts with the MySQL database, has protected routes, and has a pagination.",
+     *     description="This request is used to get all inventory data. This request interacts with the MySQL database, has protected routes, and has a pagination.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(

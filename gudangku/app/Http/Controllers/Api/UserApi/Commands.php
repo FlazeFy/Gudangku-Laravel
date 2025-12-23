@@ -11,7 +11,6 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 // Helper
 use App\Helpers\Generator;
 use App\Helpers\Validation;
-
 // Models
 use App\Models\UserModel;
 use App\Models\HistoryModel;
@@ -23,7 +22,6 @@ use App\Models\AdminModel;
 use App\Models\ReminderModel;
 use App\Models\ValidateRequestModel;
 use App\Models\PersonalAccessToken;
-
 // Mailer
 use App\Jobs\UserMailer;
 
@@ -32,15 +30,31 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/user/update_telegram_id",
-     *     summary="Update telegram token id",
+     *     summary="Put Update Telegram ID",
+     *     description="This request is used to update telegram ID by given `telegram_user_id`. This request interacts with the MySQL database, broadcast message using Telegram, and has a protected routes.",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"telegram_user_id"},
+     *             @OA\Property(property="telegram_user_id", type="string", example="123456789")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="telegram id updated! and validation has been sended to you",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="telegram id updated! and validation has been sended to you")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="telegram id failed to update",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="telegram ID is invalid. Please check your Telegram ID")
      *         )
      *     ),
      *     @OA\Response(
@@ -69,39 +83,52 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function update_telegram_id(Request $request)
+    public function updateTelegramId(Request $request)
     {
         try{
             $user_id = $request->user()->id;
             $new_telegram_id = $request->telegram_user_id;
 
-            $check = UserModel::selectRaw('1')
-                ->where('telegram_user_id', $new_telegram_id)
-                ->first();
-
-            if($check == null){
-                $res = UserModel::where('id',$user_id)
-                    ->update([
-                        'telegram_user_id' => $new_telegram_id,
-                        'telegram_is_valid' => 0
-                    ]);
-                
-                if ($res) {
+            // Check if telegram ID has been used
+            $check = UserModel::isTelegramIDUsed($new_telegram_id);
+            if($check === null){
+                // Update user by ID
+                $res = UserModel::updateUserById(['telegram_user_id' => $new_telegram_id, 'telegram_is_valid' => 0],$user_id);
+                if($res){
+                    // Generate token
                     $token_length = 6;
                     $token = Generator::getTokenValidation($token_length);
+
+                    // Create validate request
                     ValidateRequestModel::createValidateRequest('telegram_id_validation', $token, $user_id);
 
-                    $user = UserModel::find($user_id);
-                    $response = Telegram::sendMessage([
-                        'chat_id' => $new_telegram_id,
-                        'text' => "Hello,\n\nWe received a request to validate GudangKu apps's account with username <b>$user->username</b> to sync with this Telegram account. If you initiated this request, please confirm that this account belongs to you by clicking the button YES.\n\nAlso we provided the Token :\n$token\n\nIf you did not request this, please press button NO.\n\nThank you, GudangKu",
-                        'parse_mode' => 'HTML'
-                    ]);
+                    // Get user by ID
+                    $user = UserModel::getSocial($user_id);
 
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => Generator::getMessageTemplate("custom", 'telegram id updated! and validation has been sended to you'),
-                    ], Response::HTTP_OK);
+                    // Check if user Telegram ID is valid
+                    if(TelegramMessage::checkTelegramID($new_telegram_id)){
+                        // Send telegram message
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $new_telegram_id,
+                            'text' => "Hello,\n\nWe received a request to validate GudangKu apps's account with username <b>$user->username</b> to sync with this Telegram account. If you initiated this request, please confirm that this account belongs to you by clicking the button YES.\n\nAlso we provided the Token :\n$token\n\nIf you did not request this, please press button NO.\n\nThank you, GudangKu",
+                            'parse_mode' => 'HTML'
+                        ]);
+    
+                        // Return success response
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => Generator::getMessageTemplate("custom", 'telegram id updated! and validation has been sended to you'),
+                        ], Response::HTTP_OK);
+                    } else {
+                        // Reset telegram from user account if not valid
+                        UserModel::updateUserById(['telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                        
+                        // Return success response
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => Generator::getMessageTemplate("custom", 'telegram ID is invalid. Please check your Telegram ID'),
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
                 } else {
                     return response()->json([
                         'status' => 'failed',
@@ -125,9 +152,18 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/user/update_profile",
-     *     summary="Update profile",
+     *     summary="Put Update Profile",
+     *     description="This request is used to update profile by given `username` and `email`. This request interacts with the MySQL database, broadcast message using Telegram, and has a protected routes.",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username","email"},
+     *             @OA\Property(property="username", type="string", example="FlazenApps"),
+     *             @OA\Property(property="email", type="string", example="flazfy@gmail.com")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="profile updated",
@@ -170,11 +206,12 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function update_profile(Request $request)
+    public function updateProfile(Request $request)
     {
         try{
             $user_id = $request->user()->id;
 
+            // Validate request body
             $validator = Validation::getValidateUser($request,'update');
             if ($validator->fails()) {
                 return response()->json([
@@ -182,35 +219,39 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                $check = UserModel::selectRaw('1')
-                    ->where(function ($query) use ($request) {
-                        $query->where('email', $request->email)
-                            ->orWhere('username', $request->username);
-                    })
-                    ->where('id', '!=', $user_id)
-                    ->first();
-
+                $extra_msg = null;
+                
+                // Check if username / email has been used
+                $check = UserModel::isUsernameEmailUsedWithExceptionalId($request->email, $request->username, $user_id);
                 if($check == null){
-                    $res = UserModel::where('id',$user_id)
-                        ->update([
-                            'email' => $request->email,
-                            'username' => $request->username
-                        ]);
-                    
+                    // Update user by ID
+                    $res = UserModel::updateUserById(['email' => $request->email, 'username' => $request->username],$user_id);
                     if ($res) {
+                        // Get user data by ID
                         $user = UserModel::getSocial($user_id);
 
                         if($user->telegram_is_valid == 1){
-                            $response = Telegram::sendMessage([
-                                'chat_id' => $user->telegram_user_id,
-                                'text' => "Hello,\n\nYour profile has been updated",
-                                'parse_mode' => 'HTML'
-                            ]);
+                            // Check if user Telegram ID is valid
+                            // If Telegram ID is invalid, keep return success response because this is update profile function. (assume that the telegram is not validated yet)
+                            if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                $response = Telegram::sendMessage([
+                                    'chat_id' => $user->telegram_user_id,
+                                    'text' => "Hello,\n\nYour profile has been updated",
+                                    'parse_mode' => 'HTML'
+                                ]);
+                            } else {
+                                // Reset telegram from user account if not valid
+                                UserModel::updateUserById([ 'telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                                $extra_msg = ' Telegram ID is invalid. Please check your Telegram ID';
+                            }
                         }
+                        
+                        $msg = Generator::getMessageTemplate("update", 'profile');
 
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
-                            'message' => Generator::getMessageTemplate("update", 'profile'),
+                            'message' => Generator::getMessageTemplate("custom", $extra_msg ? $msg.". But ".$extra_msg: $msg),
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
@@ -236,7 +277,8 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/register/token",
-     *     summary="Check and send validation token to the user who in registration process",
+     *     summary="Post Register Validation Token",
+     *     description="This request is used to check and send validation token to the user who in registration process. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
      *     tags={"User"},
      *     @OA\Response(
      *         response=200,
@@ -268,30 +310,27 @@ class Commands extends Controller
     {
         try{
             $username = $request->username;
-            $check_user = UserModel::selectRaw('1')
-                ->where('username',$username)
-                ->first();
 
+            // Check if username has not been used
+            $check_user = UserModel::isUsernameUsed($username);
             if(!$check_user){
-                $valid = ValidateRequestModel::selectRaw('1')
-                    ->where('request_type','register')
-                    ->where('created_by',$username)
-                    ->first();
-
+                // Get active request
+                $valid = ValidateRequestModel::getActiveRequest($username, 'register');
                 if(!$valid){
+                    // Generate token
                     $token_length = 6;
                     $token = Generator::getTokenValidation($token_length);
 
+                    // Create validate request
                     $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
-
                     if($valid_insert){
                         // Send email
                         $ctx = 'Generate registration token';
                         $email = $request->email;
                         $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
-
                         dispatch(new UserMailer($ctx, $data, $username, $email));
 
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
@@ -325,8 +364,19 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/register/account",
-     *     summary="Register account and accept validation",
+     *     summary="Post Register Account & Accept Validation",
+     *     description="This request is used to finally create an user and accept validation request. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
      *     tags={"User"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username","password","email","token"},
+     *             @OA\Property(property="username", type="string", example="FlazenApps"),
+     *             @OA\Property(property="password", type="string", example="abcde132"),
+     *             @OA\Property(property="email", type="string", example="flazfy@gmail.com"),
+     *             @OA\Property(property="token", type="string", example="AKC123"),
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="account is registered",
@@ -374,6 +424,7 @@ class Commands extends Controller
     public function postValidateRegister(Request $request)
     {
         try{
+            // Validate request body
             $validator = Validation::getValidateUser($request,'create');
             if ($validator->fails()) {
                 return response()->json([
@@ -382,30 +433,28 @@ class Commands extends Controller
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $username = $request->username;
-                $valid = ValidateRequestModel::selectRaw('id')
-                    ->where('request_type','register')
-                    ->where('request_context',$request->token)
-                    ->where('created_by',$username)
-                    ->first();
 
+                // Get active request
+                $valid = ValidateRequestModel::getActiveRequest($username, 'register', $request->token);
                 if($valid){
-                    $check_user = UserModel::selectRaw('1')
-                        ->where('username',$username)
-                        ->first();
-
+                    // Check if username has not been used
+                    $check_user = UserModel::isUsernameUsed($username);
                     if(!$check_user){
+                        // Hard delete request by id
                         ValidateRequestModel::destroy($valid->id);
 
+                        // Create user
                         $user = UserModel::createUser($request->username, $request->password, $request->email);
                         if($user){
                             // Send email
                             $ctx = 'Register new account';
                             $email = $request->email;
                             $data = "Welcome to GudangKu, happy explore!";
-
                             dispatch(new UserMailer($ctx, $data, $username, $email));
 
+                            // Return success response
                             if(Hash::check($request->password, $user->password)){
+                                // Hash the password
                                 $token = $user->createToken('login')->plainTextToken;
 
                                 return response()->json([
@@ -451,8 +500,16 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/register/regen_token",
-     *     summary="Regenerate registration token",
+     *     summary="Post Regenerate Registration Token",
+     *     description="This request is used to regenerate and send validation token that has been expired or just regenerate it. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
      *     tags={"User"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username"},
+     *             @OA\Property(property="username", type="string", example="flazefy")
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="the validation token has been sended to {email} email account",
@@ -483,28 +540,30 @@ class Commands extends Controller
     {
         try{
             $username = $request->username;
-            $valid = ValidateRequestModel::select('id')
-                ->where('request_type','register')
-                ->where('created_by',$username)
-                ->first();
 
+            // Generate token
             $token_length = 6;
             $token = Generator::getTokenValidation($token_length);
 
+            $ctx = 'Generate registration token';
+            $email = $request->email;
+            $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
+
+            // Get active register request
+            $valid = ValidateRequestModel::getActiveRequest($username, 'register');
             if($valid){
+                // Hard delete validate request by ID
                 $delete = ValidateRequestModel::destroy($valid->id);
 
                 if($delete > 0){
+                    // Create validate request
                     $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
 
                     if($valid_insert){
-                        // Send email
-                        $ctx = 'Generate registration token';
-                        $email = $request->email;
-                        $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
-
+                        // Send email token validation
                         dispatch(new UserMailer($ctx, $data, $username, $email));
 
+                        // Return success response
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
@@ -522,17 +581,14 @@ class Commands extends Controller
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
-                // already deleted
+                // Create validate request
                 $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
 
                 if($valid_insert){
-                    // Send email
-                    $ctx = 'Generate registration token';
-                    $email = $request->email;
-                    $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
-
+                    // Send email token validation
                     dispatch(new UserMailer($ctx, $data, $username, $email));
 
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
@@ -555,8 +611,16 @@ class Commands extends Controller
     /**
      * @OA\POST(
      *     path="/api/v1/user/update_timezone_fcm",
-     *     summary="Update user timezone",
+     *     summary="Put Update User Timezone",
+     *     description="This request is used to update user's `timezone`. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"User"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"timezone"},
+     *             @OA\Property(property="timezone", type="string", example="+11"),
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="firebase message token / timezone has been updated",
@@ -566,7 +630,7 @@ class Commands extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=422,
+     *         response=400,
      *         description="Timezone is invalid",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="failed"),
@@ -583,25 +647,24 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function update_timezone_fcm(Request $request)
+    public function updateTimezoneFCM(Request $request)
     {
         try{
             $user_id = $request->user()->id;
             $cols = "timezone";
+
+            // Validate timezone format
             $check = Validation::getValidateTimezone($request->timezone);
             if($check){
+                // Update user by ID
                 if($request->firebase_fcm_token == null){
-                    UserModel::where('id',$user_id)->update([
-                        'timezone'=> $request->timezone
-                    ]);
+                    UserModel::updateUserById(['timezone'=> $request->timezone],$user_id);
                 } else {
-                    UserModel::where('id',$user_id)->update([
-                        'timezone'=> $request->timezone,
-                        'firebase_fcm_token'=> $request->firebase_fcm_token
-                    ]);
+                    UserModel::updateUserById(['timezone'=> $request->timezone, 'firebase_fcm_token'=> $request->firebase_fcm_token],$user_id);
                     $cols .= " and firebase fcm token";
                 }
                 
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("custom", "$cols has been updated"),
@@ -623,15 +686,39 @@ class Commands extends Controller
     /**
      * @OA\PUT(
      *     path="/api/v1/user/validate_telegram_id",
-     *     summary="Validate telegram id change",
+     *     summary="Put Validate Telegram ID",
+     *     description="This request is used to validate Telegram ID change by give `request_context`. This request interacts with the MySQL database, and has a protected routes.",
      *     tags={"User"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"request_context"},
+     *             @OA\Property(property="request_context", type="string", example="AX1AJ9"),
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="telegram id has been validated"
+     *         description="telegram id has been validated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="telegram id has been validated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid telegram ID",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Telegram ID is invalid. Please check your Telegram ID")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="validation token is not valid"
+     *         description="validation token not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="validation token is not valid")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
@@ -643,30 +730,48 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function validate_telegram_id(Request $request){
+    public function putValidateTelegramId(Request $request){
         try{
             $user_id = $request->user()->id;
-            $res = ValidateRequestModel::where('request_type','telegram_id_validation')
-                ->where('created_by',$user_id)
-                ->where('request_context',$request->request_context)
-                ->delete();
+
+            // Hard delete validate request by request context
+            $res = ValidateRequestModel::deleteValidateRequestByRequestContext($request->request_context, $user_id);
             if($res > 0){
-                $user = UserModel::find($user_id);
-                UserModel::where('id', $user_id)
-                    ->update([
-                        'telegram_is_valid' => 1
-                    ]);
+                // Update user by ID
+                $res = UserModel::updateUserById(['telegram_is_valid' => 1],$user_id);
+                if($res > 0){
+                    // Get user data
+                    $user = UserModel::getSocial($user_id);
 
-                $response = Telegram::sendMessage([
-                    'chat_id' => $user->telegram_user_id,
-                    'text' => "Validation success.\nWelcome <b>{$user->username}</b>!,",
-                    'parse_mode' => 'HTML'
-                ]);
+                    // Check if user Telegram ID is valid
+                    if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                        // Send telegram message with file
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $user->telegram_user_id,
+                            'text' => "Validation success.\nWelcome <b>{$user->username}</b>!,",
+                            'parse_mode' => 'HTML'
+                        ]);
+        
+                        // Return success response
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => Generator::getMessageTemplate("custom", 'telegram id has been validated'),
+                        ], Response::HTTP_OK);
+                    } else {
+                        // Reset telegram from user account if not valid
+                        UserModel::updateUserById([ 'telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => Generator::getMessageTemplate("custom", 'telegram id has been validated'),
-                ], Response::HTTP_OK);
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => Generator::getMessageTemplate("custom", "Telegram ID is invalid. Please check your Telegram ID"),
+                        ], Response::HTTP_BAD_REQUEST);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("not_found", 'user'),
+                    ], Response::HTTP_NOT_FOUND);
+                }
             } else {
                 return response()->json([
                     'status' => 'failed',
@@ -684,7 +789,8 @@ class Commands extends Controller
     /**
      * @OA\DELETE(
      *     path="/api/v1/user/{id}",
-     *     summary="Delete User By Id",
+     *     summary="Hard Delete User By Id",
+     *     description="This request is used to delete user by given user's `id`. This request interacts with the MySQL database and has a protected routes.",
      *     tags={"User"},
      *     @OA\Parameter(
      *         name="id",
@@ -728,16 +834,19 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hard_delete_user_by_id(Request $request, $id)
+    public function hardDeleteUserById(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
 
+            // Make sure only admin can access this request
+            $check_admin = AdminModel::find($user_id);
             if($check_admin){
+                // Hard delete user by ID
                 $res = UserModel::where('id',$id)->delete();
                 
                 if ($res) {
+                    // Hard delete data that related to user
                     InventoryModel::deleteInventoryByUserId($id);
                     InventoryLayoutModel::deleteInventoryLayoutByUserId($id);
                     ReportModel::deleteReportByUserId($id);
@@ -746,6 +855,7 @@ class Commands extends Controller
                     ReminderModel::deleteReminderByUserId($id);
                     PersonalAccessToken::deletePersonalAccessTokenByUserId($id);
 
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("delete", 'user'),

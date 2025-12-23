@@ -1731,7 +1731,7 @@
                     "Inventory"
                 ],
                 "summary": "Get All Inventory",
-                "description": "This request is used to get all inventory data.  This request interacts with the MySQL database, has protected routes, and has a pagination.",
+                "description": "This request is used to get all inventory data. This request interacts with the MySQL database, has protected routes, and has a pagination.",
                 "operationId": "ba8b3005bed7008380df0cdd8724f8f3",
                 "responses": {
                     "200": {
@@ -10223,8 +10223,28 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Update telegram token id",
-                "operationId": "b3319a420453e08af500d97aa4d48b6d",
+                "summary": "Put Update Telegram ID",
+                "description": "This request is used to update telegram ID by given `telegram_user_id`. This request interacts with the MySQL database, broadcast message using Telegram, and has a protected routes.",
+                "operationId": "c70d54943ca3414fe4365878ff52e309",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "telegram_user_id"
+                                ],
+                                "properties": {
+                                    "telegram_user_id": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "telegram id updated! and validation has been sended to you",
@@ -10239,6 +10259,26 @@
                                         "message": {
                                             "type": "string",
                                             "example": "telegram id updated! and validation has been sended to you"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "telegram id failed to update",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "telegram ID is invalid. Please check your Telegram ID"
                                         }
                                     },
                                     "type": "object"
@@ -10319,8 +10359,33 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Update profile",
-                "operationId": "d8307a36aad6b3e10693a92193f8d4ad",
+                "summary": "Put Update Profile",
+                "description": "This request is used to update profile by given `username` and `email`. This request interacts with the MySQL database, broadcast message using Telegram, and has a protected routes.",
+                "operationId": "d5ace13a02be6746143b151df9c9cde0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "FlazenApps"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "flazfy@gmail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "profile updated",
@@ -10435,7 +10500,8 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Check and send validation token to the user who in registration process",
+                "summary": "Post Register Validation Token",
+                "description": "This request is used to check and send validation token to the user who in registration process. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
                 "operationId": "ef6f3e60adfc3031ca81c0d3363d6592",
                 "responses": {
                     "200": {
@@ -10506,8 +10572,43 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Register account and accept validation",
+                "summary": "Post Register Account & Accept Validation",
+                "description": "This request is used to finally create an user and accept validation request. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
                 "operationId": "8fc614cf74a052718c41f56bf5e9bf3c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password",
+                                    "email",
+                                    "token"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "FlazenApps"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "abcde132"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "flazfy@gmail.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "AKC123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "account is registered",
@@ -10625,8 +10726,28 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Regenerate registration token",
+                "summary": "Post Regenerate Registration Token",
+                "description": "This request is used to regenerate and send validation token that has been expired or just regenerate it. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
                 "operationId": "25f376358b6ab0d223b28d3243c09410",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "flazefy"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "the validation token has been sended to {email} email account",
@@ -10696,8 +10817,28 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Update user timezone",
-                "operationId": "a8507903e83d7a4e0cc32bc26c47889f",
+                "summary": "Put Update User Timezone",
+                "description": "This request is used to update user's `timezone`. This request interacts with the MySQL database, and has a protected routes.",
+                "operationId": "37f90b1432241e86f683df5198e6988f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "timezone"
+                                ],
+                                "properties": {
+                                    "timezone": {
+                                        "type": "string",
+                                        "example": "+11"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "firebase message token / timezone has been updated",
@@ -10719,7 +10860,7 @@
                             }
                         }
                     },
-                    "422": {
+                    "400": {
                         "description": "Timezone is invalid",
                         "content": {
                             "application/json": {
@@ -10767,14 +10908,88 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Validate telegram id change",
-                "operationId": "de1ceb7d57fb3bab1493d6315a623752",
+                "summary": "Put Validate Telegram ID",
+                "description": "This request is used to validate Telegram ID change by give `request_context`. This request interacts with the MySQL database, and has a protected routes.",
+                "operationId": "55a918238fc000e5e0546c25d0b24835",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "request_context"
+                                ],
+                                "properties": {
+                                    "request_context": {
+                                        "type": "string",
+                                        "example": "AX1AJ9"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "telegram id has been validated"
+                        "description": "telegram id has been validated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "telegram id has been validated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid telegram ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Telegram ID is invalid. Please check your Telegram ID"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "validation token is not valid"
+                        "description": "validation token not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "validation token is not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -10804,8 +11019,9 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Delete User By Id",
-                "operationId": "4f449371c0150bb9392a121f7b4fd6f5",
+                "summary": "Hard Delete User By Id",
+                "description": "This request is used to delete user by given user's `id`. This request interacts with the MySQL database and has a protected routes.",
+                "operationId": "db995ff281d9001eead654db3400f5c0",
                 "parameters": [
                     {
                         "name": "id",
@@ -10907,8 +11123,8 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Get my profile",
-                "description": "This request is used to get user profile info. This request is using MySql database, and have a protected routes",
+                "summary": "Get My Profile",
+                "description": "This request is used to get user profile info. This request interacts with the MySQL database, and have a protected routes",
                 "operationId": "b2acc664d9f1c1787fe8c4f3ecc7d583",
                 "responses": {
                     "200": {
@@ -11060,12 +11276,12 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Get all user",
-                "description": "This request is used to get all user. This endpoint for Admin only. This request is using MySql database, and have a protected routes",
+                "summary": "Get All User",
+                "description": "This request is used to get all user. This endpoint for Admin only. This request interacts with the MySQL database, a pagination, and have a protected routes",
                 "operationId": "40b8390ae98ad1b43f5079d74a902e0b",
                 "responses": {
                     "200": {
-                        "description": "user fetched",
+                        "description": "user fetched successfully. Ordered in descending order by `created_at`",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -11079,41 +11295,46 @@
                                             "example": "user fetched"
                                         },
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "string",
-                                                        "example": "17963858-9771-11ee-8f4a-3216422910r4"
-                                                    },
-                                                    "username": {
-                                                        "type": "string",
-                                                        "example": "flazefy"
-                                                    },
-                                                    "email": {
-                                                        "type": "string",
-                                                        "example": "flazen.edu@gmail.com"
-                                                    },
-                                                    "role": {
-                                                        "type": "string",
-                                                        "example": "user"
-                                                    },
-                                                    "telegram_user_id": {
-                                                        "type": "string",
-                                                        "example": "1317625970"
-                                                    },
-                                                    "telegram_is_valid": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "created_at": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2024-09-20 22:53:47"
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "17963858-9771-11ee-8f4a-3216422910r4"
+                                                            },
+                                                            "username": {
+                                                                "type": "string",
+                                                                "example": "flazefy"
+                                                            },
+                                                            "email": {
+                                                                "type": "string",
+                                                                "example": "flazen.edu@gmail.com"
+                                                            },
+                                                            "role": {
+                                                                "type": "string",
+                                                                "example": "user"
+                                                            },
+                                                            "telegram_user_id": {
+                                                                "type": "string",
+                                                                "example": "1317625970"
+                                                            },
+                                                            "telegram_is_valid": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-09-20 22:53:47"
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
-                                                },
-                                                "type": "object"
-                                            }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -11195,7 +11416,7 @@
                     "User"
                 ],
                 "summary": "Get My Content's Year",
-                "description": "This request is used to get all available year to selected in filter based on created date inventory or report. This request is using MySql database, and have a protected routes",
+                "description": "This request is used to get all available year to selected in filter based on created date inventory or report. This request interacts with the MySQL database, and have a protected routes",
                 "operationId": "2e2557e28eb79cefb6dc58450258afd3",
                 "responses": {
                     "200": {

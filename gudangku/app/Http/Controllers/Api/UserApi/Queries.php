@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Models\UserModel;
 use App\Models\AdminModel;
 use App\Models\ValidateRequestModel;
-
 // Helper
 use App\Helpers\Generator;
 
@@ -18,8 +17,8 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/user/my_profile",
-     *     summary="Get my profile",
-     *     description="This request is used to get user profile info. This request is using MySql database, and have a protected routes",
+     *     summary="Get My Profile",
+     *     description="This request is used to get user profile info. This request interacts with the MySQL database, and have a protected routes",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -76,10 +75,14 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
+            // Get user / admin data by ID
             $res = UserModel::getUserById($user_id); // with admin too
-            $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
-            
+
             if ($res) {
+                // Get user's active request
+                $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
+
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'user'),
@@ -103,27 +106,29 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/user",
-     *     summary="Get all user",
-     *     description="This request is used to get all user. This endpoint for Admin only. This request is using MySql database, and have a protected routes",
+     *     summary="Get All User",
+     *     description="This request is used to get all user. This endpoint for Admin only. This request interacts with the MySQL database, a pagination, and have a protected routes",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="user fetched",
+     *         description="user fetched successfully. Ordered in descending order by `created_at`",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="user fetched"),
-     *             @OA\Property(property="data", type="array",
-     *                 @OA\Items(
-     *                      @OA\Property(property="id", type="string", example="17963858-9771-11ee-8f4a-3216422910r4"),
-     *                      @OA\Property(property="username", type="string", example="flazefy"),
-     *                      @OA\Property(property="email", type="string", example="flazen.edu@gmail.com"),
-     *                      @OA\Property(property="role", type="string", example="user"),
-     *                      @OA\Property(property="telegram_user_id", type="string", example="1317625970"),
-     *                      @OA\Property(property="telegram_is_valid", type="integer", example=1),
-     *                      @OA\Property(property="created_at", type="string", format="date-time", example="2024-09-20 22:53:47")
-     *                 )
-     *             ),
+     *             @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="data", type="array",
+     *                      @OA\Items(
+     *                          @OA\Property(property="id", type="string", example="17963858-9771-11ee-8f4a-3216422910r4"),
+     *                          @OA\Property(property="username", type="string", example="flazefy"),
+     *                          @OA\Property(property="email", type="string", example="flazen.edu@gmail.com"),
+     *                          @OA\Property(property="role", type="string", example="user"),
+     *                          @OA\Property(property="telegram_user_id", type="string", example="1317625970"),
+     *                          @OA\Property(property="telegram_is_valid", type="integer", example=1),
+     *                          @OA\Property(property="created_at", type="string", format="date-time", example="2024-09-20 22:53:47")
+     *                      )
+     *                  ),
+     *              )
      *         )
      *     ),
      *     @OA\Response(
@@ -156,13 +161,16 @@ class Queries extends Controller
     {
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
             $paginate = $request->query('per_page_key') ?? 12;
 
+            // Make sure only admin can access this request
+            $check_admin = AdminModel::find($user_id);
             if($check_admin){
+                // Get all user with pagination
                 $res = UserModel::getAllUser($paginate);
                 
                 if ($res) {
+                    // Return success response
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("fetch", 'user'),
@@ -192,7 +200,7 @@ class Queries extends Controller
      * @OA\GET(
      *     path="/api/v1/user/my_year",
      *     summary="Get My Content's Year",
-     *     description="This request is used to get all available year to selected in filter based on created date inventory or report. This request is using MySql database, and have a protected routes",
+     *     description="This request is used to get all available year to selected in filter based on created date inventory or report. This request interacts with the MySQL database, and have a protected routes",
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
@@ -237,10 +245,15 @@ class Queries extends Controller
     public function getContentYear(Request $request){
         try{
             $user_id = $request->user()->id;
-            $check_admin = AdminModel::find($user_id);
-            $res = UserModel::getAvailableYear($check_admin ? null : $user_id, $check_admin ? true : false);
 
+            // Define user id by role
+            $check_admin = AdminModel::find($user_id);
+            $user_id = $check_admin ? null : $user_id;
+
+            // Get available year based on content history
+            $res = UserModel::getAvailableYear($user_id, $check_admin ? true : false);
             if ($res) {
+                // Return success response
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'user year'),
