@@ -9,12 +9,15 @@
 
 @section('content')
     <div class="content">
-        @include('components.profile')
-        @include('components.notification')
-        <h1 class="main-page-title">My Inventory</h1>
-        <a class="btn btn-danger mb-3 me-2" href="/inventory"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> Back</a>
-        <a class="btn btn-primary mb-3 me-2" href="/inventory/add"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Inventory</a>
-        <a class="btn btn-primary mb-3 me-2" href="/stats"><i class="fa-solid fa-chart-pie" style="font-size:var(--textXLG);"></i> Stats</a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">My Inventory</h1>
+            <div>
+                @include('components.profile')
+                @include('components.notification')
+            </div>
+        </div>
+        <hr>
+        @include('home.home_toolbar')
         @include('home.catalog.list')
     </div>
 @endsection

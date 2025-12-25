@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 // Model
 use App\Models\UserModel;
 use App\Models\GoogleTokensModel;
-
 // Mailer
 use App\Jobs\UserMailer;
 

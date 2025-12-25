@@ -7,7 +7,6 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 
 // Helpers
 use App\Helpers\Generator;
-
 // Models
 use App\Models\UserModel;
 use App\Models\ValidateRequestModel;

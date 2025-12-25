@@ -1,15 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-
-// Models
-use App\Models\ReportModel;
-use App\Models\ReportItemModel;
 
 // Helpers
 use App\Helpers\Generator;
-use App\Helpers\Audit;
 
 class EditController extends Controller
 {

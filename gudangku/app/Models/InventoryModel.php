@@ -72,6 +72,18 @@ class InventoryModel extends Model
         return InventoryModel::select('inventory_room')->where('created_by',$user_id)->groupby('inventory_room')->get();
     }
 
+    public static function getInventoryCatalogByContext($user_id = null, $context){
+        $res = InventoryModel::selectRaw("$context as context, COUNT(1) as total");
+        
+        if($user_id){
+            $res = $res->where('created_by',$user_id);
+        }
+        
+        $res = $res->groupby($context)->orderby('total','desc')->get();
+
+        return count($res) > 0 ? $res : null;
+    }
+
     public static function getInventoryCalendar($user_id){
         return InventoryModel::select('id','inventory_name','inventory_price','created_at')
             ->where('created_by',$user_id)

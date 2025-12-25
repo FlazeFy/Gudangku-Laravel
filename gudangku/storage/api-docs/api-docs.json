@@ -2717,6 +2717,156 @@
                 ]
             }
         },
+        "/api/v1/inventory/catalog": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get Inventory Catalog",
+                "description": "This request is used to get inventory by catalog (category, room, and storage) and total per each. This request interacts with the MySQL database, and has protected routes.",
+                "operationId": "8a20b6ca66b426cefd8e82e7d07acf47",
+                "responses": {
+                    "200": {
+                        "description": "Inventory fetched successfully. Ordered in descending order by `total`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "room": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "context": {
+                                                                "type": "string",
+                                                                "example": "Bed Room"
+                                                            },
+                                                            "total": {
+                                                                "type": "number",
+                                                                "example": 2
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "category": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "context": {
+                                                                "type": "string",
+                                                                "example": "Electronic"
+                                                            },
+                                                            "total": {
+                                                                "type": "number",
+                                                                "example": 2
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "storage": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "context": {
+                                                                "type": "string",
+                                                                "example": "Wardrobe"
+                                                            },
+                                                            "total": {
+                                                                "type": "number",
+                                                                "example": 2
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "inventory failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/inventory/list": {
             "get": {
                 "tags": [

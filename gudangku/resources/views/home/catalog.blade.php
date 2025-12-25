@@ -1,38 +1,82 @@
-<h2 class="mb-4">By Room</h2>
-<div class="row"> 
-@foreach($room as $r)
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
-        <button class="btn-feature" onclick="location.href='/inventory/by/room/{{$r->dictionary_name}}';">
-            <i class="fa-solid fa-house" style="font-size:90px;"></i>
-            <h2 class="mt-3 mb-2" style="font-size:var(--textJumbo);">{{$r->dictionary_name}}</h2>
-            <span style="background: var(--infoBG);" class="py-1 px-2 rounded props-box">{{$r->total}} Item</span>
-        </button>
-    </div>
-@endforeach
+<style>
+    .btn-feature i {
+        font-size: 80px;
+    }
+    @media (min-width: 576px) and (max-width: 767px) {
+        .btn-feature i {
+            font-size: 60px;
+        }
+    }
+    @media (max-width: 575px) {
+        .btn-feature i {
+            font-size: 40px;
+        }
+    }
+</style>
+
+<div class="container-form">
+    <h2>By Room</h2><hr>
+    <div class="row gy-3" id="inventory_by_room-holder"></div>
+</div>
+<div class="container-form">
+    <h2>By Category</h2><hr>
+    <div class="row gy-3" id="inventory_by_category-holder"></div>
+</div>
+<div class="container-form">
+    <h2>By Storage</h2><hr>
+    <div class="row gy-3" id="inventory_by_storage-holder"></div>
 </div>
 
-<h2 class="mb-4 mt-3">By Category</h2>
-<div class="row"> 
-@foreach($category as $c)
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
-        <button class="btn-feature" onclick="location.href='/inventory/by/category/{{$c->dictionary_name}}';">
-            <i class="fa-solid fa-toolbox" style="font-size:90px;"></i>
-            <h2 class="mt-3 mb-2" style="font-size:var(--textJumbo);">{{$c->dictionary_name}}</h2>
-            <span style="background: var(--infoBG);" class="py-1 px-2 rounded props-box">{{$c->total}} Item</span>
-        </button>
-    </div>
-@endforeach
-</div>
+<script>
+    const get_inventory = () => {
+        const holder = ['room','category','storage']
 
-<h2 class="mb-4 mt-3">By Storage</h2>
-<div class="row"> 
-@foreach($storage as $s)
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
-        <button class="btn-feature" onclick="location.href='/inventory/by/storage/{{$s->inventory_storage}}';">
-            <i class="fa-solid fa-box-archive" style="font-size:90px;"></i>
-            <h2 class="mt-3 mb-2" style="font-size:var(--textJumbo);">{{$s->inventory_storage}}</h2>
-            <span style="background: var(--infoBG);" class="py-1 px-2 rounded props-box">{{$s->total}} Item</span>
-        </button>
-    </div>
-@endforeach
-</div>
+        $.ajax({
+            url: `/api/v1/inventory/catalog`,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                Swal.showLoading()
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+            },
+            success: function(response) {
+                Swal.close()
+
+                holder.forEach(el => {
+                    const data = response.data[el]
+                    $(`#inventory_by_${el}-holder`).empty()
+
+                    const icon = el === 'room' ? 'fa-house' : el === 'category' ? 'fa-toolbox' : 'fa-box-archive'
+
+                    if(data){
+                        data.forEach((dt, idx) => {
+                            $(`#inventory_by_${el}-holder`).append(`
+                                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6 px-2">
+                                    <button class="btn-feature" onclick="location.href='/inventory/by/${el}/${dt.context}';">
+                                        <i class="fa-solid ${icon}"></i>
+                                        <h5 class="mt-3 mb-2">${dt.context ?? `<span class="no-data-message">- No ${ucFirst(el)} -</span>`}</h5>
+                                        <span class="py-1 px-2 rounded bg-success">${dt.total} Item</span>
+                                    </button>
+                                </div>
+                            `)
+                        });
+                    } else {
+                        template_alert_container(`inventory_by_${el}-holder`, 'no-data', `No inventory by ${el} to show`, null, '<i class="fa-solid fa-rotate-left"></i>')
+                    }
+                });                
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                if(response.status != 404){
+                    generate_api_error(response, true)
+                } else {
+                    holder.forEach(el => {
+                        $(`#inventory_by_${el}-holder`).empty()
+                        template_alert_container(`inventory_by_${el}-holder`, 'no-data', `No inventory by ${el} to show`, null, '<i class="fa-solid fa-rotate-left"></i>')
+                    });
+                }
+            }
+        });
+    }
+    get_inventory()
+</script>

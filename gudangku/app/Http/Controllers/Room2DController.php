@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
-// Models
-use App\Models\InventoryModel;
-
 // Helpers
 use App\Helpers\Generator;
 

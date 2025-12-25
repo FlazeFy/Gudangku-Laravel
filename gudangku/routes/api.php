@@ -37,6 +37,7 @@ Route::post('/v1/logout', [CommandAuthApi::class, 'postLogout'])->middleware(['a
 
 Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesInventoryController::class, 'getAllInventory']);
+    Route::get('/catalog', [QueriesInventoryController::class, 'getInventoryCatalog']);
     Route::get('/search/by_room_storage/{room}/{storage}', [QueriesInventoryController::class, 'getInventoryByStorage']);
     Route::get('/list', [QueriesInventoryController::class, 'getListInventory']);
     Route::get('/room', [QueriesInventoryController::class, 'getListRoom']);

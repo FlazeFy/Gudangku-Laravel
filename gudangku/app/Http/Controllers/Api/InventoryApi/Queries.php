@@ -213,6 +213,105 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
+     *     path="/api/v1/inventory/catalog",
+     *     summary="Get Inventory Catalog",
+     *     description="This request is used to get inventory by catalog (category, room, and storage) and total per each. This request interacts with the MySQL database, and has protected routes.",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Inventory fetched successfully. Ordered in descending order by `total`",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="room", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="context", type="string", example="Bed Room"),
+     *                         @OA\Property(property="total", type="number", example=2),
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="category", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="context", type="string", example="Electronic"),
+     *                         @OA\Property(property="total", type="number", example=2),
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="storage", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="context", type="string", example="Wardrobe"),
+     *                         @OA\Property(property="total", type="number", example=2),
+     *                     )
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function getInventoryCatalog(Request $request)
+    {
+        try{
+            // Attribute
+            $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+            $user_id = $check_admin ? null : $user_id;
+
+            // Get inventory catalog by context
+            $res_room = InventoryModel::getInventoryCatalogByContext($user_id,'inventory_room');
+            $res_category = InventoryModel::getInventoryCatalogByContext($user_id,'inventory_category');
+            $res_storage = InventoryModel::getInventoryCatalogByContext($user_id,'inventory_storage');
+
+            if($res_room || $res_category || $res_storage){
+                // Return success response
+                return response()->json([
+                    'status' => 'success',
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
+                    'data' => [
+                        'room' => $res_room,
+                        'category' => $res_category,
+                        'storage' => null
+                    ]
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
      *     path="/api/v1/inventory/list",
      *     summary="Get List Inventory",
      *     description="This request is used to get all inventory data but in shot format for selection.  This request interacts with the MySQL database, and has protected routes",

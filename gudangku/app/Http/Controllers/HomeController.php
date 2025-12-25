@@ -10,15 +10,12 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 // Models
 use App\Models\InventoryModel;
 use App\Models\DictionaryModel;
-use App\Models\ReminderModel;
 use App\Models\UserModel;
 use App\Models\AdminModel;
-
 // Helpers
 use App\Helpers\Generator;
 use App\Helpers\Audit;
 use App\Helpers\TelegramMessage;
-
 // Export
 use App\Exports\ActiveInventoryExport;
 use App\Exports\DeletedInventoryExport;
@@ -30,24 +27,17 @@ class HomeController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
-            $search_key = $request->query('search_key');
-            $filter_category = $request->query('filter_category');
-            $sorting = $request->query('sorting');
             $selected = session()->get('toogle_view_inventory');
 
-            $dct_reminder_type = DictionaryModel::where('dictionary_type', 'reminder_type')
-                ->get();
-
-            $dct_reminder_context = DictionaryModel::where('dictionary_type', 'reminder_context')
-                ->get();
-                
             if($selected == 'table'){
+                $search_key = $request->query('search_key');
+                $filter_category = $request->query('filter_category');
+                $sorting = $request->query('sorting');
+
                 return view('home.index')
                     ->with('search_key',$search_key)
                     ->with('sorting',$sorting)
-                    ->with('dct_reminder_type', $dct_reminder_type)
-                    ->with('filter_category',$filter_category)
-                    ->with('dct_reminder_context', $dct_reminder_context);
+                    ->with('filter_category',$filter_category);
             } elseif($selected == 'catalog'){
                 $room = DictionaryModel::selectRaw('dictionary_name, COUNT(1) as total')
                     ->leftjoin('inventory','inventory_room','=','dictionary_name')
@@ -74,14 +64,9 @@ class HomeController extends Controller
                     ->get();
 
                 return view('home.index')
-                    ->with('search_key',$search_key)
-                    ->with('filter_category',$filter_category)
-                    ->with('sorting',$sorting)
                     ->with('room',$room)
                     ->with('category',$category)
-                    ->with('storage',$storage)
-                    ->with('dct_reminder_type', $dct_reminder_type)
-                    ->with('dct_reminder_context', $dct_reminder_context);
+                    ->with('storage',$storage);
             }
         } else {
             return redirect("/login");

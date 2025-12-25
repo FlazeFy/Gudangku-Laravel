@@ -5,11 +5,6 @@ use Illuminate\Http\Request;
 
 // Helpers
 use App\Helpers\Generator;
-use App\Helpers\Audit;
-
-// Models
-use App\Models\ReportModel;
-use App\Models\ReportItemModel;
 
 class ReportController extends Controller
 {
