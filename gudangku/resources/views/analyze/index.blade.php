@@ -13,7 +13,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h1 class="main-page-title">Analyze {{ucfirst($type)}}</h1>
-                <h3 class="mb-0"><b class='inventory_name text-primary'></b></h3>
+                <h3 class="mb-0"><b class='inventory_name'></b></h3>
             </div>
             <div style="min-width:120px;">
                 @include('components.profile')
@@ -100,7 +100,7 @@
                         let tbody_report = ''
 
                         data.inventory_history_analyze.forEach(dt => {
-                            report_history += `<b class='text-primary'>${dt.report_category} (${dt.total}x)</b>, `
+                            report_history += `<b>${dt.report_category} (${dt.total}x)</b>, `
                         });
                         data.inventory_report.forEach(dt => {
                             tbody_report += `
@@ -131,7 +131,7 @@
                         const totalUsedInReportYear = data.inventory_in_monthly_report.reduce((sum, dt) => {
                             return sum + dt.total
                         }, 0);
-                        $('#whole_year_total_in_report').html(`<p>In whole year ${year}, there is about <b class='text-primary'>${totalUsedInReportYear} report</b> are using this inventory.</p>`)
+                        $('#whole_year_total_in_report').html(`<p>In whole year ${year}, there is about <b>${totalUsedInReportYear} report</b> are using this inventory.</p>`)
                     }
                     if(data.inventory_capacity_unit && data.inventory_capacity_vol){
                         $('#capacity_holder').html(`
@@ -156,7 +156,7 @@
                     $('#inventory_price_avg_merk').text(`Rp. ${number_format(data.inventory_merk_analyze.average_price, 0, ',', '.')}`)
                     $('#total_inventory_category').text(data.inventory_category_analyze.total)
                     $('#total_inventory_merk').text(data.inventory_merk_analyze.total)
-                    $('#inventory_storage_rack').html(`${data.inventory_storage && `storage <span class='text-primary'>${data.inventory_storage}</span>`}${data.inventory_rack && `, rack <span class='text-primary'>${data.inventory_rack}</span>`}`)
+                    $('#inventory_storage_rack').html(`${data.inventory_storage && `storage <b>${data.inventory_storage}</b>`}${data.inventory_rack && `, rack <b>${data.inventory_rack}</b>`}`)
                     $('#total_inventory_room').text(data.inventory_room_analyze.total)
                     $('#inventory_price_avg_room').text(`Rp. ${number_format(data.inventory_room_analyze.average_price, 0, ',', '.')}`)
                     $('#inventory_price_avg_unit').text(`Rp. ${number_format(data.inventory_unit_analyze.average_price, 0, ',', '.')}`)
@@ -178,7 +178,7 @@
                     if(data.inventory_layout){
                         $('#layout-holder').html(`
                             <h2>8. The Room Layout</h2>
-                            <p>You can find <span class='text-primary'>${data.inventory_name}</span> at storage <span class='text-primary'>${data.inventory_storage}</span>, layout <span class='text-primary'>${data.inventory_layout.layout}</span>.
+                            <p>You can find <b>${data.inventory_name}</b> at storage <b>${data.inventory_storage}</span>, layout <b>${data.inventory_layout.layout}</b>.
                             This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about <b>${count_time(data.inventory_layout.created_at,null)}</b>.
                             </p>
                             <div id='room_layout_map' class='mx-3 mt-2'></div>

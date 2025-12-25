@@ -4,3 +4,7 @@
 <link rel="stylesheet" href="{{ asset('/form_v1.0.css') }}"/>
 <link rel="stylesheet" href="{{ asset('/chart_v1.0.css') }}"/>
 <link rel="stylesheet" href="{{ asset('/typography_v1.0.css') }}"/>
+
+<?php if(preg_match('(chat)', $cleanedUrl)): ?>
+    <link rel="stylesheet" href="{{ asset('/chat_v1.0.css') }}"/>
+<?php endif; ?>

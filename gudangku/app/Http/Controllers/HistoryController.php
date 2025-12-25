@@ -32,17 +32,6 @@ class HistoryController extends Controller
         }
     }
 
-    public function hard_delete($id)
-    {
-        $res = HistoryModel::destroy($id);
-
-        if($res){
-            return redirect()->back()->with('success_mini_message', "Success delete history");
-        } else {
-            return redirect()->back()->with('failed_message', "Failed delete history");
-        }
-    }
-
     public function save_as_csv(){
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check_admin = AdminModel::find($user_id);

@@ -1,5 +1,5 @@
 <h2>7. The Report Activity</h2>
-<p>Here you can see total report found using <span class='inventory_name text-primary'></span> inventory for the last 31 days</p>
+<p>Here you can see total report found using <b class='inventory_name'></b> inventory for the last 31 days</p>
 <div class='mt-3' id="inventory_activity_heatmap"></div>
 <br>
 

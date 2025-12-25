@@ -111,6 +111,5 @@
     <!--Modal-->
     @include('components.modal.success')
     @include('components.modal.about')
-    @include('components.modal.success_mini')
     @include('components.modal.failed')
 </html>

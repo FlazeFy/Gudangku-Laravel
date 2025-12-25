@@ -660,7 +660,7 @@ class Commands extends Controller
         try{
             $user_id = $request->user()->id;
             
-            // True / False safety
+            // True / False, Empty Rules safety
             $request->merge([
                 'is_favorite' => $request->is_favorite == 'off' ? 0 : 1,
                 'inventory_capacity_unit' => $request->inventory_capacity_unit === '-' ? null : $request->inventory_capacity_unit,

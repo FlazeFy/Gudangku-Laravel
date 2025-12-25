@@ -12,60 +12,60 @@
         @if($role == 0)
             @include('landing.dashboard')
         @endif
-        <div class="row g-3 align-items-stretch">
+        <div class="row g-3 justify-content-center">
             @if($role == 0)
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto" id="col-chat">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/chat';" id="nav_chat_btn">
                     <i class="fa-solid fa-robot d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">Chat</h4>
                 </button>
             </div>
             @endif
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/inventory';" id="nav_inventory_btn">
                     <i class="fa-solid fa-warehouse d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">@if($role == 0) My @endif Inventory</h4>
                 </button>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/stats';" id="nav_stats_btn">
                     <i class="fa-solid fa-pie-chart d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">Stats</h4>
                 </button>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/{{ $role == 0 ? 'calendar' : 'user' }}';">
                     <i class="fa-solid fa-{{ $role == 0 ? 'calendar' : 'user' }} d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">{{ $role == 0 ? 'Calendar' : 'User' }}</h4>
                 </button>
             </div>
 
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/report';" id="nav_report_btn">
                     <i class="fa-solid fa-scroll d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">Report</h4>
                 </button>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/history';" id="nav_history_btn">
                     <i class="fa-solid fa-clock-rotate-left d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">History</h4>
                 </button>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/profile';" id="nav_profile_btn">
                     <i class="fa-solid fa-user d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">My Profile</h4>
                 </button>
             </div>
             @if($role == 1)
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/error';" id="nav_error_history_btn">
                     <i class="fa-solid fa-triangle-exclamation d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">Error History</h4>
                 </button>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-6 mx-auto">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/reminder';" id="nav_reminder_btn">
                     <i class="fa-solid fa-bell d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
                     <h4 class="mt-3 mb-0 text-center">Reminder Mark</h4>

@@ -1,53 +1,10 @@
-<style>
-    .bubble {
-        background-color: var(--darkColor);
-        border-radius: var(--roundedMD);
-        padding: var(--spaceMD);
-        margin-top: var(--spaceJumbo);
-        position: relative;
-        font-weight:normal;
-        border: 1px solid var(--whiteColor);
-    }
-    .bubble.bot {
-        border-left: 10px solid var(--warningBG);
-        text-align: left;
-    }
-    .bubble.bot::after {
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: -30px;
-        left: 0;
-        border-width: 30px 0 0 30px;
-        border-style: solid;
-        border-color: var(--warningBG) transparent;
-        width: 2px;
-        border-radius: 0 0 40px 0;
-    }
-    .bubble.me {
-        border-right: 10px solid var(--successBG);
-        text-align: right;
-    }
-    .bubble.me::after {
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: -30px;
-        right: 0;
-        border-width: 30px 30px 0 0;
-        border-style: solid;
-        border-color: var(--successBG) transparent;
-        width: 2px;
-        border-radius: 0 0 0 40px;
-    }
-</style>
 <link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.0.css') }}"/>
 
 <div id='chat-section' class="ms-4 text-start text-white">
-    <div style="font-size:var(--textLG);" class="bubble bot">Do you have a GudangKu generated document and feel lazy to find what inventory contain in the report?
+    <div class="bubble bot">Do you have a GudangKu generated document and feel lazy to find what inventory contain in the report?
         or maybe your friend share their report and you want to import the inventory found on it? or you want to just copy the inventory?
     </div>
-    <div style="font-size:var(--textLG);" class="bubble me" id="upload-analyze-section">
+    <div class="bubble me" id="upload-analyze-section">
         <form id="analyze_form">
             <div class="img-holder" style="min-height: 80px;">
                 <div class='no-image-picker' title='Change Image' id='image-picker'>
@@ -94,8 +51,8 @@
                     filePreview = `<p>Uploaded CSV File: <strong>${file.name}</strong></p>`
                 }
 
-                $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble me">Can you analyze this ${analyze_type}?<br><br>${filePreview}</div>`)
-                $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble bot">Okay, give me a minute to read the ${analyze_type} and sync it with your data</div>`)
+                $('#chat-section').append(`<div class="bubble me">Can you analyze this ${analyze_type}?<br><br>${filePreview}</div>`)
+                $('#chat-section').append(`<div class="bubble bot">Okay, give me a minute to read the ${analyze_type} and sync it with your data</div>`)
                 analyze()
             };
 
@@ -165,7 +122,7 @@
                     `
                 });
                 $('#chat-section').append(`
-                    <div style="font-size:var(--textLG);" class="bubble bot">
+                    <div class="bubble bot">
                         Hey, i have found <b>${data.found_total_item}</b> item in your inventory that may similar with items in this report, this report is generated <b>${data.generated_at}</b>. Here's the list inventory\n
                         ${inventory_element}
                     </div>
@@ -179,7 +136,7 @@
                 }
 
                 $('#chat-section').append(`
-                    <div style="font-size:var(--textLG);" class="bubble bot">
+                    <div class="bubble bot">
                         Also, from the inventory I found. The total price for all item is <b>Rp. ${number_format(data.found_total_price, 0, ',', '.')}</b>, and the average per item is <b>Rp. ${number_format(data.found_avg_price, 0, ',', '.')}</b>.
                         From the category, we got this distribution :\n<br>
                         <div id='category_distribution'></div>${not_found_item_element}
@@ -191,8 +148,8 @@
                 });
 
                 $('#chat-section').append(`
-                    <div style="font-size:var(--textLG);" class="bubble bot">Is there any action do you want me to do with this document?</div>
-                    <div style="font-size:var(--textLG);" class="bubble me">
+                    <div class="bubble bot">Is there any action do you want me to do with this document?</div>
+                    <div class="bubble me">
                         Hmmm, I want to <span id='selected-action'>... <br></span>
                         <div class="mt-2" id='action-list'>
                             <button class="btn btn-primary py-0" onclick="make_report()">Make same Report</button>
@@ -220,16 +177,16 @@
                         }
                     }
 
-                    $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble bot">${msg}</div>`)
+                    $('#chat-section').append(`<div class="bubble bot">${msg}</div>`)
                 } else {
-                    $('#chat-section').append(`<div style="font-size:var(--textLG);" class="bubble bot">${response.responseJSON?.message || "Something went wrong"}</div>`)
+                    $('#chat-section').append(`<div class="bubble bot">${response.responseJSON?.message || "Something went wrong"}</div>`)
                     if(response.status === 404){
                         const items = response.responseJSON.data.not_existing_item
                         const not_existing_item = items.join(", ")
                         $('#chat-section').append(`
-                            <div style="font-size:var(--textLG);" class="bubble bot">Item not found ${items.length > 1 ? 'are':'is'} ${not_existing_item}</div>
-                            <div style="font-size:var(--textLG);" class="bubble bot">Is there any action do you want me to do with this document?</div>
-                            <div style="font-size:var(--textLG);" class="bubble me">
+                            <div class="bubble bot">Item not found ${items.length > 1 ? 'are':'is'} ${not_existing_item}</div>
+                            <div class="bubble bot">Is there any action do you want me to do with this document?</div>
+                            <div class="bubble me">
                                 Hmmm, I want to <span id='selected-action'>... <br></span>
                                 <div class="mt-2" id='action-list'>
                                     <button class="btn btn-primary py-0 me-2" onclick="make_report()">Make same Report</button>
@@ -247,7 +204,7 @@
         $('#selected-action').empty().html('make same report')
         $('#action-list').empty()
         $('#chat-section').append(`
-            <div style="font-size:var(--textLG);" class="bubble bot">Okay, wait some moment</div>
+            <div class="bubble bot">Okay, wait some moment</div>
         `)
         add_report()
     }
@@ -272,7 +229,7 @@
                 const id = response.data.id
 
                 $('#chat-section').append(`
-                    <div style="font-size:var(--textLG);" class="bubble bot">
+                    <div class="bubble bot">
                         The new report has been created, if you want to see it now you can click this button <br>
                         <div class="mt-2">
                             <a class="btn btn-primary py-0" href="/report/detail/${id}">See Detail</a>

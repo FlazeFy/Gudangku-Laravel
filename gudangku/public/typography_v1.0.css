@@ -1,6 +1,9 @@
 a {
     text-decoration: none;
 }
+b {
+    color: var(--primaryColor);
+}
 a, label, h1, h2, h3, h4, h5, h6, p, table {
     color: var(--whiteColor) !important;
 }
@@ -71,6 +74,15 @@ table th {
 }
 table tr:hover {
     background-color: rgba(131, 129, 129, 0.15);
+}
+table thead {
+    background: var(--primaryColor);
+}
+table thead tr th:first-child {
+    border-top-left-radius: var(--roundedMD);
+}
+table thead tr th:last-child {
+    border-top-right-radius: var(--roundedMD);
 }
 
 /* List */

@@ -8,7 +8,7 @@
         </form>
     </div>
     <div class="col-lg-9 col-md-8 col-sm-12">
-        <p><span class='inventory_name text-primary'></span> have exist in your inventory since <span id="created_at"></span> about <b id='days_exist'></b> days ago.
+        <p><b class='inventory_name'></b> have exist in your inventory since <span id="created_at"></span> about <b id='days_exist'></b> days ago.
         <span id="updated_at"></span><span id="whole_year_total_in_report"></span><span id='report_history'></span></p>
     </div>
 </div>

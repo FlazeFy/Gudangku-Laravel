@@ -202,7 +202,7 @@
                                                 <p>${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</p>
                                                 <div class="alert alert-primary mt-3" role="alert">
                                                     <h6 class='fw-bold' style="font-size:var(--textXLG);"><i class="fa-solid fa-circle-info"></i> For Your Information</h6>
-                                                    <p class='mt-2 mb-0'><b class="text-primary">${el.inventory_name}</b> is been existed in your inventory for about <b>${count_time(el.created_at,null)}</b></p>
+                                                    <p class='mt-2 mb-0'><b>${el.inventory_name}</b> is been existed in your inventory for about <b>${count_time(el.created_at,null)}</b></p>
                                                 </div>
                                             </div>
                                         </div>

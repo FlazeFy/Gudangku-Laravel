@@ -1,5 +1,5 @@
 <style>
-    b, h2 {
+    h2 {
         color: var(--primaryColor);
     }
 </style>
