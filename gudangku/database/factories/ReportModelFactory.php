@@ -21,7 +21,7 @@ class ReportModelFactory extends Factory
             'is_reminder' => $ran, 
             'remind_at' => $ran == 1 ? fake()->dateTime() : null, 
             'created_at' => Generator::getRandomDate(0), 
-            'created_by' => UserModel::getRandom(0), 
+            'created_by' => UserModel::getRandomWithInventory(0), 
             'updated_at' => Generator::getRandomDate($ran),
             'deleted_at' => null
         ];

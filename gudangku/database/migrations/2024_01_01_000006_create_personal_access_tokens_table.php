@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('personal_access_tokens'); // for prevent old personal access token conflict
         Schema::create('personal_access_tokens', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('tokenable_type', 255);
             $table->string('tokenable_id', 36);
             $table->string('name', 255);

@@ -31,13 +31,13 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         
         // Factory
-        AdminModel::factory(10)->create();
-        UserModel::factory(10)->create();
-        FAQModel::factory(50)->create();
-        InventoryModel::factory(10)->create();
-        ReportModel::factory(10)->create();
-        ReportItemModel::factory(10)->create();
-        ReminderModel::factory(10)->create();
-        HistoryModel::factory(50)->create();
+        AdminModel::factory(5)->create();
+        UserModel::factory(30)->create();
+        FAQModel::factory(60)->create();
+        InventoryModel::factory(200)->create();
+        ReportModel::factory(250)->create();
+        ReportItemModel::factory(300)->create();
+        ReminderModel::factory(50)->create();
+        HistoryModel::factory(200)->create();
     }
 }

@@ -146,7 +146,7 @@ class Commands extends Controller
 
                                 GoogleCalendar::createRecurringEvent($access_token, $reminder_desc, $start,'DAILY');
                             } else if ($reminder_type == 'Every Week') {
-                                $day = (int) str_replace("Every Day", "", $reminder_context);
+                                $day = (int) str_replace("Every Day ", "", $reminder_context);
                                 $weekdayMap = [1 => 'MO', 2 => 'TU', 3 => 'WE', 4 => 'TH', 5 => 'FR', 6 => 'SA', 7 => 'SU'];
                                 $byDay = $weekdayMap[$day];
                                 $carbonDayMap = ['MO' => 'Monday','TU' => 'Tuesday','WE' => 'Wednesday','TH' => 'Thursday','FR' => 'Friday','SA' => 'Saturday','SU' => 'Sunday',];

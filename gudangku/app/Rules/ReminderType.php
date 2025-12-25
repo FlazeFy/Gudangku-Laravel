@@ -1,32 +1,18 @@
 <?php
 
 namespace App\Rules;
-
 use Illuminate\Contracts\Validation\Rule;
+
+// Model
+use App\Models\DictionaryModel;
 
 class ReminderType implements Rule
 {
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     public function passes($attribute, $value)
     {
-        $type = ['Every Day','Every Week','Every Month','Every Year'];
+        $types = DictionaryModel::getDictionaryByType('reminder_type')->pluck('dictionary_name')->toArray();
 
-        foreach ($type as $format) {
-            if ($format === $value) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($value, $types, true);
     }
 
     public function message()

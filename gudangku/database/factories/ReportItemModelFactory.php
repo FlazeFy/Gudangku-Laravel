@@ -14,7 +14,7 @@ class ReportItemModelFactory extends Factory
     public function definition(): array
     {
         $ran = mt_rand(0, 1);
-        $user_id = UserModel::getRandom(0);
+        $user_id = UserModel::getRandomWithInventoryAndReport(0);
         $inventory = InventoryModel::getRandom(0,$user_id);
         $report = ReportModel::getRandom(0,$user_id);
 

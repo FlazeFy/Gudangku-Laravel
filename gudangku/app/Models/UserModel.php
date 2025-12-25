@@ -101,6 +101,33 @@ class UserModel extends Authenticatable
         return $res;
     }
 
+    public static function getRandomWithInventory($null){
+        if($null == 0){
+            $data = UserModel::select('users.id')->join('inventory','inventory.created_by','=','users.id')->inRandomOrder()->take(1)->first();
+            $res = $data->id;
+        } else {
+            $res = null;
+        }
+        
+        return $res;
+    }
+
+    public static function getRandomWithInventoryAndReport($null){
+        if($null == 0){
+            $data = UserModel::select('users.id')
+                ->join('inventory','inventory.created_by','=','users.id')
+                ->join('report','report.created_by','=','users.id')
+                ->inRandomOrder()
+                ->take(1)
+                ->first();
+            $res = $data->id;
+        } else {
+            $res = null;
+        }
+        
+        return $res;
+    }
+
     public static function getUserByUsernameOrEmail($username,$email){
         return UserModel::where('username',$username)
             ->orwhere('email',$email)

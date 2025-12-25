@@ -3,7 +3,10 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+
+// Helper
 use App\Helpers\Generator;
+// Model
 use App\Models\DictionaryModel;
 use App\Models\UserModel;
 use App\Models\InventoryModel;
@@ -15,13 +18,14 @@ class ReminderModelFactory extends Factory
         $ran = mt_rand(0, 1);
         $user_id = UserModel::getRandom(0);
         $inventory = InventoryModel::getRandom(0,$user_id);
+        $reminder_type = DictionaryModel::getRandom(0,'reminder_type');
 
         return [
             'id' => Generator::getUUID(), 
             'inventory_id' => $inventory->id, 
             'reminder_desc' => fake()->paragraph(),  
-            'reminder_type' => DictionaryModel::getRandom(0,'reminder_type'), 
-            'reminder_context' => DictionaryModel::getRandom(0,'reminder_context'), 
+            'reminder_type' => $reminder_type, 
+            'reminder_context' => Generator::getRandomReminderContext($reminder_type), 
             'created_at' => Generator::getRandomDate(0), 
             'created_by' => $user_id, 
             'updated_at' => Generator::getRandomDate($ran)

@@ -42,9 +42,7 @@ class Generator
     }
 
     public static function getUserEmail($user_id){
-        $profile = UserModel::select('email')
-            ->where('id',$user_id)
-            ->first();
+        $profile = UserModel::select('email')->where('id',$user_id)->first();
 
         return $profile->email;
     }
@@ -146,17 +144,60 @@ class Generator
     }
 
     public static function getRandomVol($unit){
-        if($unit == 'Kilogram'){
+        if ($unit == 'Kilogram') {
             $res = mt_rand(1, 30);
-        } else if($unit == 'Pcs'){
+        } else if ($unit == 'Gram') {
+            $res = mt_rand(50, 2000);
+            $res = round($res / 50) * 50;
+        } else if ($unit == 'Pcs') {
             $res = mt_rand(1, 20);
-        } else if($unit == 'Liter'){
+        } else if ($unit == 'Liter') {
             $res = mt_rand(1, 5);
-        } else if($unit == 'Ml'){
+        } else if ($unit == 'Ml') {
             $res = mt_rand(25, 750);
             $res = round($res / 5) * 5;
+        } else if ($unit == 'Box') {
+            $res = mt_rand(1, 10);
+        } else if ($unit == 'Pack') {
+            $res = mt_rand(1, 12);
+        } else if ($unit == 'Bottle') {
+            $res = mt_rand(1, 5);
+        } else if ($unit == 'Can') {
+            $res = mt_rand(1, 6);
+        } else if ($unit == 'Sachet') {
+            $res = mt_rand(1, 20);
+        } else if ($unit == 'Percentage') {
+            $res = mt_rand(5, 100);
+            $res = round($res / 5) * 5;
         }
+
         return $res;
+    }
+
+    public static function getRandomReminderContext($reminder_type){
+        switch ($reminder_type) {
+            case 'Every Day':
+                // Hour: 00–23
+                $hour = str_pad(mt_rand(0, 23), 2, '0', STR_PAD_LEFT);
+                return "Every {$hour}";
+            case 'Every Week':
+                $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+                return 'Every ' . $days[array_rand($days)];
+            case 'Every Month':
+                // Day 01–28 
+                $day = str_pad(mt_rand(1, 28), 2, '0', STR_PAD_LEFT);
+                return "Every {$day}";
+            case 'Every Year':
+                $day   = str_pad(mt_rand(1, 28), 2, '0', STR_PAD_LEFT);
+                $months = [
+                    'January','February','March','April','May','June',
+                    'July','August','September','October','November','December'
+                ];
+                $month = $months[array_rand($months)];
+                return "Every {$day} {$month}";
+            default:
+                return null;
+        }
     }
 
     public static function getRandomStorage(){

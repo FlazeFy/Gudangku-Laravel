@@ -24,7 +24,6 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('inventory_id')->references('id')->on('inventory')->onDelete('cascade');
             $table->foreign('reminder_type')->references('dictionary_name')->on('dictionary')->onDelete('cascade');
-            $table->foreign('reminder_context')->references('dictionary_name')->on('dictionary')->onDelete('cascade');
         });
     }
 

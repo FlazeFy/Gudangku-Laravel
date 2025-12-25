@@ -661,7 +661,10 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             
             // True / False safety
-            $request->merge(['is_favorite' => $request->is_favorite == 'off' ? 0 : 1]);
+            $request->merge([
+                'is_favorite' => $request->is_favorite == 'off' ? 0 : 1,
+                'inventory_capacity_unit' => $request->inventory_capacity_unit === '-' ? null : $request->inventory_capacity_unit,
+            ]);
 
             // Validate request body
             $validator = Validation::getValidateInventory($request,'create');

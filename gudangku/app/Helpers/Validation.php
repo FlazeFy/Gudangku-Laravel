@@ -1,8 +1,13 @@
 <?php
 namespace App\Helpers;
 use Illuminate\Support\Facades\Validator;
+
+// Rules
 use App\Rules\ReportCategory;
 use App\Rules\ReminderType;
+use App\Rules\InventoryCategory;
+use App\Rules\InventoryUnit;
+use App\Rules\InventoryCapacityUnit;
 use App\Rules\DictionaryType;
 
 class Validation
@@ -33,7 +38,7 @@ class Validation
         if($type == 'create'){
             $validator = Validator::make($request->all(), [
                 'inventory_name' => 'required|string|max:75',
-                'inventory_category' => 'required|string|max:75',
+                'inventory_category' => ['required', new InventoryCategory],
                 'inventory_desc' => 'nullable|string|max:255',
                 'inventory_merk' => 'nullable|string|max:75',
                 'inventory_color' => 'nullable|string|max:16',
@@ -41,9 +46,9 @@ class Validation
                 'inventory_storage' => 'nullable|string|max:36',
                 'inventory_rack' => 'nullable|string|max:36',
                 'inventory_price' => 'nullable|numeric|min:0|max:999999999',
-                'inventory_unit' => 'required|string|max:36',
+                'inventory_unit' => ['required', new InventoryUnit],
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
-                'inventory_capacity_unit' => 'nullable|string|max:36',
+                'inventory_capacity_unit' => ['nullable', new InventoryCapacityUnit],
                 'inventory_capacity_vol' => 'nullable|numeric|min:0|max:999999',
                 'is_favorite' => 'required|boolean',
                 'created_at' => 'required|date_format:Y-m-d H:i:s',
@@ -54,7 +59,7 @@ class Validation
         } else if($type == 'update'){
             $validator = Validator::make($request->all(), [
                 'inventory_name' => 'required|string|max:75',
-                'inventory_category' => 'required|string|max:75',
+                'inventory_category' => ['required', new InventoryCategory],
                 'inventory_desc' => 'nullable|string|max:255',
                 'inventory_merk' => 'nullable|string|max:75',
                 'inventory_color' => 'nullable|string|max:16',
@@ -62,9 +67,9 @@ class Validation
                 'inventory_storage' => 'nullable|string|max:36',
                 'inventory_rack' => 'nullable|string|max:36',
                 'inventory_price' => 'nullable|numeric|min:0|max:999999999',
-                'inventory_unit' => 'required|string|max:36',
+                'inventory_unit' => ['required', new InventoryUnit],
                 'inventory_vol' => 'required|numeric|min:0|max:999999',
-                'inventory_capacity_unit' => 'nullable|string|max:36',
+                'inventory_capacity_unit' => ['nullable', new InventoryCapacityUnit],
                 'inventory_capacity_vol' => 'nullable|numeric|min:0|max:999999',
                 'created_at' => 'required|date_format:Y-m-d H:i:s',
             ]);

@@ -17,9 +17,10 @@ input, textarea, select{
     background: transparent !important;
     margin-bottom: var(--spaceXSM);
 }
-.error_input {
+.error-input {
     color: var(--dangerBG) !important;
     font-size: var(--textMD);
+    background: none;
     text-decoration: none;
     margin-top: var(--spaceSM);
 }
