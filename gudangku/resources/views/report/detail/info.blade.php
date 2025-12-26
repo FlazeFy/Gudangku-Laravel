@@ -93,9 +93,46 @@
                     $('#report_img_holder').append(`
                         <div class='col-lg-4 col-md-6 col-sm-12 col-12'>
                             <img class='img img-responsive img-zoomable-modal mb-2' data-bs-toggle='modal' data-bs-target='#zoom_image-${el.report_image_id}' title='${el.report_image_url}' src='${el.report_image_url}'>
+                            <a class="btn btn-danger py-1 btn-remove-image mb-3" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.report_image_id}"><i class="fa-solid fa-trash"></i> Remove</a>
+                            <div class="modal fade" id="modalDelete_${el.report_image_id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure want to delete this report image?</p>
+                                            <button class="btn btn-danger" onclick="destroy_report_image_by_id('<?= $id ?>','${el.report_image_id}', '${token}', 
+                                            ()=>get_detail_report('<?= $id ?>'))">Yes, Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     `)
                 });
+
+                if(data.report_image.length > 1){
+                    $('#report_image_button-holder').prepend(`
+                        <a class="btn btn-danger py-1" data-bs-toggle="modal" data-bs-target="#modalDeleteAllImage"><i class="fa-solid fa-fire"></i><span class="d-none d-md-inline"> Remove All</span></a>
+                        <div class="modal fade" id="modalDeleteAllImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure want to delete all this report image?</p>
+                                        <button class="btn btn-danger" onclick="destroy_all_report_image_by_id('<?= $id ?>', '${token}', 
+                                        ()=>get_detail_report('<?= $id ?>'))">Yes, Delete All</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `)
+                }
             } else {
                 $('#report_img_holder').html(`
                     <div class='no-image'><h6 class="text-center text-secondary fst-italic">- No Image Attached -</h6></div>

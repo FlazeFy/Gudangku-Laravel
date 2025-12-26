@@ -5,8 +5,13 @@
     use App\Helpers\Generator;
 ?>  
 @php($isMobile = Generator::isMobileDevice())  
+@php($role = session()->get('role_key'))
 
 @section('content')
+    @if($role == 0)
+        <script src="{{ asset('/usecases/report_v1.0.js')}}"></script>
+    @endif
+
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="main-page-title">Report Detail</h1>

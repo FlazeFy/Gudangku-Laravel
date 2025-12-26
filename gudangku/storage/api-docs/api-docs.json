@@ -7456,14 +7456,14 @@
                 ]
             }
         },
-        "/api/v1/report/image_collection/{id}": {
+        "/api/v1/report/report_image/{id}": {
             "post": {
                 "tags": [
                     "Report"
                 ],
-                "summary": "Post Update Report Report Image By Id",
-                "description": "This request is used to update report report image by given report's `ID`. The updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
-                "operationId": "b23e6caeaa863a4d29320c78d2b04c6b",
+                "summary": "Post Update Report Image By Id",
+                "description": "This request is used to update report image by given report's `ID`. The updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
+                "operationId": "4d827104fd093fea76491e173c2fefb0",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -7520,6 +7520,130 @@
                                                 "message": {
                                                     "type": "string",
                                                     "example": "report report image is a required field"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "report failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "report not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/report/report_image/destroy/{report_id}/{image_id}": {
+            "delete": {
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Delete Report Image By Image ID",
+                "description": "This request is used to delete an image in report by given `report_id` and `image_id` for the image. Updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
+                "operationId": "a54afa726324de9d91d1236794a73b5a",
+                "parameters": [
+                    {
+                        "name": "report_id",
+                        "in": "path",
+                        "description": "Report ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    },
+                    {
+                        "name": "image_id",
+                        "in": "path",
+                        "description": "Report Image ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Report image update successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "report image update"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "failed"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "report image is a required field"
                                                 }
                                             },
                                             "type": "object"

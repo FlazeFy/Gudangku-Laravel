@@ -111,6 +111,7 @@
                         allowOutsideClick: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            closeModalBS()
                             $('#item_holder').html('<div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>')
                             get_detail_report('{{$id}}')
                         } 

@@ -20,8 +20,6 @@
                     </div>
                 `)
             }
-            
-            $('#remove_report_image-button').removeClass('d-none') 
         })
 
         $(document).on('click', '#add_report_image-button', function () {
@@ -43,7 +41,6 @@
                     </a>
                 `)
             }
-            $('#remove_report_image-button').removeClass('d-none')
 
             $("#report_img_holder").append(`
                 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
@@ -74,7 +71,6 @@
             }
             reader.readAsDataURL(file)
 
-            $('#remove_report_image-button').addClass('d-none')
             if($('#save_report_image-button').length === 0){
                 $('#report_image_button-holder').append(`
                     <a class="btn btn-success py-1" id="save_report_image-button">
@@ -82,39 +78,6 @@
                     </a>
                 `)
             }
-        })
-
-        $(document).on('click', '#remove_report_image-button', function () {
-            const id = '<?= $id ?>'
-
-            Swal.fire({
-                title: "Are you sure?",
-                html: `Do you want to remove the report image?`,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes",
-                cancelButtonText: "No, cancel",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: `/api/v1/report/report_image/${id}`,
-                        type: 'POST',
-                        processData: false,
-                        contentType: false,
-                        beforeSend: function (xhr) {
-                            Swal.showLoading()
-                            xhr.setRequestHeader("Accept", "application/json")
-                            xhr.setRequestHeader("Authorization", `Bearer ${token}`)
-                        },
-                        success: function(response) {
-                            Swal.fire("Success!", response.message, "success").then(() => window.location.href=`/report/detail/${id}` )
-                        },
-                        error: function(response, jqXHR, textStatus, errorThrown) {
-                            generate_api_error(response, true)
-                        }
-                    });
-                }
-            });
         })
 
         $(document).on('click', '#save_report_image-button', function () {

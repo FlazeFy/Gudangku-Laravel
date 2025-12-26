@@ -6,6 +6,12 @@ const isMobile = () => {
     return key.test(navigator.userAgent)
 }
 
+const closeModalBS = () => {
+    $('.modal.show').each(function () {
+        bootstrap.Modal.getInstance(this)?.hide()
+    }) 
+}
+
 const getDateToContext = (datetime, type, isFlexible = true) => {
     if(datetime){
         const result = new Date(datetime)

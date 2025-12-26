@@ -883,9 +883,9 @@ class Commands extends Controller
 
     /**
      * @OA\POST(
-     *     path="/api/v1/report/image_collection/{id}",
-     *     summary="Post Update Report Report Image By Id",
-     *     description="This request is used to update report report image by given report's `ID`. The updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
+     *     path="/api/v1/report/report_image/{id}",
+     *     summary="Post Update Report Image By Id",
+     *     description="This request is used to update report image by given report's `ID`. The updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
@@ -989,7 +989,7 @@ class Commands extends Controller
                     // If file not attached and there is some image exist in the old data
                     foreach ($report->report_image as $dt) {
                         // Delete failed if file not found (already gone)
-                        if(!Firebase::deleteFile($dt['report_image'])){
+                        if(!Firebase::deleteFile($dt['report_image_url'])){
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
@@ -1026,6 +1026,129 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => Generator::getMessageTemplate("not_found", $this->module),
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/report/report_image/destroy/{report_id}/{image_id}",
+     *     summary="Delete Report Image By Image ID",
+     *     description="This request is used to delete an image in report by given `report_id` and `image_id` for the image. Updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
+     *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="report_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Report ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Parameter(
+     *         name="image_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Report Image ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Report image update successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="report image update")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             oneOf={
+     *                 @OA\Schema(
+     *                     @OA\Property(property="status", type="string", example="failed"),
+     *                     @OA\Property(property="message", type="string", example="report image is a required field")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="report failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     )
+     * )
+     */
+    public function hardDeleteReportImageById(Request $request, $report_id, $image_id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            // Get report by ID
+            $report = ReportModel::getReportDetail($user_id,$report_id,'doc');
+            if($report){
+                $report_images = $report->report_image;
+                // Iterate to delete file
+                foreach ($report_images as $dt) {
+                    if ($dt['report_image_id'] === $image_id) {
+                        // Delete failed if file not found (already gone)
+                        if(!Firebase::deleteFile($dt['report_image_url'])){
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
+                            ], Response::HTTP_NOT_FOUND);
+                        }
+                        break;
+                    }
+                }
+            
+                // Remove image from report image by its image ID
+                $report_images = array_filter($report_images, function ($dt) use ($image_id) {
+                    return $dt['report_image_id'] !== $image_id;
+                });
+                $report_image = array_values($report_images);
+                
+                // Update report by ID
+                $rows = ReportModel::updateReportById($user_id, $report_id, [
+                    'report_image' => count($report_image) > 0 ? $report_image : null,
+                ]);
+
+                if($rows > 0){
+                    // Return success response
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("delete", "$this->module image"),
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("not_found", "$this->module image"),
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => Generator::getMessageTemplate("not_found", "$this->module image"),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

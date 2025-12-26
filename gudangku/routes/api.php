@@ -147,6 +147,7 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/', [CommandsReportController::class, 'postReport']);
     Route::post('/item/{id}', [CommandsReportController::class, 'postReportItem']);
     Route::post('/report_image/{id}', [CommandsReportController::class, 'putReportImageById']);
+    Route::delete('/report_image/destroy/{report_id}/{image_id}', [CommandsReportController::class, 'hardDeleteReportImageById']);
     Route::prefix('/detail/item/{id}')->group(function (){
         Route::get('/', [QueriesReportController::class, 'getMyReportDetail']);
         Route::get('/doc', [QueriesReportController::class, 'getDocumentById']);
