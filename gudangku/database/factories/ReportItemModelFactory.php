@@ -1,9 +1,11 @@
 <?php
 
 namespace Database\Factories;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
+
+// Helper
 use App\Helpers\Generator;
+// Model
 use App\Models\DictionaryModel;
 use App\Models\UserModel;
 use App\Models\InventoryModel;

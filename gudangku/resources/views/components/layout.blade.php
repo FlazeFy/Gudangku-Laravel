@@ -49,7 +49,7 @@
         <!-- Jquery -->
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
-        <?php if(preg_match('(stats|analyze|embed)', $cleanedUrl)): ?>
+        <?php if(preg_match('(stats|analyze|embed|room)', $cleanedUrl)): ?>
             <!--Apex Chart-->
             <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <?php endif; ?>
@@ -71,7 +71,7 @@
         <script src="{{ asset('/global_v1.0.js')}}"></script>
         <script src="{{ asset('/template_v1.0.js')}}"></script>
 
-        <?php if(preg_match('(stats|analyze|embed)', $cleanedUrl)): ?>
+        <?php if(preg_match('(stats|analyze|embed|room)', $cleanedUrl)): ?>
             <script src="{{ asset('/chart_v1.0.js')}}"></script>
         <?php endif; ?>
 

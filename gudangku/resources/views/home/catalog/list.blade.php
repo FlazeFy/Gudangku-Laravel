@@ -80,9 +80,7 @@
                 
                 if(current_page < last_page){
                     $('#inventory-holder').append(`
-                        <div class="col-12">
-                            <button class="btn btn-primary" onclick="navigate_page(${page})">Next Page</button>
-                        </div>
+                        <div class="col-12"><button class="btn btn-primary" onclick="navigate_page(${page})">Next Page</button></div>
                     `);
                 } 
             },

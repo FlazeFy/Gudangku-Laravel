@@ -1,7 +1,10 @@
 <?php
 
 namespace Database\Seeders;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
+// Model
 use App\Models\AdminModel;
 use App\Models\UserModel;
 use App\Models\InventoryModel;
@@ -10,9 +13,6 @@ use App\Models\HistoryModel;
 use App\Models\ReportItemModel;
 use App\Models\ReminderModel;
 use App\Models\FAQModel;
-
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {

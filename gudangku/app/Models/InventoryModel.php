@@ -72,6 +72,10 @@ class InventoryModel extends Model
         return InventoryModel::select('inventory_room')->where('created_by',$user_id)->groupby('inventory_room')->get();
     }
 
+    public static function getInventoryStorageRoom($user_id){
+        return InventoryModel::select('inventory_room','inventory_storage')->where('created_by',$user_id)->groupBy('inventory_room', 'inventory_storage')->get();
+    }
+
     public static function getInventoryCatalogByContext($user_id = null, $context){
         $res = InventoryModel::selectRaw("$context as context, COUNT(1) as total");
         

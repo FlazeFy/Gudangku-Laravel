@@ -131,7 +131,7 @@ const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                         <div class="modal-body">
-                            <div class='row'>
+                            <div class='row gy-3'>
                                 <div class='col-lg-4 col-md-5 col-sm-12'>
                                     <div id='pie-chart-${coor}'></div>
                                     <label>Storage Name</label>
@@ -140,22 +140,24 @@ const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
                                     <textarea name="inventory_desc" class="form-control">${storage_desc ?? ''}</textarea>
                                     <div class='mt-3'>
                                         <input value='${id}_${coor}' class='id-coor-holder' hidden>
-                                        <a class='btn btn-danger remove_coordinate'><i class="fa-solid fa-trash"></i> Remove Coordinate</a>
+                                        <a class='btn btn-danger remove_coordinate w-100'><i class="fa-solid fa-trash"></i> Remove Coordinate</a>
                                     </div>
                                 </div>
                                 <div class='col-lg-8 col-md-7 col-sm-12'>
-                                    <table id='table-inventory-${coor}' class='table'>
-                                        <thead>
-                                            <tr class='text-center'>
-                                                <th>Rack</th>
-                                                <th>Name, Unit & Volume</th>
-                                                <th>Category</th>
-                                                <th>Price</th>
-                                                <th>Edit</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
+                                    <div style='overflow-x:auto;'>
+                                        <table id='table-inventory-${coor}' class='table' style='min-width:600px;'>
+                                            <thead>
+                                                <tr class='text-center'>
+                                                    <th style="width: 120px;">Rack</th>
+                                                    <th style="width: 200px;">Name, Unit & Volume</th>
+                                                    <th style="width: 140px;">Category</th>
+                                                    <th style="width: 140px;">Price</th>
+                                                    <th>Edit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>                                    
                         </div>
@@ -244,10 +246,10 @@ const generate_map_room = (target,data,is_interact,room) => {
 
     if(is_interact){
         $(target).append(`
-            <div class='floor-config'>
-                <a class='d-inline-block btn-layout-config btn btn-success' onclick='expand_floor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
-                ${data && `<a class='d-inline-block btn-layout-config btn btn-success' href='/doc/layout/${room}'><i class="fa-solid fa-print"></i> Print</a>`}
-                ${data && `<a class='d-inline-block btn-layout-config btn btn-success' href='/doc/layout/${room}/custom'><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>`}
+            <div class='floor-config m-3'>
+                <a class='d-inline-block btn btn-success' onclick='expand_floor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
+                ${data ? `<a class='d-inline-block btn btn-success' href='/doc/layout/${room}'><i class="fa-solid fa-print"></i> Print</a>`:''}
+                ${data ? `<a class='d-inline-block btn btn-success' href='/doc/layout/${room}/custom'><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>`:''}
             </div>
         `)
     }

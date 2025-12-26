@@ -67,11 +67,11 @@
 }
 
 /* Modal */
-.modal {
+.modal-content {
     margin-top: 5vh;
 }
 @media screen and (max-width: 1023px) {
-    .modal {
+    .modal-content {
         margin-top: 10vh;
     }
 }

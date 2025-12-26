@@ -1,9 +1,11 @@
 <?php
 
 namespace Database\Factories;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
+
+// Helper
 use App\Helpers\Generator;
+// Model
 use App\Models\DictionaryModel;
 use App\Models\UserModel;
 
@@ -25,7 +27,7 @@ class InventoryModelFactory extends Factory
             'inventory_merk' => fake()->company(), 
             'inventory_color' => fake()->colorName(), 
             'inventory_room' => DictionaryModel::getRandom(0,'inventory_room'), 
-            'inventory_storage' => $ran == 1 ? Generator::getRandomStorage() : null, 
+            'inventory_storage' => Generator::getRandomStorage(), 
             'inventory_rack' => $ran == 1 ? fake()->unique()->bothify('Rack-?#') : null, 
             'inventory_price' => $price, 
             'inventory_image' => null, 

@@ -351,4 +351,49 @@ class Generator
 
         return $res;
     }
+
+    public static function getRandomLayout(){
+        // Max Area
+        $cols = range('A', 'J');
+        $maxRow = 10;
+
+        $colIndex = rand(0, count($cols) - 1);
+        $row = rand(1, $maxRow);
+
+        $length = rand(1, 8);
+
+        $used = [];
+        $result = [];
+
+        for($i = 0; $i < $length; $i++) {
+            $coord = $cols[$colIndex].$row;
+
+            if(!isset($used[$coord])){
+                $used[$coord] = true;
+                $result[] = $coord;
+            }
+
+            $moves = [
+                [$colIndex + 1, $row], 
+                [$colIndex - 1, $row], 
+                [$colIndex, $row + 1], 
+                [$colIndex, $row - 1], 
+            ];
+
+            shuffle($moves);
+
+            foreach($moves as [$c, $r]){
+                if($c >= 0 && $c < count($cols) && $r >= 1 && $r <= $maxRow) {
+                    $next = $cols[$c].$r;
+                    if(!isset($used[$next])){
+                        $colIndex = $c;
+                        $row = $r;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return implode(':', $result);
+    }
 }

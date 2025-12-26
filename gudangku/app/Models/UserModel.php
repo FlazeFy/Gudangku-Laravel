@@ -112,6 +112,13 @@ class UserModel extends Authenticatable
         return $res;
     }
 
+    public static function getAllWithInventory(){
+        return UserModel::select('users.id')
+            ->join('inventory','inventory.created_by','=','users.id')
+            ->groupby('users.id')
+            ->get();
+    }
+
     public static function getRandomWithInventoryAndReport($null){
         if($null == 0){
             $data = UserModel::select('users.id')

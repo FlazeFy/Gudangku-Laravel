@@ -56,13 +56,13 @@
                     const stats = response.stats
                     data.forEach(dt => {
                         $(`#table-inventory-${target} tbody`).append(`
-                            <tr>
-                                <td class='text-center'>${dt.inventory_rack ?? '-'}</td>
-                                <td>
+                            <tr class="text-center">
+                                <td>${dt.inventory_rack ?? '-'}</td>
+                                <td class="text-start">
                                     <b class="mb-0">${dt.inventory_name}</b>
                                     <p class="mb-0">${dt.inventory_vol} ${dt.inventory_unit}</p>
                                 </td>
-                                <td class='text-center'>${dt.inventory_category}</td>
+                                <td>${dt.inventory_category}</td>
                                 <td>Rp. ${number_format(dt.inventory_price, 0, ',', '.')}</td>
                                 <td><a class="btn btn-warning modal-btn" href="/inventory/edit/${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></a></td>
                             </tr>
@@ -70,15 +70,16 @@
                     });
                     if(stats){
                         generate_pie_chart('Category Distribution',`pie-chart-${target}`,stats)
+                        $(`#pie-chart-${target}`).append('<hr class="mb-1 mt-5">')
                     }
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
+                    Swal.close()
                     $(`#table-inventory-${target} tbody`).append(`
                         <tr>
                             <td colspan='4' class='text-secondary fst-italic text-center'>- No inventory to show -</td>
                         </tr>
                     `)
-                    generate_api_error(response, true)
                 }
             });
         }
