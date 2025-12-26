@@ -18,7 +18,7 @@
             </div>
         </div>
         <hr>
-        <div class="mb-3 d-flex flex-wrap gap-2">
+        <div class="mb-3 d-flex justify-content-between">
             @include('components.back_button', ['route' => '/inventory'])
             @include('room.select_room')
         </div>

@@ -25,6 +25,7 @@ class Commands extends Controller
     private $allowed_file_type;
     private $max_size_analyze_file;
     private $allowed_analyze_file_type;
+    private $module;
 
     public function __construct()
     {
@@ -32,6 +33,7 @@ class Commands extends Controller
         $this->allowed_file_type = ['jpg','jpeg','gif','png','pdf'];
         $this->max_size_analyze_file = 15000000; // 15.0 Mb
         $this->allowed_analyze_file_type = ['pdf'];
+        $this->module = 'report';
     }
 
     /**
@@ -870,6 +872,161 @@ class Commands extends Controller
                         'message' => Generator::getMessageTemplate("custom", 'failed to add item report'),
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\POST(
+     *     path="/api/v1/report/image_collection/{id}",
+     *     summary="Post Update Report Report Image By Id",
+     *     description="This request is used to update report report image by given report's `ID`. The updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
+     *     tags={"Report"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  required={"report_image"},
+     *                  @OA\Property(property="report_image", type="string", format="binary"),
+     *              )
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Report report image update successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="report update")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             oneOf={
+     *                 @OA\Schema(
+     *                     @OA\Property(property="status", type="string", example="failed"),
+     *                     @OA\Property(property="message", type="string", example="report report image is a required field")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="report failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="report not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     )
+     * )
+     */
+    public function putReportImageById(Request $request, $id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            // Get report by ID
+            $report = ReportModel::getReportDetail($user_id,$id,'doc');
+            if($report){
+                $report_images = [];
+                // Check if file attached
+                if($request->hasFile('report_image')){
+                    // Iterate to upload file
+                    foreach ($request->file('report_image') as $file) {
+                        if ($file->isValid()) {
+                            $file_ext = $file->getClientOriginalExtension();
+                            // Validate file type
+                            if (!in_array($file_ext, $this->allowed_file_type)) {
+                                return response()->json([
+                                    'status' => 'failed',
+                                    'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
+                                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                            }
+                            // Validate file size
+                            if ($file->getSize() > $this->max_size_file) {
+                                return response()->json([
+                                    'status' => 'failed',
+                                    'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
+                                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                            }
+        
+                            try {
+                                // Get user data
+                                $user = UserModel::getSocial($user_id);
+                                // Upload file to Firebase storage
+                                $report_image = Firebase::uploadFile('report', $user_id, $user->username, $file, $file_ext); 
+                                $report_images[] = (object)[
+                                    'report_image_id' => Generator::getUUID(),
+                                    'report_image_url' => $report_image
+                                ];
+                            } catch (\Exception $e) {
+                                return response()->json([
+                                    'status' => 'error',
+                                    'message' => Generator::getMessageTemplate("unknown_error", null),
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+                        }
+                    }
+                } else if($report->report_image && !$request->hasFile('report_image')){
+                    // If file not attached and there is some image exist in the old data
+                    foreach ($report->report_image as $dt) {
+                        // Delete failed if file not found (already gone)
+                        if(!Firebase::deleteFile($dt['report_image'])){
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
+                            ], Response::HTTP_NOT_FOUND);
+                        }
+                    }
+                }
+
+                // Make null if array image empty
+                if(count($report_images) === 0){
+                    $report_images = null;
+                } else {
+                    if($report->report_image){
+                        // If old report image not empty, combine with the new report image
+                        $report_images = array_merge($report_images, $report->report_image);
+                    }
+                }
+
+                // Update report by ID
+                $rows = ReportModel::updateReportById($user_id, $id, ['report_image' => $report_images]);
+                if($rows > 0){
+                    // Return success response
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("update", $this->module),
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
+                    ], Response::HTTP_NOT_FOUND);
+                } 
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
+                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([

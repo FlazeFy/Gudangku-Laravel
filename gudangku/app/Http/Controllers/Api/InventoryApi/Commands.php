@@ -1234,8 +1234,7 @@ class Commands extends Controller
                     if($check_layout){
                         // Update inventory layout by ID
                         $rows_layout = InventoryLayoutModel::updateInventoryLayoutById($user_id, $check_layout->id, [
-                            'layout' => $check_layout->layout.':'.$request->layout,
-                            'storage_desc' => $request->storage_desc
+                            'layout' => $check_layout->layout.':'.$request->layout
                         ]);
                         
                         if($rows_layout > 0){

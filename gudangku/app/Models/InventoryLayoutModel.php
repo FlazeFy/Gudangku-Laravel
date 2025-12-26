@@ -42,7 +42,7 @@ class InventoryLayoutModel extends Model
     }
 
     public static function getInventoryByRoomStorage($user_id,$room,$storage){
-        return InventoryLayoutModel::select('inventory_storage','layout','storage_desc','created_at')
+        return InventoryLayoutModel::select('id','inventory_storage','layout','storage_desc','created_at')
             ->where('created_by',$user_id)
             ->where('inventory_room',$room)
             ->where('inventory_storage',$storage)

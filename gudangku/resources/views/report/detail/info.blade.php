@@ -11,8 +11,7 @@
 </div>
 
 <div class="container-form" id="edit_attached_image-section">
-    <h3>Attached Image</h3>
-    <div id="report_img_holder" class='row'></div>
+    @include('report.detail.report_image')
 </div>
 
 <div class="container-form" id="edit_attached_item-section">
@@ -83,8 +82,8 @@
                         <th scope="col" style='min-width:140px;'>Description</th>
                         <th scope="col" style='min-width:60px;'>Qty</th>
                         <th scope="col" style='min-width:140px;'>Created At</th>
-                        <th scope="col" style='min-width:60px;'>Edit</th>
-                        <th scope="col" style='min-width:60px;'>Remove</th>
+                        <th scope="col" style='min-width:80px;'>Edit</th>
+                        <th scope="col" style='min-width:80px;'>Remove</th>
                     </tr>
                 `)
             }
@@ -92,14 +91,14 @@
                 $('#report_img_holder').empty()
                 data.report_image.forEach(el => {
                     $('#report_img_holder').append(`
-                        <div class='col-lg-4 col-md-6 col-sm-12 col-12 p-2'>
-                            <img class='img img-responsive img-zoomable-modal mb-3' data-bs-toggle='modal' data-bs-target='#zoom_image-${data.id}' title='${el.url}' src='${el.url}'>
+                        <div class='col-lg-4 col-md-6 col-sm-12 col-12'>
+                            <img class='img img-responsive img-zoomable-modal mb-2' data-bs-toggle='modal' data-bs-target='#zoom_image-${el.report_image_id}' title='${el.report_image_url}' src='${el.report_image_url}'>
                         </div>
                     `)
                 });
             } else {
                 $('#report_img_holder').html(`
-                    <div class='col p-2'><h6 class="text-center text-secondary fst-italic">- No Image Attached -</h6></div>
+                    <div class='no-image'><h6 class="text-center text-secondary fst-italic">- No Image Attached -</h6></div>
                 `)
             }
 
@@ -197,7 +196,7 @@
                                                         <label>Price</label>
                                                         <input class="form-control" name="item_price" type="number" value="${dt.item_price}" min="1">` :''
                                                     }
-                                                    <a class="btn btn-success mt-3 w-100 border-0" onclick="update_report_item('${dt.id}')" style="background:var(--successBG) !important;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
+                                                    <a class="btn btn-success mt-3 w-100" onclick="update_report_item('${dt.id}')"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
                                                 </form>
                                             </div>
                                         </div>

@@ -35,16 +35,6 @@
     .fc-next-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary{
         border: none !important;
     }
-    .calendar-tag-holder {
-        position: absolute; 
-        right: 20vh; 
-        z-index: 99;
-    }
-    .calendar-tag-holder .btn-primary{
-        background: var(--primaryLightBG) !important;
-        color: var(--primaryColor) !important;
-        z-index: 99 !important;
-    }
 
     /* Day Grid */
     .fc-daygrid-event-dot{
@@ -57,6 +47,7 @@
         background: var(--primaryColor);
         border-radius: var(--roundedCircle);
         width: 25px;
+        white-space: nowrap;
         height: 25px;
         margin: var(--spaceMini);
         color: var(--whiteColor) !important;
@@ -68,6 +59,9 @@
     }
     .fc-event-time{
         display:none;
+    }
+    .fc-col-header-cell-cushion, .fc-daygrid-day-number {
+        background: transparent;
     }
 
     /* Day Event */
@@ -81,9 +75,6 @@
         -o-transition: all 0.4s;
         transition: all 0.4s;
         z-index: 999 !important;
-    }
-    .fc-daygrid-event:hover, .fc-timegrid-event:hover{
-        background: var(--calendarItem) !important;
     }
     th.fc-col-header-cell.fc-day{
         background: var(--primaryLightBG);
@@ -118,7 +109,7 @@
     }
     .fc-daygrid-event:hover {
         box-shadow: rgba(59, 130, 246, 0.7) 0px 3.75px 10px;
-        transform: scale(1.07);
+        transform: scale(1.05);
     }
 
     .fc-daygrid-event.fc-daygrid-dot-event{
@@ -203,10 +194,6 @@
         }
         th.fc-col-header-cell.fc-day {
             padding: var(--spaceMini);
-        }
-        .calendar-tag-holder {
-            top: var(--spaceJumbo);
-            left: var(--spaceMD);
         }
     }
 </style>
