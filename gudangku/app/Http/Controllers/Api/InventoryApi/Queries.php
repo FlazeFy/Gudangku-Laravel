@@ -293,7 +293,7 @@ class Queries extends Controller
                     'data' => [
                         'room' => $res_room,
                         'category' => $res_category,
-                        'storage' => null
+                        'storage' => $res_storage
                     ]
                 ], Response::HTTP_OK);
             } else {
@@ -306,6 +306,125 @@ class Queries extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/inventory/catalog/{view}/{catalog}",
+     *     summary="Get Inventory By Catalog",
+     *     description="This request is used to get inventory header by given `view` and `catalog`. This request interacts with the MySQL database, has a pagination, and has protected routes.",
+     *     tags={"Inventory"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="view",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Context of inventory like `inventory_room`, `inventory_storage`, or `inventory_category`",
+     *         example="inventory_room",
+     *     ),
+     *     @OA\Parameter(
+     *         name="catalog",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Value based on view (context)",
+     *         example="Main%20Room",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Inventory fetched successfully. Ordered in descending order by `is_favorite` and `created_at`",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="inventory fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="id", type="string", example="b3ead76e-95fd-6f99-33f2-c31f40a6a55e"),
+     *                         @OA\Property(property="inventory_name", type="string", example="Kris Air Friyer"),
+     *                         @OA\Property(property="inventory_category", type="string", example="Electronics"),
+     *                         @OA\Property(property="inventory_desc", type="string", example="buat goreng"),
+     *                         @OA\Property(property="inventory_merk", type="string", example="Kris"),
+     *                         @OA\Property(property="inventory_room", type="string", example="Main Room"),
+     *                         @OA\Property(property="inventory_storage", type="string", nullable=true, example="Main Table"),
+     *                         @OA\Property(property="inventory_rack", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="inventory_price", type="number", example=650000),
+     *                         @OA\Property(property="inventory_image", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="inventory_unit", type="string", example="Pcs"),
+     *                         @OA\Property(property="inventory_vol", type="number", example=1),
+     *                         @OA\Property(property="inventory_capacity_unit", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="inventory_capacity_vol", type="number", nullable=true, example=null),
+     *                         @OA\Property(property="is_favorite", type="integer", example=1),
+     *                         @OA\Property(property="is_reminder", type="integer", example=0),
+     *                         @OA\Property(property="created_at", type="string", example="2025-12-25 21:25:00"),
+     *                         @OA\Property(property="updated_at", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="deleted_at", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="reminder_id", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="reminder_desc", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="reminder_type", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="reminder_context", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="reminder_created_at", type="string", nullable=true, example=null),
+     *                         @OA\Property(property="reminder_updated_at", type="string", nullable=true, example=null)
+     *                     )
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="inventory failed to fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="inventory not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function getInventoryByCatalog(Request $request, $view, $catalog)
+    {
+        try{
+            // Attribute
+            $user_id = $request->user()->id;
+            $check_admin = AdminModel::find($user_id);
+            $user_id = $check_admin ? null : $user_id;
+
+            // Get inventory by catalog with pagination
+            $res = InventoryModel::getInventoryByCatalog($user_id, $view, $catalog);
+            if($res->count() > 0){
+                // Return success response
+                return response()->json([
+                    'status' => 'success',
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
+                    'data' => $res
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

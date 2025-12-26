@@ -39,34 +39,7 @@ class HomeController extends Controller
                     ->with('sorting',$sorting)
                     ->with('filter_category',$filter_category);
             } elseif($selected == 'catalog'){
-                $room = DictionaryModel::selectRaw('dictionary_name, COUNT(1) as total')
-                    ->leftjoin('inventory','inventory_room','=','dictionary_name')
-                    ->where('dictionary_type','inventory_room')
-                    ->where('inventory.created_by',$user_id)
-                    ->groupby('dictionary_name')
-                    ->orderby('dictionary_name','ASC')
-                    ->get();
-
-                $category = DictionaryModel::selectRaw('dictionary_name, COUNT(1) as total')
-                    ->leftjoin('inventory','inventory_category','=','dictionary_name')
-                    ->where('dictionary_type','inventory_category')
-                    ->where('inventory.created_by',$user_id)
-                    ->groupby('dictionary_name')
-                    ->orderby('dictionary_name','ASC')
-                    ->get();
-
-                $storage = InventoryModel::selectRaw('inventory_storage, COUNT(1) as total')
-                    ->whereNotNull('inventory_storage')
-                    ->where('inventory.created_by',$user_id)
-                    ->where('created_by', $user_id)
-                    ->groupby('inventory_storage')
-                    ->orderby('inventory_storage','ASC')
-                    ->get();
-
-                return view('home.index')
-                    ->with('room',$room)
-                    ->with('category',$category)
-                    ->with('storage',$storage);
+                return view('home.index');
             }
         } else {
             return redirect("/login");
@@ -78,41 +51,9 @@ class HomeController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
-            if($view == "room"){
-                $other = DictionaryModel::select('dictionary_name')
-                    ->where('dictionary_type','inventory_room')
-                    ->orderby('dictionary_name','ASC')
-                    ->get();
-            } else if($view == "category"){
-                $other = DictionaryModel::select('dictionary_name')
-                    ->where('dictionary_type','inventory_category')
-                    ->orderby('dictionary_name','ASC')
-                    ->get();
-            } else if($view == "storage"){
-                $other = InventoryModel::select('inventory_storage')
-                    ->whereNotNull('inventory_storage')
-                    ->where('created_by', $user_id)
-                    ->groupby('inventory_storage')
-                    ->orderby('inventory_storage','ASC')
-                    ->get();
-            }
-            
-            $inventory = InventoryModel::select('inventory.id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_room', 
-                'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 
-                'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'inventory.created_at', 'inventory.updated_at', 'inventory.deleted_at',
-                'reminder.id as reminder_id', 'reminder_desc', 'reminder_type', 'reminder_context', 'reminder.created_at as reminder_created_at', 'reminder.updated_at as reminder_updated_at')
-                ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
-                ->where("inventory_$view", $context)
-                ->where('inventory.created_by',$user_id)
-                ->orderBy('is_favorite', 'desc')
-                ->orderBy('inventory.created_at', 'desc')
-                ->get();
-
             return view('home.catalog.index')
-                ->with('other',$other)
                 ->with('view',$view)
-                ->with('context',$context)
-                ->with('inventory',$inventory);
+                ->with('context',$context);
         } else {
             return redirect("/login");
         }

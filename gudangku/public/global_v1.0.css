@@ -59,6 +59,9 @@ body {
 .bordered {
     border: 1.5px solid var(--whiteColor);
 }
+.rounded {
+    border-radius: var(--roundedMD) !important;
+}
 hr {
     color: var(--whiteColor) !important;
     margin-top: var(--spaceXLG) !important;

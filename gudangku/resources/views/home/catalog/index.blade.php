@@ -8,6 +8,11 @@
 @php($role = session()->get('role_key'))
 
 @section('content')
+    <script>
+        const view = `<?= $view ?>`
+        const catalog = `<?= $context ?>`
+    </script>
+    
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="main-page-title">My Inventory</h1>
@@ -19,5 +24,6 @@
         <hr>
         @include('home.home_toolbar')
         @include('home.catalog.list')
+        @include('home.catalog.others')
     </div>
 @endsection

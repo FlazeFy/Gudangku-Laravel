@@ -2867,6 +2867,251 @@
                 ]
             }
         },
+        "/api/v1/inventory/catalog/{view}/{catalog}": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "Get Inventory By Catalog",
+                "description": "This request is used to get inventory header by given `view` and `catalog`. This request interacts with the MySQL database, has a pagination, and has protected routes.",
+                "operationId": "d77ce3253c6eb61bd05a1d1663f6664f",
+                "parameters": [
+                    {
+                        "name": "view",
+                        "in": "path",
+                        "description": "Context of inventory like `inventory_room`, `inventory_storage`, or `inventory_category`",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "inventory_room"
+                    },
+                    {
+                        "name": "catalog",
+                        "in": "path",
+                        "description": "Value based on view (context)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Main%20Room"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory fetched successfully. Ordered in descending order by `is_favorite` and `created_at`",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "b3ead76e-95fd-6f99-33f2-c31f40a6a55e"
+                                                            },
+                                                            "inventory_name": {
+                                                                "type": "string",
+                                                                "example": "Kris Air Friyer"
+                                                            },
+                                                            "inventory_category": {
+                                                                "type": "string",
+                                                                "example": "Electronics"
+                                                            },
+                                                            "inventory_desc": {
+                                                                "type": "string",
+                                                                "example": "buat goreng"
+                                                            },
+                                                            "inventory_merk": {
+                                                                "type": "string",
+                                                                "example": "Kris"
+                                                            },
+                                                            "inventory_room": {
+                                                                "type": "string",
+                                                                "example": "Main Room"
+                                                            },
+                                                            "inventory_storage": {
+                                                                "type": "string",
+                                                                "example": "Main Table",
+                                                                "nullable": true
+                                                            },
+                                                            "inventory_rack": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "inventory_price": {
+                                                                "type": "number",
+                                                                "example": 650000
+                                                            },
+                                                            "inventory_image": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "inventory_unit": {
+                                                                "type": "string",
+                                                                "example": "Pcs"
+                                                            },
+                                                            "inventory_vol": {
+                                                                "type": "number",
+                                                                "example": 1
+                                                            },
+                                                            "inventory_capacity_unit": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "inventory_capacity_vol": {
+                                                                "type": "number",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "is_favorite": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "is_reminder": {
+                                                                "type": "integer",
+                                                                "example": 0
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2025-12-25 21:25:00"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "deleted_at": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "reminder_id": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "reminder_desc": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "reminder_type": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "reminder_context": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "reminder_created_at": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            },
+                                                            "reminder_updated_at": {
+                                                                "type": "string",
+                                                                "example": null,
+                                                                "nullable": true
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "inventory failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "inventory not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/inventory/list": {
             "get": {
                 "tags": [

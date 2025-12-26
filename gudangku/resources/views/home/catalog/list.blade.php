@@ -1,31 +1,105 @@
-<h2 class="text-white fw-bold mb-4 mt-3" style="font-size:var(--textXJumbo);">By {{ucwords($view)}} - {{ucwords($context)}}</h2>
-<div class="row"> 
-@foreach($inventory as $in)
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
-        <button class="btn-feature mb-4 position-relative" <?php if($in['deleted_at'] != null){ echo 'style="background:rgba(221, 0, 33, 0.15) !important;"';} ?> onclick="window.location.href='/inventory/edit/<?= $in['id'] ?>'">
-            @if($in['is_favorite'] == '1')
-                <span style="background: var(--dangerBG); top:-15px; left:-20px;" class="p-3 me-1 rounded-circle position-absolute"><i class="fa-solid fa-heart mx-1"></i></span>
-            @endif
-            @if($in['reminder_id'])
-                <span style="background: var(--successBG); top:-15px; left:45px;" class="p-3 me-1 rounded-circle position-absolute"><i class="fa-solid fa-bell mx-1"></i></span>
-            @endif
-            @if($in->inventory_image == null)
-                <i class="fa-solid fa-box" style="font-size:90px;"></i>
-            @else 
-                <img class="img img-fluid" style="border-radius: var(--roundedMD);" src="{{$in->inventory_image}}" title="{{$in->inventory_name}}">
-            @endif
-            <h2 class="mt-3" style="font-size:var(--textXLG);">{{$in['inventory_name']}}</h2>
-            <div class="mt-3 d-flex justify-content-center props-box">
-                <span style="background: var(--successBG);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">Rp. {{number_format($in['inventory_price'], 0, ',', '.')}}</span>
-                <span style="background: var(--primaryColor);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">{{$in['inventory_vol']}} {{$in['inventory_unit']}}</span>
-                @if($in['inventory_capacity_unit'] == 'percentage')
-                    <span style="background: <?php if($in['inventory_capacity_vol'] > 30){ echo 'var(--infoBG)'; } else { echo 'var(--dangerBG)'; }?>;" class="py-1 px-2 me-1 rounded">{{$in['inventory_capacity_vol']}}%</span>
-                @endif
-                @if($in['reminder_id'])
-                    <span style="background: var(--successBG);" class="py-1 px-2 me-1 rounded"><i class="fa-solid fa-bell"></i> {{ucwords(str_replace("_"," ",$in->reminder_type))}}</span>
-                @endif
-            </div>
-        </button>
-    </div>
-@endforeach
+<style>
+    .btn-feature i {
+        font-size: var(--textLG);
+    }
+    .btn-feature i.catalog-icon {
+        font-size: 80px;
+    }
+    @media (min-width: 576px) and (max-width: 767px) {
+        .btn-feature i.catalog-icon {
+            font-size: 60px;
+        }
+    }
+    @media (max-width: 575px) {
+        .btn-feature i.catalog-icon {
+            font-size: 40px;
+        }
+    }
+</style>
+
+<div class="container-form">
+    <h2>By {{ucwords($view)}} - {{ucwords($context)}}</h2><hr>
+    <div class="row gy-3" id="inventory-holder"></div>
 </div>
+
+<script>
+    let page = 1
+    $('#inventory-holder').empty()
+
+    const get_inventory = (page) => {
+        $.ajax({
+            url: `/api/v1/inventory/catalog/${view}/${catalog}?page=${page}`,
+            type: 'GET',
+            beforeSend: function (xhr) {
+                Swal.showLoading()
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+            },
+            success: function(response) {
+                Swal.close()
+
+                const data = response.data.data
+                const current_page = response.data.current_page
+                const last_page = response.data.last_page
+
+                data.forEach(dt => {
+                    $('#inventory-holder').append(`
+                        <div class="col-md-6 col-sm-12 px-2">
+                            <button class="btn-feature" style="${dt.deleted_at !== null ? 'background:rgba(221, 0, 33, 0.15) !important;' : ''}"
+                                onclick="window.location.href='/inventory/edit/${dt.id}'">
+                                <div class="row m-0 align-items-center">
+                                    <div class="col-4">
+                                        ${dt.inventory_image == null ? `<i class="fa-solid fa-box catalog-icon"></i>` : `
+                                            <img class="img img-fluid" style="border-radius: var(--roundedMD);" src="${dt.inventory_image}" title="${dt.inventory_name}">
+                                        `}
+                                        <h5 class="mt-3">${dt.inventory_name}</h5>
+                                    </div>
+                                    <div class="col-8 text-start">
+                                        <h6>Detail</h6>
+                                        <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:var(--textSM);">
+                                            ${dt.is_favorite == '1' ? `
+                                                <span class="p-2 rounded d-inline-flex align-items-center bg-danger">
+                                                    <i class="fa-solid fa-heart"></i>
+                                                </span>` : ''}
+                                            <span class="p-2 rounded d-inline-flex align-items-center bg-success">Rp. ${dt.inventory_price ? number_format(dt.inventory_price, 0, ',', '.') : '-'}</span>
+                                            <span class="p-2 rounded d-inline-flex align-items-center bg-primary">${dt.inventory_vol} ${dt.inventory_unit}</span>
+                                            ${dt.inventory_capacity_unit === 'percentage' ? `
+                                                <span class="p-2 rounded ${dt.inventory_capacity_vol > 30 ? 'bg-primary' : 'bg-danger'}">${dt.inventory_capacity_vol}%</span>` : ''}
+                                            ${dt.reminder_id ? `
+                                                <span class="p-2 rounded bg-success">
+                                                    <i class="fa-solid fa-bell"></i> ${dt.reminder_type.replaceAll('_',' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}
+                                                </span>` : ''}
+                                        </div><hr class="mb-0 mt-3">
+                                        <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(dt.created_at,'calendar')}</p>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    `);
+                }); 
+                
+                if(current_page < last_page){
+                    $('#inventory-holder').append(`
+                        <div class="col-12">
+                            <button class="btn btn-primary" onclick="navigate_page(${page})">Next Page</button>
+                        </div>
+                    `);
+                } 
+            },
+            error: function(response, jqXHR, textStatus, errorThrown) {
+                Swal.close()
+                if(response.status != 404){
+                    generate_api_error(response, true)
+                } else {
+                    
+                }
+            }
+        });
+    }
+    get_inventory(page)
+
+    const navigate_page = (page) => {
+        $('#inventory-holder').children().last().remove()
+        get_inventory(page + 1)
+    }
+</script>
