@@ -1,0 +1,49 @@
+.autocomplete {
+    position: relative;
+    display: inline-block;
+}
+.autocomplete-items {
+    position: absolute;
+    border: 2px solid white;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--darkColor);
+    border-radius: var(--roundedLG);
+}
+.autocomplete-items div {
+    padding: var(--spaceMD);
+    cursor: pointer;
+    background: transparent;
+    color: var(--whiteColor);
+}
+.autocomplete-items div:hover {
+    background: var(--primaryColor);
+}
+.autocomplete-active {
+    color: #ffffff;
+}
+.item_qty_selected {
+    width: 80px;
+}
+.item_name_selected {
+    font-weight: 500;
+    font-size: var(--textXMD);
+    margin-bottom: var(--spaceXXSM) !important;
+}
+table.table-report tr td {
+    padding: var(--spaceMD) var(--spaceXSM)  !important;
+}
+table.table-report tbody span, table.table-report tbody input, table.table-report tbody textarea {
+    font-size: var(--textMD) !important;
+}
+table.table-report tbody input, table.table-report tbody textarea {
+    padding: var(--spaceXSM) !important;
+}
+@media (max-width: 575.98px) {
+    .table-report {
+        table-layout: fixed; 
+        min-width: 500px;
+    }
+}

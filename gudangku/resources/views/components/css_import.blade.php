@@ -8,3 +8,7 @@
 <?php if(preg_match('(chat)', $cleanedUrl)): ?>
     <link rel="stylesheet" href="{{ asset('/chat_v1.0.css') }}"/>
 <?php endif; ?>
+
+<?php if(preg_match('(report/add|report/detail)', $cleanedUrl)): ?>
+    <link rel="stylesheet" href="{{ asset('/report_item_v1.0.css') }}"/>
+<?php endif; ?>

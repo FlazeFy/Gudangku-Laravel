@@ -218,11 +218,6 @@ const count_time = (date1, date2) => {
 
 const check_all = (target,type) => {
     $(target).prop('checked', type == 'check' ? true : false)
-    Swal.fire({
-        title: "Success!",
-        text: `${ucFirst(type)}ed all items`,
-        icon: "success"
-    });
 } 
 
 const zoomableModal = () => {

@@ -7,7 +7,6 @@
 
 <div class="container-form" id="edit_report_detail-section">
     <div id="report_holder"></div>
-    <div id="report_check_action"></div>
 </div>
 
 <div class="container-form" id="edit_attached_image-section">
@@ -20,6 +19,7 @@
         <table class="table mt-3" id="report_item_tb"><thead></thead><tbody></tbody></table>
     </div>
     <div id="report_check_extra" class="mt-3"></div>
+    <div id="report_check_action"></div>
 </div>
 
 <script>
@@ -159,7 +159,8 @@
                             `<label>Category</label>
                             <select class='form-select' id='report_category_holder'></select>`
                             :
-                            `<span class="bg-success text-white rounded-pill px-3 py-2" style='font-size:var(--textMD); font-weight:500;'>${data.report_category}</span>`
+                            `<input hidden id="report_category_holder" value="${data.report_category}"/>
+                            <span class="bg-success text-white rounded-pill px-3 py-2" style='font-size:var(--textMD); font-weight:500;'>${data.report_category}</span>`
                         }
                     </div>
                 </div>
@@ -250,7 +251,7 @@
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                             </div>
                                             <div class="modal-body">
-                                                <h2>Remove this inventory "${dt.item_name}" from report "${data.report_title}"?</h2>
+                                                <p>Remove this inventory "${dt.item_name}" from report "${data.report_title}"?</p>
                                                 <a class="btn btn-danger mt-4" onclick="delete_item('${dt.id}')">Yes, Delete</a>
                                             </div>
                                         </div>
@@ -288,6 +289,8 @@
 
             await get_context_opt('report_category',token)
             $('#report_category_holder').val(data.report_category)
+
+            reportCategoryHolderEventHandler('#report_category_holder')
 
             zoomableModal()
         } catch (error) {
@@ -327,6 +330,7 @@
                     icon: "success"
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        closeModalBS()
                         get_detail_report('{{$id}}')
                     }
                 });
@@ -354,6 +358,7 @@
                     icon: "success"
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        closeModalBS()
                         get_detail_report('{{$id}}')
                     }
                 });
@@ -390,6 +395,7 @@
                     icon: "success"
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        closeModalBS()
                         get_detail_report(id)
                     }
                 });
@@ -455,7 +461,7 @@
             let selected_item_id = ''
             let selected_inventory_id = ''
             checkedItems.forEach((el,idx) => {
-                selected_item_name += `<a class='fst-italic fw-bold bg-primary rounded px-2 py-1 mx-1 mb-1'>${el.item_name}</a>`
+                selected_item_name += `<a class='bordered bg-transparent rounded px-2 py-1 d-inline-block'>${el.item_name}</a>`
                 if(idx < checkedItems.length - 1){
                     selected_item_id += `${el.id},`
                     selected_inventory_id += `${el.inventory_id},`
@@ -465,35 +471,33 @@
                 }
             });
             $(report_action_holder).html(`
-                <div class='container bordered row'>
-                    <div class='col'>
-                        <h2 class='text-primary fw-bold' style='font-size:calc(var(--textXLG)*2);'>${checkedItems.length} Items</h2>
-                        <h5 class='fw-bold' style='font-size:var(--textXLG);'>Selected</h5>
-                        <hr class='mt-3 mb-2'>
-                        ${selected_item_name}
+                <div class='container bordered row mx-0 align-items-center px-1'>
+                    <div class='col-lg-8 col-md-7 col-sm-12 text-center text-md-start'>
+                        <h3 class='text-primary'>${checkedItems.length} Items selected</h3>
+                        <hr class='mt-0 mb-3'>
+                        <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start" style="font-size:var(--textMD);">
+                            ${selected_item_name}
+                        </div>
                     </div>
-                    <div class='col text-end'>
-                        <h5 class='fw-bold my-4' style='font-size:var(--textXLG);'>What you want to do?</h5>
-                        <a class='btn btn-primary' href="/doc/report/{{$id}}/custom?filter_in=${selected_item_id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Custom Print @endif</a>
-                        <a class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#modalAddReport" onclick="get_dictionary()"><i class="fa-solid fa-arrows-split-up-and-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Split Report @endif</a>
-                        <div class="modal fade" id="modalAddReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title fw-bold" id="exampleModalLabel">Add Report</h5>
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id='add-report-form'>
-                                            @csrf
+                    <div class='col-lg-4 col-md-5 col-sm-12 text-center text-md-end pt-3 pt-md-0'>
+                        <h6 class='fw-bold'>What you want to do?</h6>
+                        <div class='d-flex flex-wrap gap-2 justify-content-center justify-content-md-end mt-3' style="font-size:var(--textMD)">
+                            <a class='btn btn-primary py-1' href="/doc/report/{{$id}}/custom?filter_in=${selected_item_id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Custom Print</a>
+                            <a class='btn btn-primary py-1' data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-arrows-split-up-and-left" style="font-size:var(--textXLG);"></i> Split Report</a>
+                            <div class="modal fade" id="modalAddReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold" id="exampleModalLabel">Add Report</h5>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <div class="modal-body">
                                             <div class="row text-start">
                                                 <div class="col">
                                                     <label>Title</label>
                                                     <input name="report_title" class="form-control" type="text" id="report_title_split" required>
-
                                                     <label>Description</label>
                                                     <textarea name="report_desc" id="report_desc_split" class="form-control"></textarea>
-
                                                     <label>Category</label>
                                                     <select class="form-select" name="report_category"  id="report_category_split" aria-label="Default select example"></select>
                                                     <a class='btn btn-success w-100 mt-4' onclick="split_report('<?= $id ?>','${selected_item_id}')"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
@@ -503,24 +507,24 @@
                                                     ${selected_item_name}
                                                 </div>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <a class='btn btn-primary' href="/doc/inventory/${selected_inventory_id}/custom"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Print Detail @endif</a>
-                        <a class='btn btn-primary'><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Analyze @endif</a>
-                        <a class='btn btn-danger mt-2' data-bs-toggle="modal" data-bs-target="#modalDeleteManyItem"><i class="fa-solid fa-trash" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Remove @endif</a>
-                        <div class="modal fade" id="modalDeleteManyItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h2>Remove this inventory ${selected_item_name} from report "${report_title}"?</h2>
-                                        <a class="btn btn-danger mt-4" onclick="delete_item('${selected_item_id}')">Yes, Delete</a>
+                            <a class='btn btn-primary py-1' href="/doc/inventory/${selected_inventory_id}/custom"><i class="fa-solid fa-print"></i> Print Detail</a>
+                            <a class='btn btn-primary py-1'><i class="fa-solid fa-chart-simple"></i> Analyze</a>
+                            <a class='btn btn-danger py-1' data-bs-toggle="modal" data-bs-target="#modalDeleteManyItem"><i class="fa-solid fa-trash"></i> Remove</a>
+                            <div class="modal fade" id="modalDeleteManyItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Remove this inventory ${selected_item_name} from report "${report_title}"?</p>
+                                            <a class="btn btn-danger mt-4" onclick="delete_item('${selected_item_id}')">Yes, Delete</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

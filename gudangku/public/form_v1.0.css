@@ -95,3 +95,21 @@ input[type="file"].form-control::file-selector-button, input[type="file"].form-c
     color: var(--whiteColor);
     border-radius: var(--roundedMD);
 }
+
+/* Richtexteditor */
+.richtexteditor {
+    padding: var(--spaceMD);
+    border: 1.75px solid var(--whiteColor) !important;
+    background: var(--semiDarkColor) !important;
+}
+.rte-toolbar-desktop, rte-bottom {
+    background: transparent;
+}
+.rte-toolbar-desktop *, rte-bottom * {
+    color: var(--whiteColor) !important;
+    fill: var(--whiteColor) !important;
+}
+rte-toolbar-button:hover {
+    background: var(--primaryColor) !important;
+    border-radius: var(--roundedMini);
+}

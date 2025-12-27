@@ -4,11 +4,9 @@
     margin-top: var(--spaceMD);
 }
 .container.bordered {
-    border: 1.5px solid var(--whiteColor);
     padding: var(--spaceXMD);
 }
 .container-light {
-    border: 1.5px solid var(--whiteColor);
     border-radius: var(--roundedLG);
     padding: var(--spaceMD);
 }
@@ -16,7 +14,6 @@
     border-radius: var(--roundedLG);
     margin: 0;
     padding: var(--spaceXMD);
-    border: 1.5px solid var(--whiteColor);
 }
 @media (max-width: 575px) {
     .alert {
@@ -92,4 +89,8 @@
     font-weight: bold;
     padding-bottom: 0;
     font-size: var(--spaceXMD);
+}
+
+.alert, .container-light, .container.bordered {
+    border: 1.5px solid var(--whiteColor);
 }

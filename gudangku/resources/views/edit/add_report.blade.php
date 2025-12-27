@@ -129,7 +129,6 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.close()
-                        get_dictionary()
                         get_detail_inventory(inventory_id)
                     }
                 });
