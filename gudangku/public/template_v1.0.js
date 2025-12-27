@@ -7,7 +7,7 @@ const template_alert_container = (target, type, msg, btn_title, icon, href) => {
     `)
 }
 
-const get_context_opt = (context, token, selected = null) => {
+const get_context_opt = (context, token, selected = null, target_type = '#') => {
     return new Promise((resolve, reject) => {
         Swal.showLoading()
         let ctx_holder
@@ -25,17 +25,17 @@ const get_context_opt = (context, token, selected = null) => {
         const generate_context_list = (holder, data, selected = null) => {
             if (Array.isArray(holder)) {
                 holder.forEach(dt => {
-                    $(`#${dt}`).empty().append(`<option>-</option>`)
+                    $(`${target_type}${dt}`).empty().append(`<option>-</option>`)
                     data.forEach(el => {
                         if (el.dictionary_type === dt.replace('_holder','').replace('_split','')) {
-                            $(`#${dt}`).append(`<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`)
+                            $(`${target_type}${dt}`).append(`<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`)
                         }
                     })
                 })
             } else {
-                $(`#${holder}`).empty().append(`<option>-</option>`)
+                $(`${target_type}${holder}`).empty().append(`<option>-</option>`)
                 data.forEach(el => {
-                    $(`#${holder}`).append(`<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`)
+                    $(`${target_type}${holder}`).append(`<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`)
                 })
             }
 

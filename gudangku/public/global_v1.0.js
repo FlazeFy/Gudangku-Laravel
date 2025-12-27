@@ -155,6 +155,14 @@ const generate_api_error = (response, is_list_format) => {
     }
 }
 
+const generate_empty_field_error = (context) => {
+    Swal.fire({
+        title: "Oops!",
+        text: `You must select the ${context}`,
+        icon: "warning"
+    });
+}
+
 const generate_last_page_error = () => {
     Swal.fire({
         title: "Oops!",
@@ -181,6 +189,46 @@ const check_filling_status = (list) => {
         }
         return false
     });
+}
+
+const get_reminder_context = (reminderType) => {
+    switch (reminderType) {
+        case 'Every Day': {
+            // Hours: 00–23
+            return Array.from({ length: 24 }, (_, i) => `Every ${String(i).padStart(2, '0')}`)
+        }
+        case 'Every Week': {
+            return ['Every Monday','Every Tuesday','Every Wednesday','Every Thursday','Every Friday','Every Saturday','Every Sunday']
+        }
+        case 'Every Month': {
+            // Days: 01–28
+            return Array.from({ length: 28 }, (_, i) => `Every ${String(i + 1).padStart(2, '0')}`)
+        }
+        case 'Every Year': {
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
+            const result = []
+            for (let m of months) {
+                for (let d = 1; d <= 28; d++) {
+                    result.push(`Every ${String(d).padStart(2, '0')} ${m}`)
+                }
+            }
+            return result
+        }
+        default:
+            return []
+    }
+}
+
+const get_reminder_context_select = (reminderType, target, selected = null) => {
+    const $target = target instanceof jQuery ? target : $(target)
+
+    $target.empty().append(`<option>-</option>`)
+    const list = get_reminder_context(reminderType)
+
+    list.forEach(dt => {
+        $target.append(`<option value="${dt}" ${selected === dt ? "selected":""}>${dt}</option>`)
+    })
 }
 
 const count_time = (date1, date2) => {

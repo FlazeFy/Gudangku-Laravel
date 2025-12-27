@@ -286,8 +286,7 @@
                 `)
             }
 
-            await get_context_opt('report_category,report_category_split',token)
-            $('#report_category_holder').val(data.report_category)
+            await get_context_opt('report_category,report_category_split',token,data.report_category)
 
             reportCategoryHolderEventHandler('#report_category_holder')
 
@@ -540,9 +539,7 @@
 
     $(document).on('click','#split_report-button',async function(){
         const report_category = $('#report_category_holder').val()
-        await get_context_opt('report_category,report_category_split',token)
-        $('#report_category_holder').val(report_category)
-        $('#report_category_split_holder').val(report_category)
+        await get_context_opt('report_category,report_category_split',token,report_category)
     })
 
     $(document).on('change','.check-inventory', function(){

@@ -13,7 +13,7 @@
                     <label>Description</label>
                     <textarea name="reminder_desc" id="reminder_desc" class="form-control"></textarea>
                     <label>Type</label>
-                    <select class="form-select" name="reminder_type" id="reminder_type" aria-label="Default select example"></select>
+                    <select class="form-select" name="reminder_type" id="reminder_type_holder" aria-label="Default select example"></select>
                     <label>Context</label>
                     <select class="form-select" name="reminder_context" id="reminder_context" aria-label="Default select example"></select>
                     <div class="form-check">
@@ -28,6 +28,23 @@
 </div>
 
 <script>
+    $('#modalAddReminder').on('shown.bs.modal', async function () {
+        $(async function () {
+            await get_context_opt('reminder_type',token)
+        })
+    });
+
+    $(document).on('change','#reminder_type_holder',function(){
+        const selected = $(this).val()
+
+        alert(selected)
+        if(selected !== "-"){
+            get_reminder_context_select(selected,'#reminder_context')
+        } else {
+            generate_empty_field_error('reminder type')
+        }
+    })
+
     const post_reminder = (form,is_checked) => {
         let formData = $(`#${form}`).serializeArray()
         formData.push({ name: "send_demo", value: is_checked })

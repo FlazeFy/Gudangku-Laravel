@@ -83,7 +83,7 @@
         <h2>Reminder</h2>
         <span id="add_reminder-holder"></span>
     </div>
-    <div id='reminder_holder'></div>
+    <div id='reminder_holder' class="accordion"></div>
 </div>
 
 <div class="container-form">
@@ -151,20 +151,20 @@
                     $('#reminder_holder').empty().addClass('pt-2')
                     reminder.forEach(dt => {
                         $('#reminder_holder').append(`
-                            <div class="reminder-box" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReminder${dt.id}" aria-expanded="false" aria-controls="collapseExample">
+                            <div class="reminder-box" data-reminder-type="${dt.reminder_type}" data-reminder-context="${dt.reminder_context}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReminder${dt.id}" aria-expanded="false" aria-controls="collapseExample">
                                 <div class='d-flex justify-content-between flex-wrap gap-2 text-white'>
                                     <p class="mb-0"><b>Description :</b> ${dt.reminder_desc}</p>
                                     <span class='rounded-pill bg-success px-2 py-1' style='font-size:var(--textMD);'><i class="fa-solid fa-bell"></i> ${dt.reminder_type} at ${dt.reminder_context}</span>
                                 </div>
                             </div>
-                            <div class="collapse" id="collapseReminder${dt.id}">
-                                <div class="container py-0 ps-4 ms-5 mb-4 w-auto" style='border-left: var(--spaceMini) solid var(--primaryColor); border-radius:0;'>
+                            <div class="accordion-collapse collapse" data-bs-parent="#reminder_holder" id="collapseReminder${dt.id}">
+                                <div class="container py-0 ps-4 ms-3 ms-md-5 mb-4 w-auto" style='border-left: var(--spaceMini) solid var(--primaryColor); border-radius:0;'>
                                     <div class='d-flex justify-content-between'>
                                         <div>
                                             <p class='date-text mb-0'>Created At : ${getDateToContext(dt.created_at,'calendar')}</p>
                                             <p class='date-text mb-0'>Last Updated : ${dt.updated_at ? getDateToContext(dt.updated_at,'calendar') : '-'}</p>
                                         </div>
-                                        <a class='btn btn-danger py-1' data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${dt.id}"><i class="fa-solid fa-trash"></i> Delete</a>
+                                        <a class='btn btn-danger py-1' data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${dt.id}"><i class="fa-solid fa-trash"></i><span class="d-none d-md-inline"> Delete</span></a>
                                         <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" id="modalDeleteReminder_${dt.id}" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -173,10 +173,8 @@
                                                         <a class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <h2><span class="text-danger">Permentally Delete</span> this reminder "${dt.reminder_desc}"?</h2>
-                                                        <a class="btn btn-danger mt-4"
-                                                            onclick="delete_reminder_by_id('${dt.id}', '${token}', () => get_detail_inventory('${inventory_id}'))"> Yes, Delete
-                                                        </a>
+                                                        <p><span class="text-danger">Permentally delete</span> this reminder "${dt.reminder_desc}"?</p>
+                                                        <a class="btn btn-danger" onclick="delete_reminder_by_id('${dt.id}', '${token}', () => get_detail_inventory('${inventory_id}'))"> Yes, Delete</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -185,11 +183,11 @@
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <label>Type</label>
-                                            <select class="form-select" name="reminder_type" aria-label="Default select example"></select>
+                                            <select class="form-select reminder_type_holder" name="reminder_type" aria-label="Default select example"></select>
                                         </div>
                                         <div class="col-lg-6">
                                             <label>Context</label>
-                                            <select class="form-select" name="reminder_context" aria-label="Default select example"></select>
+                                            <select class="form-select reminder_context_holder" name="reminder_context" aria-label="Default select example"></select>
                                         </div>
                                         <div class="col-lg-6">
                                             <label>Description</label>
@@ -268,6 +266,17 @@
     $(async function () {
         await get_context_opt('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
         get_detail_inventory(inventory_id)
+    })
+
+    $(document).on('click','.reminder-box',async function(){
+        const reminder_type = $(this).data('reminder-type')
+        const reminder_context = $(this).data('reminder-context')
+        const index = $('.reminder-box').index(this)
+
+        await get_context_opt('reminder_type',token,reminder_type,'.')  
+
+        const $contextHolder = $('.reminder_context_holder').eq(index)
+        get_reminder_context_select(reminder_type,$contextHolder,reminder_context)
     })
 
     const save_update = () => {
