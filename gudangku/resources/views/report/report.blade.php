@@ -53,46 +53,7 @@
 
                 data.forEach(el => {
                     if(role == 0){
-                        $(`#${item_holder}`).append(`
-                            <button class="report-box mt-2" onclick="window.location.href='/report/detail/${el.id}'">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <div>
-                                        <h3 style="font-weight:500; font-size:var(--textJumbo);">${el.report_title}</h3>
-                                    </div>
-                                    <div>
-                                        <span class="bg-success text-white rounded-pill px-3 py-2 report-category">${el.report_category}</span>
-                                    </div>
-                                </div>
-                                ${el.report_desc ? `<p>${el.report_desc}</p>` : `<p class="no-data-message">- No Description Provided -</p>`}
-                                <br>
-                                <h6>Items : </h6>
-                                <div class='d-flex justify-content-start mt-2 report-items'>${el.report_items ?? '<span class="text-secondary fst-italic mt-2">- No Items Found -</span>'}</div>
-                                ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
-                                    <div class="d-flex justify-content-between mt-2">
-                                        <div class='total-price'>
-                                            ${
-                                                isMobile() ?
-                                                    `<h6 class="fw-bold">Total Price</h6>
-                                                    <p class="mb-0">Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</p>`
-                                                :
-                                                    `<h6 class="fw-bold" style="font-size:var(--textJumbo);">Total Price : Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</h6>`
-                                            }
-                                        </div>
-                                        <div class='total-item'>
-                                            ${
-                                                isMobile() ?
-                                                    `<h6 class="fw-bold">Total Item</h6>
-                                                    <p class="mb-0">${el.total_item ?? '0'}</p>`
-                                                :
-                                                    `<h6 class="fw-bold" style="font-size:var(--textJumbo);">Total Item : ${el.total_item ?? '0'}</h6>`
-                                            }
-                                        </div>
-                                    </div>
-                                ` : ''}
-                                <hr><p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
-                                ${ role == 1 ? `<p class='date-text mt-2 mb-0'>Created By : @${el.username}</p>` : ''}
-                            </button>
-                        `);
+                        $(`#${item_holder}`).append(generate_report_box(el, null));
                     } else {
                         $(`#${item_holder}`).append(`
                             <tr>
@@ -100,7 +61,7 @@
                                 <td class='text-center pt-3'><span class="bg-success text-white rounded-pill px-3 py-2 w-100">${el.report_category}</span></td>
                                 <td>${el.report_desc ?? '<span class="no-data-message mt-2">- No Description Provided -</span>'}</td>
                                 <td>${el.report_items ?? '<span class="no-data-message mt-2">- No items found -</span>'}</td>
-                                <td>Rp. ${el.item_price ? number_format(el.item_price, 0, ',', '.') : '-'}</td>
+                                <td>Rp. ${el.item_price ? el.item_price.toLocaleString() : '-'}</td>
                                 <td>
                                     <b>Created By</b>
                                     <a>@${el.username}</a><br><br>

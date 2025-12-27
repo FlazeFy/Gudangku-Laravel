@@ -27,7 +27,7 @@ const get_context_opt = (context, token, selected = null) => {
                 holder.forEach(dt => {
                     $(`#${dt}`).empty().append(`<option>-</option>`)
                     data.forEach(el => {
-                        if (el.dictionary_type === dt.replace('_holder','')) {
+                        if (el.dictionary_type === dt.replace('_holder','').replace('_split','')) {
                             $(`#${dt}`).append(`<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`)
                         }
                     })
@@ -35,9 +35,7 @@ const get_context_opt = (context, token, selected = null) => {
             } else {
                 $(`#${holder}`).empty().append(`<option>-</option>`)
                 data.forEach(el => {
-                    $(`#${holder}`).append(
-                        `<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`
-                    )
+                    $(`#${holder}`).append(`<option value="${el.dictionary_name}" ${selected === el.dictionary_name ? "selected":""}>${el.dictionary_name}</option>`)
                 })
             }
 
@@ -58,7 +56,9 @@ const get_context_opt = (context, token, selected = null) => {
                     localStorage.setItem(ctx_holder, JSON.stringify(data))
                     localStorage.setItem(`last-hit-${ctx_holder}`, Date.now())
 
-                    generate_context_list(ctx_holder, data, selected)
+                    $(document).ready(function () {
+                        generate_context_list(ctx_holder, data, selected)
+                    })
                 },
                 error: function (response) {
                     Swal.close()
@@ -77,7 +77,9 @@ const get_context_opt = (context, token, selected = null) => {
 
                 if (data) {
                     Swal.close()
-                    generate_context_list(ctx_holder, data, selected)
+                    $(document).ready(function () {
+                        generate_context_list(ctx_holder, data, selected)
+                    })
                 } else {
                     Swal.close()
                     failedMsg(`get the ${context} list`)
@@ -491,4 +493,43 @@ const reportCategoryHolderEventHandler = (el) => {
         $tbody.find('td.td-price').remove()
         $tbody.find('td[colspan]').attr('colspan', 3)
     }
+}
+
+const generate_report_box = (el, search = null) => {
+    return `
+        <button class="report-box mt-2" onclick="window.location.href='/report/detail/${el.id}'">
+            <div class="d-flex justify-content-between mb-3">
+                <h5>${el.report_title}</h5>
+                <span class="bg-success rounded-pill px-2 py-1">${el.report_category}</span>
+            </div>
+            ${el.report_desc ? `<p>${el.report_desc}</p>` : `<p class="no-data-message">- No Description Provided -</p>`}
+            <h6><b>Items :</b></h6>
+            <div class='d-flex justify-content-start mt-2'>${
+                search ? `<div class="mb-3 d-flex">${highlight_item(search,el.report_items)}</div>` : el.report_items ? `<p>${el.report_items}</p>` : `<p class="no-data-message">- No items attached -</p>`}
+            </div><hr class="mt-0">
+            ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
+                <div class="d-flex justify-content-between mt-2">
+                    <div class='total-price'>
+                        ${
+                            isMobile() ?
+                                `<h6 class="fw-bold">Total Price</h6>
+                                <p class="mb-0">Rp. ${el.item_price ? el.item_price.toLocaleString() : '-'}</p>`
+                            :
+                                `<h6 class="fw-bold">Total Price : Rp. ${el.item_price ? el.item_price.toLocaleString() : '-'}</h6>`
+                        }
+                    </div>
+                    <div class='total-item'>
+                        ${
+                            isMobile() ?
+                                `<h6 class="fw-bold">Total Item</h6>
+                                <p class="mb-0">${el.total_item ?? '0'}</p>`
+                            :
+                                `<h6 class="fw-bold">Total Item : ${el.total_item ?? '0'}</h6>`
+                        }
+                    </div>
+                </div>
+            ` : ''}
+            <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
+        </button>
+    `
 }

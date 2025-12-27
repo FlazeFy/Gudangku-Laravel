@@ -63,8 +63,8 @@
                                     <p class="mb-0">${dt.inventory_vol} ${dt.inventory_unit}</p>
                                 </td>
                                 <td>${dt.inventory_category}</td>
-                                <td>Rp. ${number_format(dt.inventory_price, 0, ',', '.')}</td>
-                                <td><a class="btn btn-warning modal-btn" href="/inventory/edit/${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></a></td>
+                                <td>Rp. ${dt.inventory_price.toLocaleString()}</td>
+                                <td><a class="btn btn-warning modal-btn" href="/inventory/edit/${dt.id}"><i class="fa-solid fa-pen-to-square"></i></a></td>
                             </tr>
                         `)
                     });

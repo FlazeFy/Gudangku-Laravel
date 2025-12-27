@@ -1,4 +1,4 @@
-<hr><h2 class="fw-bold my-3 text-center" id="user_manual-section">User Manual</h2>
+<h2 class="fw-bold my-3 text-center" id="user_manual-section">User Manual</h2>
 <div class="container bordered mb-4">
     <h4 class="fw-bold mb-3">How to Login?</h4>
     <p>To sign it to GudangKu Apps you must provide <b>Email / Username</b> and <b>Password</b></p>

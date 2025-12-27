@@ -24,9 +24,9 @@
             <div class="d-flex flex-wrap gap-2">
                 @include('components.back_button', ['route' => '/inventory'])
                 <span id='btn-toogle-fav-holder'></span>
-                <a class="btn btn-primary" href="/analyze/inventory/{{$id}}" id="analyze-button"><i class="fa-solid fa-chart-simple" style="font-size:var(--textXLG);"></i> Analyze</a>
-                <a class="btn btn-primary" href="/doc/inventory/{{$id}}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</a>
-                <a class="btn btn-primary" href="/doc/inventory/{{$id}}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Custom Print</a>
+                <a class="btn btn-primary" href="/analyze/inventory/{{$id}}" id="analyze-button"><i class="fa-solid fa-chart-simple"></i> Analyze</a>
+                <a class="btn btn-primary" href="/doc/inventory/{{$id}}"><i class="fa-solid fa-print"></i> Print</a>
+                <a class="btn btn-primary" href="/doc/inventory/{{$id}}/custom"><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>
             </div>
             <div class='text-start text-md-end'>
                 <p class='date-text mb-0'>Created At : <span id='created_at'></span></p>

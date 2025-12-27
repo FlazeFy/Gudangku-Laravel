@@ -77,10 +77,7 @@
                     $('#change-pass-button-holder').empty()
                 } else{
                     $('#login_status_box').html(`<div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Your account login using Basic Auth</div>`)
-                    $('#change-pass-button-holder').html(`
-                        <a class="btn btn-primary" href="/forgot">
-                            <i class="fa-solid fa-key" style="font-size:var(--textXLG);"></i> Change Password
-                        </a>`)
+                    $('#change-pass-button-holder').html(`<a class="btn btn-primary" href="/forgot"><i class="fa-solid fa-key"></i> Change Password</a>`)
                 } 
             },
             error: function(response, jqXHR, textStatus, errorThrown) {

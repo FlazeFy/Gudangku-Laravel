@@ -11,7 +11,7 @@
         Set reminders for cleaning or restocking, generate tailored reports, and gain insights into your inventory through charts and data-driven analysis. 
         With the ability to save and share data in CSV or PDF formats, GudangKu streamlines decision-making and enhances collaboration, making it the ultimate 
         tool for smarter, hassle-free inventory management.
-    </p><br><hr><br><br>
+    </p><hr><br>
     <h2 class="text-primary mb-3">About Creator</h2>
     <div class="bordered p-3 mx-auto text-white mb-5" style="border-radius:var(--roundedLG); max-width:360px;">
         <img class="img img-fluid rounded-circle mx-auto" style="width:240px;"  src="<?= asset('images/male.png')?>"/>
@@ -24,7 +24,7 @@
             <a href="https://github.com/FlazeFy" class="me-3"><i class="fa-brands fa-github"></i></a>
             <a href="mailto:flazen.edu@gmail.com"><i class="fa-solid fa-envelope"></i></a>
         </div>
-    </div><br><hr><br><br>
+    </div><hr><br>
     <h2 class="text-primary mb-3">About Stack</h2>
     <p>
         For development of GudangKu apps, we use <b>Laravel</b> for the Web Apps, <b>Flutter</b> for the Mobile Apps, and <b>Python</b> for the Telegram Bot.

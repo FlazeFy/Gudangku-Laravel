@@ -1,4 +1,4 @@
-<div id="nav_scroll-holder" style="position:fixed; right:20px; bottom:20px; z-index:1000;"></div>
+<div id="nav_scroll-holder"></div>
 <script>
     const handle_scroll_top_btn = () => {
         if (window.scrollY > window.innerHeight) {

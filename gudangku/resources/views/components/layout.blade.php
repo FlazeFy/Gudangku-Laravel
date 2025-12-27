@@ -89,16 +89,12 @@
     </head>
     <body class="antialiased">
         @include('others.detect_flazenapps')
-        <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div>
-                <div style="min-height: 90vh;">
-                    @yield('content')
-                </div>
-                <?php if(!preg_match('(embed)', $cleanedUrl)): ?>
-                @include('components.footer')
-                <?php endif; ?>
-            </div>
+        <div style="min-height: 90vh;">
+            @yield('content')
         </div>
+        <?php if(!preg_match('(embed)', $cleanedUrl)): ?>
+            @include('components.footer')
+        <?php endif; ?>
         @include('components.scroll_top')
         <script>
             var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))

@@ -171,14 +171,14 @@
                                     `:''
                                 }
                             </td>
-                            <td ${el.reminder ? 'rowspan="2"' : ''} class="text-center">Rp. ${el.inventory_price ? number_format(el.inventory_price, 0, ',', '.') : '-'}</td>
+                            <td ${el.reminder ? 'rowspan="2"' : ''} class="text-center">Rp. ${el.inventory_price ? el.inventory_price.toLocaleString() : '-'}</td>
                             <td ${el.reminder ? 'rowspan="2"' : ''} class="text-center">${el.inventory_vol} ${el.inventory_unit === 'Kilogram' ? 'Kg':el.inventory_unit}</td>
                             <td ${el.reminder ? 'rowspan="2"' : ''} class="text-center">
                                 ${el.inventory_capacity_unit === 'percentage' ? `${el.inventory_capacity_vol}%` : '-'}
                             </td>
                             <td>
                                 <button class="btn btn-primary w-100 btn-props" data-bs-toggle="modal" data-bs-target="#modalInfoProps_${el.id}">
-                                    <i class="fa-solid fa-circle-info" style="font-size:var(--textXLG);"></i> Properties
+                                    <i class="fa-solid fa-circle-info"></i> Properties
                                 </button>
                                 <div class="modal fade" id="modalInfoProps_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -201,7 +201,7 @@
                                                 <h6>Deleted At</h6>
                                                 <p>${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</p>
                                                 <div class="alert alert-primary mt-3" role="alert">
-                                                    <h6 class='fw-bold' style="font-size:var(--textXLG);"><i class="fa-solid fa-circle-info"></i> For Your Information</h6>
+                                                    <h6 class='fw-bold'><i class="fa-solid fa-circle-info"></i> For Your Information</h6>
                                                     <p class='mt-2 mb-0'><b>${el.inventory_name}</b> is been existed in your inventory for about <b>${count_time(el.created_at,null)}</b></p>
                                                 </div>
                                             </div>
@@ -213,14 +213,14 @@
                                         <div class='col p-0 pe-1'>
                                             <a class="btn btn-danger w-100 btn-like" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
                                                 ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
-                                                <i class="fa-solid fa-heart" style="font-size:var(--textXLG);"></i>
+                                                <i class="fa-solid fa-heart"></i>
                                             </a>
                                         </div>
                                     ` : ''}
                                     <div class='col p-0 ${role === 0 && 'ps-1' }'>
                                         <input type="hidden" name="type_delete" value="${el.deleted_at ? "hard" : "soft"}">
                                         <button class="btn btn-danger modal-btn w-100 btn-delete" data-bs-toggle="modal" data-bs-target="#modalDelete_${el.id}">
-                                            <i class="fa-solid ${el.deleted_at ? "fa-fire" : "fa-trash"}" style="font-size:var(--textXLG);"></i>
+                                            <i class="fa-solid ${el.deleted_at ? "fa-fire" : "fa-trash"}"></i>
                                         </button>
                                         <div class="modal fade" id="modalDelete_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -248,7 +248,7 @@
                                                 ? `data-bs-toggle="modal" data-bs-target="#modalRecover_${el.id}"` 
                                                 : `href="/inventory/edit/${el.id}"`
                                             }>
-                                            <i class="fa-solid ${el.deleted_at ? "fa-rotate" : "fa-pen-to-square"}" style="font-size:var(--textXLG);"></i>
+                                            <i class="fa-solid ${el.deleted_at ? "fa-rotate" : "fa-pen-to-square"}"></i>
                                         </a>
                                         ${el.deleted_at ? `
                                         <div class="modal fade" id="modalRecover_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -271,7 +271,7 @@
                                     ${idCollapse ? `
                                         <div class='col p-0 ps-1'>
                                             <button class="btn btn-success ${el.reminder && "bg-success border-0"} w-100 btn-reminder" data-bs-toggle="collapse" href="#${idCollapse}">
-                                                <i class="fa-solid ${el.reminder ? "fa-bell" : "fa-bell-slash"}" style="font-size:var(--textXLG);"></i>
+                                                <i class="fa-solid ${el.reminder ? "fa-bell" : "fa-bell-slash"}"></i>
                                             </button>
                                             ${reminders}
                                         </div>
@@ -306,7 +306,7 @@
                 $('#toolbar-button-section').html(`
                     <form class="d-inline" action="/inventory/save_as_csv" method="POST">
                         @csrf
-                        <button class="btn btn-primary" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</button>
+                        <button class="btn btn-primary" id="save_as_csv_btn" type="submit"><i class="fa-solid fa-print"></i> Print</button>
                     </form>
                 `)
             },

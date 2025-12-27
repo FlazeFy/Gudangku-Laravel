@@ -39,6 +39,7 @@
             })
             Swal.close()
 
+            $('#report_check_action').empty()
             const item_holder = 'report_holder'
             const data = response.data
             const data_item = response.data_item
@@ -53,11 +54,11 @@
 
             if(data_item.length > 0){
                 $(`#btn-doc-preview-holder`).html(`
-                    <a class="btn btn-primary" href="/doc/report/${data.id}"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</a>
-                    <a class="btn btn-primary" href="/doc/report/${data.id}/custom"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Custom Print</a>
+                    <a class="btn btn-primary" href="/doc/report/${data.id}"><i class="fa-solid fa-print"></i> Print</a>
+                    <a class="btn btn-primary" href="/doc/report/${data.id}/custom"><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>
                     <form action='/report/detail/${data.id}/save_as_csv' method='POST' class='d-inline'>
                         @csrf
-                        <button class="btn btn-primary" href=""><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print CSV</button>
+                        <button class="btn btn-primary" href=""><i class="fa-solid fa-print"></i> Print CSV</button>
                     </form>
                 `)
             }
@@ -146,7 +147,7 @@
                             `<label>Title</label>
                             <input class='form-control' id='report_title' style='${ !isMobile() && 'min-width:480px;'}' value='${data.report_title}'>`
                             :
-                            `<h3 class="mb-2 mb-md-0">${data.report_title}</h3>`
+                            `<h3 class="mb-2 mb-md-0" id='report_title'>${data.report_title}</h3>`
                         }
                     </div>
                     <div>
@@ -168,7 +169,7 @@
                     `<label>Description</label>
                     <textarea class='form-control' id='report_desc'>${data.report_desc ?? ''}</textarea>
                     <div class="d-grid d-md-inline-block">
-                        <a class="btn btn-success my-3 w-100 w-md-auto" id='save-edit-modal-btn' data-bs-toggle='modal' data-bs-target='#update-validation-modal'><i class="fa-solid fa-floppy-disk" style="font-size:var(--textXLG);"></i> Save Changes</a>
+                        <a class="btn btn-success my-3 w-100 w-md-auto" id='save-edit-modal-btn' data-bs-toggle='modal' data-bs-target='#update-validation-modal'><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
                     </div>
                     <div class="modal fade" id="update-validation-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -191,7 +192,7 @@
                 <br>
                 ${(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist') ? `
                     <div class="d-flex justify-content-between mt-3">
-                        <p class="fw-bold mb-0">Total Price: Rp. ${data.total_price ? number_format(data.total_price, 0, ',', '.'):'-'}</p>
+                        <p class="fw-bold mb-0">Total Price: Rp. ${data.total_price ? data.total_price.toLocaleString():'-'}</p>
                         <p class="fw-bold mb-0">Total Item: ${data.total_item}</p>
                     </div>
                 ` : ''}
@@ -210,10 +211,10 @@
                             <td>${dt.item_name}</td>
                             <td>${dt.item_desc ?? '<span class="no-data-message">- No Description Provided -</span>'}</td>
                             <td class="text-center">${dt.item_qty}</td>
-                            ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td class="text-center">Rp. ${dt.item_price ? number_format(dt.item_price, 0, ',', '.'): '-'}</td>` : ''}
+                            ${data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist' ? `<td class="text-center">Rp. ${dt.item_price ? dt.item_price.toLocaleString(): '-'}</td>` : ''}
                             <td class="text-center">${getDateToContext(dt.created_at,'calendar')}</td>
                             <td>
-                                <button class="btn btn-warning d-block mx-auto" data-bs-toggle="modal" data-bs-target="#modalEdit_${dt.id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i></button>
+                                <button class="btn btn-warning d-block mx-auto" data-bs-toggle="modal" data-bs-target="#modalEdit_${dt.id}"><i class="fa-solid fa-pen-to-square"></i></button>
                                 <div class="modal fade" id="modalEdit_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -242,7 +243,7 @@
                                 </div>
                             </td>
                             <td>
-                                <button class="btn btn-danger d-block mx-auto" data-bs-toggle="modal" data-bs-target="#modalDelete_${dt.id}"><i class="fa-solid fa-fire" style="font-size:var(--textXLG);"></i></button>
+                                <button class="btn btn-danger d-block mx-auto" data-bs-toggle="modal" data-bs-target="#modalDelete_${dt.id}"><i class="fa-solid fa-fire"></i></button>
                                 <div class="modal fade" id="modalDelete_${dt.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -263,22 +264,20 @@
                 });
                 $('#report_check_extra').html(`
                     <div class="d-flex gap-2 mb-3">
-                        <a class="btn btn-primary" onclick="check_all('.check-inventory','check'); checked_toggle_event();">
-                            <i class="fa-solid fa-check" style="font-size:var(--textXLG);"></i>
-                            <span class="d-none d-md-inline">Check All</span>
+                        <a class="btn btn-primary py-1" onclick="check_all('.check-inventory','check'); checked_toggle_event();">
+                            <i class="fa-solid fa-check"></i><span class="d-none d-md-inline"> Check All</span>
                         </a>
-                        <a class="btn btn-danger" onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();">
-                            <i class="fa-solid fa-xmark" style="font-size:var(--textXLG);"></i>
-                            <span class="d-none d-md-inline">Uncheck All</span>
+                        <a class="btn btn-danger py-1" onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();">
+                            <i class="fa-solid fa-xmark"></i><span class="d-none d-md-inline"> Uncheck All</span>
                         </a>
-                        <a class="btn btn-success flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#modalAddReport" style="font-size:var(--textXMD);">
+                        <a class="btn btn-success py-1 flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#modalAddReport">
                             <i class="fa-solid fa-plus"></i> Add Item
                         </a>
                     </div>
                 `)
             } else {
                 $('#report_check_extra').html(`
-                    <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddReport" style="font-size:var(--textXMD);"><i class="fa-solid fa-plus"></i> Add Item</a>
+                    <a class="btn btn-success py-1" data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-plus"></i> Add Item</a>
                 `)
                 $('#report_item_tb tbody').append(`
                     <tr>
@@ -287,7 +286,7 @@
                 `)
             }
 
-            await get_context_opt('report_category',token)
+            await get_context_opt('report_category,report_category_split',token)
             $('#report_category_holder').val(data.report_category)
 
             reportCategoryHolderEventHandler('#report_category_holder')
@@ -415,7 +414,7 @@
             data: JSON.stringify({
                 report_title: $('#report_title_split').val(),
                 report_desc: $('#report_desc_split').val(),
-                report_category: $('#report_category_split').val(),
+                report_category: $('#report_category_split_holder').val(),
                 is_reminder:0,
                 list_id:item_id
             }),
@@ -482,29 +481,31 @@
                     <div class='col-lg-4 col-md-5 col-sm-12 text-center text-md-end pt-3 pt-md-0'>
                         <h6 class='fw-bold'>What you want to do?</h6>
                         <div class='d-flex flex-wrap gap-2 justify-content-center justify-content-md-end mt-3' style="font-size:var(--textMD)">
-                            <a class='btn btn-primary py-1' href="/doc/report/{{$id}}/custom?filter_in=${selected_item_id}"><i class="fa-solid fa-pen-to-square" style="font-size:var(--textXLG);"></i> Custom Print</a>
-                            <a class='btn btn-primary py-1' data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-arrows-split-up-and-left" style="font-size:var(--textXLG);"></i> Split Report</a>
-                            <div class="modal fade" id="modalAddReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <a class='btn btn-primary py-1' href="/doc/report/{{$id}}/custom?filter_in=${selected_item_id}"><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>
+                            <a class='btn btn-primary py-1' data-bs-toggle="modal" data-bs-target="#modalSplitReport" id="split_report-button"><i class="fa-solid fa-arrows-split-up-and-left"></i> Split Report</a>
+                            <div class="modal fade" id="modalSplitReport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title fw-bold" id="exampleModalLabel">Add Report</h5>
+                                            <h5 class="modal-title fw-bold" id="exampleModalLabel">Split & Add New Report</h5>
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="row text-start">
-                                                <div class="col">
+                                                <div class="col-lg-6 col-md-12">
+                                                    <label>List Selected Item</label>
+                                                    <div class="d-flex gap-2">
+                                                        ${selected_item_name}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-12 pt-2 pt-lg-0">
                                                     <label>Title</label>
                                                     <input name="report_title" class="form-control" type="text" id="report_title_split" required>
                                                     <label>Description</label>
                                                     <textarea name="report_desc" id="report_desc_split" class="form-control"></textarea>
                                                     <label>Category</label>
-                                                    <select class="form-select" name="report_category"  id="report_category_split" aria-label="Default select example"></select>
+                                                    <select class="form-select" name="report_category"  id="report_category_split_holder" aria-label="Default select example"></select>
                                                     <a class='btn btn-success w-100 mt-4' onclick="split_report('<?= $id ?>','${selected_item_id}')"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
-                                                </div>
-                                                <div class="col">
-                                                    <h5 class='mb-3'>List Selected Item</h5>
-                                                    ${selected_item_name}
                                                 </div>
                                             </div>
                                         </div>
@@ -512,7 +513,6 @@
                                 </div>
                             </div>
                             <a class='btn btn-primary py-1' href="/doc/inventory/${selected_inventory_id}/custom"><i class="fa-solid fa-print"></i> Print Detail</a>
-                            <a class='btn btn-primary py-1'><i class="fa-solid fa-chart-simple"></i> Analyze</a>
                             <a class='btn btn-danger py-1' data-bs-toggle="modal" data-bs-target="#modalDeleteManyItem"><i class="fa-solid fa-trash"></i> Remove</a>
                             <div class="modal fade" id="modalDeleteManyItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -521,9 +521,10 @@
                                             <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete</h5>
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                         </div>
-                                        <div class="modal-body">
-                                            <p>Remove this inventory ${selected_item_name} from report "${report_title}"?</p>
-                                            <a class="btn btn-danger mt-4" onclick="delete_item('${selected_item_id}')">Yes, Delete</a>
+                                        <div class="modal-body text-start">
+                                            <p>Remove this inventory from report "${report_title}"?</p>
+                                            <div class="d-flex gap-2 mb-3">${selected_item_name}</div>
+                                            <a class="btn btn-danger" onclick="delete_item('${selected_item_id}')">Yes, Delete</a>
                                         </div>
                                     </div>
                                 </div>
@@ -536,6 +537,14 @@
             $(report_action_holder).empty()
         }
     }
+
+    $(document).on('click','#split_report-button',async function(){
+        const report_category = $('#report_category_holder').val()
+        await get_context_opt('report_category,report_category_split',token)
+        $('#report_category_holder').val(report_category)
+        $('#report_category_split_holder').val(report_category)
+    })
+
     $(document).on('change','.check-inventory', function(){
         checked_toggle_event()
     })

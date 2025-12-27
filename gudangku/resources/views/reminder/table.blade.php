@@ -46,9 +46,7 @@
                             <td>${el.reminder_context}</td>
                             <td class='text-center'>${getDateToContext(el.last_execute,'calendar')}</td>
                             <td>
-                                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalReRemind_${el.id}">
-                                    <i class="fa-solid fa-bell" style="font-size:var(--textXLG);"></i>
-                                </button>
+                                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalReRemind_${el.id}"><i class="fa-solid fa-bell"></i></button>
                                 <div class="modal fade" id="modalReRemind_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">

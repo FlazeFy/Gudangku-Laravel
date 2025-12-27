@@ -3,9 +3,9 @@
     <div class="row">
         <div class="col-lg-6 col-md-6">
             <label>Name</label>
-            <input type="text" name="inventory_name" id="inventory_name" class="form-control my-2"/>
+            <input type="text" name="inventory_name" id="inventory_name" class="form-control"/>
             <label>Category</label>
-            <select class="form-select my-2" name="inventory_category" id="inventory_category_holder" aria-label="Default select example"></select>
+            <select class="form-select" name="inventory_category" id="inventory_category_holder" aria-label="Default select example"></select>
             <div id='inventory_color_holder'></div>
         </div>
         <div class="col-lg-6 col-md-6">
@@ -31,7 +31,7 @@
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Standard Capacity</h6>
+            <h6 class="fw-bold mt-3">Standard Capacity</h6>
             <div class="row">
                 <div class="col-lg-3 col-md-4 col-sm-4 col-4">
                     <label>Volume</label>
@@ -44,7 +44,7 @@
             </div><hr>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Remaining Capacity</h6>
+            <h6 class="fw-bold mt-3">Remaining Capacity</h6>
             <div class="row">
                 <div class="col-lg-3 col-md-4 col-sm-4 col-4">
                     <label>Volume</label>
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <h6 class="fw-bold mt-3" style="font-size:var(--textXLG);">Placement</h6>
+    <h6 class="fw-bold mt-3">Placement</h6>
     <div class="row">
         <div class="col-md-4 col-sm-6 col-6">
             <label>Room</label>
@@ -115,7 +115,7 @@
                 if(data.inventory_image){
                     $('#inventory_color_holder').html(`
                         <label>Color</label>
-                        <input type="text" name="inventory_color" id="inventory_color" value='${data.inventory_color ?? ''}' class="form-control my-2" readonly/>
+                        <input type="text" name="inventory_color" id="inventory_color" value='${data.inventory_color ?? ''}' class="form-control" readonly/>
                     `)
                     $('#img_holder').empty().prepend(`
                         <div class='no-image-picker' title='Change Image' id='image-picker'>
@@ -143,28 +143,28 @@
                 $('#btn-toogle-fav-holder').html(`
                     <a class="btn btn-danger btn-toggle-favorite" onclick="fav_toogle_inventory_by_id('${id}', ${data.is_favorite == 0 ? '1' : '0'}, '<?= session()->get("token_key"); ?>', 
                         ()=>get_detail_inventory('${id}'))" style="${data.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
-                        <i class="fa-solid fa-heart mx-2" style="font-size:var(--textXLG);"></i>
+                        <i class="fa-solid fa-heart mx-2"></i>
                     </a>
                 `)
 
                 if(reminder){
-                    $('#reminder_holder').empty()
+                    $('#reminder_holder').empty().addClass('pt-2')
                     reminder.forEach(dt => {
                         $('#reminder_holder').append(`
-                            <div class="btn btn-primary w-100 text-start mt-3 mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReminder${dt.id}" aria-expanded="false" aria-controls="collapseExample">
-                                <div class='d-flex justify-content-between'>
-                                    <a>Reminder : ${dt.reminder_desc}</a>
-                                    <span class='rounded-pill bg-success px-2 py-1' style='font-size:var(--textMD); font-weight:600;'><i class="fa-solid fa-bell"></i> ${dt.reminder_type} at ${dt.reminder_context}</span>
+                            <div class="reminder-box" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReminder${dt.id}" aria-expanded="false" aria-controls="collapseExample">
+                                <div class='d-flex justify-content-between flex-wrap gap-2 text-white'>
+                                    <p class="mb-0"><b>Description :</b> ${dt.reminder_desc}</p>
+                                    <span class='rounded-pill bg-success px-2 py-1' style='font-size:var(--textMD);'><i class="fa-solid fa-bell"></i> ${dt.reminder_type} at ${dt.reminder_context}</span>
                                 </div>
                             </div>
                             <div class="collapse" id="collapseReminder${dt.id}">
-                                <div class="container py-0 ps-4 ms-5 w-auto" style='border-left: var(--spaceMini) solid var(--primaryColor); border-radius:0;'>
+                                <div class="container py-0 ps-4 ms-5 mb-4 w-auto" style='border-left: var(--spaceMini) solid var(--primaryColor); border-radius:0;'>
                                     <div class='d-flex justify-content-between'>
                                         <div>
                                             <p class='date-text mb-0'>Created At : ${getDateToContext(dt.created_at,'calendar')}</p>
                                             <p class='date-text mb-0'>Last Updated : ${dt.updated_at ? getDateToContext(dt.updated_at,'calendar') : '-'}</p>
                                         </div>
-                                        <a class='btn btn-danger' data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${dt.id}"><i class="fa-solid fa-trash"></i> Delete Reminder</a>
+                                        <a class='btn btn-danger py-1' data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${dt.id}"><i class="fa-solid fa-trash"></i> Delete</a>
                                         <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" id="modalDeleteReminder_${dt.id}" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -201,7 +201,7 @@
                         `)
                     });
                     $('#add_reminder-holder').html(`
-                        <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReminder"><i class="fa-solid fa-plus" style="font-size:var(--textXLG);"></i> Add Reminder</a>
+                        <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReminder"><i class="fa-solid fa-plus"></i> Add Reminder</a>
                     `)
                 } else {
                     $('#reminder_holder').html(`

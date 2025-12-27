@@ -77,6 +77,13 @@ button:hover, .btn:hover {
     text-decoration: none !important;
     color: var(--primaryColor);
 }
+#nav_scroll-holder {
+    max-width: 180px;
+    position: fixed; 
+    right: var(--spaceLG); 
+    bottom: var(--spaceLG); 
+    z-index: 1000;
+}
 #nav_scroll-holder button {
     font-size: var(--textXMD);
 }

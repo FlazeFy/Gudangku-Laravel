@@ -53,7 +53,7 @@
                         <div class='col-xl-3 col-lg-4 col-md-6 col-sm-12'>
                             <button class="btn-feature mb-4 position-relative inventory-item" style="${buttonStyle}" data-inventory="${encodeURIComponent(JSON.stringify(inventory))}">
                                 ${el.inventory_image ? `<img class="img img-fluid" style="border-radius: var(--roundedMD);" src="${el.inventory_image}" title="${el.inventory_image}">` : `<i class="fa-solid fa-box" style="font-size:90px;"></i>`}
-                                <h2 class="mt-3" style="font-size:var(--textXLG);">${el.inventory_name}</h2>
+                                <h2 class="mt-3">${el.inventory_name}</h2>
                                 <div class="mt-3 d-flex justify-content-center props-box">
                                     <span style="background: var(--successBG);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_category}</span>
                                     <span style="background: var(--primaryColor);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_vol} ${el.inventory_unit}</span>

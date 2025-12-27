@@ -117,7 +117,7 @@
                             <p>${el.inventory_desc ?? '<span class="no-data-message">- No Description Provided -<span>'}</p>
                             <h6 class='mt-2'>Unit : ${el.inventory_vol} ${el.inventory_unit}</h6>
                             <h6>Placement (Room / Storage) : ${el.inventory_room} / ${el.inventory_storage ?? '-'}</h6>
-                            <h6>Price : Rp. ${number_format(el.inventory_price, 0, ',', '.')}</h6>
+                            <h6>Price : Rp. ${el.inventory_price.toLocaleString()}</h6>
                         </button>
                     `
                 });
@@ -137,7 +137,7 @@
 
                 $('#chat-section').append(`
                     <div class="bubble bot">
-                        Also, from the inventory I found. The total price for all item is <b>Rp. ${number_format(data.found_total_price, 0, ',', '.')}</b>, and the average per item is <b>Rp. ${number_format(data.found_avg_price, 0, ',', '.')}</b>.
+                        Also, from the inventory I found. The total price for all item is <b>Rp. ${data.found_total_price.toLocaleString()}</b>, and the average per item is <b>Rp. ${data.found_avg_price.toLocaleString()}</b>.
                         From the category, we got this distribution :\n<br>
                         <div id='category_distribution'></div>${not_found_item_element}
                     </div>

@@ -61,7 +61,7 @@
                                                 <span class="p-2 rounded d-inline-flex align-items-center bg-danger">
                                                     <i class="fa-solid fa-heart"></i>
                                                 </span>` : ''}
-                                            <span class="p-2 rounded d-inline-flex align-items-center bg-success">Rp. ${dt.inventory_price ? number_format(dt.inventory_price, 0, ',', '.') : '-'}</span>
+                                            <span class="p-2 rounded d-inline-flex align-items-center bg-success">Rp. ${dt.inventory_price ? dt.inventory_price.toLocaleString() : '-'}</span>
                                             <span class="p-2 rounded d-inline-flex align-items-center bg-primary">${dt.inventory_vol} ${dt.inventory_unit}</span>
                                             ${dt.inventory_capacity_unit === 'percentage' ? `
                                                 <span class="p-2 rounded ${dt.inventory_capacity_vol > 30 ? 'bg-primary' : 'bg-danger'}">${dt.inventory_capacity_vol}%</span>` : ''}

@@ -118,10 +118,10 @@
 
         if (report_items.length == 0) {
             Swal.fire({
-                title: "Warning!",
-                text: 'Please select at least one inventory item.',
-                icon: "warning",
-            })
+                title: "Oops!",
+                text: "You must select at least one item",
+                icon: "warning"
+            });
             return
         }
 

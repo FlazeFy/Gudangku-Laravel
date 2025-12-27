@@ -42,7 +42,7 @@
     background: var(--darkColor);
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
-.report-box {
+.report-box, .reminder-box {
     border: 2px solid var(--primaryColor);
     padding: var(--spaceLG);
     border-radius: var(--roundedLG);

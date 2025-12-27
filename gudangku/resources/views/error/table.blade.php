@@ -39,7 +39,7 @@
                         <tr>
                             <td>${el.message}</td>
                             <td>
-                                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalDetailStack_${el.id}"><i class="fa-solid fa-circle-info" style="font-size:var(--textXLG);"></i></button>
+                                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalDetailStack_${el.id}"><i class="fa-solid fa-circle-info"></i></button>
                                 <div class="modal fade" id="modalDetailStack_${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">

@@ -10,9 +10,9 @@
     ?>" name="toogle_view"/>
     <button class="btn btn-primary" type="submit" id="toogle_view">
         @if($selected == 'table')
-            <i class="fa-solid fa-table" style="font-size:var(--textXLG);"></i> Table
+            <i class="fa-solid fa-table"></i> Table
         @elseif($selected == 'catalog')
-            <i class="fa-solid fa-box-archive" style="font-size:var(--textXLG);"></i> Catalog
+            <i class="fa-solid fa-box-archive"></i> Catalog
         @endif
     </button>
 </form>

@@ -16,7 +16,7 @@
                         <input class="form-control" type="file" id="file" name="file" accept='.png, .jpg, .jpeg, .pdf, .csv'>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                        <h5>List Selected Item</h5>
+                        <label>List Selected Item</label>
                         <div class="table-responsive">
                             <table class="table table-report">
                                 <thead>
@@ -49,11 +49,12 @@
         Swal.showLoading()
         let report_items = []
 
-        $('#item_holder').children(':not(.alert)').each(function () {
+        $('#item_holder').children('tr:not(:has(.alert))').each(function () {
+            const item_desc = $(this).find('textarea[name="item_desc[]"]').val()
             report_items.push({
                 'inventory_id': $(this).find('input[name="inventory_id[]"]').val() ?? null,
                 'item_name': $(this).find('input[name="item_name[]"]').val(),
-                'item_desc': $(this).find('textarea[name="item_desc[]"]').val() ?? null,
+                'item_desc': item_desc && item_desc.trim() !== "" ? item_desc : null,
                 'item_qty': $(this).find('input[name="item_qty[]"]').val() ?? 1,
                 'item_price': $(this).find('input[name="item_price[]"]').val() ?? null,
             });
@@ -89,19 +90,14 @@
                     });
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    Swal.hideLoading()
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Something error! Please call admin",
-                        icon: "error"
-                    });
+                    generate_api_error(response, true)
                 }
             })
         } else {
             Swal.fire({
                 title: "Oops!",
                 text: "You must select at least one item",
-                icon: "error"
+                icon: "warning"
             });
         }
     }

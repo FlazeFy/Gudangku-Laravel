@@ -1,5 +1,5 @@
 <a class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#modalSignOut" id="sign_out_btn">
-    <i class="fa-solid fa-right-from-bracket" style="font-size:var(--textXLG);"></i>
+    <i class="fa-solid fa-right-from-bracket"></i>
     <span class="d-none d-md-inline"> Sign Out</span>
 </a>
 <div class="modal fade" id="modalSignOut" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -23,7 +23,7 @@
         <hr>
         <div class="mb-3 d-flex flex-wrap gap-2">
             @include('components.back_button', ['route' => '/inventory/edit/'.$id])
-            <a class="btn btn-primary" onclick="generate_custom()"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Custom Print</a>
+            <a class="btn btn-primary" onclick="generate_custom()"><i class="fa-solid fa-print"></i> Custom Print</a>
         </div>
 
         <div id="render_area">
@@ -33,13 +33,13 @@
                     @include('analyze.inventory_price')
                     @include('analyze.inventory_category')
                 </div>
-                <div class="col">
+                <div class="col d-flex flex-column justify-content-center">
                     <div id='price-pie-chart-holder'></div>
                 </div>
             </div>
             <br><br>
             <div class="row">
-                <div class="col">
+                <div class="col d-flex flex-column justify-content-center">
                     <div id='price-line-chart-holder'></div>
                 </div>
                 <div class="col">
@@ -146,20 +146,20 @@
                     }
 
                     $('.inventory_unit_vol').text(`${data.inventory_vol} ${data.inventory_unit}`)
-                    $('.inventory_price').text(`Rp. ${number_format(data.inventory_price, 0, ',', '.')}`)
-                    $('#inventory_price_max').text(`Rp. ${number_format(data.inventory_price_analyze.max_inventory_price, 0, ',', '.')}`)
-                    $('#inventory_price_min').text(`Rp. ${number_format(data.inventory_price_analyze.min_inventory_price, 0, ',', '.')}`)
+                    $('.inventory_price').text(`Rp. ${data.inventory_price.toLocaleString()}`)
+                    $('#inventory_price_max').text(`Rp. ${data.inventory_price_analyze.max_inventory_price.toLocaleString()}`)
+                    $('#inventory_price_min').text(`Rp. ${data.inventory_price_analyze.min_inventory_price.toLocaleString()}`)
                     $('#diff_price_status').text(data.inventory_price_analyze.diff_status_average_to_price)
-                    $('#diff_price_ammount').text(`Rp. ${number_format(Math.abs(data.inventory_price_analyze.diff_ammount_average_to_price), 0, ',', '.')}`)
-                    $('#inventory_price_avg').text(`Rp. ${number_format(data.inventory_price_analyze.average_inventory_price, 0, ',', '.')}`)
-                    $('#inventory_price_avg_category').text(`Rp. ${number_format(data.inventory_category_analyze.average_price, 0, ',', '.')}`)
-                    $('#inventory_price_avg_merk').text(`Rp. ${number_format(data.inventory_merk_analyze.average_price, 0, ',', '.')}`)
+                    $('#diff_price_ammount').text(`Rp. ${Math.abs(data.inventory_price_analyze.diff_ammount_average_to_price).toLocaleString()}`)
+                    $('#inventory_price_avg').text(`Rp. ${data.inventory_price_analyze.average_inventory_price.toLocaleString()}`)
+                    $('#inventory_price_avg_category').text(`Rp. ${data.inventory_category_analyze.average_price.toLocaleString()}`)
+                    $('#inventory_price_avg_merk').text(`Rp. ${data.inventory_merk_analyze.average_price.toLocaleString()}`)
                     $('#total_inventory_category').text(data.inventory_category_analyze.total)
                     $('#total_inventory_merk').text(data.inventory_merk_analyze.total)
                     $('#inventory_storage_rack').html(`${data.inventory_storage && `storage <b>${data.inventory_storage}</b>`}${data.inventory_rack && `, rack <b>${data.inventory_rack}</b>`}`)
                     $('#total_inventory_room').text(data.inventory_room_analyze.total)
-                    $('#inventory_price_avg_room').text(`Rp. ${number_format(data.inventory_room_analyze.average_price, 0, ',', '.')}`)
-                    $('#inventory_price_avg_unit').text(`Rp. ${number_format(data.inventory_unit_analyze.average_price, 0, ',', '.')}`)
+                    $('#inventory_price_avg_room').text(`Rp. ${data.inventory_room_analyze.average_price.toLocaleString()}`)
+                    $('#inventory_price_avg_unit').text(`Rp. ${data.inventory_unit_analyze.average_price.toLocaleString()}`)
                     $('#total_inventory_unit').text(data.inventory_unit_analyze.total)
 
                     const data_price_pie_chart = [
@@ -206,7 +206,18 @@
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     if(response.status != 404){
                         generate_api_error(response, true)
-                    } 
+                    } else {
+                        Swal.fire({
+                            title: "Failed!",
+                            text: `${response.responseJSON?.message}. Back to Home?`,
+                            icon: "error",
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href='/'
+                            } 
+                        });
+                    }
                 }
             });
         }

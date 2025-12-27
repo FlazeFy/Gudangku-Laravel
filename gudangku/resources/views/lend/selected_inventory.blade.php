@@ -1,4 +1,4 @@
-<a class="btn btn-primary mb-3 me-2" id="selected-inventory-modal-button" data-bs-target="#modalBorrowInventory" data-bs-toggle="modal"><i class="fa-solid fa-cart-shopping" style="font-size:var(--textXLG);"></i> <b id="total-item-selected">0</b> @if(!$isMobile) Item Selected @endif</a>
+<a class="btn btn-primary mb-3 me-2" id="selected-inventory-modal-button" data-bs-target="#modalBorrowInventory" data-bs-toggle="modal"><i class="fa-solid fa-cart-shopping"></i> <b id="total-item-selected">0</b> @if(!$isMobile) Item Selected @endif</a>
 <div class="modal fade" id="modalBorrowInventory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -107,7 +107,7 @@
             selected.forEach(el => {
                 $('#selected-inventory-holder').append(`
                     <button class="btn-feature mb-2 text-start" style="padding:var(--spaceXMD) !important;">
-                        <h2 style="font-size:var(--textXLG);">${el.inventory_name}</h2>
+                        <h2>${el.inventory_name}</h2>
                         <div class="mt-2 d-flex text-start props-box">
                             <span style="background: var(--successBG);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_category}</span>
                             <span style="background: var(--primaryColor);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_room}</span>

@@ -5,7 +5,7 @@
             <div class="col-lg-6 col-md-6">
                 <input type="text" name="inventory_name" id='inventory_name' class="form-control form-validated mb-2" maxlength="75"/>
                 <label>Category</label>
-                <select class="form-select mb-2" name="inventory_category" aria-label="Default select example" id="inventory_category_holder"></select>
+                <select class="form-select" name="inventory_category" aria-label="Default select example" id="inventory_category_holder"></select>
                 <label>Color</label>
                 <input type="text" name="inventory_color" id="inventory_color" class="form-control"/>
             </div>

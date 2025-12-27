@@ -8,13 +8,18 @@
 
 @section('content')
     <div class="content">
-        @if(session()->get("token_key"))
-            @include('components.profile')
-            @include('components.notification')
-        @endif
-        <h1 class="main-page-title">Help</h1>
-        <div class="d-flex justify-content-<?php if(!$isMobile){ echo "start"; } else { echo "end"; } ?>">
-            <a class="btn btn-danger btn-main top" href="/"><i class="fa-solid fa-arrow-left" style="font-size:var(--textXLG);"></i> @if(!$isMobile) Back @endif</a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="main-page-title">Help</h1>
+            @if(session()->get("token_key"))
+                <div>
+                    @include('components.profile')
+                    @include('components.notification')
+                </div>
+            @endif
+        </div>
+        <hr>  
+        <div class="mb-3 d-flex flex-wrap gap-2">      
+            @include('components.back_button', ['route' => '/'])
         </div>
         @include('help.list')
     </div>

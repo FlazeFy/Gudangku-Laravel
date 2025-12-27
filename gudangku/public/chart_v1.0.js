@@ -273,7 +273,7 @@ const generate_table_context_total = (holder, data, key_currency) => {
         data.forEach(el => {
             tbody += '<tr>'
             keys.forEach(key => {
-                tbody += `<td>${key.includes('price') || (key.includes(key_currency) && key_currency) ? `Rp. ${number_format(el[key], 0, ',', '.')}` : el[key]}</td>`
+                tbody += `<td>${key.includes('price') || (key.includes(key_currency) && key_currency) ? `Rp. ${el[key].toLocaleString()}` : el[key]}</td>`
             });
             tbody += '</tr>'
         });

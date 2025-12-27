@@ -23,7 +23,7 @@
             @include('components.back_button', ['route' => '/'])
             <form action='/user/save_as_csv' method='POST' class='d-inline'>
                 @csrf
-                <button class="btn btn-primary"><i class="fa-solid fa-print" style="font-size:var(--textXLG);"></i> Print</button>
+                <button class="btn btn-primary"><i class="fa-solid fa-print"></i> Print</button>
             </form>
         </div>
 

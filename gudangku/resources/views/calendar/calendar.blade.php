@@ -240,7 +240,7 @@
                     data.forEach(el => {
                         events.push({
                             groupId: el.id,
-                            title: `${el.inventory_name} | Rp. ${el.inventory_price ? number_format(el.inventory_price, 0, ',', '.') : '-'}`,
+                            title: `${el.inventory_name} | Rp. ${el.inventory_price ? el.inventory_price.toLocaleString() : '-'}`,
                             start: getDateToContext(el.created_at, 'calendar'),
                             end: getDateToContext(el.created_at, 'calendar')
                         })
