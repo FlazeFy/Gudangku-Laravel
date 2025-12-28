@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Rules;
-
 use Illuminate\Contracts\Validation\Rule;
 
 class DictionaryType implements Rule

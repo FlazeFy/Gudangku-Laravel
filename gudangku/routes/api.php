@@ -105,6 +105,7 @@ Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/copy', [CommandsReminderController::class, 'postCopyReminder']);
     Route::post('/re_remind', [CommandsReminderController::class, 'postReRemind']);
     Route::delete('/{id}', [CommandsReminderController::class, 'hardDeleteReminderById']);
+    Route::put('/{id}', [CommandsReminderController::class, 'putReminderById']);
 });
 
 Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {

@@ -2,6 +2,8 @@
 namespace App\Helpers;
 use Endroid\QrCode\Builder\Builder;
 use Illuminate\Support\Str;
+
+// Helper
 use App\Helpers\Generator;
 
 class QRGenerate

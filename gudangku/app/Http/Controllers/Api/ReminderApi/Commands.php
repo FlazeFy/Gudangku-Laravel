@@ -205,6 +205,184 @@ class Commands extends Controller
                     } else {
                         return response()->json([
                             'status' => 'failed',
+                            'message' => Generator::getMessageTemplate("not_found", "inventory"),
+                        ], Response::HTTP_NOT_FOUND);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'reminder with same type and context has been used',
+                    ], Response::HTTP_CONFLICT);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/reminder/{id}",
+     *     summary="Put Update Reminder By ID",
+     *     description="This request is used to update a reminder by using given reminder's `id` and `inventory_id`. The updated fields are `reminder_type`, `reminder_context`, and `reminder_desc`. This request interacts with the MySQL database, sync with Google Calendar, has a protected routes, and audited activity (history).",
+     *     tags={"Reminder"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Reminder ID",
+     *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"reminder_type","reminder_context","reminder_desc","inventory_id"},
+     *             @OA\Property(property="reminder_type", type="string", example="Every Week"),
+     *             @OA\Property(property="reminder_context", type="string", example="Every Day 1"),
+     *             @OA\Property(property="reminder_desc", type="string", example="testing reminder"),
+     *             @OA\Property(property="inventory_id", type="string", example="5994fb22-30ae-c088-3543-8d12f487539a")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="reminder updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="reminder updated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="reminder not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="reminder not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="reminder with same type and context has been used",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="reminder with same type and context has been used")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="{validation_msg}",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="{field validation message}")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function putReminderById(Request $request, $id)
+    {
+        try{
+            $user_id = $request->user()->id;
+
+            // Validate request body
+            $validator = Validation::getValidateReminder($request,'update');
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $reminder_type = $request->reminder_type;
+                $reminder_context = $request->reminder_context;
+                $inventory_id = $request->inventory_id;
+                $reminder_desc = $request->reminder_desc;
+
+                // Get reminder data
+                $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id,$id);
+                if(!$is_exist){
+                    // Update reminder
+                    $res = ReminderModel::updateReminderByID([
+                        'reminder_type' => $reminder_type,
+                        'reminder_context' => $reminder_context,
+                        'reminder_desc' => $reminder_desc]
+                    , $id, $user_id);
+
+                    if($res > 0){
+                        // Get google token by user
+                        $google_token = GoogleTokensModel::getGoogleTokensByUserId($user_id);
+                        
+                        // Get inventory name by ID
+                        $inventory = InventoryModel::getInventoryNameById($inventory_id);
+                        if($inventory === null){
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("not_found", "inventory"),
+                            ], Response::HTTP_NOT_FOUND);
+                        }
+                            
+                        if($google_token){
+                            $reminder_desc = "$reminder_desc for inventory $inventory->inventory_name";
+                            $access_token = $google_token->access_token;
+
+                            // Define event in google calendar
+                            if($reminder_type == 'Every Day'){
+                                $hour = (int) str_replace("Every ", "", $reminder_context);
+                                $start = now()->setTime($hour, 0)->toRfc3339String();
+
+                                GoogleCalendar::createRecurringEvent($access_token, $reminder_desc, $start,'DAILY');
+                            } else if ($reminder_type == 'Every Week') {
+                                $day = (int) str_replace("Every Day ", "", $reminder_context);
+                                $weekdayMap = [1 => 'MO', 2 => 'TU', 3 => 'WE', 4 => 'TH', 5 => 'FR', 6 => 'SA', 7 => 'SU'];
+                                $byDay = $weekdayMap[$day];
+                                $carbonDayMap = ['MO' => 'Monday','TU' => 'Tuesday','WE' => 'Wednesday','TH' => 'Thursday','FR' => 'Friday','SA' => 'Saturday','SU' => 'Sunday',];
+                                $start = now()->next($carbonDayMap[$byDay])->setTime(4, 0)->toRfc3339String();
+                            
+                                GoogleCalendar::createRecurringEvent($access_token, $reminder_desc, $start, 'WEEKLY', $byDay);
+                            } else if($reminder_type == 'Every Month'){
+                                $day = (int) str_replace("Every ", "", $reminder_context);
+                                $start = now()->startOfMonth()->addDays($day - 1)->setTime(9, 0)->toRfc3339String();
+
+                                GoogleCalendar::createRecurringEvent($access_token, $reminder_desc,$start,'MONTHLY',null,$byMonthDay = $day);
+                            } else if($reminder_type == 'Every Year'){
+                                [$day, $month] = explode(' ', str_replace("Every ", "", $reminder_context));
+                                $monthMap = ['Jan'=>1, 'Feb'=>2, 'Mar'=>3, 'Apr'=>4, 'May'=>5, 'Jun'=>6,'Jul'=>7, 'Aug'=>8, 'Sep'=>9, 'Oct'=>10, 'Nov'=>11, 'Dec'=>12];
+                                $monthNumber = $monthMap[$month];
+                                $start = now()->setDate(now()->year, $monthNumber, (int)$day)->setTime(9, 0)->toRfc3339String();
+
+                                GoogleCalendar::createRecurringEvent($access_token, $reminder_desc,$start,'YEARLY',null,null,$byMonth = $monthNumber,$byMonthDay = (int)$day);
+                            }         
+                        }               
+
+                        // History
+                        Audit::createHistory('Update Reminder', $reminder_desc, $user_id);
+
+                        // Return success response
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => Generator::getMessageTemplate("update", $this->module),
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
                             'message' => Generator::getMessageTemplate("not_found", $this->module),
                         ], Response::HTTP_NOT_FOUND);
                     }

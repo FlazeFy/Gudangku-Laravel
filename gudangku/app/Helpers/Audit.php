@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+// Model
 use App\Models\HistoryModel;
 
 class Audit

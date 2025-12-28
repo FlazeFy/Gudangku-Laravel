@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
+// Model
 use App\Models\DictionaryModel;
 
 class DictionarySeeder extends Seeder
@@ -28,9 +29,9 @@ class DictionarySeeder extends Seeder
         $now = Carbon::now();
 
         // Note : reminder_context are generate manually after user select reminder_type
-
         foreach ($dictionaries as $type => $dt) {
             foreach ($dt as $name) {
+                // Factory
                 DictionaryModel::create([
                     'dictionary_type' => $type,
                     'dictionary_name' => $name,

@@ -3,6 +3,8 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use DateTime;
+
+// Model
 use App\Models\UserModel;
 
 class Generator

@@ -28,6 +28,7 @@ class InventoryLayoutSeeder extends Seeder
 
             foreach($inventories as $in) {
                 $layout = Generator::getRandomLayout();
+                // Factory
                 InventoryLayoutModel::createInventoryLayout($in->inventory_room, $in->inventory_storage, $ran === 1 ? fake()->paragraph() : null, $layout, $us->id);
             }
         }

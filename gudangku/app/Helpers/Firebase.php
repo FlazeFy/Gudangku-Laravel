@@ -1,8 +1,10 @@
 <?php
 namespace App\Helpers;
-use App\Helpers\Generator;
 use Kreait\Firebase\Factory;
 use Illuminate\Support\Facades\Storage;
+
+// Helper
+use App\Helpers\Generator;
 
 class Firebase
 {
