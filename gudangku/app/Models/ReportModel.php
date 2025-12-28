@@ -74,7 +74,7 @@ class ReportModel extends Model
             ->groupby('report.id')
             ->orderby('report.created_at','desc');
 
-        // Search by inventory name
+        // Search by inventory name or inventory ID
         if ($search_item) {
             $res = $res->orWhere(function($query) use ($search_item, $id) {
                 $query->whereRaw('LOWER(inventory_name) LIKE ?', ['%' . strtolower($search_item) . '%'])

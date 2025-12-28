@@ -153,16 +153,16 @@ Route::prefix('/v1/dictionary')->middleware(['auth:sanctum'])->group(function ()
 
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'getAllReport']);
-    Route::get('/{search}/{id}', [QueriesReportController::class, 'getMyReportByInventory']);
+    Route::get('/{search}/{id}', [QueriesReportController::class, 'getReportByInventoryNameOrInventoryID']);
     Route::post('/', [CommandsReportController::class, 'postReport']);
     Route::post('/item/{id}', [CommandsReportController::class, 'postReportItem']);
     Route::prefix('/report_image')->group(function () {
-        Route::post('/{id}', [CommandsReportController::class, 'putReportImageById']);
-        Route::delete('/destroy/{report_id}/{image_id}', [CommandsReportController::class, 'hardDeleteReportImageById']);
+        Route::post('/{id}', [CommandsReportController::class, 'postUpdateReportImageByReportID']);
+        Route::delete('/destroy/{report_id}/{image_id}', [CommandsReportController::class, 'hardDeleteReportImageByReportIDAndImageID']);
     });
     Route::prefix('/detail/item/{id}')->group(function (){
-        Route::get('/', [QueriesReportController::class, 'getMyReportDetail']);
-        Route::get('/doc', [QueriesReportController::class, 'getDocumentById']);
+        Route::get('/', [QueriesReportController::class, 'getReportDetailByID']);
+        Route::get('/doc', [QueriesReportController::class, 'getReportDetailDocFormatByID']);
     });
     Route::prefix('/update')->group(function (){
         Route::put('/report/{id}', [CommandsReportController::class, 'putUpdateReportById']);

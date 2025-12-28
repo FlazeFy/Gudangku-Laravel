@@ -1,11 +1,12 @@
 <?php
 
 namespace Tests\Feature;
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use GuzzleHttp\Client;
 use Tests\TestCase;
+
+// Helper
 use App\Helpers\Audit;
 
 class HistoryTest extends TestCase

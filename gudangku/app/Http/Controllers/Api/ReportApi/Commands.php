@@ -938,7 +938,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function putReportImageById(Request $request, $id)
+    public function postUpdateReportImageByReportID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -1099,7 +1099,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function hardDeleteReportImageById(Request $request, $report_id, $image_id)
+    public function hardDeleteReportImageByReportIDAndImageID(Request $request, $report_id, $image_id)
     {
         try{
             $user_id = $request->user()->id;

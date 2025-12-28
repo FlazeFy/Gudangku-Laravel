@@ -65,23 +65,23 @@
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12 pt-2 d-flex align-items-center justify-content-center text-center" id="last_added-section">
         <div>
-            <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Last Added</h6>
+            <h6 class="dashboard-subtitle d-md-none">Last Added</h6>
             <h3 class="dashboard-second" id="last_added"></h3>
             <h3 class="dashboard-subtitle d-none d-md-block">Last Added</h3>
         </div>
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12 pt-2 d-flex align-items-center justify-content-center text-center" id="most_category_total-section">
         <div>
-            <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Most Category</h6>
+            <h6 class="dashboard-subtitle d-md-none">Most Category</h6>
             <h3 class="dashboard-second">(<span id="most_category_total"></span>) <span id="most_category_context"></span></h3>
             <h3 class="dashboard-subtitle d-none d-md-block">Most Category</h3>
         </div>
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12 pt-2 d-flex align-items-center justify-content-center text-center mx-auto" id="highest_price_name-section">
         <div>
-            <h6 class="dashboard-subtitle d-md-none" style="font-size:var(--textJumbo)">Highest Price</h6>
-            <h3 class="dashboard-second" style="font-size: calc(var(--textXJumbo) * 1.2)">(<span id="highest_price_name"></span>) <span id="highest_price"></span></h3>
-            <h3 class="dashboard-subtitle d-none d-md-block">Highest Price</h3><br>
+            <h6 class="dashboard-subtitle d-md-none">Most Expensive</h6>
+            <h3 class="dashboard-second">(<span id="highest_price_name"></span>) <span id="highest_price"></span></h3>
+            <h3 class="dashboard-subtitle d-none d-md-block">Most Expensive</h3><br>
         </div>
     </div>
 </div>

@@ -153,7 +153,7 @@ class AuditSchedule
         if($dashboard){
             foreach($dashboard as $index => $dt){
                 $message_template = "Hello $dt->username, here's the weekly dashboard we've gathered so far from your inventory :";
-                $message = "$message_template\n\n- Total Item : $dt->total_inventory\n- Favorite Item : $dt->total_favorite\n- Low Capacity : $dt->total_low_capacity\n- Last Added : $dt->last_created_inventory_name\n- Most Category : $dt->most_category ($dt->most_category_count)\n- The Highest Price : Rp. ".number_format($dt->max_price)." ($dt->max_price_inventory_name)";
+                $message = "$message_template\n\n- Total Item : $dt->total_inventory\n- Favorite Item : $dt->total_favorite\n- Low Capacity : $dt->total_low_capacity\n- Last Added : $dt->last_created_inventory_name\n- Most Category : $dt->most_category ($dt->most_category_count)\n- The Most Expensive : Rp. ".number_format($dt->max_price)." ($dt->max_price_inventory_name)";
 
                 if($dt->telegram_user_id && $dt->telegram_is_valid == 1){
                     $response = Telegram::sendMessage([

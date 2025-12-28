@@ -153,17 +153,17 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/v1/report/{search}/{id}",
+     *     path="/api/v1/report/{search}/{inventory_id}",
      *     summary="Get All Report By Inventory",
      *     description="This request is used to get all report found in a inventory by inventory name and report id. This request interacts with the MySQL database, have a protected routes, and a pagination.",
      *     tags={"Report"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="id",
+     *         name="inventory_id",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="string"),
-     *         description="Report ID",
+     *         description="Inventory ID",
      *         example="e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9",
      *     ),
      *     @OA\Parameter(
@@ -225,12 +225,12 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getMyReportByInventory(Request $request,$search,$id)
+    public function getReportByInventoryNameOrInventoryID(Request $request,$search,$id)
     {
         try{
             $user_id = $request->user()->id;
 
-            // Get my report
+            // Get report by inventory name or inventory ID
             $res = ReportModel::getMyReport($user_id,$search,null,$id,null);
             if (count($res) > 0) {
                 // Build pagination
@@ -337,7 +337,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function getMyReportDetail(Request $request,$id)
+    public function getReportDetailByID(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
@@ -443,7 +443,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function getDocumentById(Request $request,$id)
+    public function getReportDetailDocFormatByID(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;

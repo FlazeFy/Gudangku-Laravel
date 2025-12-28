@@ -7640,7 +7640,7 @@
                 ],
                 "summary": "Post Update Report Image By Id",
                 "description": "This request is used to update report image by given report's `ID`. The updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
-                "operationId": "4d827104fd093fea76491e173c2fefb0",
+                "operationId": "2f736e11d27a222839461e8b66868d87",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -7761,7 +7761,7 @@
                 ],
                 "summary": "Delete Report Image By Image ID",
                 "description": "This request is used to delete an image in report by given `report_id` and `image_id` for the image. Updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
-                "operationId": "a54afa726324de9d91d1236794a73b5a",
+                "operationId": "8830155a3780da31a558de6cce809fda",
                 "parameters": [
                     {
                         "name": "report_id",
@@ -8515,19 +8515,19 @@
                 ]
             }
         },
-        "/api/v1/report/{search}/{id}": {
+        "/api/v1/report/{search}/{inventory_id}": {
             "get": {
                 "tags": [
                     "Report"
                 ],
                 "summary": "Get All Report By Inventory",
                 "description": "This request is used to get all report found in a inventory by inventory name and report id. This request interacts with the MySQL database, have a protected routes, and a pagination.",
-                "operationId": "a1cb0630dcbcb1daf9d91e827dec2aec",
+                "operationId": "ac5366a14cbf300a6d14f6f6abeea101",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "inventory_id",
                         "in": "path",
-                        "description": "Report ID",
+                        "description": "Inventory ID",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -8699,7 +8699,7 @@
                 ],
                 "summary": "Get report detail by id",
                 "description": "This request is used to get report detail by id and all items found in the report. This request interacts with the MySQL database, and has protected routes.",
-                "operationId": "913aff2ee4e565e025fe9d7cd080208c",
+                "operationId": "14d60176fc059b24205bdf3459f9b006",
                 "parameters": [
                     {
                         "name": "id",
@@ -8884,7 +8884,7 @@
                 ],
                 "summary": "Get report detail document html format by id",
                 "description": "This request is used to get report detail by id and all items found in the report. This request interacts with the MySQL database, and has protected routes.",
-                "operationId": "3378c5da101c77d310276fbee9682f46",
+                "operationId": "efba969e487f7dbf76c540e053b2dc15",
                 "parameters": [
                     {
                         "name": "id",

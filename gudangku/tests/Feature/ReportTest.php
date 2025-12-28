@@ -1,11 +1,14 @@
 <?php
 
 namespace Tests\Feature;
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use GuzzleHttp\Client;
 use Tests\TestCase;
+
+// Helper
 use App\Helpers\Audit;
 
 class ReportTest extends TestCase
@@ -206,13 +209,13 @@ class ReportTest extends TestCase
         Audit::auditRecordSheet("Test - Get All Report", "TC-XXX", 'TC-XXX test_get_all_report', json_encode($data));
     }
 
-    public function test_get_my_report_by_inventory(): void
+    public function test_get_report_by_inventory_name_or_inventory_id(): void
     {
         // Exec
         $token = $this->login_trait("user");
-        $item_name = "Herborist%20Aloe%20Vera%20Gel";
+        $search = "Herborist%20Aloe%20Vera%20Gel";
         $id = "29e2754c-667a-0f32-2d26-cd04849f276c";
-        $response = $this->httpClient->get("$item_name/$id", [
+        $response = $this->httpClient->get("$search/$id", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
@@ -469,7 +472,6 @@ class ReportTest extends TestCase
         ]);
 
         $data = json_decode($response->getBody(), true);
-        print($response->getBody());
 
         // Test Parameter
         $this->assertEquals(201, $response->getStatusCode());
@@ -480,5 +482,74 @@ class ReportTest extends TestCase
 
         Audit::auditRecordText("Test - Post Report Item", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Post Report Item", "TC-XXX", 'TC-XXX test_post_report_item', json_encode($data));
+    }
+
+    public function test_post_update_report_image_by_report_id(): void
+    {
+        // Exec
+        $id = "9be458e0-48da-d13f-0b41-ef4ce8a4bcad";
+        $token = $this->login_trait("user");
+
+        // Create fake images
+        $img1 = UploadedFile::fake()->image('image1.jpg');
+        $img2 = UploadedFile::fake()->image('image2.jpg');
+
+        $form = [
+            [
+                'name'     => 'report_image[]',
+                'contents' => fopen($img1->getPathname(), 'r'),
+                'filename' => 'image1.jpg',
+            ],
+            [
+                'name'     => 'report_image[]',
+                'contents' => fopen($img2->getPathname(), 'r'),
+                'filename' => 'image2.jpg',
+            ],
+        ];
+
+        $response = $this->httpClient->post("report_image/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'multipart' => $form,
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('report updated', $data['message']);
+
+        Audit::auditRecordText("Test - Post Update Report Image By Report ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Report Report Image By Report ID", "TC-XXX", 'TC-XXX test_post_update_report_image_by_report_id', json_encode($data));
+    }
+
+    public function test_hard_delete_report_image_by_report_id_and_image_id(): void
+    {
+        // Exec
+        $report_id = "9be458e0-48da-d13f-0b41-ef4ce8a4bcad";
+        $image_id = "5470b8b0-dfbe-bfa9-1aee-e2f156f94d35";
+        $token = $this->login_trait("user");
+
+        $response = $this->httpClient->delete("report_image/destroy/$report_id/$image_id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('report image deleted', $data['message']);
+
+        Audit::auditRecordText("Test - Hard Delete Report Image By Report ID And Image ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Hard Delete Report Image By Report ID And Image ID", "TC-XXX", 'TC-XXX test_hard_delete_report_image_by_report_id_and_image_id', json_encode($data));
     }
 }
