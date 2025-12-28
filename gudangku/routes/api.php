@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// Controller API
 use App\Http\Controllers\Api\AuthApi\Commands as CommandAuthApi;
 use App\Http\Controllers\Api\InventoryApi\Queries as QueriesInventoryController;
 use App\Http\Controllers\Api\InventoryApi\Commands as CommandsInventoryController;
@@ -25,10 +26,40 @@ use App\Http\Controllers\Api\LendApi\Queries as QueriesLendController;
 ######################### Public Route #########################
 
 Route::post('/v1/login', [CommandAuthApi::class, 'postLogin']);
+
 Route::prefix('/v1/register')->group(function () {
     Route::post('/token', [CommandsUserController::class, 'postRegisterValidationToken']);
     Route::post('/account', [CommandsUserController::class, 'postValidateRegister']);
     Route::post('/regen_token', [CommandsUserController::class, 'postRegenerateRegisterToken']);
+});
+
+Route::prefix('/v1/lend')->group(function () {
+    Route::prefix('/inventory/{lend_id}')->group(function () {
+        Route::get('/', [QueriesLendController::class, 'getLendInventory']);
+        Route::post('/', [CommandsLendController::class, 'postBorrowInventory']);
+    });
+});
+
+Route::prefix('/v1/dictionary')->group(function () {
+    Route::get('/type/{type}', [QueriesDictionaryController::class, 'getDictionaryByType']);
+});
+
+Route::prefix('/v1/stats')->group(function () {
+    Route::prefix('/inventory')->group(function () {
+        Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'getTotalInventoryCreatedPerMonth']);
+        Route::get('/total_by_category/{type}', [QueriesStatsController::class, 'getTotalInventoryByCategory']);
+        Route::get('/total_by_room/{type}', [QueriesStatsController::class, 'getTotalInventoryByRoom']);
+        Route::get('/total_by_favorite/{type}', [QueriesStatsController::class, 'getTotalInventoryByFavorite']);
+        Route::get('/total_by_merk/{type}', [QueriesStatsController::class, 'getTotalInventoryByMerk']);
+        Route::get('/favorite_inventory_comparison', [QueriesStatsController::class, 'getTotalFavoriteInventoryComparison']);
+        Route::get('/low_capacity_inventory_comparison', [QueriesStatsController::class, 'getTotalLowCapacityInventoryComparison']);
+    });
+    Route::prefix('/report')->group(function () {
+        Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'getTotalReportCreatedPerMonth']);
+    });
+    Route::prefix('/history')->group(function () {
+        Route::get('/total_activity_per_month/{year}', [QueriesStatsController::class, 'getTotalActivityPerMonth']);
+    });
 });
 
 ######################### Private Route #########################
@@ -37,8 +68,10 @@ Route::post('/v1/logout', [CommandAuthApi::class, 'postLogout'])->middleware(['a
 
 Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesInventoryController::class, 'getAllInventory']);
-    Route::get('/catalog', [QueriesInventoryController::class, 'getInventoryCatalog']);
-    Route::get('/catalog/{view}/{catalog}', [QueriesInventoryController::class, 'getInventoryByCatalog']);
+    Route::prefix('/catalog')->group(function () {
+        Route::get('/', [QueriesInventoryController::class, 'getInventoryCatalog']);
+        Route::get('/{view}/{catalog}', [QueriesInventoryController::class, 'getInventoryByCatalog']);
+    });
     Route::get('/search/by_room_storage/{room}/{storage}', [QueriesInventoryController::class, 'getInventoryByStorage']);
     Route::get('/list', [QueriesInventoryController::class, 'getListInventory']);
     Route::get('/room', [QueriesInventoryController::class, 'getListRoom']);
@@ -80,24 +113,6 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
     });
 });
 
-Route::prefix('/v1/stats')->group(function () {
-    Route::prefix('/inventory')->group(function () {
-        Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'getTotalInventoryCreatedPerMonth']);
-        Route::get('/total_by_category/{type}', [QueriesStatsController::class, 'getTotalInventoryByCategory']);
-        Route::get('/total_by_room/{type}', [QueriesStatsController::class, 'getTotalInventoryByRoom']);
-        Route::get('/total_by_favorite/{type}', [QueriesStatsController::class, 'getTotalInventoryByFavorite']);
-        Route::get('/total_by_merk/{type}', [QueriesStatsController::class, 'getTotalInventoryByMerk']);
-        Route::get('/favorite_inventory_comparison', [QueriesStatsController::class, 'getTotalFavoriteInventoryComparison']);
-        Route::get('/low_capacity_inventory_comparison', [QueriesStatsController::class, 'getTotalLowCapacityInventoryComparison']);
-    });
-    Route::prefix('/report')->group(function () {
-        Route::get('/total_created_per_month/{year}', [QueriesStatsController::class, 'getTotalReportCreatedPerMonth']);
-    });
-    Route::prefix('/history')->group(function () {
-        Route::get('/total_activity_per_month/{year}', [QueriesStatsController::class, 'getTotalActivityPerMonth']);
-    });
-});
-
 Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/mark', [QueriesReminderController::class, 'getReminderMark']);
     Route::get('/history', [QueriesReminderController::class, 'getReminderHistory']);
@@ -121,11 +136,6 @@ Route::prefix('/v1/lend')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/qr/history', [QueriesLendController::class, 'getLendHistory']);
 });
 
-Route::prefix('/v1/lend')->group(function () {
-    Route::get('/inventory/{lend_id}', [QueriesLendController::class, 'getLendInventory']);
-    Route::post('/inventory/{lend_id}', [CommandsLendController::class, 'postBorrowInventory']);
-});
-
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesHistoryController::class, 'getAllHistory']);
     Route::delete('/destroy/{id}', [CommandsHistoryController::class, 'hardDeleteHistoryById']);
@@ -136,10 +146,9 @@ Route::prefix('/v1/error')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('/destroy/{id}', [CommandsErrorController::class, 'hardDeleteErrorById']);
 });
 
-Route::prefix('/v1/dictionary')->group(function () {
-    Route::get('/type/{type}', [QueriesDictionaryController::class, 'getDictionaryByType']);
-    Route::post('/', [CommandsDictionaryController::class, 'postDictionary'])->middleware(['auth:sanctum']);
-    Route::delete('/{id}', [CommandsDictionaryController::class, 'hardDeleteDictionaryById'])->middleware(['auth:sanctum']);
+Route::prefix('/v1/dictionary')->middleware(['auth:sanctum'])->group(function () {
+    Route::post('/', [CommandsDictionaryController::class, 'postDictionary']);
+    Route::delete('/{id}', [CommandsDictionaryController::class, 'hardDeleteDictionaryById']);
 });
 
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
@@ -147,8 +156,10 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/{search}/{id}', [QueriesReportController::class, 'getMyReportByInventory']);
     Route::post('/', [CommandsReportController::class, 'postReport']);
     Route::post('/item/{id}', [CommandsReportController::class, 'postReportItem']);
-    Route::post('/report_image/{id}', [CommandsReportController::class, 'putReportImageById']);
-    Route::delete('/report_image/destroy/{report_id}/{image_id}', [CommandsReportController::class, 'hardDeleteReportImageById']);
+    Route::prefix('/report_image')->group(function () {
+        Route::post('/{id}', [CommandsReportController::class, 'putReportImageById']);
+        Route::delete('/destroy/{report_id}/{image_id}', [CommandsReportController::class, 'hardDeleteReportImageById']);
+    });
     Route::prefix('/detail/item/{id}')->group(function (){
         Route::get('/', [QueriesReportController::class, 'getMyReportDetail']);
         Route::get('/doc', [QueriesReportController::class, 'getDocumentById']);

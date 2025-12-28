@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Controller Page
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\RegisterController;
@@ -45,6 +46,33 @@ Route::prefix('/auth')->group(function (){
     Route::get('/google/callback', [LoginController::class, 'login_google_callback']);
 });
 
+Route::prefix('/lend')->group(function () {
+    Route::get('/{id}', [LendController::class, 'index']);
+});
+
+Route::prefix('/embed')->group(function () {
+    Route::get('/distribution_inventory_category', [EmbedController::class, 'distribution_inventory_category']);
+    Route::get('/distribution_inventory_room', [EmbedController::class, 'distribution_inventory_room']);
+    Route::get('/distribution_inventory_favorite', [EmbedController::class, 'distribution_inventory_favorite']);
+    Route::get('/distribution_inventory_merk', [EmbedController::class, 'distribution_inventory_merk']);
+    Route::get('/inventory_created_per_month/{year}', [EmbedController::class, 'inventory_created_per_month']);
+    Route::get('/report_created_per_month/{year}', [EmbedController::class, 'report_created_per_month']);
+    Route::get('/activity_per_month/{year}', [EmbedController::class, 'activity_per_month']);
+});
+
+Route::prefix('/doc')->group(function () {
+    Route::prefix('/report/{id}')->group(function (){
+        Route::get('/', [DocumentController::class, 'index_report']);
+        Route::get('/custom', [DocumentController::class, 'custom_report']);
+    });
+});
+
+Route::prefix('/analyze')->group(function () {
+    Route::prefix('/report/{id}')->group(function (){
+        Route::get('/', [AnalyzeController::class, 'index_report']);
+    });
+});
+
 ######################### Private Route #########################
 
 Route::prefix('/chat')->middleware(['auth_v2:sanctum'])->group(function () {
@@ -70,16 +98,6 @@ Route::prefix('/stats')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::post('/toogleTotal', [StatsController::class, 'toogle_total']);
     Route::post('/toogleView', [StatsController::class, 'toogle_view']);
     Route::post('/toogleYear', [StatsController::class, 'toogle_year']);
-});
-
-Route::prefix('/embed')->group(function () {
-    Route::get('/distribution_inventory_category', [EmbedController::class, 'distribution_inventory_category']);
-    Route::get('/distribution_inventory_room', [EmbedController::class, 'distribution_inventory_room']);
-    Route::get('/distribution_inventory_favorite', [EmbedController::class, 'distribution_inventory_favorite']);
-    Route::get('/distribution_inventory_merk', [EmbedController::class, 'distribution_inventory_merk']);
-    Route::get('/inventory_created_per_month/{year}', [EmbedController::class, 'inventory_created_per_month']);
-    Route::get('/report_created_per_month/{year}', [EmbedController::class, 'report_created_per_month']);
-    Route::get('/activity_per_month/{year}', [EmbedController::class, 'activity_per_month']);
 });
 
 Route::prefix('/history')->middleware(['auth_v2:sanctum'])->group(function () {
@@ -115,10 +133,6 @@ Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [CalendarController::class, 'index']);
 });
 
-Route::prefix('/lend')->group(function () {
-    Route::get('/{id}', [LendController::class, 'index']);
-});
-
 Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ReportController::class, 'index']);
 
@@ -139,29 +153,22 @@ Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::post('/select_room', [Room2DController::class, 'select_room']);
 });
 
-Route::prefix('/doc')->group(function () {
-    Route::prefix('/report/{id}')->group(function (){
-        Route::get('/', [DocumentController::class, 'index_report']);
-        Route::get('/custom', [DocumentController::class, 'custom_report']);
-    });
-    Route::prefix('/layout/{room}')->middleware(['auth_v2:sanctum'])->group(function (){
+Route::prefix('/doc')->middleware(['auth_v2:sanctum'])->group(function () {
+    Route::prefix('/layout/{room}')->group(function (){
         Route::get('/', [DocumentController::class, 'index_layout']);
         Route::get('/custom', [DocumentController::class, 'custom_layout']);
     });
-    Route::prefix('/inventory/{id}')->middleware(['auth_v2:sanctum'])->group(function (){
+    Route::prefix('/inventory/{id}')->group(function (){
         Route::get('/', [DocumentController::class, 'index_inventory']);
         Route::get('/custom', [DocumentController::class, 'custom_inventory']);
     });
 });
 
-Route::prefix('/analyze')->group(function () {
-    Route::prefix('/report/{id}')->group(function (){
-        Route::get('/', [AnalyzeController::class, 'index_report']);
-    });
-    Route::prefix('/layout/{room}')->middleware(['auth_v2:sanctum'])->group(function (){
+Route::prefix('/analyze')->middleware(['auth_v2:sanctum'])->group(function () {
+    Route::prefix('/layout/{room}')->group(function (){
         Route::get('/', [AnalyzeController::class, 'index_layout']);
     });
-    Route::prefix('/inventory/{id}')->middleware(['auth_v2:sanctum'])->group(function (){
+    Route::prefix('/inventory/{id}')->group(function (){
         Route::get('/', [AnalyzeController::class, 'index_inventory']);
     });
 });

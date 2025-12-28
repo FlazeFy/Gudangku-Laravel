@@ -33,7 +33,7 @@
 .box-reminder {
     background-color:rgba(0, 195, 99, 0.2);
 }
-.box-reminder p, .box-reminder h5 {
+.box-reminder p {
     font-size: var(--textMD);
 }
 .control-panel {

@@ -41,7 +41,7 @@ class Queries extends Controller
      *                         @OA\Property(property="reminder_desc", type="string", example="Restock at https://tokopedia.link/rBfBm3vVDIb\r\nBeli 2 boleh"),
      *                         @OA\Property(property="reminder_type", type="string", example="Every Month"),
      *                         @OA\Property(property="reminder_context", type="string", example="Every 19"),
-     *                         @OA\Property(property="last_executed", type="string", format="date-time", example="2024-09-20 22:53:47"),
+     *                         @OA\Property(property="last_execute", type="string", format="date-time", example="2024-09-20 22:53:47"),
      *                         @OA\Property(property="created_at", type="string", format="date-time", example="2024-09-20 22:53:47"),
      *                         @OA\Property(property="username", type="string", example="flazefy")
      *                     )
@@ -132,7 +132,7 @@ class Queries extends Controller
      *                         @OA\Property(property="reminder_desc", type="string", example="Restock at https://tokopedia.link/rBfBm3vVDIb\r\nBeli 2 boleh"),
      *                         @OA\Property(property="reminder_type", type="string", example="Every Month"),
      *                         @OA\Property(property="reminder_context", type="string", example="Every 19"),
-     *                         @OA\Property(property="last_executed", type="string", format="date-time", example="2024-09-20 22:53:47")
+     *                         @OA\Property(property="last_execute", type="string", format="date-time", example="2024-09-20 22:53:47")
      *                     )
      *                 ),
      *             )

@@ -71,7 +71,7 @@ class ReminderModel extends Model
             ->first();
     }
 
-    public static function getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id,$exception_id){
+    public static function getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id,$exception_id = null){
         $res = ReminderModel::where('created_by', $user_id)
             ->where('inventory_id',$inventory_id)
             ->where('reminder_type',$reminder_type)

@@ -415,13 +415,7 @@ class Commands extends Controller
      *             @OA\Property(property="reminder_type", type="string", example="Every Week"),
      *             @OA\Property(property="reminder_context", type="string", example="Every Day 1"),
      *             @OA\Property(property="reminder_desc", type="string", example="testing reminder"),
-     *             @OA\Property(
-     *                 property="list_inventory_id",
-     *                 type="array",
-     *                 @OA\Items(
-     *                     type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440000"
-     *                 )
-     *             )
+     *             @OA\Property(property="list_inventory_id", type="string", example="eb763050-ca6e-73e4-201d-935912ede04d,e0de852b-8a17-a450-0832-8a1154e1a71c")
      *         )
      *     ),
      *     @OA\Response(

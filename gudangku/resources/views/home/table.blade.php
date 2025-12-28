@@ -1,3 +1,14 @@
+<style>
+    .action-inventory {
+        min-width: 140px;
+    }
+    @media screen and (max-width: 1023px) {
+        .action-inventory {
+            min-width: 240px;
+        }
+    }
+</style>
+
 <div class="table-responsive">
     <table class="table" id="inventory_tb">
         <thead>
@@ -8,7 +19,7 @@
                 <th scope="col" style='min-width:110px;'>Price</th>
                 <th scope="col" style='min-width:110px;'>Unit</th>
                 <th scope="col" style='min-width:110px;'>Capacity</th>
-                <th scope="col" style='min-width:140px;'>Action</th>
+                <th scope="col" class='action-inventory'>Action</th>
             </tr>
         </thead>
         <tbody id="inventory_tb_body"></tbody>
@@ -17,7 +28,6 @@
 <hr>
 
 <script>
-    let toogle_check = 0
     const date_holder = document.querySelectorAll('.date_holder')
 
     date_holder.forEach(e => {
@@ -63,18 +73,15 @@
                         el.reminder.forEach(rm => {
                             reminders += `
                                 <div class="box-reminder mb-3">
-                                    <h5 class="fw-bold mb-0">Reminder | ${rm.reminder_type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</h5>
+                                    <h6 class="fw-bold mb-3">Reminder | ${rm.reminder_type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</h6>
                                     <p>${rm.reminder_desc}</p>
                                     <p class="mt-2 mb-0">Time: ${rm.reminder_context.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</p>
                                     <p class="my-0">Created At: ${getDateToContext(rm.created_at,'calendar')}</p>
                                     <hr class="my-2">
                                     
-                                    <!-- Delete Button -->
-                                    <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
-                                        <i class="fa-solid fa-trash" style="font-size:var(--textSM);"></i>
+                                    <button class="btn btn-danger py-1 px-3" data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${rm.id}">
+                                        <i class="fa-solid fa-trash" style="font-size:var(--textMD);"></i>
                                     </button>
-
-                                    <!-- Delete Modal -->
                                     <div class="modal fade" id="modalDeleteReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -85,20 +92,17 @@
                                                 <div class="modal-body">
                                                     <input type="hidden" name="reminder_desc" value="${rm.reminder_desc}"/>
                                                     <p><span class="text-danger">Permanently Delete</span> this reminder "${rm.reminder_desc}"?</p>
-                                                    <a class="btn btn-danger mt-4" onclick="delete_reminder_by_id('${rm.id}', '${token}', () => get_inventory(${page},'${name}','${category}','${sort}'))"> Yes, Delete</a>
+                                                    <a class="btn btn-danger" onclick="delete_reminder_by_id('${rm.id}', '${token}', () => get_inventory(${page},'${name}','${category}','${sort}'))"> Yes, Delete</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Copy Button -->
-                                    <button class="btn btn-success" data-bs-toggle="modal" onclick="reset_reminder_form()" data-bs-target="#modalCopyReminder_${rm.id}" style="padding: var(--spaceMini) var(--spaceSM) !important;">
-                                        <i class="fa-solid fa-copy" style="font-size:var(--textSM);"></i>
+                                    <button class="btn btn-success py-1 px-3" data-bs-toggle="modal" onclick="reset_reminder_form()" data-bs-target="#modalCopyReminder_${rm.id}">
+                                        <i class="fa-solid fa-copy" style="font-size:var(--textMD);"></i>
                                     </button>
-
-                                    <!-- Copy Modal -->
                                     <div class="modal fade" id="modalCopyReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
+                                        <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title fw-bold" id="exampleModalLabel">Copy Reminder</h5>
@@ -110,23 +114,20 @@
                                                         <input type="hidden" value="${rm.reminder_desc}" name="reminder_desc">
                                                         <input type="hidden" value="${rm.reminder_type}" name="reminder_type">
 
-                                                        <table class="table" id="tb-inventory-name-${rm.id}">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col">
-                                                                        <span id="checked_all_holder_btn">
-                                                                            <a class="btn btn-primary" onclick="toggleCheck()" style="font-size:var(--textMD); padding: var(--spaceMini) var(--spaceSM) !important;">Check All</a>
-                                                                        </span>
-                                                                    </th>
-                                                                    <th scope="col">Inventory Name</th>
-                                                                    <th scope="col">Category</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class='inventory-selectable'></tbody>
-                                                        </table>
-                                                        <br>
-                                                        <h2>Are you sure to copy this reminder "${rm.reminder_desc}" to inventory <span id="inventory_selected_name"></span>?</h2>
-                                                        <a class="btn btn-success mt-4" onclick="copy_reminder('${rm.id}')">Yes, Copy</a>
+                                                        <div style='overflow-x:auto;'>
+                                                            <table class="table" id="tb-inventory-name-${rm.id}" style="min-width: 530px;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col" style="width:110px;"><a class="btn btn-primary checked_all_holder_btn py-1" style="font-size:var(--textSM);">Check All</a></th>
+                                                                        <th scope="col" style="min-width:240px;">Inventory Name</th>
+                                                                        <th scope="col" style="width:180px;">Category</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class='inventory-selectable'></tbody>
+                                                            </table>
+                                                        </div>
+                                                        <p>Are you sure to copy this reminder "${rm.reminder_desc}" to inventory <span id="inventory_selected_name"></span>?</p>
+                                                        <a class="btn btn-success" onclick="copy_reminder('${rm.id}')">Yes, Copy</a>
                                                     </form>
                                                 </div>
                                             </div>
@@ -233,7 +234,7 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <p>${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'} this inventory "${el.inventory_name}"?</p>
-                                                        <a class="btn btn-danger mt-4" onclick="delete_inventory_by_id('${el.id}', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
+                                                        <a class="btn btn-danger" onclick="delete_inventory_by_id('${el.id}', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -286,9 +287,9 @@
                 $('.inventory-selectable').empty()
                 data.forEach((el, idx) => {
                     $('.inventory-selectable').append(`
-                        <tr>
-                            <td>
-                                <div class="form-check">
+                        <tr class="align-middle">
+                            <td class="text-center">
+                                <div class="form-check d-inline-flex justify-content-center">
                                     <input class="form-check-input check_inventory" type="checkbox" value="${el.id}" id="flexCheckDefault">
                                 </div>
                             </td>
@@ -373,7 +374,8 @@
                     allowOutsideClick: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.close()
+                        closeModalBS() 
+                        get_inventory(page,search_key,filter_category,sorting)
                     }
                 });
             },
@@ -383,24 +385,9 @@
         });
     }
 
-    function toogleCheck(){
-        const checked_all_holder_btn = document.getElementById('checked_all_holder_btn')
-        const inventoryCheck = document.querySelectorAll('.check-inventory')
-        
-        if(toogle_check % 2 != 0){
-            inventoryCheck.forEach(el => {
-                el.checked = false
-            });
-            checked_all_holder_btn.innerHTML = `<a class="btn btn-primary" onclick="toogleCheck()" 
-                style="font-size:var(--textMD); padding: var(--spaceMini) var(--spaceSM) !important;">Check All</a>`
-        } else {
-            inventoryCheck.forEach(el => {
-                el.checked = true
-            });
-            checked_all_holder_btn.innerHTML = `<a class="btn btn-danger" onclick="toogleCheck()" 
-                style="font-size:var(--textMD); padding: var(--spaceMini) var(--spaceSM) !important;">Uncheck All</a>`
-        }
-
-        toogle_check++
-    }
+    $(document).on('click', '.checked_all_holder_btn', function () {
+        const index = $('.checked_all_holder_btn').index(this)
+        const $tbody = $('.inventory-selectable').eq(index)
+        $tbody.find('input[type="checkbox"]').prop('checked', true)
+    });
 </script>

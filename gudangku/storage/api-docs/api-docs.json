@@ -5623,7 +5623,7 @@
                     "Reminder"
                 ],
                 "summary": "Put Update Reminder By ID",
-                "description": "This request is used to update a reminder by using given reminder's `id`. The updated fields are `reminder_type`, `reminder_context`, and `reminder_desc`. This request interacts with the MySQL database, sync with Google Calendar, has a protected routes, and audited activity (history).",
+                "description": "This request is used to update a reminder by using given reminder's `id` and `inventory_id`. The updated fields are `reminder_type`, `reminder_context`, and `reminder_desc`. This request interacts with the MySQL database, sync with Google Calendar, has a protected routes, and audited activity (history).",
                 "operationId": "46fdd1cadbb47e167dbe7c2f4cb4f52a",
                 "parameters": [
                     {
@@ -5940,12 +5940,8 @@
                                         "example": "testing reminder"
                                     },
                                     "list_inventory_id": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "uuid",
-                                            "example": "550e8400-e29b-41d4-a716-446655440000"
-                                        }
+                                        "type": "string",
+                                        "example": "eb763050-ca6e-73e4-201d-935912ede04d,e0de852b-8a17-a450-0832-8a1154e1a71c"
                                     }
                                 },
                                 "type": "object"
@@ -6247,7 +6243,7 @@
                                                                 "type": "string",
                                                                 "example": "Every 19"
                                                             },
-                                                            "last_executed": {
+                                                            "last_execute": {
                                                                 "type": "string",
                                                                 "format": "date-time",
                                                                 "example": "2024-09-20 22:53:47"
@@ -6391,7 +6387,7 @@
                                                                 "type": "string",
                                                                 "example": "Every 19"
                                                             },
-                                                            "last_executed": {
+                                                            "last_execute": {
                                                                 "type": "string",
                                                                 "format": "date-time",
                                                                 "example": "2024-09-20 22:53:47"
