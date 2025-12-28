@@ -10,6 +10,8 @@ use App\Models\UserModel;
 use App\Models\GoogleTokensModel;
 // Mailer
 use App\Jobs\UserMailer;
+// Helpers
+use App\Helpers\Generator;
 
 class LoginController extends Controller
 {
@@ -91,7 +93,7 @@ class LoginController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            return redirect('/login')->with('failed_message', $e->getMessage()); 
+            return redirect('/login')->with('failed_message', Generator::getMessageTemplate("unknown_error", null)); 
         }
     }
 }

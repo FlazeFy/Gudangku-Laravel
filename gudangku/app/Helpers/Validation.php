@@ -7,6 +7,7 @@ use App\Rules\ReportCategory;
 use App\Rules\ReminderType;
 use App\Rules\InventoryCategory;
 use App\Rules\InventoryUnit;
+use App\Rules\InventoryRoom;
 use App\Rules\InventoryCapacityUnit;
 use App\Rules\DictionaryType;
 
@@ -14,6 +15,10 @@ class Validation
 {
     private static function validateInventoryVolumeRelation($validator, $request){
         $validator->after(function ($validator) use ($request) {
+            if($request->inventory_capacity_unit === 'Percentage') {
+                return;
+            }
+            
             if ($request->filled('inventory_capacity_vol') && is_numeric($request->inventory_capacity_vol) &&
                 is_numeric($request->inventory_vol) && $request->inventory_vol < $request->inventory_capacity_vol) {
                 $validator->errors()->add('inventory_vol', 'Inventory vol must be greater than or equal to inventory capacity vol.');
@@ -48,7 +53,7 @@ class Validation
             'inventory_desc' => 'nullable|string|max:255',
             'inventory_merk' => 'nullable|string|max:75',
             'inventory_color' => 'nullable|string|max:16',
-            'inventory_room' => 'required|string|max:36',
+            'inventory_room' => ['required', new InventoryRoom],
             'inventory_storage' => 'nullable|string|max:36',
             'inventory_rack' => 'nullable|string|max:36',
             'inventory_price' => 'nullable|numeric|min:0|max:999999999',
@@ -73,7 +78,7 @@ class Validation
                 ]);
             case 'create_layout':
                 return Validator::make($request->all(), [
-                    'inventory_room' => 'required|string|max:36',
+                    'inventory_room' => ['required', new InventoryRoom],
                     'inventory_storage' => 'required|string|max:36',
                     'storage_desc' => 'nullable|string|max:255',
                     'layout' => 'nullable|string|min:2',

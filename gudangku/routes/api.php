@@ -70,7 +70,7 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::get('/', [QueriesInventoryController::class, 'getAllInventory']);
     Route::prefix('/catalog')->group(function () {
         Route::get('/', [QueriesInventoryController::class, 'getInventoryCatalog']);
-        Route::get('/{view}/{catalog}', [QueriesInventoryController::class, 'getInventoryByCatalog']);
+        Route::get('/{view}/{catalog}', [QueriesInventoryController::class, 'getInventoryByViewAndCatalog']);
     });
     Route::get('/search/by_room_storage/{room}/{storage}', [QueriesInventoryController::class, 'getInventoryByStorage']);
     Route::get('/list', [QueriesInventoryController::class, 'getListInventory']);
@@ -92,9 +92,9 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::delete('/destroy/{id}', [CommandsInventoryController::class, 'hardDeleteInventoryByID']);
     Route::put('/fav_toggle/{id}', [CommandsInventoryController::class, 'putFavToogleInventoryByID']);
     Route::put('/recover/{id}', [CommandsInventoryController::class, 'putRecoverInventoryByID']);
-    Route::put('/edit/{id}', [CommandsInventoryController::class, 'putEditInventoryByID']);
-    Route::post('/edit_image/{id}', [CommandsInventoryController::class, 'putEditImageByID']);
-    Route::put('/edit_layout/{id}', [CommandsInventoryController::class, 'putEditLayoutByID']);
+    Route::put('/edit/{id}', [CommandsInventoryController::class, 'putUpdateInventoryByID']);
+    Route::post('/edit_image/{id}', [CommandsInventoryController::class, 'putUpdateImageByID']);
+    Route::put('/edit_layout/{id}', [CommandsInventoryController::class, 'putUpdateLayoutByID']);
 });
 
 Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {

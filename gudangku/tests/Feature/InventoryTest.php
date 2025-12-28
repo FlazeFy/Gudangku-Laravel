@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
 use GuzzleHttp\Client;
 use Tests\TestCase;
 
@@ -114,6 +116,108 @@ class InventoryTest extends TestCase
 
         Audit::auditRecordText("Test - Get Inventory By Room", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Get Inventory By Room", "TC-XXX", 'TC-XXX test_get_inventory_by_room', json_encode($data));
+    }
+
+    public function test_get_inventory_catalog(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $response = $this->httpClient->get("catalog", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data);
+
+        $catalogs = ["room","category","storage"];
+        foreach ($catalogs as $ct) {
+            foreach($data['data'][$ct] as $dt) {
+                $this->assertArrayHasKey('context', $dt);
+                $this->assertArrayHasKey('total', $dt);
+
+                if($ct !== "storage"){
+                    $this->assertNotNull($dt['context']);
+                    $this->assertIsString($dt['context']);
+                }
+        
+                $this->assertNotNull($dt['total']);
+                $this->assertIsInt($dt['total']);
+                $this->assertGreaterThan(0, $dt['total']);
+            }
+        }
+
+        Audit::auditRecordText("Test - Get Inventory Catalog", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Inventory Catalog", "TC-XXX", 'TC-XXX test_get_inventory_catalog', json_encode($data));
+    }
+
+    public function test_get_inventory_by_view_and_catalog(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $view = "category";
+        $catalog = "Home%20Appliances";
+
+        $response = $this->httpClient->get("catalog/$view/$catalog", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data);
+
+        foreach ($data['data']['data'] as $dt) {
+            $check_object = ['id','inventory_name','inventory_category','inventory_room','inventory_storage','inventory_rack','inventory_price','inventory_image',
+            'inventory_unit','inventory_vol','inventory_capacity_unit','inventory_capacity_vol','is_favorite', 'created_at','updated_at','deleted_at','reminder_type'];
+            foreach ($check_object as $col) {
+                $this->assertArrayHasKey($col, $dt);
+            }
+
+            $check_not_null_str = ['id','inventory_name','inventory_category','inventory_room','inventory_unit','created_at'];
+            foreach ($check_not_null_str as $col) {
+                $this->assertNotNull($dt[$col]);
+                $this->assertIsString($dt[$col]);
+            }
+
+            $check_nullable_str = ['inventory_storage','inventory_rack','inventory_image','inventory_capacity_unit','updated_at','deleted_at','reminder_type'];
+            foreach ($check_nullable_str as $col) {
+                if (!is_null($dt[$col])) {
+                    $this->assertIsString($dt[$col]);
+                }
+            }
+
+            $check_not_null_int = ['inventory_price','inventory_vol','is_favorite'];
+            foreach ($check_not_null_int as $col) {
+                $this->assertNotNull($dt[$col]);
+                $this->assertIsInt($dt[$col]);
+                $this->assertGreaterThanOrEqual(0, $dt[$col]);
+            }
+
+            $this->assertEquals(36,strlen($dt['id']));
+            $this->assertContains($dt['is_favorite'], [0, 1]);
+
+            if (!is_null($dt['inventory_capacity_vol'])) {
+                $this->assertIsInt($dt['inventory_capacity_vol']);
+                $this->assertGreaterThanOrEqual(0, $dt['inventory_capacity_vol']);
+            }
+        }
+
+        Audit::auditRecordText("Test - Get Inventory By View And Catalog", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Inventory By View And Catalog", "TC-XXX", 'TC-XXX test_get_inventory_by_view_and_catalog', json_encode($data));
     }
 
     public function test_get_inventory_by_storage(): void
@@ -667,7 +771,7 @@ class InventoryTest extends TestCase
         // Exec
         $token = $this->login_trait("user");
         $body = [
-            "inventory_room" => "Living Room",
+            "inventory_room" => "Main Room",
             "inventory_storage" => "Testing Storage",
             "storage_desc" => "This is for API Testing",
             "layout" => "A1:A2:A3:B1:B2:B3s"
@@ -696,28 +800,38 @@ class InventoryTest extends TestCase
     {
         // Exec
         $token = $this->login_trait("user");
-        $inventory_name = "Product A - Testing";
-        $body = [
-            "inventory_name" => $inventory_name, 
-            "inventory_category" => "Fashion", 
-            "inventory_desc" => "Testing Add Product", 
-            "inventory_merk" => "Great Product", 
-            "inventory_color" => null, 
-            "inventory_room" => "Living Room", 
-            "inventory_storage" => "Shelf", 
-            "inventory_rack" => "Bottom Rack", 
-            "inventory_price" => 25000, 
-            "inventory_unit" => "Pcs", 
-            "inventory_vol" => 1, 
-            "inventory_capacity_unit" => "Ml", 
-            "inventory_capacity_vol" => 750, 
-            "is_favorite" => 0, 
+        
+        // Create fake images
+        $img1 = UploadedFile::fake()->image('image1.jpg');
+
+        $form = [
+            ['name' => 'inventory_name', 'contents' => 'Product B - Testing'],
+            ['name' => 'inventory_category', 'contents' => 'Baby Care'],
+            ['name' => 'inventory_desc', 'contents' => 'Testing Add Product'],
+            ['name' => 'inventory_merk', 'contents' => 'Great Product'],
+            ['name' => 'inventory_color', 'contents' => ''],
+            ['name' => 'inventory_room', 'contents' => 'Main Room'],
+            ['name' => 'inventory_storage', 'contents' => 'Shelf'],
+            ['name' => 'inventory_rack', 'contents' => 'Bottom Rack'],
+            ['name' => 'inventory_price', 'contents' => 25000],
+            ['name' => 'inventory_unit', 'contents' => 'Pcs'],
+            ['name' => 'inventory_vol', 'contents' => 5],
+            ['name' => 'inventory_capacity_unit', 'contents' => 'Percentage'],
+            ['name' => 'inventory_capacity_vol', 'contents' => 20],
+            ['name' => 'is_favorite', 'contents' => 0],
+            ['name' => 'created_at', 'contents' => '2024-05-19 21:05:53'],
+            [
+                'name'     => 'inventory_image',
+                'contents' => fopen($img1->getPathname(), 'r'),
+                'filename' => 'image1.jpg',
+            ],
         ];
+
         $response = $this->httpClient->post("", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ],
-            'json' => $body
+            'multipart' => $form,
         ]);
 
         $data = json_decode($response->getBody(), true);
@@ -727,10 +841,52 @@ class InventoryTest extends TestCase
         $this->assertArrayHasKey('status', $data);
         $this->assertEquals('success', $data['status']);
         $this->assertArrayHasKey('message', $data);
-        $this->assertEquals("inventory created, its called '".$inventory_name."'", $data['message']);
+        $this->assertEquals("inventory created, its called '".$form['inventory_name']."'", $data['message']);
 
         Audit::auditRecordText("Test - Post Inventory", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Post Inventory", "TC-XXX", 'TC-XXX test_post_inventory', json_encode($data));
+    }
+
+    public function test_put_update_inventory_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $id = "bfbbb920-b22d-cfa3-1b36-afad9e6cd963";
+        $body = [
+            "inventory_name" => "Product A - Testing", 
+            "inventory_category" => "Baby Care", 
+            "inventory_desc" => "Testing Add Product", 
+            "inventory_merk" => "Great Product", 
+            "inventory_color" => null, 
+            "inventory_room" => "Main Room", 
+            "inventory_storage" => "Shelf", 
+            "inventory_rack" => "Bottom Rack", 
+            "inventory_price" => 25000, 
+            "inventory_unit" => "Pcs", 
+            "inventory_vol" => 1, 
+            "inventory_capacity_unit" => null, 
+            "inventory_capacity_vol" => null, 
+            "is_favorite" => 0, 
+            "created_at" => "2024-05-19 21:05:53"
+        ];
+        $response = $this->httpClient->put("edit/$id", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals("inventory '".$body['inventory_name']."' is updated", $data['message']);
+
+        Audit::auditRecordText("Test - Put Update Inventory By ID", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Put Update Inventory By ID", "TC-XXX", 'TC-XXX test_put_update_inventory_by_id', json_encode($data));
     }
 
     public function test_get_list_room(): void

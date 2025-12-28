@@ -313,7 +313,7 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/inventory/catalog/{view}/{catalog}",
-     *     summary="Get Inventory By Catalog",
+     *     summary="Get Inventory By View And Catalog",
      *     description="This request is used to get inventory header by given `view` and `catalog`. This request interacts with the MySQL database, has a pagination, and has protected routes.",
      *     tags={"Inventory"},
      *     security={{"bearerAuth":{}}},
@@ -345,8 +345,6 @@ class Queries extends Controller
      *                         @OA\Property(property="id", type="string", example="b3ead76e-95fd-6f99-33f2-c31f40a6a55e"),
      *                         @OA\Property(property="inventory_name", type="string", example="Kris Air Friyer"),
      *                         @OA\Property(property="inventory_category", type="string", example="Electronics"),
-     *                         @OA\Property(property="inventory_desc", type="string", example="buat goreng"),
-     *                         @OA\Property(property="inventory_merk", type="string", example="Kris"),
      *                         @OA\Property(property="inventory_room", type="string", example="Main Room"),
      *                         @OA\Property(property="inventory_storage", type="string", nullable=true, example="Main Table"),
      *                         @OA\Property(property="inventory_rack", type="string", nullable=true, example=null),
@@ -357,16 +355,10 @@ class Queries extends Controller
      *                         @OA\Property(property="inventory_capacity_unit", type="string", nullable=true, example=null),
      *                         @OA\Property(property="inventory_capacity_vol", type="number", nullable=true, example=null),
      *                         @OA\Property(property="is_favorite", type="integer", example=1),
-     *                         @OA\Property(property="is_reminder", type="integer", example=0),
      *                         @OA\Property(property="created_at", type="string", example="2025-12-25 21:25:00"),
      *                         @OA\Property(property="updated_at", type="string", nullable=true, example=null),
      *                         @OA\Property(property="deleted_at", type="string", nullable=true, example=null),
-     *                         @OA\Property(property="reminder_id", type="string", nullable=true, example=null),
-     *                         @OA\Property(property="reminder_desc", type="string", nullable=true, example=null),
      *                         @OA\Property(property="reminder_type", type="string", nullable=true, example=null),
-     *                         @OA\Property(property="reminder_context", type="string", nullable=true, example=null),
-     *                         @OA\Property(property="reminder_created_at", type="string", nullable=true, example=null),
-     *                         @OA\Property(property="reminder_updated_at", type="string", nullable=true, example=null)
      *                     )
      *                 ),
      *             )
@@ -398,7 +390,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getInventoryByCatalog(Request $request, $view, $catalog)
+    public function getInventoryByViewAndCatalog(Request $request, $view, $catalog)
     {
         try{
             // Attribute
@@ -407,7 +399,7 @@ class Queries extends Controller
             $user_id = $check_admin ? null : $user_id;
 
             // Get inventory by catalog with pagination
-            $res = InventoryModel::getInventoryByCatalog($user_id, $view, $catalog);
+            $res = InventoryModel::getInventoryByViewAndCatalog($user_id, $view, $catalog);
             if($res->count() > 0){
                 // Return success response
                 return response()->json([
@@ -424,7 +416,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage(),
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

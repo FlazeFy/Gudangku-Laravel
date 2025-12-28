@@ -264,7 +264,7 @@
                 ],
                 "summary": "Delete Dictionary By ID",
                 "description": "This request is used to permanently delete a dictionary entry based on the provided `ID`. This request interacts with the MySQL database, and have a protected routes.",
-                "operationId": "25d7fe2b0417deefbeb7998921a48ffe",
+                "operationId": "dda04aa46db5cdb5b657007f3a01ab37",
                 "parameters": [
                     {
                         "name": "id",
@@ -637,7 +637,7 @@
                 ],
                 "summary": "Hard Delete Error By ID",
                 "description": "This request is used to permanently delete an error history based on the provided `ID`. However, it will also search for all errors with the same `message` and delete them. This request interacts with the MySQL database, and has a protected routes (Admin only).",
-                "operationId": "79ffb8a9e5e2cf116445bb978339ab9a",
+                "operationId": "07bdac74275d8385a8122fe93a383af3",
                 "parameters": [
                     {
                         "name": "id",
@@ -889,7 +889,7 @@
                 ],
                 "summary": "Hard Delete History By ID",
                 "description": "This request is used to permanently delete a system history based on the provided `ID`. This request interacts with the MySQL database, and has a protected routes.",
-                "operationId": "4d5036ffd8580da35bf9d00c5d2c6050",
+                "operationId": "424444d2473083403c76cc1151454a0e",
                 "parameters": [
                     {
                         "name": "id",
@@ -1129,7 +1129,7 @@
                 ],
                 "summary": "Soft Delete Inventory By ID",
                 "description": "This request is used to delete an inventory based on the provided `ID`. This request interacts with the MySQL database, broadcast message with Telegram, has a protected routes, and audited activity (history).",
-                "operationId": "4ed1755d8f77358138dfc7ba5b8b879c",
+                "operationId": "7faaa7d104e52d54db427881c01a5938",
                 "parameters": [
                     {
                         "name": "id",
@@ -1238,7 +1238,7 @@
                 ],
                 "summary": "Post Edit Inventory Image By ID",
                 "description": "This request is used to update inventory image by given vehicle's `ID`. And the updated field is `inventory_image`. This request interacts with the MySQL database, firebase storage, has a protected routes, and audited activity (history).",
-                "operationId": "46f0b8d4f240dc8307f5eddb138cf889",
+                "operationId": "06a1d8067deaec56f2335e8b473efe7b",
                 "parameters": [
                     {
                         "name": "id",
@@ -1386,7 +1386,7 @@
                 ],
                 "summary": "Hard Delete Inventory By ID",
                 "description": "This request is used to permanently delete an inventory by given `ID`. This request interacts with the MySQL database, firebase storage, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
-                "operationId": "344d7c237f1e008bee49ac4e624c2e10",
+                "operationId": "f07b693f723d03897806d32410c77677",
                 "parameters": [
                     {
                         "name": "id",
@@ -1495,7 +1495,7 @@
                 ],
                 "summary": "Put Toogle Favorite Inventory By ID",
                 "description": "This request is used to toggle (favorite) an inventory based on the provided `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "81906bbe568dc9307d76a94b18463c38",
+                "operationId": "699bdc6ddfad2ebbbf31353f3b8e8dcb",
                 "parameters": [
                     {
                         "name": "id",
@@ -1623,7 +1623,7 @@
                 ],
                 "summary": "Recover Inventory By Id",
                 "description": "This request is used to recover deleted inventory based on the provided `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "c2f1bcc0e4bdf1411d89ffdd729a1fe0",
+                "operationId": "b7d466ab3934e489af8e569351985741",
                 "parameters": [
                     {
                         "name": "id",
@@ -2156,7 +2156,7 @@
                 ],
                 "summary": "Put Update Inventory By ID",
                 "description": "This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "f0c25c0ad9d2e40518e20e7845e4e3ee",
+                "operationId": "b419d94522a37854a5b43a1bd6573356",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2364,7 +2364,7 @@
                 ],
                 "summary": "Put Update Inventory Layout By ID",
                 "description": "This request is used to update an inventory by given inventory layout's `id`. The updated fields are `inventory_storage` and `storage_desc`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "18c8436a761d4d03ebe1246ce3ea5a72",
+                "operationId": "fcaefff10476e3d107a66aefa4e33702",
                 "parameters": [
                     {
                         "name": "id",
@@ -2647,7 +2647,7 @@
                 ],
                 "summary": "Hard Delete Inventory Layout By ID and Coordinate",
                 "description": "This request is used to permanently delete an inventory layout by given `ID` and `coordinate`. This request interacts with the MySQL database, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
-                "operationId": "829413fefcd37183ef16c8bae3c96f02",
+                "operationId": "8ca28202675ebde8adce9ae902619403",
                 "responses": {
                     "200": {
                         "description": "inventory layout coordinate deleted",
@@ -2872,9 +2872,9 @@
                 "tags": [
                     "Inventory"
                 ],
-                "summary": "Get Inventory By Catalog",
+                "summary": "Get Inventory By View And Catalog",
                 "description": "This request is used to get inventory header by given `view` and `catalog`. This request interacts with the MySQL database, has a pagination, and has protected routes.",
-                "operationId": "d77ce3253c6eb61bd05a1d1663f6664f",
+                "operationId": "cbc9c9cdb5967f083cd142be0020ba24",
                 "parameters": [
                     {
                         "name": "view",
@@ -2930,14 +2930,6 @@
                                                                 "type": "string",
                                                                 "example": "Electronics"
                                                             },
-                                                            "inventory_desc": {
-                                                                "type": "string",
-                                                                "example": "buat goreng"
-                                                            },
-                                                            "inventory_merk": {
-                                                                "type": "string",
-                                                                "example": "Kris"
-                                                            },
                                                             "inventory_room": {
                                                                 "type": "string",
                                                                 "example": "Main Room"
@@ -2983,10 +2975,6 @@
                                                                 "type": "integer",
                                                                 "example": 1
                                                             },
-                                                            "is_reminder": {
-                                                                "type": "integer",
-                                                                "example": 0
-                                                            },
                                                             "created_at": {
                                                                 "type": "string",
                                                                 "example": "2025-12-25 21:25:00"
@@ -3001,32 +2989,7 @@
                                                                 "example": null,
                                                                 "nullable": true
                                                             },
-                                                            "reminder_id": {
-                                                                "type": "string",
-                                                                "example": null,
-                                                                "nullable": true
-                                                            },
-                                                            "reminder_desc": {
-                                                                "type": "string",
-                                                                "example": null,
-                                                                "nullable": true
-                                                            },
                                                             "reminder_type": {
-                                                                "type": "string",
-                                                                "example": null,
-                                                                "nullable": true
-                                                            },
-                                                            "reminder_context": {
-                                                                "type": "string",
-                                                                "example": null,
-                                                                "nullable": true
-                                                            },
-                                                            "reminder_created_at": {
-                                                                "type": "string",
-                                                                "example": null,
-                                                                "nullable": true
-                                                            },
-                                                            "reminder_updated_at": {
                                                                 "type": "string",
                                                                 "example": null,
                                                                 "nullable": true
@@ -3755,7 +3718,7 @@
                 ],
                 "summary": "Get Inventory Detail By ID",
                 "description": "This request is used to get inventory details and reminders by the given inventory's `id`. This request interacts with the MySQL database, and has a protected routes.",
-                "operationId": "29aef768ceea735f87633baef0200b64",
+                "operationId": "4bbda3fb66a69761d9e991e68bd15af2",
                 "parameters": [
                     {
                         "name": "id",
@@ -4522,7 +4485,7 @@
                 ],
                 "summary": "Post Create Lend QR",
                 "description": "This request is used to create an inventory lend by using given `qr_period`. This request interacts with the MySQL database, firebase storage, broadcast message using Telegram, has a protected routes, and audited activity (history).",
-                "operationId": "8658940c0d0d6f8eb30755835faa746a",
+                "operationId": "eef56aac2e60d3ca7b2837f1a08509a7",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -5624,7 +5587,7 @@
                 ],
                 "summary": "Put Update Reminder By ID",
                 "description": "This request is used to update a reminder by using given reminder's `id` and `inventory_id`. The updated fields are `reminder_type`, `reminder_context`, and `reminder_desc`. This request interacts with the MySQL database, sync with Google Calendar, has a protected routes, and audited activity (history).",
-                "operationId": "46fdd1cadbb47e167dbe7c2f4cb4f52a",
+                "operationId": "537d77b6895644425a132f42229a8380",
                 "parameters": [
                     {
                         "name": "id",
@@ -5805,7 +5768,7 @@
                 ],
                 "summary": "Hard Delete Reminder By ID",
                 "description": "This request is used to permanently delete a reminder by given `id`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "080d9e96cd48c94effbcbeecd4ae36ac",
+                "operationId": "b9f47c095221be5efe587ac93370931d",
                 "parameters": [
                     {
                         "name": "id",
@@ -6480,7 +6443,7 @@
                 ],
                 "summary": "Hard Delete Report Item By ID",
                 "description": "This request is used to delete a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "36f0d3a58d1ac36209a85a71b2babb4b",
+                "operationId": "4d80987d56ebba297a70f4b1002e4053",
                 "parameters": [
                     {
                         "name": "id",
@@ -6589,7 +6552,7 @@
                 ],
                 "summary": "Hard Delete Report By ID",
                 "description": "This request is used to delete a report based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "bec185fa169b15285915e29e0ea56dda",
+                "operationId": "dfbecbb579218a7a9bfd169d364f5d12",
                 "parameters": [
                     {
                         "name": "id",
@@ -6698,7 +6661,7 @@
                 ],
                 "summary": "Put Update Report Detail By ID",
                 "description": "This request is used to update a report based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "1771f2dccd8c82250c0e2aa4cf1ebe6e",
+                "operationId": "e9e5f8644d058d59f755333066e05d4f",
                 "parameters": [
                     {
                         "name": "id",
@@ -6862,7 +6825,7 @@
                 ],
                 "summary": "Put Update Report Item By ID",
                 "description": "This request is used to update a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "1c03434d7e7b99ef4528a26facbc6938",
+                "operationId": "4cbd0214b1beae323dbf65c17779ede7",
                 "parameters": [
                     {
                         "name": "id",
@@ -7026,7 +6989,7 @@
                 ],
                 "summary": "Update Report Item By Splitting It Into A New Report",
                 "description": "This request is used to update a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "90efa2a9dd1812ff2b626e3eb5b810ff",
+                "operationId": "831471188424f83bbdb2c4afd036fde0",
                 "parameters": [
                     {
                         "name": "id",
@@ -7761,7 +7724,7 @@
                 ],
                 "summary": "Delete Report Image By Image ID",
                 "description": "This request is used to delete an image in report by given `report_id` and `image_id` for the image. Updated field is `report_image`. This request interacts with the MySQL database, firebase storage, and has a protected routes.",
-                "operationId": "8830155a3780da31a558de6cce809fda",
+                "operationId": "ab9a7038347d8008bcd94fabc2337a52",
                 "parameters": [
                     {
                         "name": "report_id",
@@ -11042,7 +11005,7 @@
                 ],
                 "summary": "Put Update Telegram ID",
                 "description": "This request is used to update telegram ID by given `telegram_user_id`. This request interacts with the MySQL database, broadcast message using Telegram, and has a protected routes.",
-                "operationId": "c70d54943ca3414fe4365878ff52e309",
+                "operationId": "500276ea0119dbf4ed843823dc02d48c",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11178,7 +11141,7 @@
                 ],
                 "summary": "Put Update Profile",
                 "description": "This request is used to update profile by given `username` and `email`. This request interacts with the MySQL database, broadcast message using Telegram, and has a protected routes.",
-                "operationId": "d5ace13a02be6746143b151df9c9cde0",
+                "operationId": "d858646501b81840456aad3cf5a4add1",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11727,7 +11690,7 @@
                 ],
                 "summary": "Put Validate Telegram ID",
                 "description": "This request is used to validate Telegram ID change by give `request_context`. This request interacts with the MySQL database, and has a protected routes.",
-                "operationId": "55a918238fc000e5e0546c25d0b24835",
+                "operationId": "e97399edebf9ba606b2040ef7aad3c5b",
                 "requestBody": {
                     "required": true,
                     "content": {

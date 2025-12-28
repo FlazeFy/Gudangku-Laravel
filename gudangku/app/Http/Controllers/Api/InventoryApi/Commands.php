@@ -204,7 +204,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putEditImageByID(Request $request, $id)
+    public function putUpdateImageByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -967,7 +967,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putEditInventoryByID(Request $request,$id)
+    public function putUpdateInventoryByID(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
@@ -980,13 +980,15 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
+                $inventory_name = $request->inventory_name;
+
                 // Check inventory name
                 $is_exist = InventoryModel::isInventoryNameUsed($inventory_name,$user_id,$id);
 
                 if(!$is_exist){
                     // Update inventory by ID
                     $res = InventoryModel::updateInventoryById($user_id,$id,[
-                        'inventory_name' => $request->inventory_name, 
+                        'inventory_name' => $inventory_name, 
                         'inventory_category' => $request->inventory_category, 
                         'inventory_desc' => $request->inventory_desc, 
                         'inventory_merk' => $request->inventory_merk, 
@@ -1004,12 +1006,12 @@ class Commands extends Controller
 
                     if($res){
                         // Create history
-                        Audit::createHistory('Update', $request->inventory_name, $user_id);
+                        Audit::createHistory('Update', $inventory_name, $user_id);
                         
                         // Return success response
                         return response()->json([
                             'status' => 'success',
-                            'message' => "inventory '$request->inventory_name' is updated",
+                            'message' => "inventory '$inventory_name' is updated",
                             'data' => $res
                         ], Response::HTTP_OK);
                     } else {
@@ -1098,7 +1100,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putEditLayoutByID(Request $request, $id)
+    public function putUpdateLayoutByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;

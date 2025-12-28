@@ -16,6 +16,7 @@ const delete_inventory_by_id = (id, type, token, refreshData) => {
                 allowOutsideClick: false,
             }).then((result) => {
                 if (result.isConfirmed) {
+                    closeModalBS()    
                     refreshData()
                 } 
             });
@@ -76,6 +77,7 @@ const recover_inventory_by_id = (id, token, refreshData) => {
                 allowOutsideClick: false,
             }).then((result) => {
                 if (result.isConfirmed) {
+                    closeModalBS()    
                     refreshData()
                 } 
             });

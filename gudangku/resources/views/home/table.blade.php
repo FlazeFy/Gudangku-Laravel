@@ -262,8 +262,8 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <h2>Recover this inventory "${el.inventory_name}"?</h2>
-                                                        <a class="btn btn-success mt-4" onclick="recover_inventory_by_id('${el.id}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Recover</a>
+                                                        <p>Recover this inventory "${el.inventory_name}"?</p>
+                                                        <a class="btn btn-success" onclick="recover_inventory_by_id('${el.id}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Recover</a>
                                                     </div>
                                                 </div>
                                             </div>

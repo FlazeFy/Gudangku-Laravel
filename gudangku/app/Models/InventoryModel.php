@@ -88,11 +88,11 @@ class InventoryModel extends Model
         return count($res) > 0 ? $res : null;
     }
 
-    public static function getInventoryByCatalog($user_id = null, $view, $catalog){
-        $res = InventoryModel::select('inventory.id', 'inventory_name', 'inventory_category', 'inventory_desc', 'inventory_merk', 'inventory_room', 
-            'inventory_storage', 'inventory_rack', 'inventory_price', 'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 
-            'inventory_capacity_vol', 'is_favorite', 'is_reminder', 'inventory.created_at', 'inventory.updated_at', 'inventory.deleted_at',
-            'reminder.id as reminder_id', 'reminder_desc', 'reminder_type', 'reminder_context', 'reminder.created_at as reminder_created_at', 'reminder.updated_at as reminder_updated_at')
+    public static function getInventoryByViewAndCatalog($user_id = null, $view, $catalog){
+        $res = InventoryModel::select('inventory.id', 'inventory_name', 'inventory_category', 'inventory_room', 'inventory_storage', 'inventory_rack', 'inventory_price', 
+            'inventory_image', 'inventory_unit', 'inventory_vol', 'inventory_capacity_unit', 'inventory_capacity_vol', 'is_favorite', 'inventory.created_at', 
+            'inventory.updated_at', 'inventory.deleted_at',
+            DB::raw("GROUP_CONCAT(DISTINCT reminder.reminder_type ORDER BY reminder.reminder_type SEPARATOR ', ') AS reminder_type"))
             ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
             ->where("inventory_$view", $catalog);
         

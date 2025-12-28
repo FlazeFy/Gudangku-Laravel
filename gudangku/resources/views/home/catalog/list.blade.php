@@ -45,7 +45,7 @@
                 data.forEach(dt => {
                     $('#inventory-holder').append(`
                         <div class="col-md-6 col-sm-12 px-2">
-                            <button class="btn-feature" style="${dt.deleted_at !== null ? 'background:rgba(221, 0, 33, 0.15) !important;' : ''}"
+                            <button class="btn-feature" style="${dt.deleted_at !== null ? 'background:rgba(221, 0, 33, 0.15) !important;' : ''}; ${dt.deleted_at ? 'border-color:var(--dangerBG);':''}"
                                 onclick="window.location.href='/inventory/edit/${dt.id}'">
                                 <div class="row m-0 align-items-center">
                                     <div class="col-4">
@@ -65,12 +65,13 @@
                                             <span class="p-2 rounded d-inline-flex align-items-center bg-primary">${dt.inventory_vol} ${dt.inventory_unit}</span>
                                             ${dt.inventory_capacity_unit === 'percentage' ? `
                                                 <span class="p-2 rounded ${dt.inventory_capacity_vol > 30 ? 'bg-primary' : 'bg-danger'}">${dt.inventory_capacity_vol}%</span>` : ''}
-                                            ${dt.reminder_id ? `
+                                            ${dt.reminder_type ? `
                                                 <span class="p-2 rounded bg-success">
                                                     <i class="fa-solid fa-bell"></i> ${dt.reminder_type.replaceAll('_',' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}
                                                 </span>` : ''}
                                         </div><hr class="mb-0 mt-3">
                                         <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(dt.created_at,'calendar')}</p>
+                                        ${dt.updated_at ? `<p class='date-text mb-0'>Last Updated : ${getDateToContext(dt.updated_at,'calendar')}</p>`:''}
                                     </div>
                                 </div>
                             </button>
