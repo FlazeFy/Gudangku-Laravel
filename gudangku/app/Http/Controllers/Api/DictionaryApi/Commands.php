@@ -76,7 +76,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteDictionaryById(Request $request, $id)
+    public function hardDeleteDictionaryByID(Request $request, $id)
     {
         try{
             // Validate param

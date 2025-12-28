@@ -100,7 +100,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function postLendQr(Request $request)
+    public function postLendQR(Request $request)
     {
         try{
             $user_id = $request->user()->id;

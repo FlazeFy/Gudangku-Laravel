@@ -58,6 +58,110 @@ class StatsTest extends TestCase
         Audit::auditRecordSheet("Test - Get Total Inventory By Category", "TC-XXX", 'TC-XXX test_get_total_inventory_by_category', json_encode($data));
     }
 
+    public function test_get_dashboard(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $response = $this->httpClient->get("dashboard", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data);
+
+        $check_object = ['total_item','total_fav','total_low','last_added','most_category','highest_price'];
+        foreach ($check_object as $dt) {
+            $this->assertArrayHasKey($dt, $data['data']);
+        }
+
+        $check_not_null_int = ['total_item','total_fav','total_low'];
+        foreach ($check_not_null_int as $dt){
+            $this->assertIsInt($data['data'][$dt]);
+            $this->assertGreaterThanOrEqual(0, $data['data'][$dt]);
+        }
+
+        $this->assertIsString($data['data']['last_added']);
+
+        $check_not_null_object = ['most_category','highest_price'];
+        foreach ($check_not_null_object as $dt) {
+            $this->assertIsArray($data['data'][$dt]); // object as an array
+        }
+
+        $check_object_most_category = ['context','total'];
+        foreach ($check_object_most_category as $dt) {
+            $this->assertArrayHasKey($dt, $data['data']['most_category']);
+        }
+        $this->assertIsInt($data['data']['most_category']['total']);
+        $this->assertIsString($data['data']['most_category']['context']);
+
+        $check_object_highest_price = ['inventory_name','inventory_price'];
+        foreach ($check_object_highest_price as $dt) {
+            $this->assertArrayHasKey($dt, $data['data']['highest_price']);
+        }
+        $this->assertIsInt($data['data']['highest_price']['inventory_price']);
+        $this->assertIsString($data['data']['highest_price']['inventory_name']);
+
+        Audit::auditRecordText("Test - Get Dashboard", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Dashboard", "TC-XXX", 'TC-XXX test_get_dashboard', json_encode($data));
+    }
+
+    public function test_get_tree_map(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $response = $this->httpClient->get("inventory/tree_map", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertArrayHasKey('data', $data);
+        $this->assertIsArray($data['data']);
+
+        $validateNode = function ($dt) use (&$validateNode) {
+            $this->assertArrayHasKey('id', $dt);
+            $this->assertArrayHasKey('name', $dt);
+
+            $this->assertIsString($dt['id']);
+            $this->assertIsString($dt['name']);
+
+            $idParts = explode('_', $dt['id']);
+            $this->assertCount(2, $idParts);
+            $this->assertEquals(32, strlen($idParts[1]));
+
+            if (array_key_exists('children', $dt)) {
+                $this->assertIsArray($dt['children']);
+
+                foreach ($dt['children'] as $child) {
+                    $validateNode($child);
+                }
+            }
+        };
+
+        // Check until the deepest
+        foreach ($data['data'] as $rootNode) {
+            $validateNode($rootNode);
+        }
+
+        Audit::auditRecordText("Test - Get Tree Map", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Get Tree Map", "TC-XXX", 'TC-XXX test_get_tree_map', json_encode($data));
+    }
+
     public function test_get_total_inventory_by_room(): void
     {
         // Exec

@@ -99,7 +99,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function softDeleteInventoryById(Request $request, $id)
+    public function softDeleteInventoryByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -204,7 +204,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putEditImageById(Request $request, $id)
+    public function putEditImageByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -341,7 +341,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteInventoryById(Request $request, $id)
+    public function hardDeleteInventoryByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -459,7 +459,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putFavToogleInventoryById(Request $request, $id)
+    public function putFavToogleInventoryByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -542,7 +542,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putRecoverInventoryById(Request $request, $id)
+    public function putRecoverInventoryByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -967,7 +967,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putEditInventoryById(Request $request,$id)
+    public function putEditInventoryByID(Request $request,$id)
     {
         try{
             $user_id = $request->user()->id;
@@ -1098,7 +1098,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putEditLayoutById(Request $request, $id)
+    public function putEditLayoutByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -1334,7 +1334,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteInventoryLayoutByIdCoor(Request $request, $id, $coor){
+    public function hardDeleteInventoryLayoutByIDCoor(Request $request, $id, $coor){
         try{
             $user_id = $request->user()->id;
             $extra_msg = "";

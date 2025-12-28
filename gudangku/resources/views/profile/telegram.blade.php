@@ -37,12 +37,12 @@
                 $("#update-tele-holder").css({
                     'display':'block'
                 }).empty().append(`
-                    <a type="button" class="btn btn-primary py-1" onclick="validate_telegram_change()" data-bs-toggle="modal" data-bs-target="#updateTelegramIdModal"><i class="fa-solid fa-pen-to-square"></i> Update Telegram ID</a>
-                    <div class="modal fade" id="updateTelegramIdModal" tabindex="-1" aria-labelledby="updateTelegramIdModalLabel" aria-hidden="true">
+                    <a type="button" class="btn btn-primary py-1" onclick="validate_telegram_change()" data-bs-toggle="modal" data-bs-target="#updateTelegramIDModal"><i class="fa-solid fa-pen-to-square"></i> Update Telegram ID</a>
+                    <div class="modal fade" id="updateTelegramIDModal" tabindex="-1" aria-labelledby="updateTelegramIDModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="updateTelegramIdModalLabel">Update Telegram ID</h5>
+                                <h5 class="modal-title" id="updateTelegramIDModalLabel">Update Telegram ID</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -88,7 +88,7 @@
                     xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
                 },
                 success: function(response) {
-                    $('#updateTelegramIdModal').modal('hide')
+                    $('#updateTelegramIDModal').modal('hide')
                     Swal.fire({
                         title: "Success!",
                         text: response.message,

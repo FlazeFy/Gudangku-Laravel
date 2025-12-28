@@ -298,7 +298,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putReminderById(Request $request, $id)
+    public function putReminderByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -718,7 +718,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteReminderById(Request $request, $id)
+    public function hardDeleteReminderByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;

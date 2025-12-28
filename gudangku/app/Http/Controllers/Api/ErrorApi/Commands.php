@@ -68,7 +68,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteErrorById(Request $request, $id)
+    public function hardDeleteErrorByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;

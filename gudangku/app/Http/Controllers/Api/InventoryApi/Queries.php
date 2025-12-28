@@ -929,7 +929,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function getInventoryById(Request $request, $id){
+    public function getInventoryByID(Request $request, $id){
         try{
             $user_id = $request->user()->id;
 

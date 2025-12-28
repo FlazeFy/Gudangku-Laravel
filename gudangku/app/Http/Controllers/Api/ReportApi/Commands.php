@@ -85,7 +85,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteReportItemById(Request $request, $id)
+    public function hardDeleteReportItemByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -169,7 +169,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteReportById(Request $request, $id)
+    public function hardDeleteReportByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -278,7 +278,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putUpdateReportById(Request $request, $id)
+    public function putUpdateReportByID(Request $request, $id)
     {
         try{
             $user_id = $request->user()->id;
@@ -390,7 +390,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putUpdateReportItemById(Request $request, $id)
+    public function putUpdateReportItemByID(Request $request, $id)
     {
         try{
             // Validate request body
@@ -502,7 +502,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putUpdateSplitReportItemById(Request $request, $id){
+    public function putUpdateSplitReportItemByID(Request $request, $id){
         try{
             $validator = Validation::getValidateReport($request,'create');
 
