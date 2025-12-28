@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items-center">
     <h2>Report</h2>
     <span id="add_report-holder"></span>
 </div>

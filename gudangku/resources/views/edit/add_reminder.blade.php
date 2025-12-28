@@ -12,11 +12,17 @@
                     <input hidden id='inventory_name_add_reminder' name="item_name">
                     <label>Description</label>
                     <textarea name="reminder_desc" id="reminder_desc" class="form-control"></textarea>
-                    <label>Type</label>
-                    <select class="form-select" name="reminder_type" id="reminder_type_holder" aria-label="Default select example"></select>
-                    <label>Context</label>
-                    <select class="form-select" name="reminder_context" id="reminder_context" aria-label="Default select example"></select>
-                    <div class="form-check">
+                    <div class="row">
+                        <div class="col-5">
+                            <label>Type</label>
+                            <select class="form-select" name="reminder_type" id="reminder_type_holder" aria-label="Default select example"></select>
+                        </div>
+                        <div class="col-7">
+                            <label>Context</label>
+                            <select class="form-select" name="reminder_context" id="reminder_context" aria-label="Default select example"></select>
+                        </div>
+                    </div>
+                    <div class="form-check d-flex align-items-center">
                         <input class="form-check-input" type="checkbox" name='send_demo' id='send_demo'>
                         <label class="form-check-label" for="flexCheckChecked">Send me the Demo</label>
                     </div>
@@ -37,7 +43,6 @@
     $(document).on('change','#reminder_type_holder',function(){
         const selected = $(this).val()
 
-        alert(selected)
         if(selected !== "-"){
             get_reminder_context_select(selected,'#reminder_context')
         } else {

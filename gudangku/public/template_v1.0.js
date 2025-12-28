@@ -505,7 +505,7 @@ const generate_report_box = (el, search = null) => {
             ${el.report_desc ? `<p>${el.report_desc}</p>` : `<p class="no-data-message">- No Description Provided -</p>`}
             <h6><b>Items :</b></h6>
             <div class='d-flex justify-content-start mt-2'>${
-                search ? `<div class="mb-3 d-flex">${highlight_item(search,el.report_items)}</div>` : el.report_items ? `<p>${el.report_items}</p>` : `<p class="no-data-message">- No items attached -</p>`}
+                search ? `<div class="mb-3 d-flex flex-wrap">${highlight_item(search,el.report_items)}</div>` : el.report_items ? `<p>${el.report_items}</p>` : `<p class="no-data-message">- No items attached -</p>`}
             </div><hr class="mt-0">
             ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
                 <div class="d-flex justify-content-between mt-2">
@@ -531,5 +531,58 @@ const generate_report_box = (el, search = null) => {
             ` : ''}
             <p class='date-text mt-2 mb-0'>Created At : ${getDateToContext(el.created_at,'calendar')}</p>
         </button>
+    `
+}
+
+const generate_reminder_box = (dt, inventory_id) => {
+    return `
+        <div class="reminder-box" data-reminder-type="${dt.reminder_type}" data-reminder-context="${dt.reminder_context}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReminder${dt.id}" aria-expanded="false" aria-controls="collapseExample">
+            <div class='d-flex justify-content-between flex-wrap gap-2 text-white'>
+                <p class="mb-0"><b>Description :</b> ${dt.reminder_desc}</p>
+                <span class='rounded-pill bg-success px-2 py-1' style='font-size:var(--textMD);'><i class="fa-solid fa-bell"></i> ${dt.reminder_type} at ${dt.reminder_context}</span>
+            </div>
+        </div>
+        <div class="accordion-collapse collapse" data-bs-parent="#reminder_holder" id="collapseReminder${dt.id}">
+            <div class="container py-0 ps-3 ps-md-4 ms-3 ms-md-5 mb-4 w-auto" style='border-left: var(--spaceMini) solid var(--primaryColor); border-radius:0;'>
+                <div class='d-flex justify-content-between'>
+                    <div>
+                        <p class='date-text mb-0'>Created At : ${getDateToContext(dt.created_at,'calendar')}</p>
+                        <p class='date-text mb-0'>Last Updated : ${dt.updated_at ? getDateToContext(dt.updated_at,'calendar') : '-'}</p>
+                    </div>
+                    <div>
+                        <a class='btn btn-danger py-1' data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${dt.id}"><i class="fa-solid fa-trash"></i><span class="d-none d-md-inline"> Delete</span></a>
+                        <a class='btn btn-success py-1 save_reminder-button' data-id="${dt.id}" data-inventory-id="${inventory_id}"><i class="fa-solid fa-floppy-disk"></i><span class="d-none d-md-inline"> Save Changes</span></a>
+                        <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" id="modalDeleteReminder_${dt.id}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title fw-bold" id="exampleModalLabel">Delete Reminder</h5>
+                                        <a class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><span class="text-danger">Permentally delete</span> this reminder "${dt.reminder_desc}"?</p>
+                                        <a class="btn btn-danger" onclick="delete_reminder_by_id('${dt.id}', '${token}', () => get_detail_inventory('${inventory_id}'))"> Yes, Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-12">
+                        <label>Type</label>
+                        <select class="form-select reminder_type_holder" name="reminder_type" aria-label="Default select example"></select>
+                    </div>
+                    <div class="col-sm-6 col-12">
+                        <label>Context</label>
+                        <select class="form-select reminder_context_holder" name="reminder_context" aria-label="Default select example"></select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Description</label>
+                        <textarea name="reminder_desc" class="form-control reminder_desc_holder">${dt.reminder_desc}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
     `
 }
