@@ -43,28 +43,21 @@ class HistoryTest extends TestCase
         $this->assertArrayHasKey('data', $data);
 
         foreach ($data['data']['data'] as $dt) {
-            $this->assertArrayHasKey('id', $dt);
-            $this->assertArrayHasKey('history_type', $dt);
-            $this->assertArrayHasKey('history_context', $dt);
-            $this->assertArrayHasKey('created_at', $dt);
-            $this->assertArrayHasKey('created_by', $dt);
+            $check_object = ['id','history_type','history_context','created_at','created_by'];
+            foreach ($check_object as $col) {
+                $this->assertArrayHasKey($col, $dt);
+            }
 
-            $this->assertNotNull($dt['id']);
-            $this->assertIsString($dt['id']);
-            $this->assertEquals(36,strlen($dt['id']));
+            $check_not_null_string = ['id','history_type','history_context','created_at','created_by'];
+            foreach ($check_not_null_string as $col) {
+                $this->assertNotNull($dt[$col]);
+                $this->assertIsString($dt[$col]);
+            }
 
-            $this->assertNotNull($dt['history_type']);
-            $this->assertIsString($dt['history_type']);
-
-            $this->assertNotNull($dt['history_context']);
-            $this->assertIsString($dt['history_context']);
-
-            $this->assertNotNull($dt['created_at']);
-            $this->assertIsString($dt['created_at']);
-
-            $this->assertNotNull($dt['created_by']);
-            $this->assertIsString($dt['created_by']);
-            $this->assertEquals(36,strlen($dt['created_by']));
+            $check_uuid = ['id','created_by'];
+            foreach ($check_uuid as $col) {
+                $this->assertEquals(36,strlen($dt[$col]));
+            }
         }
 
         Audit::auditRecordText("Test - Get All History", "TC-XXX", "Result : ".json_encode($data));

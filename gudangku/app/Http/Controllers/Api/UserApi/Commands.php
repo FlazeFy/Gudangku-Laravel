@@ -280,8 +280,16 @@ class Commands extends Controller
      *     summary="Post Register Validation Token",
      *     description="This request is used to check and send validation token to the user who in registration process. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
      *     tags={"User"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username","email"},
+     *             @OA\Property(property="username", type="string", example="FlazenApps"),
+     *             @OA\Property(property="email", type="string", example="flazfy@gmail.com")
+     *         )
+     *     ),
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="the validation token has been sended to {email} email account",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
@@ -334,7 +342,7 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
-                        ], Response::HTTP_OK);
+                        ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'failed',
@@ -378,7 +386,7 @@ class Commands extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="account is registered",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
@@ -421,7 +429,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function postValidateRegister(Request $request)
+    public function postValidateRegisterAccount(Request $request)
     {
         try{
             // Validate request body
@@ -462,13 +470,13 @@ class Commands extends Controller
                                     'token' => $token,
                                     'status' => 'success',
                                     'message' => Generator::getMessageTemplate("custom", "account is registered"),
-                                ], Response::HTTP_OK);   
+                                ], Response::HTTP_CREATED);   
                             } else {
                                 return response()->json([
                                     'is_signed_in' => false,
                                     'status' => 'success',
                                     'message' => Generator::getMessageTemplate("custom", "account is registered"),
-                                ], Response::HTTP_OK);   
+                                ], Response::HTTP_CREATED);   
                             }
                         } else {
                             return response()->json([
@@ -506,12 +514,13 @@ class Commands extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"username"},
-     *             @OA\Property(property="username", type="string", example="flazefy")
+     *             required={"username","email"},
+     *             @OA\Property(property="username", type="string", example="FlazenApps"),
+     *             @OA\Property(property="email", type="string", example="flazfy@gmail.com")
      *         )
      *     ),
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="the validation token has been sended to {email} email account",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
@@ -567,7 +576,7 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
-                        ], Response::HTTP_OK);
+                        ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'failed',
@@ -592,7 +601,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
-                    ], Response::HTTP_OK);
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',

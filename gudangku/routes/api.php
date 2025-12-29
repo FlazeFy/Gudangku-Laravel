@@ -29,7 +29,7 @@ Route::post('/v1/login', [CommandAuthApi::class, 'postLogin']);
 
 Route::prefix('/v1/register')->group(function () {
     Route::post('/token', [CommandsUserController::class, 'postRegisterValidationToken']);
-    Route::post('/account', [CommandsUserController::class, 'postValidateRegister']);
+    Route::post('/account', [CommandsUserController::class, 'postValidateRegisterAccount']);
     Route::post('/regen_token', [CommandsUserController::class, 'postRegenerateRegisterToken']);
 });
 

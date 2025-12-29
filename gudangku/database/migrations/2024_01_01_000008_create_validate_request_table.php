@@ -17,8 +17,8 @@ return new class extends Migration
             $table->dateTime('created_at', $precision = 0);
             $table->string('created_by', 36);
 
-            // References
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            // Note: This `created_by` does not have a direct relation to the users table, because it can store either a user ID or a username.
+            // During registration, `created_by` may be filled with a username even when the user record does not yet exist in the users table.
         });
     }
 

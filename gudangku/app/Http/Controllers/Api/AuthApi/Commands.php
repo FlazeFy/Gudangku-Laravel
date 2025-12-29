@@ -18,7 +18,7 @@ use App\Helpers\Generator;
  * @OA\Info(
  *     title="GudangKu",
  *     version="1.0.0",
- *     description="API Documentation for GudangKu",
+ *     description="This document describes the GudangKu API, built with Laravel (PHP), MySQL as the primary database, and Firebase for cloud storage, notification, and NoSQL data storage.",
  *     @OA\Contact(
  *         email="flazen.edu@gmail.com"
  *     )

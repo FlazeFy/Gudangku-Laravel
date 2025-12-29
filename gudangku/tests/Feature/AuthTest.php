@@ -22,18 +22,17 @@ class AuthTest extends TestCase
         ]);
     }
 
-    // TC-001
     public function test_post_login()
     {
-        // Exec
-        $param = [
-            'username' => 'richardkyle',
+        $body = [
+            'username' => 'flazefy',
             'password' => 'nopass123'
         ];
-        $response = $this->httpClient->post("/api/v1/login", [
-            'json' => $param
-        ]);
 
+        // Exec
+        $response = $this->httpClient->post("/api/v1/login", [
+            'json' => $body
+        ]);
         $data = json_decode($response->getBody(), true);
 
         // Test Parameter
@@ -61,28 +60,107 @@ class AuthTest extends TestCase
         }
 
         Audit::auditRecordText("Test - Post Login", "TC-001", "Token : ".$data['token']);
-        Audit::auditRecordSheet("Test - Post Login", "TC-001", json_encode($param), $data['token']);
+        Audit::auditRecordSheet("Test - Post Login", "TC-001", json_encode($body), $data['token']);
+        
         return $data['token'];
     }
 
-    // TC-002
-    public function test_get_sign_out(): void
+    public function test_post_sign_out(): void
     {
         // Exec
         $token = $this->test_post_login();
-        $response = $this->httpClient->get("/api/v1/logout", [
+        $response = $this->httpClient->post("/api/v1/logout", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('logout success',$data['message']);
+
+        Audit::auditRecordText("Test - Post Sign Out", "TC-002", "message : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Sign Out", "TC-002", 'TC-001 test_post_sign_out', json_encode($data));
+    }
+
+    public function test_post_register_validation_token(): void
+    {
+        $body = [
+            'username' => 'tester@gmail.com',
+            'email' => 'flazen.work@gmail.com'
+        ];
+
+        // Exec
+        $response = $this->httpClient->post("/api/v1/register/token", [
+            'json' => $body
         ]);
 
         $data = json_decode($response->getBody(), true);
 
         // Test Parameter
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
         $this->assertArrayHasKey('message', $data);
+        $this->assertEquals("the validation token has been sended to ".$body['email']." email account",$data['message']);
 
-        Audit::auditRecordText("Test - Sign Out", "TC-002", "message : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Sign Out", "TC-002", 'TC-001 test_post_login', json_encode($data));
+        Audit::auditRecordText("Test - Post Register Validation Token", "TC-XXX", "message : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Register Validation Token", "TC-XXX", 'TC-001 test_post_register_validation_token', json_encode($data));
+    }
+
+    public function test_post_validate_register_account(): void
+    {
+        $body = [
+            'username' => 'tester@gmail.com',
+            'email' => 'flazen.work@gmail.com',
+            'token' => 'SO9KWH',
+            'password' => 'nopass123'
+        ];
+
+        // Exec
+        $response = $this->httpClient->post("/api/v1/register/account", [
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('account is registered',$data['message']);
+
+        Audit::auditRecordText("Test - Post Validate Register Account", "TC-XXX", "message : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Validate Register Account", "TC-XXX", 'TC-001 test_post_validate_register_account', json_encode($data));
+    }
+
+    public function test_post_regenerate_register_token(): void
+    {
+        $body = [
+            'username' => 'tester@gmail.com',
+            'email' => 'flazen.work@gmail.com',
+        ];
+
+        // Exec
+        $response = $this->httpClient->post("/api/v1/register/regen_token", [
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals("the validation token has been sended to ".$body['email']." email account",$data['message']);
+
+        Audit::auditRecordText("Test - Post Regenerate Register Token", "TC-XXX", "message : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Regenerate Register Token", "TC-XXX", 'TC-001 test_post_regenerate_register_token', json_encode($data));
     }
 }

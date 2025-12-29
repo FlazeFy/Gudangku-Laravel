@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "GudangKu",
-        "description": "API Documentation for GudangKu",
+        "description": "This document describes the GudangKu API, built with Laravel (PHP), MySQL as the primary database, and Firebase for cloud storage, notification, and NoSQL data storage.",
         "contact": {
             "email": "flazen.edu@gmail.com"
         },
@@ -11283,8 +11283,32 @@
                 "summary": "Post Register Validation Token",
                 "description": "This request is used to check and send validation token to the user who in registration process. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
                 "operationId": "ef6f3e60adfc3031ca81c0d3363d6592",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "FlazenApps"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "flazfy@gmail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "the validation token has been sended to {email} email account",
                         "content": {
                             "application/json": {
@@ -11354,7 +11378,7 @@
                 ],
                 "summary": "Post Register Account & Accept Validation",
                 "description": "This request is used to finally create an user and accept validation request. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
-                "operationId": "8fc614cf74a052718c41f56bf5e9bf3c",
+                "operationId": "ecb3b593730448edb3a9962d3208ff2d",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11390,7 +11414,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "account is registered",
                         "content": {
                             "application/json": {
@@ -11515,12 +11539,17 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "username"
+                                    "username",
+                                    "email"
                                 ],
                                 "properties": {
                                     "username": {
                                         "type": "string",
-                                        "example": "flazefy"
+                                        "example": "FlazenApps"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "flazfy@gmail.com"
                                     }
                                 },
                                 "type": "object"
@@ -11529,7 +11558,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "the validation token has been sended to {email} email account",
                         "content": {
                             "application/json": {
