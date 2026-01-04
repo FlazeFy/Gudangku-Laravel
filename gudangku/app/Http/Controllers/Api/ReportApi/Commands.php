@@ -653,7 +653,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function postReport(Request $request){
+    public function postCreateReport(Request $request){
         try{
            // Validate request body
             $validator = Validation::getValidateReport($request,'create');
@@ -825,7 +825,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function postReportItem(Request $request,$id){
+    public function postCreateReportItem(Request $request,$id){
         try{
             // Validate request body
             $validator = Validation::getValidateReportItem($request,'create');

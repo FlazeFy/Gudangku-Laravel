@@ -183,7 +183,7 @@ class Commands extends Controller
      * )
      */
 
-    public function postDictionary(Request $request)
+    public function postCreateDictionary(Request $request)
     {
         try{
             // Validate request body

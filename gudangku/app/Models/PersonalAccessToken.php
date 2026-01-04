@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="name", type="string", description="Source of the auth token generated"),
  *     @OA\Property(property="token", type="string", description="Auth token that will be used for Auth Bearer all the protected API"),
  *     @OA\Property(property="abilities", type="string", description="Ability of auth token"),
- * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the auth token was created"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the auth token was updated"),
  *     @OA\Property(property="expires_at", type="string", format="date-time", description="Timestamp when the auth token will expired"),

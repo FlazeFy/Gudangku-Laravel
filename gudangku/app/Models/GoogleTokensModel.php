@@ -16,7 +16,6 @@ use App\Helpers\Generator;
  *     @OA\Property(property="id", type="integer", description="Primary Key"),
  *     @OA\Property(property="access_token", type="string", description="Access token of Google Sign In"),
  *     @OA\Property(property="expiry", type="string", description="Expire datetime of access token"),
- * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the user created the history"),
  *     @OA\Property(property="created_by", type="string", format="uuid", description="ID of the user who created the history")
  * )

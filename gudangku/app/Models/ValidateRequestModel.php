@@ -16,7 +16,6 @@ use App\Helpers\Generator;
  *     @OA\Property(property="id", type="integer", description="Primary Key"),
  *     @OA\Property(property="request_type", type="string", description="Type of the request"),
  *     @OA\Property(property="request_context", type="string", description="Context of the request"),
- * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the user make the request"),
  *     @OA\Property(property="created_by", type="string", format="uuid", description="ID of the user who make the request")
  * )

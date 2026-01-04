@@ -12,7 +12,6 @@ use App\Helpers\Generator;
 use App\Helpers\Audit;
 use App\Helpers\TelegramMessage;
 // Models
-use App\Models\DictionaryModel;
 use App\Models\ReportItemModel;
 use App\Models\AdminModel;
 use App\Models\UserModel;
@@ -27,12 +26,7 @@ class ReportDetailController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
 
         if($user_id != null){
-            $dct_cat = DictionaryModel::where('dictionary_type', 'report_category')
-                ->get();
-
-            return view('report.detail.index')
-                ->with('id',$id)
-                ->with('dct_cat',$dct_cat);
+            return view('report.detail.index')->with('id',$id);
         } else {
             return redirect("/login");
         }

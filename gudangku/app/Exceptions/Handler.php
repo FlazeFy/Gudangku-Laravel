@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Exceptions;
-
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+
+// Model
 use App\Models\ErrorModel;
 
 class Handler extends ExceptionHandler

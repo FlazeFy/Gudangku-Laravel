@@ -15,7 +15,6 @@ use App\Helpers\Generator;
  * 
  *     @OA\Property(property="id", type="integer", description="Primary Key"),
  *     @OA\Property(property="reminder_id", type="string", description="ID of the reminder"),
- * 
  *     @OA\Property(property="last_execute", type="string", format="date-time", description="Timestamp when the reminder was executed"),
  * )
  */

@@ -17,7 +17,6 @@ use App\Helpers\Generator;
  *     @OA\Property(property="type", type="string", description="Type of the failed jobs on Task Scheduling"),
  *     @OA\Property(property="status", type="string", description="Status of the failed jobs on Task Scheduling"),
  *     @OA\Property(property="payload", type="string", description="Respond / Payload from the error"),
- * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the jobs had failed"),
  * )
  */

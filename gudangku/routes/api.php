@@ -28,15 +28,15 @@ use App\Http\Controllers\Api\LendApi\Queries as QueriesLendController;
 Route::post('/v1/login', [CommandAuthApi::class, 'postLogin']);
 
 Route::prefix('/v1/register')->group(function () {
-    Route::post('/token', [CommandsUserController::class, 'postRegisterValidationToken']);
-    Route::post('/account', [CommandsUserController::class, 'postValidateRegisterAccount']);
-    Route::post('/regen_token', [CommandsUserController::class, 'postRegenerateRegisterToken']);
+    Route::post('/token', [CommandsUserController::class, 'postCreateRegisterValidationToken']);
+    Route::post('/account', [CommandsUserController::class, 'postCreateValidateRegisterAccount']);
+    Route::post('/regen_token', [CommandsUserController::class, 'postCreateRegenerateRegisterToken']);
 });
 
 Route::prefix('/v1/lend')->group(function () {
     Route::prefix('/inventory/{lend_id}')->group(function () {
         Route::get('/', [QueriesLendController::class, 'getLendInventory']);
-        Route::post('/', [CommandsLendController::class, 'postBorrowInventory']);
+        Route::post('/', [CommandsLendController::class, 'postCreateBorrowInventory']);
     });
 });
 
@@ -85,8 +85,8 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
         Route::get('/', [QueriesInventoryController::class, 'getInventoryByID']);
         Route::get('/doc', [QueriesInventoryController::class, 'getInventoryDetailDocument']);
     });
-    Route::post('/', [CommandsInventoryController::class, 'postInventory']);
-    Route::post('/layout', [CommandsInventoryController::class, 'postInventoryLayout']);
+    Route::post('/', [CommandsInventoryController::class, 'postCreateInventory']);
+    Route::post('/layout', [CommandsInventoryController::class, 'postCreateInventoryLayout']);
     Route::delete('/delete_layout/{id}/{coor}', [CommandsInventoryController::class, 'hardDeleteInventoryLayoutByIDCoor']);
     Route::delete('/delete/{id}', [CommandsInventoryController::class, 'softDeleteInventoryByID']);
     Route::delete('/destroy/{id}', [CommandsInventoryController::class, 'hardDeleteInventoryByID']);
@@ -116,11 +116,11 @@ Route::prefix('/v1/stats')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/mark', [QueriesReminderController::class, 'getReminderMark']);
     Route::get('/history', [QueriesReminderController::class, 'getReminderHistory']);
-    Route::post('/', [CommandsReminderController::class, 'postReminder']);
+    Route::post('/', [CommandsReminderController::class, 'postCreateReminder']);
     Route::post('/copy', [CommandsReminderController::class, 'postCopyReminder']);
     Route::post('/re_remind', [CommandsReminderController::class, 'postReRemind']);
     Route::delete('/{id}', [CommandsReminderController::class, 'hardDeleteReminderByID']);
-    Route::put('/{id}', [CommandsReminderController::class, 'putReminderByID']);
+    Route::put('/{id}', [CommandsReminderController::class, 'putUpdateReminderByID']);
 });
 
 Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {
@@ -130,7 +130,7 @@ Route::prefix('/v1/analyze')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/lend')->middleware(['auth:sanctum'])->group(function () {
-    Route::post('/qr', [CommandsLendController::class, 'postLendQR']);
+    Route::post('/qr', [CommandsLendController::class, 'postCreateLendQR']);
     Route::put('/update_status/{lend_id}', [CommandsLendController::class, 'putConfirmationReturned']);
     Route::get('/qr', [QueriesLendController::class, 'getLendActive']);
     Route::get('/qr/history', [QueriesLendController::class, 'getLendHistory']);
@@ -147,15 +147,15 @@ Route::prefix('/v1/error')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/dictionary')->middleware(['auth:sanctum'])->group(function () {
-    Route::post('/', [CommandsDictionaryController::class, 'postDictionary']);
+    Route::post('/', [CommandsDictionaryController::class, 'postCreateDictionary']);
     Route::delete('/{id}', [CommandsDictionaryController::class, 'hardDeleteDictionaryByID']);
 });
 
 Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesReportController::class, 'getAllReport']);
     Route::get('/{search}/{id}', [QueriesReportController::class, 'getReportByInventoryNameOrInventoryID']);
-    Route::post('/', [CommandsReportController::class, 'postReport']);
-    Route::post('/item/{id}', [CommandsReportController::class, 'postReportItem']);
+    Route::post('/', [CommandsReportController::class, 'postCreateReport']);
+    Route::post('/item/{id}', [CommandsReportController::class, 'postCreateReportItem']);
     Route::prefix('/report_image')->group(function () {
         Route::post('/{id}', [CommandsReportController::class, 'postUpdateReportImageByReportID']);
         Route::delete('/destroy/{report_id}/{image_id}', [CommandsReportController::class, 'hardDeleteReportImageByReportIDAndImageID']);

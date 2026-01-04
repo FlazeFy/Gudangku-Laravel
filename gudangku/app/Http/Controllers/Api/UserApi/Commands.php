@@ -314,7 +314,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function postRegisterValidationToken(Request $request)
+    public function postCreateRegisterValidationToken(Request $request)
     {
         try{
             $username = $request->username;
@@ -429,7 +429,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function postValidateRegisterAccount(Request $request)
+    public function postCreateValidateRegisterAccount(Request $request)
     {
         try{
             // Validate request body
@@ -545,7 +545,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function postRegenerateRegisterToken(Request $request)
+    public function postCreateRegenerateRegisterToken(Request $request)
     {
         try{
             $username = $request->username;

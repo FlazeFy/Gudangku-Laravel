@@ -20,7 +20,6 @@ use App\Helpers\Generator;
  *     @OA\Property(property="report_category", type="string", description="Category of the report"),
  *     @OA\Property(property="report_image", type="string", description="Images of the report"),
  *     @OA\Property(property="is_reminder", type="string", description="Indicates if a reminder is set for the report"),
- * 
  *     @OA\Property(property="remind_at", type="string", format="date-time", description="Timestamp when the report remind to user"),
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the user created the report"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the user updated the report"),

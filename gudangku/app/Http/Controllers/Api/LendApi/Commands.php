@@ -100,7 +100,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function postLendQR(Request $request)
+    public function postCreateLendQR(Request $request)
     {
         try{
             $user_id = $request->user()->id;
@@ -268,7 +268,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function postBorrowInventory(Request $request,$lend_id)
+    public function postCreateBorrowInventory(Request $request,$lend_id)
     {
         try{
             // Validate request body

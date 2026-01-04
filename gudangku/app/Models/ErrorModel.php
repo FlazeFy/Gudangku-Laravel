@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="stack_trace", type="string", description="Trail of function calls leading up to the error"),
  *     @OA\Property(property="file", type="string", description="Path of the file where the error is faced"),
  *     @OA\Property(property="line", type="integer", description="Line of code in specific file where the error is faced"),
- * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the error was faced"),
  *     @OA\Property(property="fixed_at", type="string", format="date-time", description="Timestamp when the dev team finally fix and deploy the bug / error fix"),
  *     @OA\Property(property="faced_by", type="string", format="uuid", description="ID of the user who specific faced the error"),
