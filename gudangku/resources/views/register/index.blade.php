@@ -18,7 +18,7 @@
     <script>
         is_process = false
         window.addEventListener('beforeunload', function(event) {
-            is_process = check_filling_status(['checkTerm','username','password','email','password_validation'])
+            is_process = checkFillingStatus(['checkTerm','username','password','email','password_validation'])
             if(is_process == true){
                 event.preventDefault()
                 event.returnValue = ''

@@ -249,7 +249,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     if(response.status != 404){
-                        generate_api_error(response, true)
+                        generateAPIError(response, true)
                     }
                 }
             });

@@ -86,7 +86,7 @@
     setCurrentLocalDateTime('created_at')
 
     $(async function () {
-        await get_context_opt('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
+        await getDictionaryByContext('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
     })
 
     const submit_add = () => {
@@ -129,7 +129,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }

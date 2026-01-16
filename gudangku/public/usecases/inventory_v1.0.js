@@ -22,12 +22,12 @@ const delete_inventory_by_id = (id, type, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }
 
-const fav_toogle_inventory_by_id = (id, is_favorite, token, refreshData) => {
+const favToogleInventoryByID = (id, is_favorite, token, refreshData) => {
     Swal.showLoading()
     $.ajax({
         url: `/api/v1/inventory/fav_toggle/${id}`,
@@ -54,7 +54,7 @@ const fav_toogle_inventory_by_id = (id, is_favorite, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }
@@ -83,7 +83,7 @@ const recover_inventory_by_id = (id, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }

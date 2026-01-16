@@ -47,7 +47,7 @@
     }
     
     $(async function () {
-        await get_context_opt('report_category',token,"<?= $filter_category ?? "all" ?>")
+        await getDictionaryByContext('report_category',token,"<?= $filter_category ?? "all" ?>")
     })
     place_reset_btn()
 

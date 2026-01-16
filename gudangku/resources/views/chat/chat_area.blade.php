@@ -144,7 +144,7 @@
                 `)
                 
                 $( document ).ready(function() {
-                    generate_pie_chart(`Category Distribution`,'category_distribution',data.found_inventory_category)
+                    generatePieChart(`Category Distribution`,'category_distribution',data.found_inventory_category)
                 });
 
                 $('#chat-section').append(`
@@ -238,7 +238,7 @@
                 `)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }

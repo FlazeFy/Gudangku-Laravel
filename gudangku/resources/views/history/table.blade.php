@@ -61,14 +61,14 @@
                     `);
                 });
 
-                generate_pagination(item_holder, get_all_history, total_page, current_page)
+                generatePagination(item_holder, get_all_history, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 } else {
-                    template_alert_container(item_holder, 'no-data', "No history found to show", null, '<i class="fa-solid fa-scroll"></i>')
+                    templateAlertContainer(item_holder, 'no-data', "No history found to show", null, '<i class="fa-solid fa-scroll"></i>')
                 }
             }
         });

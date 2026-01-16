@@ -53,7 +53,7 @@
 
                 data.forEach(el => {
                     if(role == 0){
-                        $(`#${item_holder}`).append(generate_report_box(el, null));
+                        $(`#${item_holder}`).append(generateReportBox(el, null));
                     } else {
                         $(`#${item_holder}`).append(`
                             <tr>
@@ -98,15 +98,15 @@
                     }
                 });
 
-                generate_pagination(item_holder, get_my_report_all, total_page, current_page)
+                generatePagination(item_holder, get_my_report_all, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    generate_api_error(response, true);
+                    generateAPIError(response, true);
                 } else {
                     $('#total-item').text(0)
-                    template_alert_container(item_holder, 'no-data', "No report found to show", null, '<i class="fa-solid fa-scroll"></i>','')
+                    templateAlertContainer(item_holder, 'no-data', "No report found to show", null, '<i class="fa-solid fa-scroll"></i>','')
                 }
             }
         });

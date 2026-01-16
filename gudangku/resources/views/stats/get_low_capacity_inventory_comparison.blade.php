@@ -28,14 +28,14 @@
                     const data = response.data
                     localStorage.setItem(ctx,JSON.stringify(data))
                     localStorage.setItem(`last-hit-${ctx}`,Date.now())
-                    generate_gauge_chart(title,ctx_holder,data,'low_best')
+                    generateGaugeChart(title,ctx_holder,data,'low_best')
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
                     if(response.status != 404){
                         failedMsg()
                     } else {
-                        template_alert_container(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>','/inventory/add')
+                        templateAlertContainer(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>','/inventory/add')
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                     }
                 }
@@ -49,7 +49,7 @@
             if(((now - lastHit) / 1000) < statsFetchRestTime){
                 const data = JSON.parse(localStorage.getItem(ctx))
                 if(data){
-                    generate_gauge_chart(title,ctx_holder,data,'low_best')
+                    generateGaugeChart(title,ctx_holder,data,'low_best')
                     Swal.close()
                 } else {
                     Swal.close()

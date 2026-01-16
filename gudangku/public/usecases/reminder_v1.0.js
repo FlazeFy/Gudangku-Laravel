@@ -22,12 +22,12 @@ const delete_reminder_by_id = (id, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }
 
-const update_reminder_by_id = (id,inventory_id,data) => {    
+const updateReminderByID = (id,inventory_id,data) => {    
     $.ajax({
         url: `/api/v1/reminder/${id}`,
         type: 'PUT',
@@ -56,7 +56,7 @@ const update_reminder_by_id = (id,inventory_id,data) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }

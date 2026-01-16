@@ -21,7 +21,7 @@ const destroy_error_by_id = (id, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }

@@ -264,10 +264,10 @@
                 });
                 $('#report_check_extra').html(`
                     <div class="d-flex gap-2 mb-3">
-                        <a class="btn btn-primary py-1" onclick="check_all('.check-inventory','check'); checked_toggle_event();">
+                        <a class="btn btn-primary py-1" onclick="checkAll('.check-inventory','check'); checked_toggle_event();">
                             <i class="fa-solid fa-check"></i><span class="d-none d-md-inline"> Check All</span>
                         </a>
-                        <a class="btn btn-danger py-1" onclick="check_all('.check-inventory','uncheck'); checked_toggle_event();">
+                        <a class="btn btn-danger py-1" onclick="checkAll('.check-inventory','uncheck'); checked_toggle_event();">
                             <i class="fa-solid fa-xmark"></i><span class="d-none d-md-inline"> Uncheck All</span>
                         </a>
                         <a class="btn btn-success py-1 flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#modalAddReport">
@@ -286,7 +286,7 @@
                 `)
             }
 
-            await get_context_opt('report_category,report_category_split',token,data.report_category)
+            await getDictionaryByContext('report_category,report_category_split',token,data.report_category)
 
             reportCategoryHolderEventHandler('#report_category_holder')
 
@@ -334,7 +334,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }
@@ -362,7 +362,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true);
+                generateAPIError(response, true);
             }
         });
     }
@@ -399,7 +399,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }
@@ -434,7 +434,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }
@@ -539,7 +539,7 @@
 
     $(document).on('click','#split_report-button',async function(){
         const report_category = $('#report_category_holder').val()
-        await get_context_opt('report_category,report_category_split',token,report_category)
+        await getDictionaryByContext('report_category,report_category_split',token,report_category)
     })
 
     $(document).on('change','.check-inventory', function(){

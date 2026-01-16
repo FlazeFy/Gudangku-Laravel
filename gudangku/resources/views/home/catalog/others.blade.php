@@ -41,18 +41,18 @@
                             `)
                         });
                     } else {
-                        template_alert_container(`inventory_by_${el}-holder`, 'no-data', `No inventory by ${el} to show`, null, '<i class="fa-solid fa-rotate-left"></i>')
+                        templateAlertContainer(`inventory_by_${el}-holder`, 'no-data', `No inventory by ${el} to show`, null, '<i class="fa-solid fa-rotate-left"></i>')
                     }
                 });                
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 } else {
                     holder.forEach(el => {
                         $(`#inventory_by_${el}-holder`).empty()
-                        template_alert_container(`inventory_by_${el}-holder`, 'no-data', `No inventory by ${el} to show`, null, '<i class="fa-solid fa-rotate-left"></i>')
+                        templateAlertContainer(`inventory_by_${el}-holder`, 'no-data', `No inventory by ${el} to show`, null, '<i class="fa-solid fa-rotate-left"></i>')
                     });
                 }
             }

@@ -96,7 +96,7 @@ const ucFirst = (val) => {
     return res
 }
 
-const generate_pagination = (items_holder, fetch_callback, total_page, current_page) => {
+const generatePagination = (items_holder, fetch_callback, total_page, current_page) => {
     let page_element = ''
     for (let i = 1; i <= total_page; i++) {
         page_element += `
@@ -117,7 +117,7 @@ const generate_pagination = (items_holder, fetch_callback, total_page, current_p
     });
 };
 
-const generate_api_error = (response, is_list_format) => {
+const generateAPIError = (response, is_list_format) => {
     Swal.close()
     if (response.status === 422) {
         let msg = response.responseJSON.message
@@ -155,7 +155,7 @@ const generate_api_error = (response, is_list_format) => {
     }
 }
 
-const generate_empty_field_error = (context) => {
+const generateEmptyFieldError = (context) => {
     Swal.fire({
         title: "Oops!",
         text: `You must select the ${context}`,
@@ -163,7 +163,7 @@ const generate_empty_field_error = (context) => {
     });
 }
 
-const generate_last_page_error = () => {
+const generateLastPageError = () => {
     Swal.fire({
         title: "Oops!",
         text: "You are at the last page",
@@ -171,7 +171,7 @@ const generate_last_page_error = () => {
     });
 }
 
-const check_filling_status = (list) => {
+const checkFillingStatus = (list) => {
     return list.some((dt) => {
         const el = $(`#${dt}`)
         if(el && el.length > 0){
@@ -191,7 +191,7 @@ const check_filling_status = (list) => {
     });
 }
 
-const get_reminder_context = (reminderType) => {
+const getReminderContext = (reminderType) => {
     switch (reminderType) {
         case 'Every Day': {
             // Hours: 00–23
@@ -220,18 +220,18 @@ const get_reminder_context = (reminderType) => {
     }
 }
 
-const get_reminder_context_select = (reminderType, target, selected = null) => {
+const getReminderContextSelect = (reminderType, target, selected = null) => {
     const $target = target instanceof jQuery ? target : $(target)
 
     $target.empty().append(`<option>-</option>`)
-    const list = get_reminder_context(reminderType)
+    const list = getReminderContext(reminderType)
 
     list.forEach(dt => {
         $target.append(`<option value="${dt}" ${selected === dt ? "selected":""}>${dt}</option>`)
     })
 }
 
-const count_time = (date1, date2) => {
+const countTime = (date1, date2) => {
     const oneHour = 60 * 60 * 1000
     const oneDay = 24 * oneHour
     const firstDate = new Date(date1)
@@ -249,7 +249,7 @@ const count_time = (date1, date2) => {
     }
 }
 
-const check_all = (target,type) => {
+const checkAll = (target,type) => {
     $(target).prop('checked', type == 'check' ? true : false)
 } 
 

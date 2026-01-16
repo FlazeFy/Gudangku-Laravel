@@ -11,10 +11,10 @@
             const reminder_context = $(this).data('reminder-context')
             const index = $('.reminder-box').index(this)
 
-            await get_context_opt('reminder_type',token,reminder_type,'.')  
+            await getDictionaryByContext('reminder_type',token,reminder_type,'.')  
 
             const $contextHolder = $('.reminder_context_holder').eq(index)
-            get_reminder_context_select(reminder_type,$contextHolder,reminder_context)
+            getReminderContextSelect(reminder_type,$contextHolder,reminder_context)
         })
 
         $(document).on('change','.reminder_type_holder',function(){
@@ -23,9 +23,9 @@
             const $contextHolder = $('.reminder_context_holder').eq(index)
 
             if(selected !== "-"){
-                get_reminder_context_select(selected,$contextHolder)
+                getReminderContextSelect(selected,$contextHolder)
             } else {
-                generate_empty_field_error('reminder type')
+                generateEmptyFieldError('reminder type')
             }
         })
 
@@ -33,7 +33,7 @@
             const selected = $(this).val()
 
             if($(this).val() === "-"){
-                generate_empty_field_error('reminder context')
+                generateEmptyFieldError('reminder context')
             }
         })
 
@@ -42,7 +42,7 @@
             const inventory_id = $(this).data('inventory-id')
             const index = $('.save_reminder-button').index(this)
 
-            update_reminder_by_id(id,inventory_id,{
+            updateReminderByID(id,inventory_id,{
                 reminder_type: $('.reminder_type_holder').eq(index).val(),
                 reminder_context: $('.reminder_context_holder').eq(index).val(),
                 reminder_desc: $('.reminder_desc_holder').eq(index).val()
@@ -54,7 +54,7 @@
         if(reminder){
             $('#reminder_holder').empty().addClass('pt-2')
             reminder.forEach(dt => {
-                $('#reminder_holder').append(generate_reminder_box(dt, inventory_id))
+                $('#reminder_holder').append(generateReminderBox(dt, inventory_id))
             });
             $('#add_reminder-holder').html(`
                 <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReminder"><i class="fa-solid fa-plus"></i> Add Reminder</a>

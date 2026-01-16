@@ -30,8 +30,8 @@
                     const data = response.data
                     localStorage.setItem(ctx,JSON.stringify(data))
                     localStorage.setItem(`last-hit-${ctx}`,Date.now())
-                    generate_line_column_chart(title,ctx_holder,data)
-                    generate_table_context_total(ctx_holder,data)
+                    generateLineColumnChart(title,ctx_holder,data)
+                    generateTableContextTotal(ctx_holder,data)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
@@ -51,8 +51,8 @@
             if(((now - lastHit) / 1000) < statsFetchRestTime){
                 const data = JSON.parse(localStorage.getItem(ctx))
                 if(data){
-                    generate_line_column_chart(title,ctx_holder,data)
-                    generate_table_context_total(ctx_holder,data)
+                    generateLineColumnChart(title,ctx_holder,data)
+                    generateTableContextTotal(ctx_holder,data)
                     Swal.close()
                 } else {
                     Swal.close()

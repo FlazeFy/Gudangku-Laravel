@@ -44,9 +44,9 @@
                         },
                         error: function(response, jqXHR, textStatus, errorThrown) {
                             if(response.status != 404){
-                                generate_api_error(response, true)
+                                generateAPIError(response, true)
                             } else {
-                                template_alert_container(item_holder, 'no-data', "No notification to show", null, '<i class="fa-solid fa-rotate-left"></i>')
+                                templateAlertContainer(item_holder, 'no-data', "No notification to show", null, '<i class="fa-solid fa-rotate-left"></i>')
                             }
                         }
                     });

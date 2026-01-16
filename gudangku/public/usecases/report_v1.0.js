@@ -21,7 +21,7 @@ const destroy_report_by_id = (id, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }
@@ -50,7 +50,7 @@ const destroy_report_image_by_id = (report_id, id, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }
@@ -81,7 +81,7 @@ const destroy_all_report_image_by_id = (report_id, token, refreshData) => {
             });
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
-            generate_api_error(response, true)
+            generateAPIError(response, true)
         }
     });
 }

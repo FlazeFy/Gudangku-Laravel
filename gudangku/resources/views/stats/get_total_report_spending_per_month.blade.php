@@ -28,15 +28,15 @@
                     const data = response.data
                     localStorage.setItem(ctx,JSON.stringify(data))
                     localStorage.setItem(`last-hit-${ctx}`,Date.now())
-                    generate_line_column_chart(title,ctx_holder,data.map(({ total_item, ...rest }) => rest))
-                    generate_table_context_total(ctx_holder,data)
+                    generateLineColumnChart(title,ctx_holder,data.map(({ total_item, ...rest }) => rest))
+                    generateTableContextTotal(ctx_holder,data)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
                     if(response.status != 404){
                         failedMsg()
                     } else {
-                        template_alert_container(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>','/inventory/add')
+                        templateAlertContainer(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>','/inventory/add')
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                     }
                 }
@@ -50,8 +50,8 @@
             if(((now - lastHit) / 1000) < statsFetchRestTime){
                 const data = JSON.parse(localStorage.getItem(ctx))
                 if(data){
-                    generate_line_column_chart(title,ctx_holder,data.map(({ total_item, ...rest }) => rest))
-                    generate_table_context_total(ctx_holder,data)
+                    generateLineColumnChart(title,ctx_holder,data.map(({ total_item, ...rest }) => rest))
+                    generateTableContextTotal(ctx_holder,data)
                     Swal.close()
                 } else {
                     Swal.close()

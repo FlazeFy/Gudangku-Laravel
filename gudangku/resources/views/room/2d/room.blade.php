@@ -20,7 +20,7 @@
                 Swal.close()
                 const data = response.data
                
-                generate_map_room('#room-container',data,true,room)
+                generateMapRoom('#room-container',data,true,room)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -31,7 +31,7 @@
                         icon: "error"
                     });
                 } else {
-                    generate_map_room('#room-container',null,true,room)
+                    generateMapRoom('#room-container',null,true,room)
                 }
             }
         });
@@ -69,7 +69,7 @@
                         `)
                     });
                     if(stats){
-                        generate_pie_chart('Category Distribution',`pie-chart-${target}`,stats)
+                        generatePieChart('Category Distribution',`pie-chart-${target}`,stats)
                         $(`#pie-chart-${target}`).append('<hr class="mb-1 mt-5">')
                     }
                 },
@@ -108,7 +108,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }
@@ -135,7 +135,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }
@@ -154,7 +154,7 @@
                 max_number = parseInt(numbers)
                 const label = `${letters_next}${numbers}`
 
-                const modal = generate_modal_detail(null, null, room, label, null)
+                const modal = generateModalDetail(null, null, room, label, null)
                 $(this).append(`
                     <button class='d-inline-block room-floor' data-bs-toggle="modal" data-bs-target="#modalDetail-${label}">
                         <h6 class='coordinate'>${label}</h6>
@@ -169,7 +169,7 @@
 
         for (let idx = 0; idx < letters.length; idx++) {
             const label = `${letters[idx]}${max_number+1}`
-            const modal = generate_modal_detail(null, null, room, label, null)
+            const modal = generateModalDetail(null, null, room, label, null)
             rowContainer.append(`
                 <button class='d-inline-block room-floor' data-bs-toggle="modal" data-bs-target="#modalDetail-${label}">
                     <h6 class='coordinate'>${label}</h6>

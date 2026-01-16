@@ -32,20 +32,20 @@
 
                 $(`#${item_holder}`).empty()
                 data.forEach(el => {
-                    $(`#${item_holder}`).append(generate_report_box(el, search));
+                    $(`#${item_holder}`).append(generateReportBox(el, search));
                 });
                 $(`#add_report-holder`).html(`
                     <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-plus"></i> Add Report</a>
                 `)
 
-                generate_pagination(item_holder, get_my_report_all, total_page, current_page)
+                generatePagination(item_holder, get_my_report_all, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 } else {
-                    template_alert_container(item_holder, 'no-data', "This inventory doesn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')
+                    templateAlertContainer(item_holder, 'no-data', "This inventory doesn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')
                 }
             }
         });

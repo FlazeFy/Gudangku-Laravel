@@ -66,14 +66,14 @@
                     `);
                 });
 
-                generate_pagination(item_holder, get_all_reminder, total_page, current_page)
+                generatePagination(item_holder, get_all_reminder, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, reminderThrown) {
                 if(response.status != 404){
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 } else {
                     $(`#${item_holder}`).html(`<tr><td colspan='7' id='err_no_data-msg'></td></tr>`)
-                    template_alert_container('err_no_data-msg', 'no-data', "No reminder found to show", null, '<i class="fa-solid fa-scroll"></i>')
+                    templateAlertContainer('err_no_data-msg', 'no-data', "No reminder found to show", null, '<i class="fa-solid fa-scroll"></i>')
                 }
             }
         });
@@ -107,7 +107,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }

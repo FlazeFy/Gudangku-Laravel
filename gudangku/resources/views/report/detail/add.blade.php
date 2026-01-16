@@ -9,7 +9,7 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                         <label>Item</label>
-                        <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
+                        <select class="form-select" id="report_item" onchange="browseItem(this.value)" aria-label="Default select example"></select>
                         <div id="item_form"></div>
                         <hr>
                         <label>Upload Shopping Bills</label>
@@ -90,7 +90,7 @@
                     });
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 }
             })
         } else {
@@ -148,7 +148,7 @@
                 Swal.close()
                 const data = response.data
 
-                clean_alert_item()
+                cleanAlertItem()
                 data.forEach(el => {
                     $('#item_holder').append(`
                         <div class="container-light mt-3 item-holder-div bill-item">
@@ -176,7 +176,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }

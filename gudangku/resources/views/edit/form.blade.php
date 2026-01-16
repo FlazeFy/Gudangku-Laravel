@@ -137,7 +137,7 @@
                 }
 
                 $('#btn-toogle-fav-holder').html(`
-                    <a class="btn btn-danger btn-toggle-favorite" onclick="fav_toogle_inventory_by_id('${id}', ${data.is_favorite == 0 ? '1' : '0'}, '<?= session()->get("token_key"); ?>', 
+                    <a class="btn btn-danger btn-toggle-favorite" onclick="favToogleInventoryByID('${id}', ${data.is_favorite == 0 ? '1' : '0'}, '<?= session()->get("token_key"); ?>', 
                         ()=>get_detail_inventory('${id}'))" style="${data.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
                         <i class="fa-solid fa-heart mx-2"></i>
                     </a>
@@ -179,7 +179,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 } else {
                     Swal.fire({
                         title: "Failed!",
@@ -199,7 +199,7 @@
     }
     
     $(async function () {
-        await get_context_opt('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
+        await getDictionaryByContext('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
         get_detail_inventory(inventory_id)
     })
 
@@ -228,13 +228,13 @@
                     confirmButtonText: "Ok"
                 }).then(async (result) => {
                     if (result.isConfirmed) {
-                        await get_context_opt('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
+                        await getDictionaryByContext('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
                         get_detail_inventory(id)
                     }
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }

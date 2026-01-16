@@ -83,10 +83,10 @@
                     $('.inventory_vol').text(data.inventory_vol)
                     $('.inventory_merk').text(data.inventory_merk)
                     $('#created_at').text(getDateToContext(data.created_at,'calendar'))
-                    $('#days_exist').text(count_time(data.created_at,null))
+                    $('#days_exist').text(countTime(data.created_at,null))
 
                     if(data.updated_at){
-                        $('#updated_at').html(` And the last updated on ${getDateToContext(data.updated_at,'calendar')} that about <b>${count_time(data.updated_at,null)}</b>.`)
+                        $('#updated_at').html(` And the last updated on ${getDateToContext(data.updated_at,'calendar')} that about <b>${countTime(data.updated_at,null)}</b>.`)
                     }
                     const isExpensive = data.inventory_price > data.inventory_price_analyze.average_inventory_price
                     const capacityClass = isExpensive ? 'bg-danger' : 'bg-success'
@@ -171,20 +171,20 @@
                         { context: `By Unit`, average_price: data.inventory_unit_analyze.average_price, inventory_price: data.inventory_price},
                         { context: `By Room`, average_price: data.inventory_room_analyze.average_price, inventory_price: data.inventory_price}
                     ]
-                    generate_pie_chart(`Price Comparison to All Inventory`,'price-pie-chart-holder',data_price_pie_chart)
-                    generate_line_column_chart(`Average Price Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_line_chart,60)
-                    generate_bar_chart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
+                    generatePieChart(`Price Comparison to All Inventory`,'price-pie-chart-holder',data_price_pie_chart)
+                    generateLineColumnChart(`Average Price Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_line_chart,60)
+                    generateBarChart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
 
                     if(data.inventory_layout){
                         $('#layout-holder').html(`
                             <h2>8. The Room Layout</h2>
                             <p>You can find <b>${data.inventory_name}</b> at storage <b>${data.inventory_storage}</span>, layout <b>${data.inventory_layout.layout}</b>.
-                            This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about <b>${count_time(data.inventory_layout.created_at,null)}</b>.
+                            This storage is created at ${getDateToContext(data.inventory_layout.created_at,'calendar')} about <b>${countTime(data.inventory_layout.created_at,null)}</b>.
                             </p>
                             <div id='room_layout_map' class='mx-3 mt-2'></div>
                             <br>
                         `)
-                        generate_map_room('#room_layout_map',[data.inventory_layout],false,data.inventory_room)
+                        generateMapRoom('#room_layout_map',[data.inventory_layout],false,data.inventory_room)
                     } else {
                         $('#layout-holder').html(`
                             <h2>8. The Room Layout</h2>
@@ -205,7 +205,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     if(response.status != 404){
-                        generate_api_error(response, true)
+                        generateAPIError(response, true)
                     } else {
                         Swal.fire({
                             title: "Failed!",

@@ -60,7 +60,7 @@
                         icon: "error"
                     });
                 } else {
-                    template_alert_container(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
+                    templateAlertContainer(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
                 }
             }
         });

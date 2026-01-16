@@ -50,7 +50,7 @@
                         </div>
                     `)
                 } else {
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 }
             }
         });
@@ -87,7 +87,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }
@@ -166,7 +166,7 @@
                     `)
                 });
 
-                generate_pagination(item_holder, get_qr_history, total_page, current_page)
+                generatePagination(item_holder, get_qr_history, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -175,7 +175,7 @@
                     const message = json.message
                     $('#qr-code-history').html(`<span class="fst-italic text-white">- ${ucFirst(message)} -</span>`);
                 } else {
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 }
             }
         });
@@ -226,7 +226,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }

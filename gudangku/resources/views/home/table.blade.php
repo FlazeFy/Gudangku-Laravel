@@ -203,7 +203,7 @@
                                                 <p>${el.deleted_at ? getDateToContext(el.deleted_at,'calendar') : '-'}</p>
                                                 <div class="alert alert-primary mt-3" role="alert">
                                                     <h6 class='fw-bold'><i class="fa-solid fa-circle-info"></i> For Your Information</h6>
-                                                    <p class='mt-2 mb-0'><b>${el.inventory_name}</b> is been existed in your inventory for about <b>${count_time(el.created_at,null)}</b></p>
+                                                    <p class='mt-2 mb-0'><b>${el.inventory_name}</b> is been existed in your inventory for about <b>${countTime(el.created_at,null)}</b></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -212,7 +212,7 @@
                                 <div class='row mt-2 mx-1'>
                                     ${role === 0 ? `
                                         <div class='col p-0 pe-1'>
-                                            <a class="btn btn-danger w-100 btn-like" onclick="fav_toogle_inventory_by_id('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
+                                            <a class="btn btn-danger w-100 btn-like" onclick="favToogleInventoryByID('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
                                                 ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
                                                 <i class="fa-solid fa-heart"></i>
                                             </a>
@@ -300,7 +300,7 @@
                 })
 
                 zoomableModal()
-                generate_pagination(item_holder, get_inventory, total_page, current_page,sorting)
+                generatePagination(item_holder, get_inventory, total_page, current_page,sorting)
 
                 get_lend_item(response.lend_data)
 
@@ -314,7 +314,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 } else {
                     $('#total-item').text(0)
                     $(`#${item_holder}`).html(`<tr><td colspan='7' class='text-center py-3'>- No Inventory Found -</td></tr>`)
@@ -380,7 +380,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }

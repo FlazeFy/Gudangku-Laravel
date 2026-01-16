@@ -1,4 +1,4 @@
-const generate_pie_chart = (title, holder, data) => {
+const generatePieChart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
     if(data.length > 0){
@@ -43,7 +43,7 @@ const generate_pie_chart = (title, holder, data) => {
     }
 }
 
-const generate_bar_chart = (title, holder, data) => {
+const generateBarChart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
     if(data.length > 0){
@@ -105,7 +105,7 @@ const generate_bar_chart = (title, holder, data) => {
     }
 }
 
-const generate_line_column_chart = (title, holder, data) => {
+const generateLineColumnChart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
     if(data.length > 0){
@@ -173,7 +173,7 @@ const generate_line_column_chart = (title, holder, data) => {
     }
 }
 
-const generate_gauge_chart = (title, holder, data, type_color = 'single_color') => {
+const generateGaugeChart = (title, holder, data, type_color = 'single_color') => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
     if (data.length > 0) {
@@ -260,7 +260,7 @@ const generate_gauge_chart = (title, holder, data, type_color = 'single_color') 
 }
 
 
-const generate_table_context_total = (holder, data, key_currency) => {
+const generateTableContextTotal = (holder, data, key_currency) => {
     if(data.length > 0){
         let keys = Object.keys(data[0])
         let thead = `<thead style='background:var(--primaryColor);'><tr>`
@@ -286,11 +286,11 @@ const generate_table_context_total = (holder, data, key_currency) => {
                 </tbody>
             </table>
         `)
-        export_button_data(holder,data)
+        exportButtonData(holder,data)
     } 
 }
 
-const export_button_data = (holder, data) => {
+const exportButtonData = (holder, data) => {
     if(data.length > 0){
         $(`#${holder}`).append(`
             <button id='download-btn-data-${holder}' class='btn btn-primary w-100'>
@@ -299,8 +299,8 @@ const export_button_data = (holder, data) => {
         `);
 
         $(`#download-btn-data-${holder}`).on('click', function() {
-            const csvData = convert_to_csv(data)
-            download_csv(csvData, `data_export_${holder}.csv`)
+            const csvData = convertToCSV(data)
+            downloadCSV(csvData, `data_export_${holder}.csv`)
             Swal.fire({
                 title: "Downloaded!",
                 text: `You have downloaded ${ucEachWord(holder.replaceAll('_',' '))} data`,
@@ -310,7 +310,7 @@ const export_button_data = (holder, data) => {
     } 
 }
 
-const convert_to_csv = (data) => {
+const convertToCSV = (data) => {
     const headers = Object.keys(data[0])
     const csvRows = []
     csvRows.push(headers.join(','))
@@ -326,7 +326,7 @@ const convert_to_csv = (data) => {
     return csvRows.join('\n')
 }
 
-const download_csv = (csvData, filename) => {
+const downloadCSV = (csvData, filename) => {
     const blob = new Blob([csvData], { type: 'text/csv' })
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')

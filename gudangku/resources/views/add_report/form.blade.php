@@ -19,7 +19,7 @@
                 </div>
                 <hr>
                 <label>Item</label>
-                <select class="form-select" id="report_item" onchange="browse_item(this.value)" aria-label="Default select example"></select>
+                <select class="form-select" id="report_item" onchange="browseItem(this.value)" aria-label="Default select example"></select>
                 <div id="item_form"></div>
                 <hr>
                 <label>Upload Shopping Bills</label>
@@ -58,7 +58,7 @@
     setCurrentLocalDateTime('created_at')
 
     $(async function () {
-        await get_context_opt('report_category',token)
+        await getDictionaryByContext('report_category',token)
     })
 
     const get_list_inventory = () => {
@@ -89,7 +89,7 @@
                 $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
                 $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
                 $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         })
     }
@@ -157,7 +157,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }
@@ -181,7 +181,7 @@
                 Swal.close()
                 const data = response.data
 
-                clean_alert_item()
+                cleanAlertItem()
                 data.forEach(el => {
                     $('#item_holder').append(`
                         <tr class="item-holder-div bill-item align-middle">
@@ -198,7 +198,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }

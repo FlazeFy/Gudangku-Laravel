@@ -137,7 +137,7 @@
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     sessionStorage.clear()
                     localStorage.clear()
-                    generate_api_error(response, true)
+                    generateAPIError(response, true)
                 }
             });
         } else {

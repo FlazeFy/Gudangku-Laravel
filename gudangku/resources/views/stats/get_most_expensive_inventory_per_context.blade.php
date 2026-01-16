@@ -56,9 +56,9 @@
                     ctx_holders.forEach(ctx_holder => {
                         const ctxData = data[ctx_holder.object]
                         if (ctxData) {
-                            generate_table_context_total(ctx_holder.holder, ctxData, 'Rp. ')
+                            generateTableContextTotal(ctx_holder.holder, ctxData, 'Rp. ')
                         } else {
-                            template_alert_container(ctx_holder.holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>', '/inventory/add')
+                            templateAlertContainer(ctx_holder.holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>', '/inventory/add')
                         }
                     });
                 },
@@ -68,7 +68,7 @@
                         failedMsg()
                     } else {
                         ctx_holders.forEach(ctx_holder => {
-                            template_alert_container(ctx_holder.holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>', '/inventory/add')
+                            templateAlertContainer(ctx_holder.holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>', '/inventory/add')
                             $(`#${ctx_holder.holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                         })
                     }
@@ -84,7 +84,7 @@
                 const data = JSON.parse(localStorage.getItem('most_expensive_stats'))
                 if (data) {
                     ctx_holders.forEach(ctx_holder => {
-                        generate_table_context_total(ctx_holder.holder, data[ctx_holder.object], 'Rp. ')
+                        generateTableContextTotal(ctx_holder.holder, data[ctx_holder.object], 'Rp. ')
                         Swal.close()
                     });
                 } else {

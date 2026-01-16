@@ -1,4 +1,4 @@
-const template_alert_container = (target, type, msg, btn_title, icon, href) => {
+const templateAlertContainer = (target, type, msg, btn_title, icon, href) => {
     $(`#${target}`).html(`
         <div class="container-fluid p-3" style="${type == 'no-data'? 'background-color:rgba(59, 131, 246, 0.2);':''}">
             <h6>${icon} ${msg}</h6>
@@ -7,7 +7,7 @@ const template_alert_container = (target, type, msg, btn_title, icon, href) => {
     `)
 }
 
-const get_context_opt = (context, token, selected = null, target_type = '#') => {
+const getDictionaryByContext = (context, token, selected = null, target_type = '#') => {
     return new Promise((resolve, reject) => {
         Swal.showLoading()
         let ctx_holder
@@ -94,7 +94,7 @@ const get_context_opt = (context, token, selected = null, target_type = '#') => 
     })
 }
 
-const generate_floor_range = (data) => {
+const generateFloorRange = (data) => {
     let rawLetter = []
     let rawNum = [] 
 
@@ -122,7 +122,7 @@ const generate_floor_range = (data) => {
     }
 }
 
-const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
+const generateModalDetail = (storage, storage_desc, room, coor, id) => {
     if(storage){
         return `
             <div class="modal fade" id="modalDetail-${coor}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -195,13 +195,13 @@ const generate_modal_detail = (storage, storage_desc, room, coor, id) => {
     }
 }
 
-const generate_map_room = (target,data,is_interact,room) => {
+const generateMapRoom = (target,data,is_interact,room) => {
     let rows
     let letters
     let cols
 
     if(data){
-        const floor_range = generate_floor_range(data)
+        const floor_range = generateFloorRange(data)
         rows = floor_range.rows
         letters = floor_range.letters
         cols = floor_range.cols
@@ -234,7 +234,7 @@ const generate_map_room = (target,data,is_interact,room) => {
                 });
             }
 
-            const modal = is_interact ? generate_modal_detail(inventory_storage, storage_desc, room, label, id) : ''
+            const modal = is_interact ? generateModalDetail(inventory_storage, storage_desc, room, label, id) : ''
             const button = $(`
                 <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${label}" ${inventory_storage && `onclick="get_inventory_room_storage('${room}','${inventory_storage}','${label}')"`}>
                     <h6 class='coordinate'>${label}</h6>
@@ -257,13 +257,13 @@ const generate_map_room = (target,data,is_interact,room) => {
     }
 }
 
-const clean_alert_item = () => {
+const cleanAlertItem = () => {
     if ($('#item_holder').find('div.alert').length) {
         $('#item_holder').empty()
     } 
 }
 
-const browse_item = (val) => {
+const browseItem = (val) => {
     let inventory_id = null
     if(val == 'add_ext'){
         $('#item_form').empty().append(`
@@ -309,11 +309,11 @@ const browse_item = (val) => {
             </div>
         `)
     }
-    $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='add_item("${val}","${inventory_id}")'><i class="fa-solid fa-plus"></i> Add Item</a>`)
+    $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='addItem("${val}","${inventory_id}")'><i class="fa-solid fa-plus"></i> Add Item</a>`)
 }
 
-const add_item = (val, inventory_id) => {
-    clean_alert_item()
+const addItem = (val, inventory_id) => {
+    cleanAlertItem()
 
     let itemExists = false
     const isPriceCategory = $("#report_category_holder").val() === 'Shopping Cart' || $("#report_category_holder").val() === 'Wishlist'
@@ -495,7 +495,7 @@ const reportCategoryHolderEventHandler = (el) => {
     }
 }
 
-const generate_report_box = (el, search = null) => {
+const generateReportBox = (el, search = null) => {
     return `
         <button class="report-box mt-2" onclick="window.location.href='/report/detail/${el.id}'">
             <div class="d-flex justify-content-between mb-3">
@@ -534,7 +534,7 @@ const generate_report_box = (el, search = null) => {
     `
 }
 
-const generate_reminder_box = (dt, inventory_id) => {
+const generateReminderBox = (dt, inventory_id) => {
     return `
         <div class="reminder-box" data-reminder-type="${dt.reminder_type}" data-reminder-context="${dt.reminder_context}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReminder${dt.id}" aria-expanded="false" aria-controls="collapseExample">
             <div class='d-flex justify-content-between flex-wrap gap-2 text-white'>

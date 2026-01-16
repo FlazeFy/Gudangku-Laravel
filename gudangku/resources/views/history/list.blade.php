@@ -59,7 +59,7 @@
                     `);
                 });
 
-                generate_pagination(item_holder, get_history, total_page, current_page)
+                generatePagination(item_holder, get_history, total_page, current_page)
                 $('#export-section').html(`
                     <form class="d-inline" action="/history/save_as_csv" method="POST">
                         @csrf
@@ -76,7 +76,7 @@
                         icon: "error"
                     });
                 } else {
-                    template_alert_container(item_holder, 'no-data', "No history found to show", null, '<i class="fa-solid fa-rotate-left"></i>')
+                    templateAlertContainer(item_holder, 'no-data', "No history found to show", null, '<i class="fa-solid fa-rotate-left"></i>')
                     $(`#${item_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                 }
             }

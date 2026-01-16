@@ -90,7 +90,7 @@
                         }
                     });
                 } else {
-                    generate_api_error(response, true);
+                    generateAPIError(response, true);
                 }
             }
         });

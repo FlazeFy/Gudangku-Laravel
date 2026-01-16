@@ -36,7 +36,7 @@
 <script>
     $('#modalAddReminder').on('shown.bs.modal', async function () {
         $(async function () {
-            await get_context_opt('reminder_type',token)
+            await getDictionaryByContext('reminder_type',token)
         })
     });
 
@@ -44,9 +44,9 @@
         const selected = $(this).val()
 
         if(selected !== "-"){
-            get_reminder_context_select(selected,'#reminder_context')
+            getReminderContextSelect(selected,'#reminder_context')
         } else {
-            generate_empty_field_error('reminder type')
+            generateEmptyFieldError('reminder type')
         }
     })
 
@@ -80,7 +80,7 @@
                 });
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                generate_api_error(response, true)
+                generateAPIError(response, true)
             }
         });
     }
