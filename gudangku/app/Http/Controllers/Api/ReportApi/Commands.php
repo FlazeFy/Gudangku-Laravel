@@ -38,7 +38,7 @@ class Commands extends Controller
 
     /**
      * @OA\DELETE(
-     *     path="/api/v1/report/delete/item/{id}",
+     *     path="/api/v1/report/destroy/item/{id}",
      *     summary="Hard Delete Report Item By ID",
      *     description="This request is used to delete a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Report"},
@@ -122,7 +122,7 @@ class Commands extends Controller
 
     /**
      * @OA\DELETE(
-     *     path="/api/v1/report/delete/report/{id}",
+     *     path="/api/v1/report/destroy/report/{id}",
      *     summary="Hard Delete Report By ID",
      *     description="This request is used to delete a report based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Report"},

@@ -120,7 +120,7 @@ class ReminderTest extends TestCase
         // Exec
         $token = $this->login_trait("user");
         $id = "935265fc-29d7-fe3f-3b04-061c674ea69c";
-        $response = $this->httpClient->delete("$id", [
+        $response = $this->httpClient->delete("destroy/$id", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ],

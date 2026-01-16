@@ -50,7 +50,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <p>Delete this history about ${el.history_type} from item called ${el.history_context}?</p>
-                                                <button class="btn btn-danger mt-4" onclick="destroy_history_by_id('${el.id}', '${token}', 
+                                                <button class="btn btn-danger mt-4" onclick="deleteModuleByID('${el.id}', 'history', 'destroy', '${token}', 
                                                 ()=>get_all_history(${page}))">Yes, Delete</button>
                                             </div>
                                         </div>

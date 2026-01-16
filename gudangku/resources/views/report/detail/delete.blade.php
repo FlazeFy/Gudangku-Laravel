@@ -7,38 +7,9 @@
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure want to <span class="text-danger">Permentally Delete</span> this report?</p>
-                <button class="btn btn-danger mt-4" id="submit-delete-report-btn" onclick="delete_report('{{$id}}')" >Yes, Delete</button>
+                <p>Are you sure want to <span class="text-danger">Permanently Delete</span> this report?</p>
+                <button class="btn btn-danger mt-4" id="submit-delete-report-btn" onclick="deleteModuleByID('<?= $id ?>', 'report', 'destroy/report', token, ()=>window.location.href='/report')" >Yes, Delete</button>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    const delete_report = (id) => {
-        Swal.showLoading()
-        $.ajax({
-            url: `/api/v1/report/delete/report/${id}`,
-            type: 'DELETE',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
-            },
-            success: function(response) {
-                Swal.close()
-                Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href='/report'
-                    }
-                });
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                generateAPIError(response, true)
-            }
-        });
-    }
-</script>

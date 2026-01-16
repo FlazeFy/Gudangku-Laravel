@@ -92,7 +92,7 @@
                                                 <div class="modal-body">
                                                     <input type="hidden" name="reminder_desc" value="${rm.reminder_desc}"/>
                                                     <p><span class="text-danger">Permanently Delete</span> this reminder "${rm.reminder_desc}"?</p>
-                                                    <a class="btn btn-danger" onclick="delete_reminder_by_id('${rm.id}', '${token}', () => get_inventory(${page},'${name}','${category}','${sort}'))"> Yes, Delete</a>
+                                                    <a class="btn btn-danger" onclick="deleteModuleByID('${rm.id}', 'reminder', 'destroy', '${token}', () => get_inventory(${page},'${name}','${category}','${sort}'))"> Yes, Delete</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -234,7 +234,7 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <p>${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'} this inventory "${el.inventory_name}"?</p>
-                                                        <a class="btn btn-danger" onclick="delete_inventory_by_id('${el.id}', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
+                                                        <a class="btn btn-danger" onclick="deleteModuleByID('${el.id}', 'inventory', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
                                                     </div>
                                                 </div>
                                             </div>

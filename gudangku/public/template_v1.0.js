@@ -7,6 +7,35 @@ const templateAlertContainer = (target, type, msg, btn_title, icon, href) => {
     `)
 }
 
+const deleteModuleByID = (id, context, type, token, refreshData) => {
+    Swal.showLoading()
+    $.ajax({
+        url: `/api/v1/${context}/${type}/${id}`,
+        type: 'DELETE',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Accept", "application/json")
+            xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+        },
+        success: function(response) {
+            Swal.hideLoading()
+            Swal.fire({
+                title: "Success!",
+                text: `${response.message}`,
+                icon: "success",
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    closeModalBS()  
+                    refreshData()
+                } 
+            });
+        },
+        error: function(response, jqXHR, textStatus, errorThrown) {
+            generateAPIError(response, true)
+        }
+    });
+}
+
 const getDictionaryByContext = (context, token, selected = null, target_type = '#') => {
     return new Promise((resolve, reject) => {
         Swal.showLoading()
@@ -560,8 +589,8 @@ const generateReminderBox = (dt, inventory_id) => {
                                         <a class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></a>
                                     </div>
                                     <div class="modal-body">
-                                        <p><span class="text-danger">Permentally delete</span> this reminder "${dt.reminder_desc}"?</p>
-                                        <a class="btn btn-danger" onclick="delete_reminder_by_id('${dt.id}', '${token}', () => get_detail_inventory('${inventory_id}'))"> Yes, Delete</a>
+                                        <p><span class="text-danger">Permanently delete</span> this reminder "${dt.reminder_desc}"?</p>
+                                        <a class="btn btn-danger" onclick="deleteModuleByID('${dt.id}', 'reminder', 'destroy', '${token}', () => get_detail_inventory('${inventory_id}'))"> Yes, Delete</a>
                                     </div>
                                 </div>
                             </div>

@@ -393,7 +393,7 @@
                 ],
                 "summary": "Post Create Dictionary",
                 "description": "This request is used to created a dictionary by using given `dictionary_type`, and `dictionary_name`. This request interacts with the MySQL database, and have a protected routes.",
-                "operationId": "6577d5dad15a6096cca1f0954f5794e0",
+                "operationId": "c00bb932223a0676d61b6d1079013eca",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1943,7 +1943,7 @@
                 ],
                 "summary": "Post Create Inventory",
                 "description": "This request is used to create an inventory by using given `inventory_name`, `inventory_category`, `inventory_desc`, `inventory_merk`, `inventory_color`, `inventory_room`, `inventory_storage`, `inventory_rack`, `inventory_price`, `inventory_image`, `inventory_unit`, `inventory_vol`, `inventory_capacity_unit`, `inventory_capacity_vol`, `is_favorite`, and `created_at`. This request interacts with the MySQL database, firebase storage, returned a document, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
-                "operationId": "4674b1921101b03eb103dc6acea8108b",
+                "operationId": "f79608a67c92ef274c9e582016e8fa68",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2517,7 +2517,7 @@
                 ],
                 "summary": "Post Create Inventory Layout",
                 "description": "This request is used to create an inventory layout by given `inventory_storage`, `inventory_room`, `layout`, and `storage_desc`. This request interacts with the MySQL database, broadcast with firebase FCM (notification) and Telegram message, has a protected routes, and audited activity (history).",
-                "operationId": "722adb50f0a52461825fd86cb9350b2e",
+                "operationId": "5a22868b04c040b4f1221118b3c22dd1",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -4485,7 +4485,7 @@
                 ],
                 "summary": "Post Create Lend QR",
                 "description": "This request is used to create an inventory lend by using given `qr_period`. This request interacts with the MySQL database, firebase storage, broadcast message using Telegram, has a protected routes, and audited activity (history).",
-                "operationId": "eef56aac2e60d3ca7b2837f1a08509a7",
+                "operationId": "e21be238188db42dce214b527dce91b9",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -4808,7 +4808,7 @@
                 ],
                 "summary": "Post Create Request Borrow",
                 "description": "This request is used to create an inventory request borrow by using given `borrower_name` and `inventory_list`. This request interacts with the MySQL database, firebase storage, returned document, broadcast message using Telegram, has a protected routes, and audited activity (history).",
-                "operationId": "40a2da24615cf414820905ac4fe5a214",
+                "operationId": "b16841399926b55df786d555d6fa034b",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -5412,7 +5412,7 @@
                 ],
                 "summary": "Post Create Reminder",
                 "description": "This request is used to create a reminder by using given `reminder_type`, `reminder_context`, `inventory_id`, and `reminder_desc`. This request interacts with the MySQL database, sync with Google Calendar, broadcast message using Firebase FCM and Telegram, has a protected routes, and audited activity (history).",
-                "operationId": "d976dc76a89edab9b2bce746c019980f",
+                "operationId": "ef98d358c067316f4d341758817a1671",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -5587,7 +5587,7 @@
                 ],
                 "summary": "Put Update Reminder By ID",
                 "description": "This request is used to update a reminder by using given reminder's `id` and `inventory_id`. The updated fields are `reminder_type`, `reminder_context`, and `reminder_desc`. This request interacts with the MySQL database, sync with Google Calendar, has a protected routes, and audited activity (history).",
-                "operationId": "537d77b6895644425a132f42229a8380",
+                "operationId": "fb2bd72efca92eef407dc6706efae09a",
                 "parameters": [
                     {
                         "name": "id",
@@ -5728,113 +5728,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "{field validation message}"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "something wrong. please contact admin"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Reminder"
-                ],
-                "summary": "Hard Delete Reminder By ID",
-                "description": "This request is used to permanently delete a reminder by given `id`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "b9f47c095221be5efe587ac93370931d",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Reminder ID",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "reminder deleted",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "reminder deleted"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "protected route need to include sign in token as authorization bearer",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "failed"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "you need to include the authorization token from login"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "reminder not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "failed"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "reminder not found"
                                         }
                                     },
                                     "type": "object"
@@ -6102,6 +5995,115 @@
                                         "message": {
                                             "type": "string",
                                             "example": "you need to include the authorization token from login | permission denied. only admin can use this request"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "reminder not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/reminder/destroy/{id}": {
+            "delete": {
+                "tags": [
+                    "Reminder"
+                ],
+                "summary": "Hard Delete Reminder By ID",
+                "description": "This request is used to permanently delete a reminder by given `id`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
+                "operationId": "1197a37902da824e6bcda96d7a1506f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Reminder ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "reminder deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
                                         }
                                     },
                                     "type": "object"
@@ -6436,14 +6438,14 @@
                 ]
             }
         },
-        "/api/v1/report/delete/item/{id}": {
+        "/api/v1/report/destroy/item/{id}": {
             "delete": {
                 "tags": [
                     "Report"
                 ],
                 "summary": "Hard Delete Report Item By ID",
                 "description": "This request is used to delete a report item based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "4d80987d56ebba297a70f4b1002e4053",
+                "operationId": "0cf2cc5f1ac3c1036192d454d40a9d71",
                 "parameters": [
                     {
                         "name": "id",
@@ -6545,14 +6547,14 @@
                 ]
             }
         },
-        "/api/v1/report/delete/report/{id}": {
+        "/api/v1/report/destroy/report/{id}": {
             "delete": {
                 "tags": [
                     "Report"
                 ],
                 "summary": "Hard Delete Report By ID",
                 "description": "This request is used to delete a report based on the given `ID`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
-                "operationId": "dfbecbb579218a7a9bfd169d364f5d12",
+                "operationId": "d82c65f9022e66ddb453505829dc80e8",
                 "parameters": [
                     {
                         "name": "id",
@@ -7324,7 +7326,7 @@
                 ],
                 "summary": "Post Create Report",
                 "description": "This request is used to create a report based on the given `report_title`, `report_desc`, `report_category`, and `report_item`. This request interacts with the MySQL database, firebase storage, has a protected routes, and audited activity (history).",
-                "operationId": "fe19bb3ce474a8c9ef7b45d099f68d36",
+                "operationId": "10a37f08b9539c8348725d752d0bf3d0",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -7474,7 +7476,7 @@
                 ],
                 "summary": "Post Create Report Item",
                 "description": "This request is used to create a report item based on the given `report_item`. This request interacts with the MySQL database, and has a protected routes.",
-                "operationId": "a434c923bbb2177407a16bbd1eec3448",
+                "operationId": "110ad0ce6a4eef0eba1924170559a52c",
                 "parameters": [
                     {
                         "name": "id",
@@ -11282,7 +11284,7 @@
                 ],
                 "summary": "Post Register Validation Token",
                 "description": "This request is used to check and send validation token to the user who in registration process. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
-                "operationId": "ef6f3e60adfc3031ca81c0d3363d6592",
+                "operationId": "83fdd69720b1fd6c9034203fa8a7f4c8",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11378,7 +11380,7 @@
                 ],
                 "summary": "Post Register Account & Accept Validation",
                 "description": "This request is used to finally create an user and accept validation request. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
-                "operationId": "ecb3b593730448edb3a9962d3208ff2d",
+                "operationId": "b500430a180cc134f1cb87cef45677fe",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11532,7 +11534,7 @@
                 ],
                 "summary": "Post Regenerate Registration Token",
                 "description": "This request is used to regenerate and send validation token that has been expired or just regenerate it. This request interacts with the MySQL database, broadcast email, and has a protected routes.",
-                "operationId": "25f376358b6ab0d223b28d3243c09410",
+                "operationId": "793bc487e85bc028271ce6b3cea099ff",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -12485,6 +12487,42 @@
                         "description": "ID of the user who specific faced the error",
                         "type": "string",
                         "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "Faq": {
+                "required": [
+                    "id",
+                    "faq_question",
+                    "is_show",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary key for the FAQ",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "faq_question": {
+                        "description": "FAQ question text",
+                        "type": "string",
+                        "maxLength": 144
+                    },
+                    "faq_answer": {
+                        "description": "Answer for the FAQ question",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "is_show": {
+                        "description": "Indicates whether the FAQ is visible to users",
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the FAQ was created",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"

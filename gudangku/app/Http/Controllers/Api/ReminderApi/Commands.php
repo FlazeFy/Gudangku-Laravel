@@ -671,7 +671,7 @@ class Commands extends Controller
 
     /**
      * @OA\DELETE(
-     *     path="/api/v1/reminder/{id}",
+     *     path="/api/v1/reminder/destroy/{id}",
      *     summary="Hard Delete Reminder By ID",
      *     description="This request is used to permanently delete a reminder by given `id`. This request interacts with the MySQL database, has a protected routes, and audited activity (history).",
      *     tags={"Reminder"},

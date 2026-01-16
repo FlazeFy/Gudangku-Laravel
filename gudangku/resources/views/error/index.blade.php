@@ -8,8 +8,6 @@
 @php($role = session()->get('role_key'))
 
 @section('content')
-    <script src="{{ asset('/usecases/error_v1.0.js')}}"></script>
-
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="main-page-title">Error History</h1>

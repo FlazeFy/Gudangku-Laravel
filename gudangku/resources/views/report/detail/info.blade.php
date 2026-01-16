@@ -104,7 +104,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <p>Are you sure want to delete this report image?</p>
-                                            <button class="btn btn-danger" onclick="destroy_report_image_by_id('<?= $id ?>','${el.report_image_id}', '${token}', 
+                                            <button class="btn btn-danger" onclick="deleteModuleByID('<?= $id ?>/${el.report_image_id}', 'report/report_image', 'destroy', '${token}', 
                                             ()=>get_detail_report('<?= $id ?>'))">Yes, Delete</button>
                                         </div>
                                     </div>
@@ -126,7 +126,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <p>Are you sure want to delete all this report image?</p>
-                                        <button class="btn btn-danger" onclick="destroy_all_report_image_by_id('<?= $id ?>', '${token}', 
+                                        <button class="btn btn-danger" onclick="deleteModuleByID('<?= $id ?>', 'report', 'report_image', '${token}', 
                                         ()=>get_detail_report('<?= $id ?>'))">Yes, Delete All</button>
                                     </div>
                                 </div>
@@ -253,7 +253,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <p>Remove this inventory "${dt.item_name}" from report "${data.report_title}"?</p>
-                                                <a class="btn btn-danger mt-4" onclick="delete_item('${dt.id}')">Yes, Delete</a>
+                                                <a class="btn btn-danger mt-4" onclick="deleteModuleByID('${dt.id}', 'report', 'destroy/item', '${token}', ()=>get_detail_report('<?= $id ?>'))">Yes, Delete</a>
                                             </div>
                                         </div>
                                     </div>
@@ -335,34 +335,6 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
-            }
-        });
-    }
-
-    const delete_item = (id) => {
-        $.ajax({
-            url: `/api/v1/report/delete/item/${id}`,
-            type: 'DELETE',
-            beforeSend: function (xhr) {
-                Swal.showLoading()
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
-            },
-            success: function(response) {
-                Swal.close()
-                Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        closeModalBS()
-                        get_detail_report('{{$id}}')
-                    }
-                });
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                generateAPIError(response, true);
             }
         });
     }
@@ -523,7 +495,7 @@
                                         <div class="modal-body text-start">
                                             <p>Remove this inventory from report "${report_title}"?</p>
                                             <div class="d-flex gap-2 mb-3">${selected_item_name}</div>
-                                            <a class="btn btn-danger" onclick="delete_item('${selected_item_id}')">Yes, Delete</a>
+                                            <a class="btn btn-danger" onclick="deleteModuleByID('${selected_item_id}', 'report', 'destroy/item', '${token}', ()=>get_detail_report('<?= $id ?>'))">Yes, Delete</a>
                                         </div>
                                     </div>
                                 </div>

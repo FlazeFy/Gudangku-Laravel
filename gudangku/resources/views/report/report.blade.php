@@ -85,7 +85,7 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <p><span class="text-danger">Permanently Delete</span> this report "${el.report_title}" from user @${el.username}?</p>
-                                                        <a class="btn btn-danger mt-4" onclick="destroy_report_by_id('${el.id}', '${token}', 
+                                                        <a class="btn btn-danger mt-4" onclick="deleteModuleByID('${el.id}', 'report', 'destroy/report', '${token}', 
                                                         ()=>get_my_report_all(${page},'${search_key}','${filter_category}','${sorting}'))">Yes, Delete</a>
                                                     </div>
                                                 </div>

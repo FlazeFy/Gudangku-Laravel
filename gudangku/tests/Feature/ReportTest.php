@@ -276,7 +276,7 @@ class ReportTest extends TestCase
         // Exec
         $token = $this->login_trait("user");
         $item_id = "4d7c9cc9-d351-a8c7-1d50-82b7f77728b0";
-        $response = $this->httpClient->delete("delete/item/$item_id", [
+        $response = $this->httpClient->delete("destroy/item/$item_id", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ],
@@ -300,7 +300,7 @@ class ReportTest extends TestCase
         // Exec
         $token = $this->login_trait("user");
         $item_id = "41871596-9063-24ba-213c-0f79da705c71";
-        $response = $this->httpClient->delete("delete/report/$item_id", [
+        $response = $this->httpClient->delete("destroy/report/$item_id", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ],

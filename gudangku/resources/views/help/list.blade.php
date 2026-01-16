@@ -105,7 +105,7 @@
     </ol>
 </div>
 <div class="container bordered mb-4">
-    <h4 class="fw-bold mb-3">Permentally Delete Inventory</h4>
+    <h4 class="fw-bold mb-3">Permanently Delete Inventory</h4>
     <p>In this section you will permentally delete your inventory, remove inventory from attached report, and reminder</p>
     <h5 class="fw-bold mt-3">How to do it :</h5>
     <ol class="text-white ms-4" style="list-style-type: circle;">

@@ -381,7 +381,7 @@ class Commands extends Controller
                     }
                     
                     // Create history
-                    Audit::createHistory('Permentally delete', $inventory->inventory_name, $user_id);
+                    Audit::createHistory('Permanently delete', $inventory->inventory_name, $user_id);
                 }
 
                 // Return success response

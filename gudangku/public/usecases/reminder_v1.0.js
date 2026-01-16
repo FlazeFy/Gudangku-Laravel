@@ -1,32 +1,3 @@
-const delete_reminder_by_id = (id, token, refreshData) => {
-    Swal.showLoading()
-    $.ajax({
-        url: `/api/v1/reminder/${id}`,
-        type: 'DELETE',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Accept", "application/json")
-            xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
-        },
-        success: function(response) {
-            $(`#modalDeleteReminder_${id}`).modal('hide')
-            Swal.fire({
-                title: "Success!",
-                text: response.message,
-                icon: "success",
-                allowOutsideClick: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.close()
-                    refreshData()
-                }
-            });
-        },
-        error: function(response, jqXHR, textStatus, errorThrown) {
-            generateAPIError(response, true)
-        }
-    });
-}
-
 const updateReminderByID = (id,inventory_id,data) => {    
     $.ajax({
         url: `/api/v1/reminder/${id}`,

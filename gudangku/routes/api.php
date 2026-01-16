@@ -119,7 +119,7 @@ Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/', [CommandsReminderController::class, 'postCreateReminder']);
     Route::post('/copy', [CommandsReminderController::class, 'postCopyReminder']);
     Route::post('/re_remind', [CommandsReminderController::class, 'postReRemind']);
-    Route::delete('/{id}', [CommandsReminderController::class, 'hardDeleteReminderByID']);
+    Route::delete('/destroy/{id}', [CommandsReminderController::class, 'hardDeleteReminderByID']);
     Route::put('/{id}', [CommandsReminderController::class, 'putUpdateReminderByID']);
 });
 
@@ -169,7 +169,7 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
         Route::put('/report_item/{id}', [CommandsReportController::class, 'putUpdateReportItemByID']);
         Route::put('/report_split/{id}', [CommandsReportController::class, 'putUpdateSplitReportItemByID']);
     });
-    Route::prefix('/delete')->group(function (){
+    Route::prefix('/destroy')->group(function (){
         Route::delete('/item/{id}', [CommandsReportController::class, 'hardDeleteReportItemByID']);
         Route::delete('/report/{id}', [CommandsReportController::class, 'hardDeleteReportByID']);
     });

@@ -67,7 +67,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <p>Delete this error about "${el.message}"?</p>
-                                                <button class="btn btn-danger mt-4" onclick="destroy_error_by_id('${el.id}', '${token}', 
+                                                <button class="btn btn-danger mt-4" onclick="deleteModuleByID('${el.id}', 'error', 'destroy', '${token}', 
                                                 ()=>get_all_error(${page}))">Yes, Delete</button>
                                             </div>
                                         </div>
