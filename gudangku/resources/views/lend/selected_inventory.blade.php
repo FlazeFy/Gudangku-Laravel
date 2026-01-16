@@ -23,19 +23,11 @@
         const borrower_name = $('#borrower_name').val()
 
         if (selected.length == 0) {
-            Swal.fire({
-                title: "Warning!",
-                text: 'Please select at least one inventory item.',
-                icon: "warning",
-            })
+            Swal.fire("Warning!",'Please select at least one inventory item',"warning")
             return
         }
         if (borrower_name == "") {
-            Swal.fire({
-                title: "Failed!",
-                text: 'Please provide borrower name',
-                icon: "error",
-            })
+            Swal.fire("Failed!",'Please provide borrower name',"error")
             return
         }
 
@@ -57,11 +49,7 @@
             },
             success: function(response) {
                 Swal.close()
-                Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success"
-                }).then((result) => {
+                Swal.fire("Success!",response.message,"success").then((result) => {
                     if (result.isConfirmed && response.data) {
                         window.open(response.data, '_blank')
 
@@ -80,11 +68,7 @@
                 Swal.close()
 
                 if (response.status === 422 || (response.status === 400 && response.responseJSON && response.responseJSON.is_expired)) {
-                    Swal.fire({
-                        title: "Failed!",
-                        text: response.responseJSON.message,
-                        icon: "error"
-                    }).then((result) => {
+                    Swal.fire("Failed!",response.responseJSON.message,"error").then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = '/'
                         }

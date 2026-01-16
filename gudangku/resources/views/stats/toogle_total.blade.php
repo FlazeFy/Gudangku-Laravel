@@ -90,11 +90,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                Swal.fire({
-                    title: "Oops!",
-                    text: "Failed to get available year",
-                    icon: "error"
-                });
+                Swal.fire("Oops!","Failed to get available year", "error")
             }
         });
     }

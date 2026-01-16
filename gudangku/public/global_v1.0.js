@@ -141,34 +141,18 @@ const generateAPIError = (response, is_list_format) => {
             icon: "error"
         });
     } else if(response.status === 404){
-        Swal.fire({
-            title: "Oops!",
-            html: "Data not found",
-            icon: "error"
-        });
+        Swal.fire("Oops!", "Data not found","error")
     } else {
-        Swal.fire({
-            title: "Oops!",
-            text: response.responseJSON?.message || "Something went wrong",
-            icon: "error"
-        });
+        Swal.fire("Oops!", response.responseJSON?.message || "Something went wrong", "error")
     }
 }
 
 const generateEmptyFieldError = (context) => {
-    Swal.fire({
-        title: "Oops!",
-        text: `You must select the ${context}`,
-        icon: "warning"
-    });
+    Swal.fire("Oops!", `You must select the ${context}`, "warning")
 }
 
 const generateLastPageError = () => {
-    Swal.fire({
-        title: "Oops!",
-        text: "You are at the last page",
-        icon: "warning"
-    });
+    Swal.fire("Oops!", "You are at the last page", "warning")
 }
 
 const checkFillingStatus = (list) => {

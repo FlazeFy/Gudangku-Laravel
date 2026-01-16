@@ -159,11 +159,7 @@
                 </div>
             `)
         
-            Swal.fire({
-                title: "Success!",
-                text: data.message,
-                icon: "success"
-            });
+            Swal.fire("Success!", data.message, "success")
         })
         .fail(function (response, xhr, ajaxOptions, thrownError) {
             generateAPIError(response, true)
@@ -237,11 +233,7 @@
 
                 let data = response
                 Swal.hideLoading()
-                Swal.fire({
-                    title: `Token ${data.status}`,
-                    text: data.message,
-                    icon: data.status
-                });
+                Swal.fire(`Token ${data.status}`, data.message, data.status)
             })
             .fail(function (response, textStatus, errorThrown) {
                 generateAPIError(response, true)
@@ -277,36 +269,20 @@
                                 }, [])
 
                                 let data = response
-                                Swal.fire({
-                                    title: `Token ${data.status}`,
-                                    text: data.message,
-                                    icon: data.status
-                                });
+                                Swal.fire(`Token ${data.status}`, data.message, data.status)
                             },
                             error: function(response, jqXHR, textStatus, errorThrown) {
                                 generateAPIError(response, true)
                             }
                         })
                     } else {
-                        Swal.fire({
-                            title: "Oops!",
-                            text: 'Email must be at @gmail format',
-                            icon: "error"
-                        });
+                        Swal.fire("Oops!", 'Email must be at @gmail format',"error")
                     }
                 } else {
-                    Swal.fire({
-                        title: "Oops!",
-                        text: `Your password validation is not same`,
-                        icon: "error"
-                    });
+                    Swal.fire("Oops!", `Your password validation is not same`, "error")
                 }
             } else {
-                Swal.fire({
-                    title: "Oops!",
-                    text: `Some field may not valid. Check again!`,
-                    icon: "error"
-                });
+                Swal.fire("Oops!", `Some field may not valid. Check again!`, "error")
             }
         })
     });

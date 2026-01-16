@@ -322,11 +322,7 @@
             },
             success: function(response) {
                 Swal.close()
-                Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success"
-                }).then((result) => {
+                Swal.fire("Success!", response.message, "success").then((result) => {
                     if (result.isConfirmed) {
                         closeModalBS()
                         get_detail_report('{{$id}}')
@@ -359,11 +355,7 @@
             },
             success: function(response) {
                 Swal.close()
-                Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success"
-                }).then((result) => {
+                Swal.fire("Success!",response.message,"success").then((result) => {
                     if (result.isConfirmed) {
                         closeModalBS()
                         get_detail_report(id)
@@ -395,11 +387,7 @@
             },
             success: function(response) {
                 Swal.close()
-                Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success"
-                }).then((result) => {
+                Swal.fire("Success!", response.message, "success").then((result) => {
                     if (result.isConfirmed) {
                         get_detail_report(id)
                     }

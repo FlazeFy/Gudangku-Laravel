@@ -301,11 +301,7 @@ const exportButtonData = (holder, data) => {
         $(`#download-btn-data-${holder}`).on('click', function() {
             const csvData = convertToCSV(data)
             downloadCSV(csvData, `data_export_${holder}.csv`)
-            Swal.fire({
-                title: "Downloaded!",
-                text: `You have downloaded ${ucEachWord(holder.replaceAll('_',' '))} data`,
-                icon: "success"
-            });
+            Swal.fire("Downloaded!", `You have downloaded ${ucEachWord(holder.replaceAll('_',' '))} data`, "success")
         });
     } 
 }

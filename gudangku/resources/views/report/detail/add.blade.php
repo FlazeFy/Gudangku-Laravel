@@ -94,11 +94,7 @@
                 }
             })
         } else {
-            Swal.fire({
-                title: "Oops!",
-                text: "You must select at least one item",
-                icon: "warning"
-            });
+            Swal.fire("Oops!", "You must select at least one item", "warning")
         }
     }
     const get_list_inventory = () => {
@@ -185,20 +181,12 @@
         if($('.bill-item').length == 0){
             post_analyze_image()
         } else {
-            Swal.fire({
-                title: "Are you sure!",
-                text: "want to upload new bill? this will remove previous item!",
-                icon: "warning"
-            }).then((result) => {
+            Swal.fire("Are you sure!", "want to upload new bill? this will remove previous item!","warning").then((result) => {
                 if (result.isConfirmed) {
                     $('.bill-item').remove()
                     post_analyze_image()
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    Swal.fire({
-                        title: "Cancelled!",
-                        text: "Your previous item is safe!",
-                        icon: "success"
-                    });
+                    Swal.fire("Cancelled!", "Your previous item is safe!", "success")
                 }
             });
         }

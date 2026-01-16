@@ -32,11 +32,7 @@
         ]
 
         const failedMsg = () => {
-            Swal.fire({
-                title: "Oops!",
-                text: `Failed to get the stats Total ${title}`,
-                icon: "error"
-            });
+            Swal.fire("Oops!",`Failed to get the stats Total ${title}`, "error")
         }
 
         const fetchData = () => {
@@ -65,7 +61,7 @@
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
                     if (response.status != 404) {
-                        failedMsg()
+                        generateAPIError(response, true)
                     } else {
                         ctx_holders.forEach(ctx_holder => {
                             templateAlertContainer(ctx_holder.holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>', '/inventory/add')

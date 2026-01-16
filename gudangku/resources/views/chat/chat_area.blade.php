@@ -27,11 +27,7 @@
             const allowedTypes = ['image/png', 'image/jpeg', 'image/gif', 'application/pdf', 'text/csv']
 
             if (!allowedTypes.includes(file.type)) {
-                Swal.fire({
-                    title: "Error!",
-                    text: "Please select a valid file (image, PDF, or CSV only)",
-                    icon: "error"
-                });
+                Swal.fire("Error!", "Please select a valid file (image, PDF, or CSV only)", "error")
                 this.value = ''
                 return
             }

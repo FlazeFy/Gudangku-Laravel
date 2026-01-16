@@ -342,11 +342,7 @@
         }).get().join(',')
 
         if (!list_inventory_id) {
-            Swal.fire({
-                title: "Warning!",
-                text: 'Please select at least one inventory item.',
-                icon: "warning",
-            })
+            Swal.fire("Oops!",'Please select at least one inventory item.',"warning")
             return
         }
 

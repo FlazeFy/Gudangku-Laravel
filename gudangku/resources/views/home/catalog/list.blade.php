@@ -89,8 +89,6 @@
                 Swal.close()
                 if(response.status != 404){
                     generateAPIError(response, true)
-                } else {
-                    
                 }
             }
         });

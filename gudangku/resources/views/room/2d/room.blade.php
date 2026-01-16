@@ -25,11 +25,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    Swal.fire({
-                        title: "Oops!",
-                        text: "Failed to get the layout",
-                        icon: "error"
-                    });
+                    generateAPIError(response, true)
                 } else {
                     generateMapRoom('#room-container',null,true,room)
                 }

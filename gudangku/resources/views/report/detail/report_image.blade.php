@@ -24,13 +24,8 @@
 
         $(document).on('click', '#add_report_image-button', function () {
             $("#report_img_holder .no-image").remove()
-
             if ($("#report_img_holder .report-image-holder").length > 9) {
-                Swal.fire({
-                    title: "Error!",
-                    text: "You can only add one image",
-                    icon: "error"
-                })
+                Swal.fire("Oops!",  "You can only add image up until 10",  "warning")
                 return
             }
 

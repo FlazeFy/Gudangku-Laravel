@@ -20,11 +20,7 @@
         const file = this.files[0]
         if (file) {
             if (!file.type.startsWith('image/')) {
-                Swal.fire({
-                    title: "Error!",
-                    text: "Please select a valid image file!",
-                    icon: "error"
-                });
+                Swal.fire("Error!", "Please select a valid image file!","error")
                 return
             }
 

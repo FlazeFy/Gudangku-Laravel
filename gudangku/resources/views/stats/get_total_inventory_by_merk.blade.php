@@ -9,11 +9,7 @@
         const type_chart =  '<?= session()->get('toogle_total_stats') ?>'
 
         const failedMsg = () => {
-            Swal.fire({
-                title: "Oops!",
-                text: `Failed to get the stats Total ${title}`,
-                icon: "error"
-            });
+            Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
         }
         const fetchData = () => {
             $.ajax({
@@ -35,7 +31,7 @@
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
                     if(response.status != 404){
-                        failedMsg()
+                        generateAPIError(response, true)
                     } else {
                         templateAlertContainer(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>','/inventory/add')
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
