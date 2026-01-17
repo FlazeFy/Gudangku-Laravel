@@ -249,6 +249,20 @@ const generateModalDetail = (storage, storage_desc, room, coor, id) => {
 }
 
 const generateMapRoom = (target,data,is_interact,room) => {
+    Swal.showLoading()
+    const scrollToFirstCoordinateWithInventory = () => {
+        const $container = $('#room-container')
+        const $firstUsed = $container.find('.room-floor.active').first()
+        if (!$firstUsed.length) return
+    
+        const containerOffset = $container.offset()
+        const targetOffset = $firstUsed.offset()
+        const scrollTop = targetOffset.top - containerOffset.top + $container.scrollTop() - 20
+        const scrollLeft = targetOffset.left - containerOffset.left + $container.scrollLeft() - 20
+    
+        $container.animate({ scrollTop: scrollTop, scrollLeft: scrollLeft }, 400)
+    }
+
     let rows
     let letters
     let cols
@@ -301,12 +315,17 @@ const generateMapRoom = (target,data,is_interact,room) => {
 
     if(is_interact){
         $(target).append(`
-            <div class='floor-config m-3'>
+            <div class='floor-config m-3 d-flex gap-2 text-nowrap'>
                 <a class='d-inline-block btn btn-success' onclick='expandFloor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
                 ${data ? `<a class='d-inline-block btn btn-success' href='/doc/layout/${room}'><i class="fa-solid fa-print"></i> Print</a>`:''}
                 ${data ? `<a class='d-inline-block btn btn-success' href='/doc/layout/${room}/custom'><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>`:''}
             </div>
         `)
+
+        requestAnimationFrame(() => {
+            scrollToFirstCoordinateWithInventory()
+            Swal.close()
+        })
     }
 }
 
