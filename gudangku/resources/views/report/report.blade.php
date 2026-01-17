@@ -5,13 +5,13 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col" style='min-width:140px;'>Report Title</th>
-                    <th scope="col" style='min-width:160px;'>Category</th>
-                    <th scope="col" style='min-width:140px;'>Description</th>
-                    <th scope="col" style='min-width:140px;'>Items</th>
-                    <th scope="col" style='min-width:140px;'>Price</th>
-                    <th scope="col" style='min-width:140px;'>Props</th>
-                    <th scope="col" style='min-width:120px;'>Action</th>
+                    <th scope="col" style='min-width:140px'>Report Title</th>
+                    <th scope="col" style='min-width:160px'>Category</th>
+                    <th scope="col" style='min-width:140px'>Description</th>
+                    <th scope="col" style='min-width:140px'>Items</th>
+                    <th scope="col" style='min-width:140px'>Price</th>
+                    <th scope="col" style='min-width:140px'>Props</th>
+                    <th scope="col" style='min-width:120px'>Action</th>
                 </tr>
             </thead>
             <tbody id="report_holder"></tbody>
@@ -53,7 +53,7 @@
 
                 data.forEach(el => {
                     if(role == 0){
-                        $(`#${item_holder}`).append(generateReportBox(el, null));
+                        $(`#${item_holder}`).append(generateReportBox(el, null))
                     } else {
                         $(`#${item_holder}`).append(`
                             <tr>
@@ -94,22 +94,22 @@
                                     </div>
                                 </td>
                             </tr>
-                        `);
+                        `)
                     }
-                });
+                })
 
                 generatePagination(item_holder, getAllReport, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if(response.status != 404){
-                    generateAPIError(response, true);
+                    generateAPIError(response, true)
                 } else {
                     $('#total-item').text(0)
                     templateAlertContainer(item_holder, 'no-data', "No report found to show", null, '<i class="fa-solid fa-scroll"></i>','')
                 }
             }
-        });
+        })
     }
     getAllReport(page,search_key,filter_category,sorting)
 </script>

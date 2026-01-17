@@ -53,7 +53,7 @@
                     generateAPIError(response, true)
                 }
             }
-        });
+        })
     }
     getAllQR()
 
@@ -84,12 +84,12 @@
                         getAllQR()
                         get_qr_history()
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     const get_qr_history = () => {
@@ -121,7 +121,7 @@
                                     <label class="form-check-label" for="inv-${inv.id}">${inv.inventory_name} (${inv.inventory_category})</label>
                                 </div>
                             `
-                        });
+                        })
                     }
 
                     $('#qr-code-history').append(`
@@ -141,7 +141,7 @@
                                 `<hr class="mb-2"><b>Borrowed Item</b><p class="mb-2">${el.list_inventory}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <p><b>Borrower by</b> ${data[0].borrower_name}</p>
-                                    <a class="btn btn-success" style="padding: var(--spaceXXSM) var(--spaceMD) !important;" data-bs-target="#modalDetail-${el.id}" data-bs-toggle="modal">Return Confirmation</a>
+                                    <a class="btn btn-success" style="padding: var(--spaceXXSM) var(--spaceMD) !important" data-bs-target="#modalDetail-${el.id}" data-bs-toggle="modal">Return Confirmation</a>
                                     <div class="modal fade" id="modalDetail-${el.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
@@ -164,39 +164,36 @@
                             }
                         </div>
                     `)
-                });
+                })
 
                 generatePagination(item_holder, get_qr_history, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
                 if (response.status === 404) {
-                    const json = JSON.parse(response.responseText);
+                    const json = JSON.parse(response.responseText)
                     const message = json.message
-                    $('#qr-code-history').html(`<span class="fst-italic text-white">- ${ucFirst(message)} -</span>`);
+                    $('#qr-code-history').html(`<span class="fst-italic text-white">- ${ucFirst(message)} -</span>`)
                 } else {
                     generateAPIError(response, true)
                 }
             }
-        });
+        })
     }
     get_qr_history()
 
     $(document).on('click', '.update-returned-btn', function () {
         const lend_id = $(this).data('lend-id')
         const form_id = $(this).data('form-id')
-
         const list_inventory = []
 
         $(`#${form_id} .form-check`).each(function () {
             const id = $(this).find("input[type=hidden][name=inventory_id]").val()
             const is_returned = $(this).find("input[type=checkbox][name=is_returned]").is(":checked")
             list_inventory.push({ id, is_returned })
-        });
-
+        })
         update_returned_status(lend_id, list_inventory)
-    });
-
+    })
 
     const update_returned_status = (lend_id, list_inventory) => {
         $.ajax({
@@ -223,11 +220,11 @@
                         getAllQR()
                         get_qr_history()
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 </script>

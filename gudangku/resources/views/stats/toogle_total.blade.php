@@ -58,16 +58,18 @@
         keys.forEach(dt => {
             localStorage.removeItem(dt)
             localStorage.removeItem(`last-hit-${dt}`) 
-        });
+        })
         $('#toogle_total_view_select').submit()
     })
+
     $(document).on('change','#toogle_year',function(){
         const keys = ['total_inventory_created_per_month_temp','total_report_created_per_month_temp','total_report_spending_per_month_temp','total_report_used_per_month_temp']
         keys.forEach(dt => {
             localStorage.removeItem(dt)
             localStorage.removeItem(`last-hit-${dt}`) 
-        });
+        })
         $('#toogle_year_select').submit()
     })
+    
     getAvailableYear(token,'toogle_year',<?= session()->get('toogle_select_year') ?>)
 </script>

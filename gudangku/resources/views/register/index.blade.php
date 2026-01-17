@@ -15,6 +15,7 @@
         <br><br>
         @include('register.form')
     </div>
+    
     <script>
         is_process = false
         window.addEventListener('beforeunload', function(event) {
@@ -23,9 +24,9 @@
                 event.preventDefault()
                 event.returnValue = ''
             }
-        });
+        })
         $(document).ready(function() {
             formValidation('Account')
-        });
+        })
     </script>
 @endsection

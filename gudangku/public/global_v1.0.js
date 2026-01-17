@@ -2,7 +2,6 @@ const statsFetchRestTime = 120
 
 const isMobile = () => {
     const key = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
-    
     return key.test(navigator.userAgent)
 }
 
@@ -33,7 +32,7 @@ const getDateToContext = (datetime, type, isFlexible = true) => {
                 return ` ${result.getFullYear()}/${(result.getMonth() + 1)}/${("0" + result.getDate()).slice(-2)} ${("0" + result.getHours()).slice(-2)}:${("0" + result.getMinutes()).slice(-2)}`
             }
         } else if (type == "24h" || type == "12h") {
-            return `${("0" + result.getHours()).slice(-2)}:${("0" + result.getMinutes()).slice(-2)}`;
+            return `${("0" + result.getHours()).slice(-2)}:${("0" + result.getMinutes()).slice(-2)}`
         } else if (type == "datetime") {
             return ` ${result.getFullYear()}/${(result.getMonth() + 1)}/${("0" + result.getDate()).slice(-2)} ${("0" + result.getHours()).slice(-2)}:${("0" + result.getMinutes()).slice(-2)}`
         } else if (type == "date") {
@@ -52,15 +51,16 @@ const getDateToContext = (datetime, type, isFlexible = true) => {
 }
 
 const getUTCHourOffset = () => {
-    const offsetMi = new Date().getTimezoneOffset();
-    const offsetHr = -offsetMi / 60;
-    return offsetHr;
+    const offsetMi = new Date().getTimezoneOffset()
+    const offsetHr = -offsetMi / 60
+
+    return offsetHr
 }
 
 const getUUID = () => {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
+    )
 }
 
 const validateInput = (type, id, max, min) => {
@@ -99,9 +99,7 @@ const ucFirst = (val) => {
 const generatePagination = (items_holder, fetch_callback, total_page, current_page) => {
     let page_element = ''
     for (let i = 1; i <= total_page; i++) {
-        page_element += `
-            <a class='btn-page ${i === current_page ? 'active' : ''}' href='#' data-page='${i}' title='Open page: ${i}'>${i}</a>
-        `
+        page_element += `<a class='btn-page ${i === current_page ? 'active' : ''}' href='#' data-page='${i}' title='Open page: ${i}'>${i}</a>`
     }
 
     $(`#pagination-${items_holder}`).remove()
@@ -114,8 +112,8 @@ const generatePagination = (items_holder, fetch_callback, total_page, current_pa
     $(document).on('click', `#pagination-${items_holder} .btn-page`, function() {
         const selectedPage = $(this).data('page')
         fetch_callback(selectedPage)
-    });
-};
+    })
+}
 
 const generateAPIError = (response, is_list_format) => {
     Swal.close()
@@ -139,7 +137,7 @@ const generateAPIError = (response, is_list_format) => {
             title: "Validation Error!",
             html: msg,
             icon: "error"
-        });
+        })
     } else if(response.status === 404){
         Swal.fire("Oops!", "Data not found","error")
     } else {
@@ -172,7 +170,7 @@ const checkFillingStatus = (list) => {
             }
         }
         return false
-    });
+    })
 }
 
 const getReminderContext = (reminderType) => {
@@ -256,7 +254,7 @@ const zoomableModal = () => {
                         </div>
                     </div>
                 </div>
-            `);
+            `)
         }
     })
 }
@@ -266,7 +264,7 @@ const setArrowCollapse = () => {
         $('[data-bs-toggle="collapse"]').each(function () {
             const collapseElement = $(this).closest('div').find('.collapse')
             const direction = collapseElement.hasClass('show') ? 'up' : 'down'
-            $(this).html(`<i class="fa-solid fa-circle-chevron-${direction}" style="transition: transform 0.3s;"></i> ${$(this).text()}`)
+            $(this).html(`<i class="fa-solid fa-circle-chevron-${direction}" style="transition: transform 0.3s"></i> ${$(this).text()}`)
 
             $(this).on('click', function () {
                 const icon = $(this).find('i')
@@ -275,12 +273,12 @@ const setArrowCollapse = () => {
 
                 const currentRotation = icon.data('rotation') || 0
                 const newRotation = currentRotation + 180
-                icon.css({ transform: `rotate(${newRotation}deg)` })
+                icon.css('transform',`rotate(${newRotation}deg)`)
                 icon.data('rotation', newRotation)
-            });
-        });
-    });
-};
+            })
+        })
+    })
+}
 setArrowCollapse()
 
 const formValidation = (context) => {
@@ -348,15 +346,11 @@ const formValidation = (context) => {
                         }
 
                         if(lengthWarning != ''){
-                            $(`#alert-holder-${idx}-${$(this).attr('name')}`).html(`<label class='text-danger fst-italic' style='font-size:12px;'><i class="fa-solid fa-triangle-exclamation"></i> ${lengthWarning}</label><br>`)
-                            $(this).css({
-                                'border':'2px solid var(--dangerBG)'
-                            })
+                            $(`#alert-holder-${idx}-${$(this).attr('name')}`).html(`<label class='text-danger fst-italic' style='font-size:12px'><i class="fa-solid fa-triangle-exclamation"></i> ${lengthWarning}</label><br>`)
+                            $(this).css('border','2px solid var(--dangerBG)')
                         } else {
                             $(`#alert-holder-${idx}-${$(this).attr('name')}`).empty()
-                            $(this).css({
-                                'border':'1.5px solid var(--primaryColor)'
-                            })
+                            $(this).css('border','1.5px solid var(--primaryColor)')
                         }
                     })                  
                 } else {
@@ -365,8 +359,8 @@ const formValidation = (context) => {
             } else {
                 alert(`Can't validate a form with index - ${idx} : Not valid form validation`)
             }
-        });
-    });
+        })
+    })
 }
 
 const setCurrentLocalDateTime = (target) => {

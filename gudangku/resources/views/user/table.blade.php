@@ -2,12 +2,12 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col" style='min-width:160px;'>Username</th>
-                <th scope="col" style='min-width:180px;'>Contact</th>
-                <th scope="col" style='min-width:100px;'>Timezone</th>
-                <th scope="col" style='min-width:110px;'>Joined At</th>
-                <th scope="col" style='min-width:110px;'>Last Updated</th>
-                <th scope="col" style='min-width:80px;'>Action</th>
+                <th scope="col" style='min-width:160px'>Username</th>
+                <th scope="col" style='min-width:180px'>Contact</th>
+                <th scope="col" style='min-width:100px'>Timezone</th>
+                <th scope="col" style='min-width:110px'>Joined At</th>
+                <th scope="col" style='min-width:110px'>Last Updated</th>
+                <th scope="col" style='min-width:80px'>Action</th>
             </tr>
         </thead>
         <tbody id="user_tb_body"></tbody>
@@ -69,8 +69,8 @@
                                 </div>    
                             </td>
                         </tr>
-                    `);
-                });
+                    `)
+                })
 
                 generatePagination(item_holder, getAllUser, total_page, current_page)
             },
@@ -82,7 +82,7 @@
                     templateAlertContainer(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
                 }
             }
-        });
+        })
     }
     getAllUser(page)
 </script>

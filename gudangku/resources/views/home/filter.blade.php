@@ -79,6 +79,7 @@
             getAllInventory(page,search_key,filter_category,sorting)
         }
     }
+    
     const submitOnEnter = (event) => {
         if (event.keyCode === 13) { 
             event.preventDefault() 
@@ -87,6 +88,7 @@
         }
         return true 
     }
+
     $(document).on('blur', '#search_by_name_merk',function(){
         searchByNameMerk($(this).val())
     })
@@ -103,6 +105,7 @@
         }
         getAllInventory(page,search_key,filter_category,sorting)
     })
+
     $(document).on('change', '#sorting',function(){
         if($(this).val()){
             const url = new URL(window.location)

@@ -20,14 +20,12 @@
 
         renderer.setSize(container.clientWidth, container.clientHeight)
         container.appendChild(renderer.domElement)
-
         const light = new THREE.AmbientLight(0x404040)
         scene.add(light)
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
         directionalLight.position.set(1, 1, 1).normalize()
         scene.add(directionalLight)
-
         camera.position.z = 5
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement)
@@ -46,10 +44,8 @@
             controls.update()
             renderer.render(scene, camera)
         }
-
         render()
 
-        // Handle window resize
         window.addEventListener('resize', () => {
             camera.aspect = container.clientWidth / container.clientHeight
             camera.updateProjectionMatrix()

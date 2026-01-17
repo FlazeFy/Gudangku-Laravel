@@ -9,7 +9,7 @@
 <a class="btn btn-success w-100 mt-4" id="btn-register-acc"><i class="fa-solid fa-paper-plane"></i> Register Account</a><br>
 <div class="text-center mt-3 d-none section-form" id="token-section">
     <h3>Validate</h3><br>
-    <h4 class="my-2 fw-bold" style="font-size:var(--textJumbo);" id="timer">15:00</h4>
+    <h4 class="my-2 fw-bold" style="font-size:var(--textJumbo)" id="timer">15:00</h4>
     <label>Type the Token that has sended to your email</label><br>
     <div class="pin-code" id="pin-holder">
         <input type="text" maxlength="1" oninput="validatePin()" autofocus>
@@ -19,7 +19,7 @@
         <input type="text" maxlength="1" oninput="validatePin()">
         <input type="text" maxlength="1" oninput="validatePin()">
     </div>
-    <div id="token_validate_msg" class="msg-error-input mb-2" style="font-size:13px;"></div>
+    <div id="token_validate_msg" class="msg-error-input mb-2" style="font-size:var(--textMD)"></div>
     <div class="d-inline-block mx-auto">
         <a class="btn btn-success rounded-pill px-3 mt-3" id="btn-regenerate-token">Don't receive the token. Send again!</a>
     </div>
@@ -33,7 +33,6 @@
 
     pinContainer.addEventListener('keyup', function (event) {
         var target = event.srcElement
-        
         var maxLength = parseInt(target.attributes["maxlength"].value, 10)
         var myLength = target.value.length
 
@@ -49,7 +48,7 @@
         }
 
         if (myLength === 0) {
-            var next = target;
+            var next = target
             while (next = next.previousElementSibling) {
                 if (next == null) break
                 if (next.tagName.toLowerCase() == "input") {
@@ -58,35 +57,35 @@
                 }
             }
         }
-    }, false);
+    }, false)
 
     function formatTime(seconds){
-        var minutes = Math.floor(seconds / 60);
-        var remainingSeconds = seconds % 60;
-        return minutes + ':' + remainingSeconds.toString().padStart(2, '0');
+        var minutes = Math.floor(seconds / 60)
+        var remainingSeconds = seconds % 60
+        return minutes + ':' + remainingSeconds.toString().padStart(2, '0')
     }
 
     function controlPin(type) {
-        var pins = pin_holder.querySelectorAll('input');
-        var result = "";
+        var pins = pin_holder.querySelectorAll('input')
+        var result = ""
 
         pins.forEach(function(e) {
             if(type == "time_out"){
                 e.disabled = true
-                e.style = "background: var(--hoverBG);"
+                e.style = "background: var(--hoverBG)"
             } else if(type == "regenerate"){
                 e.disabled = false
                 e.value = ""
-                e.style = "background: var(--whiteColor);"
+                e.style = "background: var(--whiteColor)"
             } else if(type == "invalid"){
                 e.value = ""
-                e.style = "border: 1.5px solid var(--warningBG); "
+                e.style = "border: 1.5px solid var(--warningBG)"
             } else if(type == "fetch"){
                 result += e.value
             }
-        });
+        })
 
-        return result;
+        return result
     }
 
     function validatePin(){
@@ -98,7 +97,7 @@
                 is_empty = true
                 return
             }
-        });
+        })
 
         if(is_empty == false){
             const token = controlPin('fetch')
@@ -132,9 +131,7 @@
                 <a class='btn btn-success ms-1 mb-1' href='/'><i class="fa-solid fa-arrow-right"></i> Start Browsing</a>
             `).attr('style', 'height: auto !important; min-height: auto !important;')
 
-            $('#service_section').css({
-                "display":"block"
-            })
+            $('#service_section').css("display","block")
             $('html, body').animate({
                 scrollTop: $('#service_section').offset().top
             }, [])
@@ -147,13 +144,13 @@
             $('.progress-bar').css('width', '66%').attr('aria-valuenow', 66) 
             $('.step-mobile .caption').html(`
                 <div class="d-flex flex-wrap gap-2 mt-2">
-                    <a class="btn btn-success px-2 py-1" style="font-size:var(--textSM);" href='/'>
+                    <a class="btn btn-success px-2 py-1" href='/'>
                         <i class="fa-solid fa-arrow-right"></i> Go to Dashboard
                     </a>
-                    <a class="btn btn-success px-2 py-1" style="font-size:var(--textSM);" href='/login'>
+                    <a class="btn btn-success px-2 py-1" href='/login'>
                         <i class="fa-solid fa-house"></i> Back to Login
                     </a>
-                    <a class="btn btn-primary px-2 py-1" style="font-size:var(--textSM);">
+                    <a class="btn btn-primary px-2 py-1">
                         <i class="fa-solid fa-mobile-screen"></i> Get Mobile Version
                     </a>
                 </div>
@@ -171,7 +168,7 @@
                 if (index === 0) {
                     e.focus()
                 }
-            });
+            })
         })
     }
     
@@ -186,21 +183,20 @@
                 setTimeout(updateTimer, 1000)
 
                 if (remain <= 180) {
-                    timer.style = "color: var(--warningBG);"
+                    timer.style = "color: var(--warningBG)"
                 }
             } else {
                 token_msg.innerHTML = "<span class='text-danger'>Time's up, please try again</span>"
                 controlPin("time_out")
             }
         }
-
         updateTimer()
     }
 
     pinContainer.addEventListener('keydown', function (event) {
         var target = event.srcElement
         target.value = ""
-    }, false);
+    }, false)
 
     $(document).ready(function() {
         $('#checkTerm').click(function() {
@@ -209,7 +205,7 @@
             } else {
                 $('#username, #email, #password, #password_validation').val('')
             }
-        });
+        })
 
         $('#btn-regenerate-token').on('click', function(){
             $.ajax({
@@ -229,7 +225,7 @@
                 startTimer(900)
                 $('html, body').animate({
                     scrollTop: $('#token-section').offset().top
-                }, []);
+                }, [])
 
                 let data = response
                 Swal.hideLoading()
@@ -237,7 +233,7 @@
             })
             .fail(function (response, textStatus, errorThrown) {
                 generateAPIError(response, true)
-            });
+            })
         })
 
         $('#btn-register-acc').on('click', function(){
@@ -285,5 +281,5 @@
                 Swal.fire("Oops!", `Some field may not valid. Check again!`, "error")
             }
         })
-    });
+    })
 </script>

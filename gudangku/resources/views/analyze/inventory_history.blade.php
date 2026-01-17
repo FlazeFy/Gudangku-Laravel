@@ -22,7 +22,7 @@
         keys.forEach(dt => {
             localStorage.removeItem(dt)
             localStorage.removeItem(`last-hit-${dt}`) 
-        });
+        })
         $('#toogle_year_select').submit()
     })
     getAvailableYear(token,'toogle_year',<?= session()->get('toogle_select_year') ?>)

@@ -10,12 +10,10 @@
     $(document).ready(function() {
         $('#checkTerm').click(function() {
             if ($(this).is(':checked')) {
-                $('#profile_section').css({
-                    "display":"block"
-                })
+                $('#profile_section').css("display","block")
                 $('html, body').animate({
                     scrollTop: $('#profile_section').offset().top
-                }, []); 
+                }, [])
                 $('#indicator-tnc').removeClass('step-active').addClass('step-finish')
                 $('#indicator-profile').addClass('step-active')
                 
@@ -25,17 +23,15 @@
             } else {
                 $('html, body').animate({
                     scrollTop: $('#tnc_section').offset().top
-                }, []);
+                }, [])
                 $('#indicator-tnc').removeClass('step-finish').addClass('step-active')
                 $('#indicator-profile').removeClass('step-active')
-                $('#profile_section').css({
-                    "display":"none"
-                })
+                $('#profile_section').css("display","none")
 
                 $('.step-mobile .title').text("Hello There!")
                 $('.step-mobile .caption').text('Do you aggree with our terms & condition?')
                 $('.progress-bar').css('width', '0%').attr('aria-valuenow', 0) 
             }
-        });
-    });
+        })
+    })
 </script>

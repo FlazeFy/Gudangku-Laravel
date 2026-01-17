@@ -10,10 +10,9 @@
             const reminder_type = $(this).data('reminder-type')
             const reminder_context = $(this).data('reminder-context')
             const index = $('.reminder-box').index(this)
+            const $contextHolder = $('.reminder_context_holder').eq(index)
 
             await getDictionaryByContext('reminder_type',token,reminder_type,'.')  
-
-            const $contextHolder = $('.reminder_context_holder').eq(index)
             getReminderContextSelect(reminder_type,$contextHolder,reminder_context)
         })
 
@@ -55,13 +54,13 @@
             $('#reminder_holder').empty().addClass('pt-2')
             reminder.forEach(dt => {
                 $('#reminder_holder').append(generateReminderBox(dt, inventory_id))
-            });
+            })
             $('#add_reminder-holder').html(`
                 <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReminder"><i class="fa-solid fa-plus"></i> Add Reminder</a>
             `)
         } else {
             $('#reminder_holder').html(`
-                <div class="container-fluid p-3" style="background-color:rgba(59, 131, 246, 0.2);">
+                <div class="container-fluid p-3" style="background-color:rgba(59, 131, 246, 0.2)">
                     <h6><i class="fa-regular fa-clock"></i> This inventory doesn't have reminder</h6>
                     <a class="btn btn-primary mt-3" data-bs-toggle='modal' data-bs-target='#modalAddReminder'><i class="fa-solid fa-plus"></i> Add New Reminder</a>
                 </div>

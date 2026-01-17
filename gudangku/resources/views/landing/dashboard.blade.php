@@ -116,7 +116,7 @@
                     templateAlertContainer('dashboard-holder', 'no-data', "No stats found to show", null, '<i class="fa-solid fa-warehouse"></i>')
                 }
             }
-        });
+        })
     }
     get_dashboard()
 </script>

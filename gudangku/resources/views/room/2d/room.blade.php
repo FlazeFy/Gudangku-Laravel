@@ -7,6 +7,7 @@
         $(document).ready(function() {
             $('.modal').modal('hide')
         })
+        
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/inventory/layout/${room}`,
@@ -30,7 +31,7 @@
                     generateMapRoom('#room-container',null,true,room)
                 }
             }
-        });
+        })
     }
     getRoomLayout()
 
@@ -63,7 +64,8 @@
                                 <td><a class="btn btn-warning modal-btn" href="/inventory/edit/${dt.id}"><i class="fa-solid fa-pen-to-square"></i></a></td>
                             </tr>
                         `)
-                    });
+                    })
+
                     if(stats){
                         generatePieChart('Category Distribution',`pie-chart-${target}`,stats)
                         $(`#pie-chart-${target}`).append('<hr class="mb-1 mt-5">')
@@ -75,7 +77,7 @@
                         <tr><td colspan='4' class='text-secondary fst-italic text-center'>- No inventory to show -</td></tr>
                     `)
                 }
-            });
+            })
         }
     }
 
@@ -99,12 +101,12 @@
                     if (result.isConfirmed) {
                         getRoomLayout() 
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     const expandFloor = () => {
@@ -157,7 +159,7 @@
         $(document).on('click', '.submit_add_storage', function(event) {
             const form_id = $(this).closest('form').attr('id')
             postStorage(form_id)
-        });
+        })
 
         $(document).on('click', '.remove_coordinate', function(event) {
             const idx = $(this).index('.remove_coordinate')
@@ -166,5 +168,5 @@
             const coor = id_coor_holder[1]
             deleteModuleByID(`${id}/${coor}`, 'inventory', 'delete_layout', token, () => getRoomLayout())
         })
-    });
+    })
 </script>

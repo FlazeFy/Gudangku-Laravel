@@ -5,7 +5,7 @@
     }
     .autocomplete-items {
         position: absolute;
-        border: 2px solid white;
+        border: 2px solid var(--whiteColor);
         z-index: 99;
         top: 100%;
         left: 0;
@@ -23,7 +23,7 @@
         background: var(--primaryColor);
     }
     .autocomplete-active {
-        color: #ffffff;
+        color: var(--whiteColor);
     }
     .item_qty_selected {
         width: 80px;
@@ -131,11 +131,11 @@
                         Swal.close()
                         getDetailInventoryByID(inventory_id)
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 </script>

@@ -15,7 +15,7 @@
                 <h1 class="main-page-title">Analyze {{ucfirst($type)}}</h1>
                 <h3 class="mb-0"><b class='inventory_name'></b></h3>
             </div>
-            <div style="min-width:120px;">
+            <div style="min-width:120px">
                 @include('components.profile')
                 @include('components.notification')
             </div>
@@ -61,6 +61,7 @@
         </div>
         <div id="work_area" class='d-none'></div>
     </div>
+
     <script>
         const getAnalyzeInventory = (id) => {
             Swal.showLoading()
@@ -70,8 +71,8 @@
                 url: `/api/v1/inventory/analyze/${id}?year=${year}`,
                 type: 'GET',
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Accept", "application/json");
-                    xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
+                    xhr.setRequestHeader("Accept", "application/json")
+                    xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
                 },
                 success: function(response) {
                     Swal.close()
@@ -93,7 +94,7 @@
                     const capacityText = isExpensive ? 'Expensive' : 'Cheap'
                     const capacityIcon = isExpensive ? '<i class="fa-solid fa-triangle-exclamation"></i>': '<i class="fa-solid fa-thumbs-up"></i>'
 
-                    $('#expensiveness_holder').html(`<a class='${capacityClass} rounded-pill px-3 py-2 ms-3' style='font-size:var(--textXMD);'>${capacityIcon} ${capacityText}</a>`)
+                    $('#expensiveness_holder').html(`<a class='${capacityClass} rounded-pill px-3 py-2 ms-3' style='font-size:var(--textXMD)'>${capacityIcon} ${capacityText}</a>`)
 
                     if(data.inventory_history_analyze){
                         let report_history = ' This inventory also had been used in report '
@@ -101,7 +102,7 @@
 
                         data.inventory_history_analyze.forEach(dt => {
                             report_history += `<b>${dt.report_category} (${dt.total}x)</b>, `
-                        });
+                        })
                         data.inventory_report.forEach(dt => {
                             tbody_report += `
                                 <tbody>
@@ -112,7 +113,7 @@
                                     </tr>
                                 </tbody>
                             `
-                        });
+                        })
 
                         $('#last_report_history').html(`${report_history}`)
                         $('#last_report_history_table').html(`
@@ -130,19 +131,19 @@
                         `)
                         const totalUsedInReportYear = data.inventory_in_monthly_report.reduce((sum, dt) => {
                             return sum + dt.total
-                        }, 0);
+                        }, 0)
                         $('#whole_year_total_in_report').html(`<p>In whole year ${year}, there is about <b>${totalUsedInReportYear} report</b> are using this inventory.</p>`)
                     }
                     if(data.inventory_capacity_unit && data.inventory_capacity_vol){
                         $('#capacity_holder').html(`
-                            <h2 class='text-primary fw-bolder mt-2' style='font-size:calc(var(--textJumbo)*2.5);'>${data.inventory_capacity_vol} <span class='text-white' style='font-size:calc(var(--textLG)*1.75);'>${data.inventory_capacity_unit == 'percentage' ? '%' : data.inventory_capacity_unit} of remaining capacity</span></h2>
+                            <h2 class='text-primary fw-bolder mt-2' style='font-size:calc(var(--textJumbo)*2.5)'>${data.inventory_capacity_vol} <span class='text-white' style='font-size:calc(var(--textLG)*1.75)'>${data.inventory_capacity_unit == 'percentage' ? '%' : data.inventory_capacity_unit} of remaining capacity</span></h2>
                         `)
                         const isLowCapacity = data.inventory_capacity_unit === 'percentage' && data.inventory_capacity_vol <= 30
                         const capacityClass = isLowCapacity ? 'bg-danger' : 'bg-success'
                         const capacityText = isLowCapacity ? 'At Low Capacity' : 'Normal Capacity'
                         const capacityIcon = isLowCapacity ? '<i class="fa-solid fa-triangle-exclamation"></i>': '<i class="fa-solid fa-thumbs-up"></i>'
 
-                        $('#low_capacity_holder').html(`<a class='${capacityClass} rounded-pill px-3 py-2 ms-3' style='font-size:var(--textXMD);'>${capacityIcon} ${capacityText}</a>`)
+                        $('#low_capacity_holder').html(`<a class='${capacityClass} rounded-pill px-3 py-2 ms-3' style='font-size:var(--textXMD)'>${capacityIcon} ${capacityText}</a>`)
                     }
 
                     $('.inventory_unit_vol').text(`${data.inventory_vol} ${data.inventory_unit}`)
@@ -200,7 +201,7 @@
                         data_heatmap_inventory_activity.push(
                             { name: dy, data: data_inventory_activity_report.filter(el => el.day === dy).map(el => ({ x: el.context, y: el.total })) }
                         )
-                    });
+                    })
                     generateHeatmapInventoryActivity(data_heatmap_inventory_activity)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
@@ -216,10 +217,10 @@
                             if (result.isConfirmed) {
                                 window.location.href='/'
                             } 
-                        });
+                        })
                     }
                 }
-            });
+            })
         }
         getAnalyzeInventory("<?= $id ?>")
 

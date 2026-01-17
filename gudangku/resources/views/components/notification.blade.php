@@ -32,15 +32,15 @@
                             $(`#${item_holder}`).empty()
                             data.forEach(el => {
                                 $(`#${item_holder}`).append(`
-                                    <button class='btn text-start container bordered mt-0' style='font-size:var(--textMD) !important;' title='See Inventory' onclick="window.location.href='/inventory/edit/${el.id}'">
+                                    <button class='btn text-start container bordered mt-0' style='font-size:var(--textMD) !important' title='See Inventory' onclick="window.location.href='/inventory/edit/${el.id}'">
                                         <div class='d-flex justify-content-start text-white'>
-                                            <div class='container bordered mt-0 text-center me-2 p-3' style='width:50px; height:50px; border-radius: var(--roundedLG);'><i class="fa-solid fa-bell mx-0" style='font-size: var(--textJumbo);'></i></div>
+                                            <div class='container bordered mt-0 text-center me-2 p-3' style='width:50px; height:50px; border-radius: var(--roundedLG);'><i class="fa-solid fa-bell mx-0" style='font-size: var(--textJumbo)'></i></div>
                                             <h6>${el.reminder_desc}</h6> 
                                         </div>
-                                        <p class='date-text mt-2' style='font-size:var(--textMD) !important;'>Received At : ${getDateToContext(el.last_execute,'calendar')}</p>
+                                        <p class='date-text mt-2' style='font-size:var(--textMD) !important'>Received At : ${getDateToContext(el.last_execute,'calendar')}</p>
                                     </button>
                                 `)
-                            });
+                            })
                         },
                         error: function(response, jqXHR, textStatus, errorThrown) {
                             if(response.status != 404){
@@ -49,10 +49,10 @@
                                 templateAlertContainer(item_holder, 'no-data', "No notification to show", null, '<i class="fa-solid fa-rotate-left"></i>')
                             }
                         }
-                    });
+                    })
                 }
                 getReminderHistory(page_reminder) 
-            });
+            })
         })
     </script>
 @endif

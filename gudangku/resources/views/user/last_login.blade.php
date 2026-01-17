@@ -31,8 +31,8 @@
                             <td class='text-center fw-bold'>@${el.username}</td>
                             <td>${el.login_at}</td>
                         </tr>
-                    `);
-                });
+                    `)
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -42,7 +42,7 @@
                     templateAlertContainer(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
                 }
             }
-        });
+        })
     }
     getLastLogin()
 </script>

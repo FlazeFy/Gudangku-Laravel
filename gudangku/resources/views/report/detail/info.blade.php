@@ -66,25 +66,25 @@
                 $('#report_item_tb thead').html(`
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col" style='min-width:140px;'>Item Name</th>
-                        <th scope="col" style='min-width:140px;'>Description</th>
-                        <th scope="col" style='min-width:60px;'>Qty</th>
-                        <th scope="col" style='min-width:140px;'>Price</th>
-                        <th scope="col" style='min-width:140px;'>Created At</th>
-                        <th scope="col" style='min-width:80px;'>Edit</th>
-                        <th scope="col" style='min-width:80px;'>Remove</th>
+                        <th scope="col" style='min-width:140px'>Item Name</th>
+                        <th scope="col" style='min-width:140px'>Description</th>
+                        <th scope="col" style='min-width:60px'>Qty</th>
+                        <th scope="col" style='min-width:140px'>Price</th>
+                        <th scope="col" style='min-width:140px'>Created At</th>
+                        <th scope="col" style='min-width:80px'>Edit</th>
+                        <th scope="col" style='min-width:80px'>Remove</th>
                     </tr>
                 `)
             } else {
                 $('#report_item_tb thead').html(`
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col" style='min-width:140px;'>Item Name</th>
-                        <th scope="col" style='min-width:140px;'>Description</th>
-                        <th scope="col" style='min-width:60px;'>Qty</th>
-                        <th scope="col" style='min-width:140px;'>Created At</th>
-                        <th scope="col" style='min-width:80px;'>Edit</th>
-                        <th scope="col" style='min-width:80px;'>Remove</th>
+                        <th scope="col" style='min-width:140px'>Item Name</th>
+                        <th scope="col" style='min-width:140px'>Description</th>
+                        <th scope="col" style='min-width:60px'>Qty</th>
+                        <th scope="col" style='min-width:140px'>Created At</th>
+                        <th scope="col" style='min-width:80px'>Edit</th>
+                        <th scope="col" style='min-width:80px'>Remove</th>
                     </tr>
                 `)
             }
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                     `)
-                });
+                })
 
                 if(data.report_image.length > 1){
                     $('#report_image_button-holder').prepend(`
@@ -135,9 +135,7 @@
                     `)
                 }
             } else {
-                $('#report_img_holder').html(`
-                    <div class='no-image'><h6 class="text-center text-secondary fst-italic">- No Image Attached -</h6></div>
-                `)
+                $('#report_img_holder').html(`<div class='no-image'><h6 class="text-center text-secondary fst-italic">- No Image Attached -</h6></div>`)
             }
 
             $(`#${item_holder}`).html(`
@@ -145,7 +143,7 @@
                     <div>
                         ${is_edit_mode ? 
                             `<label>Title</label>
-                            <input class='form-control' id='report_title' style='${ !isMobile() && 'min-width:480px;'}' value='${data.report_title}'>`
+                            <input class='form-control' id='report_title' style='${ !isMobile() && 'min-width:480px'}' value='${data.report_title}'>`
                             :
                             `<h3 class="mb-2 mb-md-0" id='report_title'>${data.report_title}</h3>`
                         }
@@ -153,7 +151,7 @@
                     <div>
                         ${is_edit_mode ? 
                             `<label>Created At</label>
-                            <input class='form-control' type='datetime-local' id='created_at_edit' style='${ !isMobile() && 'min-width:480px;'}' value='${created_at}'>` : ''}
+                            <input class='form-control' type='datetime-local' id='created_at_edit' style='${ !isMobile() && 'min-width:480px'}' value='${created_at}'>` : ''}
                     </div>
                     <div>
                         ${is_edit_mode ? 
@@ -261,7 +259,7 @@
                             </td>
                         </tr>
                     `)
-                });
+                })
                 $('#report_check_extra').html(`
                     <div class="d-flex gap-2 mb-3">
                         <a class="btn btn-primary py-1" onclick="checkAll('.check-inventory','check'); checkedToggleEvent();">
@@ -276,9 +274,7 @@
                     </div>
                 `)
             } else {
-                $('#report_check_extra').html(`
-                    <a class="btn btn-success py-1" data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-plus"></i> Add Item</a>
-                `)
+                $('#report_check_extra').html(`<a class="btn btn-success py-1" data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-plus"></i> Add Item</a>`)
                 $('#report_item_tb tbody').append(`
                     <tr>
                         <td colspan='7' class="text-center"><p class="no-data-message mt-2">- No Item Attached -</p></td>
@@ -287,12 +283,10 @@
             }
 
             await getDictionaryByContext('report_category,report_category_split',token,data.report_category)
-
             reportCategoryHolderEventHandler('#report_category_holder')
-
             zoomableModal()
         } catch (error) {
-            Swal.close();
+            Swal.close()
             Swal.fire({
                 title: "Failed!",
                 text: "Something is wrong. Please try again",
@@ -304,9 +298,9 @@
                 if (result.isConfirmed) {
                     window.location.href = '/report'
                 }
-            });
+            })
         }
-    };
+    }
     getDetailReportByID('{{$id}}')
 
     const updateReportItem = (id) => {
@@ -327,12 +321,12 @@
                         closeModalBS()
                         getDetailReportByID('{{$id}}')
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     const updateReport = (id) => {
@@ -360,12 +354,12 @@
                         closeModalBS()
                         getDetailReportByID(id)
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     const splitReport = (id,item_id) => {
@@ -391,12 +385,12 @@
                     if (result.isConfirmed) {
                         getDetailReportByID(id)
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     const checkedToggleEvent = () => {
@@ -412,7 +406,7 @@
                     inventory_id: item_split[2]
                 })
             }
-        });
+        })
         
         if(checkedItems.length > 0){
             let selected_item_name = ''
@@ -427,13 +421,14 @@
                     selected_item_id += `${el.id}`
                     selected_inventory_id += `${el.inventory_id}`
                 }
-            });
+            })
+
             $(report_action_holder).html(`
                 <div class='container bordered row mx-0 align-items-center px-1'>
                     <div class='col-lg-8 col-md-7 col-sm-12 text-center text-md-start'>
                         <h3 class='text-primary'>${checkedItems.length} Items selected</h3>
                         <hr class='mt-0 mb-3'>
-                        <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start" style="font-size:var(--textMD);">
+                        <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start" style="font-size:var(--textMD)">
                             ${selected_item_name}
                         </div>
                     </div>

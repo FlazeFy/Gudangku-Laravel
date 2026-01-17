@@ -8,8 +8,10 @@
 </style>
 
 <div id="history_holder"></div>
+
 <script>
     let page = 1
+    
     const getAllHistory = (page) => {
         Swal.showLoading()
         const item_holder = 'history_holder'
@@ -56,8 +58,8 @@
                                 </div>
                             </div>
                         </div>
-                    `);
-                });
+                    `)
+                })
 
                 generatePagination(item_holder, getAllHistory, total_page, current_page)
                 $('#export-section').html(`
@@ -76,7 +78,7 @@
                     $(`#${item_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                 }
             }
-        });
+        })
     }
     getAllHistory(page)
 </script>

@@ -16,6 +16,7 @@
         const failedMsg = () => {
             Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
         }
+        
         const fetchData = () => {
             $.ajax({
                 url: `/api/v1/stats/inventory/tree_map`,
@@ -40,7 +41,7 @@
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                     }
                 }
-            });
+            })
         }
 
         const generateTreeMap = (title,ctx_holder,raw_data) => {
@@ -48,7 +49,7 @@
                 id: title,
                 name: title,
                 children: raw_data,
-            };
+            }
 
             const options = {
                 contentKey: 'name',
@@ -77,30 +78,28 @@
                 borderColor: 'var(--primaryColor)',
                 borderColorHover: 'var(--whiteColor)',
                 canvasStyle: 'border:calc(var(--spaceMini)/2) solid var(--whiteColor); background: transparent; border-radius:var(--roundedLG);',
-            };
+            }
 
-            const tree = new ApexTree(document.getElementById(ctx_holder), options);
-            const graph = tree.render(data);
+            const tree = new ApexTree(document.getElementById(ctx_holder), options)
+            const graph = tree.render(data)
             graph.changeLayout('left')
 
             $(document).ready(function() {
                 document.getElementById('layoutTop').addEventListener('click', (e) => {
-                    graph.changeLayout('top');
-                });
+                    graph.changeLayout('top')
+                })
                 document.getElementById('layoutBottom').addEventListener('click', (e) => {
-                    graph.changeLayout('bottom');
-                });
-
+                    graph.changeLayout('bottom')
+                })
                 document.getElementById('layoutLeft').addEventListener('click', (e) => {
-                    graph.changeLayout('left');
-                });
+                    graph.changeLayout('left')
+                })
                 document.getElementById('layoutRight').addEventListener('click', (e) => {
-                    graph.changeLayout('right');
-                });
-
+                    graph.changeLayout('right')
+                })
                 document.getElementById('fitScreen').addEventListener('click', (e) => {
-                    graph.fitScreen();
-                });
+                    graph.fitScreen()
+                })
             })
         }
 
@@ -124,7 +123,5 @@
             fetchData()
         }
     }
-    getInventoryTreeMap()
-
-    
+    getInventoryTreeMap()    
 </script>

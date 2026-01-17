@@ -59,11 +59,11 @@
                                     </button>
                                 </div>
                             `)
-                        });
+                        })
                     } else {
                         templateAlertContainer(`inventory_by_${el}-holder`, 'no-data', `No inventory by ${el} to show`, null, '<i class="fa-solid fa-rotate-left"></i>')
                     }
-                });                
+                })                
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -73,10 +73,10 @@
                     holder.forEach(el => {
                         $(`#inventory_by_${el}-holder`).empty()
                         templateAlertContainer(`inventory_by_${el}-holder`, 'no-data', `No inventory by ${el} to show`, null, '<i class="fa-solid fa-rotate-left"></i>')
-                    });
+                    })
                 }
             }
-        });
+        })
     }
     getInventoryCatalog()
 </script>

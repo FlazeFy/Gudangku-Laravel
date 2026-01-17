@@ -13,12 +13,12 @@
     <table class="table" id="inventory_tb">
         <thead>
             <tr class="tr-header">
-                <th scope="col" style='min-width:200px;'>Name & Description</th>
-                <th scope="col" style='min-width:140px;'>Category & Merk</th>
-                <th scope="col" style='min-width:140px;'>Placement</th>
-                <th scope="col" style='min-width:110px;'>Price</th>
-                <th scope="col" style='min-width:110px;'>Unit</th>
-                <th scope="col" style='min-width:110px;'>Capacity</th>
+                <th scope="col" style='min-width:200px'>Name & Description</th>
+                <th scope="col" style='min-width:140px'>Category & Merk</th>
+                <th scope="col" style='min-width:140px'>Placement</th>
+                <th scope="col" style='min-width:110px'>Price</th>
+                <th scope="col" style='min-width:110px'>Unit</th>
+                <th scope="col" style='min-width:110px'>Capacity</th>
                 <th scope="col" class='action-inventory'>Action</th>
             </tr>
         </thead>
@@ -31,9 +31,9 @@
     const date_holder = document.querySelectorAll('.date_holder')
 
     date_holder.forEach(e => {
-        const date = new Date(e.textContent);
+        const date = new Date(e.textContent)
         e.textContent = getDateToContext(e.textContent, "datetime")
-    });
+    })
 
     const getAllInventory = (page,name,category,sort) => {
         Swal.showLoading()
@@ -64,7 +64,7 @@
                     let styletr = ''
                     let reminders = ''
                     if (el.deleted_at != null) {
-                        styletr = `style="background:rgba(221, 0, 33, 0.15);"`
+                        styletr = `style="background:rgba(221, 0, 33, 0.15)"`
                     }
                     const idCollapse = el.reminder ? `collapseReminder-${el.id}` : null
 
@@ -80,7 +80,7 @@
                                     <hr class="my-2">
                                     
                                     <button class="btn btn-danger py-1 px-3" data-bs-toggle="modal" data-bs-target="#modalDeleteReminder_${rm.id}">
-                                        <i class="fa-solid fa-trash" style="font-size:var(--textMD);"></i>
+                                        <i class="fa-solid fa-trash" style="font-size:var(--textMD)"></i>
                                     </button>
                                     <div class="modal fade" id="modalDeleteReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -99,7 +99,7 @@
                                     </div>
 
                                     <button class="btn btn-success py-1 px-3" data-bs-toggle="modal" onclick="reset_reminder_form()" data-bs-target="#modalCopyReminder_${rm.id}">
-                                        <i class="fa-solid fa-copy" style="font-size:var(--textMD);"></i>
+                                        <i class="fa-solid fa-copy" style="font-size:var(--textMD)"></i>
                                     </button>
                                     <div class="modal fade" id="modalCopyReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
@@ -114,13 +114,13 @@
                                                         <input type="hidden" value="${rm.reminder_desc}" name="reminder_desc">
                                                         <input type="hidden" value="${rm.reminder_type}" name="reminder_type">
 
-                                                        <div style='overflow-x:auto;'>
+                                                        <div style='overflow-x:auto'>
                                                             <table class="table" id="tb-inventory-name-${rm.id}" style="min-width: 530px;">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th scope="col" style="width:110px;"><a class="btn btn-primary checked_all_holder_btn py-1" style="font-size:var(--textSM);">Check All</a></th>
-                                                                        <th scope="col" style="min-width:240px;">Inventory Name</th>
-                                                                        <th scope="col" style="width:180px;">Category</th>
+                                                                        <th scope="col" style="width:110px"><a class="btn btn-primary checked_all_holder_btn py-1" style="font-size:var(--textSM);">Check All</a></th>
+                                                                        <th scope="col" style="min-width:240px">Inventory Name</th>
+                                                                        <th scope="col" style="width:180px">Category</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody class='inventory-selectable'></tbody>
@@ -135,7 +135,7 @@
                                     </div>
                                 </div>
                             `
-                        });
+                        })
                         reminders += `</td></tr><tr><td colspan="15"></td></tr>`
                     }
                     
@@ -282,7 +282,7 @@
                             </td>
                         </tr>
                     `)
-                });
+                })
 
                 $('.inventory-selectable').empty()
                 data.forEach((el, idx) => {
@@ -301,7 +301,6 @@
 
                 zoomableModal()
                 generatePagination(item_holder, getAllInventory, total_page, current_page,sorting)
-
                 getLendItem(response.lend_data)
 
                 $('#toolbar-button-section').html(`
@@ -320,7 +319,7 @@
                     $(`#${item_holder}`).html(`<tr><td colspan='7' class='text-center py-3'>- No Inventory Found -</td></tr>`)
                 }
             }
-        });
+        })
     }
     getAllInventory(page,search_key,filter_category,sorting)
 
@@ -373,17 +372,17 @@
                         closeModalBS() 
                         getAllInventory(page,search_key,filter_category,sorting)
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     $(document).on('click', '.checked_all_holder_btn', function () {
         const index = $('.checked_all_holder_btn').index(this)
         const $tbody = $('.inventory-selectable').eq(index)
         $tbody.find('input[type="checkbox"]').prop('checked', true)
-    });
+    })
 </script>

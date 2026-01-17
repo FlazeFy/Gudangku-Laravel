@@ -22,12 +22,12 @@ const favToogleInventoryByID = (id, is_favorite, token, refreshData) => {
                 if (result.isConfirmed) {
                     refreshData()
                 } 
-            });
+            })
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
             generateAPIError(response, true)
         }
-    });
+    })
 }
 
 const recoverInventoryByID = (id, token, refreshData) => {
@@ -51,10 +51,10 @@ const recoverInventoryByID = (id, token, refreshData) => {
                     closeModalBS()    
                     refreshData()
                 } 
-            });
+            })
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
             generateAPIError(response, true)
         }
-    });
+    })
 }

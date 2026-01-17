@@ -36,7 +36,7 @@
                 const tele_data = response.telegram_data
 
                 if(data.telegram_is_valid){
-                    $('#label-validate-holder').html(`<label class="mt-3 text-success" style="font-weight:600;"><i class="fa-solid fa-check"></i> Validated!</label>`)
+                    $('#label-validate-holder').html(`<label class="mt-3 text-success" style="font-weight:600"><i class="fa-solid fa-check"></i> Validated!</label>`)
                 } else {
                     if(tele_data){
                         $('#label-validate-holder').html(`
@@ -55,10 +55,10 @@
                                     <div class="d-flex justify-content-between">
                                         <input hidden value="${tele_data.id}" name="id">
                                         <input type="text" name="validate_token" class="form-control" required/><br>
-                                        <button class="btn btn-success bg-success ms-2" style="width:240px;" type="submit">Validate Token</button>
+                                        <button class="btn btn-success bg-success ms-2" style="width:240px" type="submit">Validate Token</button>
                                     </div>
                                 </form>
-                                <a class="fst-italic" style="font-size:var(--textMD);">Requested at <span>${getDateToContext(tele_data.created_at,'calendar')}</span></a>
+                                <a class="fst-italic" style="font-size:var(--textMD)">Requested at <span>${getDateToContext(tele_data.created_at,'calendar')}</span></a>
                             </div>
                         `)
                         $('#telegram_user_id').attr('disabled', true)
@@ -83,7 +83,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
     get_my_profile()
 
@@ -96,8 +96,8 @@
                 dataType: 'json',
                 beforeSend: function (xhr) {
                     Swal.showLoading()
-                    xhr.setRequestHeader("Accept", "application/json");
-                    xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
+                    xhr.setRequestHeader("Accept", "application/json")
+                    xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
                 },
                 success: function(response) {
                     Swal.close()
@@ -105,16 +105,17 @@
                         if (result.isConfirmed) {
                             get_my_profile()
                         }
-                    });
+                    })
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     generateAPIError(response, true)
                 }
-            });
+            })
         } else {
             Swal.fire("Oops!","Validation failed : username or email cant be empty","error")
         }
     }
+    
     const submitOnEnter = (event) => {
         if (event.keyCode === 13) { 
             event.preventDefault() 

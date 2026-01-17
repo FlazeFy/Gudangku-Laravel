@@ -204,7 +204,7 @@
 
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
+        var calendarEl = document.getElementById('calendar')
         var calendar = new FullCalendar.Calendar(calendarEl, {
             locale: sessionStorage.getItem('locale'),
             initialView: 'dayGridMonth',
@@ -219,9 +219,9 @@
             dayMaxEvents: 4,
             events: [],
             eventClick: function(info) {
-                window.location.href = "/inventory/edit/" + info.event.groupId;
+                window.location.href = "/inventory/edit/" + info.event.groupId
             },
-        });
+        })
         calendar.render()
 
         const getCalendar = () => {
@@ -244,7 +244,7 @@
                             start: getDateToContext(el.created_at, 'calendar'),
                             end: getDateToContext(el.created_at, 'calendar')
                         })
-                    });
+                    })
                     calendar.addEventSource(events)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
@@ -252,10 +252,9 @@
                         generateAPIError(response, true)
                     }
                 }
-            });
-        };
-
+            })
+        }
         getCalendar()
-    });
+    })
 </script>
 

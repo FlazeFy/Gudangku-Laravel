@@ -10,6 +10,7 @@
     <script>
         let page = 1
     </script>
+    
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="main-page-title">User</h1>

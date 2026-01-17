@@ -16,7 +16,7 @@
                 event.preventDefault()
                 event.returnValue = ''
             }
-        });
+        })
     </script>
     <style>
         @media (max-width: 767px) {
@@ -25,6 +25,7 @@
             }
         }
     </style>
+
     <div class="content" style="width:100vw; max-width:1480px;">
         <div class="row pt-5 pt-sm-0">
             <div class="col-xl-8 col-lg-7 col-md-6 order-2 order-md-1">

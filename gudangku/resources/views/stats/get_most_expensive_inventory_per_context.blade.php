@@ -22,6 +22,7 @@
         <div id="stats_most_expensive_inventory_per_storage"></div>
     </div>
 </div>
+
 <script>
     const getMostExpensiveInventoryPerContext = () => {
         const ctx_holders = [
@@ -56,7 +57,7 @@
                         } else {
                             templateAlertContainer(ctx_holder.holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>', '/inventory/add')
                         }
-                    });
+                    })
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
@@ -69,7 +70,7 @@
                         })
                     }
                 }
-            });
+            })
         }
 
         if ('most_expensive_stats' in localStorage) {
@@ -82,7 +83,7 @@
                     ctx_holders.forEach(ctx_holder => {
                         generateTableContextTotal(ctx_holder.holder, data[ctx_holder.object], 'Rp. ')
                         Swal.close()
-                    });
+                    })
                 } else {
                     Swal.close()
                     failedMsg()

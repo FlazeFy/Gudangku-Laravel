@@ -20,10 +20,10 @@ const updateReminderByID = (id,inventory_id,data) => {
                 if (result.isConfirmed) {
                     getDetailInventoryByID(inventory_id)
                 }
-            });
+            })
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
             generateAPIError(response, true)
         }
-    });
+    })
 }

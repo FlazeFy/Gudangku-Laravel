@@ -1,10 +1,13 @@
 @extends('components.layout')
 
 @section('content')
-<div class='container bordered' style="min-width:720px;">
+<div class='container bordered' style="min-width:720px">
     <div id="stats_total_inventory_created_per_month"></div>
 </div>
+
 <script>
+    const year = "<?= $year ?>"
+    
     const getTotalInventoryCreatedPerMonth = (year) => {
         Swal.showLoading()
         const title = `Total inventory Created Per Month (${year})`
@@ -14,6 +17,7 @@
         const failedMsg = () => {
             Swal.fire("Oops!",`Failed to get the stats Total ${title}`, "error")
         }
+
         const fetchData = () => {
             $.ajax({
                 url: `/api/v1/stats/inventory/total_created_per_month/${year}`,
@@ -38,7 +42,7 @@
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                     }
                 }
-            });
+            })
         }
 
         if(ctx in localStorage){
@@ -62,7 +66,6 @@
             fetchData()
         }
     }
-    const year = "<?= $year ?>"
     getTotalInventoryCreatedPerMonth(year)
 </script>
 @endsection

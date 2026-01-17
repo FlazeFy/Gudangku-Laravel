@@ -6,10 +6,10 @@
     </div>
     <div class="bubble me" id="upload-analyze-section">
         <form id="analyze_form">
-            <div class="img-holder" style="min-height: 80px;">
+            <div class="img-holder" style="min-height: 80px">
                 <div class='no-image-picker' title='Change Image' id='image-picker'>
                     <label for='file-input'>
-                        <img id='frame' title='Change Image' style='width: var(--spaceXLG);' src="<?= asset('images/change_image.png')?>"/>
+                        <img id='frame' title='Change Image' style='width: var(--spaceXLG)' src="<?= asset('images/change_image.png')?>"/>
                         <a>No document has been selected</a>
                     </label>
                     <input id='file-input' type='file' accept='.png, .jpg, .jpeg, .gif, .pdf, .csv'  name="file" class='d-none'/>
@@ -38,7 +38,7 @@
                 let analyze_type = ''
                 if (file.type.startsWith('image/')) {
                     analyze_type = 'image'
-                    filePreview = `<img src="${e.target.result}" alt="Image Preview" class="img-thumbnail mb-2" style="max-width: 200px;" /><p>${file.name}</p>`
+                    filePreview = `<img src="${e.target.result}" alt="Image Preview" class="img-thumbnail mb-2" style="max-width: 200px" /><p>${file.name}</p>`
                 } else if (file.type === 'application/pdf') {
                     analyze_type = 'document'
                     filePreview = `<embed src="${e.target.result}" type="${file.type}" style="width: 100%; height: 500px;" class="mb-2"/><p>${file.name}</p>`
@@ -50,7 +50,7 @@
                 $('#chat-section').append(`<div class="bubble me">Can you analyze this ${analyze_type}?<br><br>${filePreview}</div>`)
                 $('#chat-section').append(`<div class="bubble bot">Okay, give me a minute to read the ${analyze_type} and sync it with your data</div>`)
                 analyze()
-            };
+            }
 
             if (file.type.startsWith('image/') || file.type === 'application/pdf') {
                 reader.readAsDataURL(file)
@@ -58,7 +58,7 @@
                 reader.onload()
             }
         }
-    });
+    })
 
     $(document).ready(function () {
         let is_show_analyze = false
@@ -96,15 +96,15 @@
             success: function(response) {
                 Swal.close()
                 $('#upload-analyze-section').addClass('d-none')
-
                 const data = response.data
                 const inventory = data.found_inventory_data
+                
                 let inventory_element = ``
                 inventory.forEach((el,idx) => {
                     inventory_element += `
                         <button class='container bordered text-start bg-dark' onclick='window.location.href="/inventory/edit/${el.id}"'>
                             <div class='d-flex justify-content-between'>
-                                <h2 class='fw-bold' style='font-size:var(--textXLG);'>${el.inventory_name}</h2>
+                                <h2 class='fw-bold' style='font-size:var(--textXLG)'>${el.inventory_name}</h2>
                                 <div class='d-flex justify-content-between'>
                                     <span class='bg-success rounded-pill px-3 py-1 me-2'>${el.inventory_category}</span>
                                     <span class='bg-primary rounded-pill px-3 py-1'>${ucFirst(el.status)}</span>
@@ -116,7 +116,8 @@
                             <h6>Price : Rp. ${el.inventory_price.toLocaleString()}</h6>
                         </button>
                     `
-                });
+                })
+
                 $('#chat-section').append(`
                     <div class="bubble bot">
                         Hey, i have found <b>${data.found_total_item}</b> item in your inventory that may similar with items in this report, this report is generated <b>${data.generated_at}</b>. Here's the list inventory\n
@@ -141,7 +142,7 @@
                 
                 $( document ).ready(function() {
                     generatePieChart(`Category Distribution`,'category_distribution',data.found_inventory_category)
-                });
+                })
 
                 $('#chat-section').append(`
                     <div class="bubble bot">Is there any action do you want me to do with this document?</div>
@@ -193,7 +194,7 @@
                     }
                 }
             }
-        });
+        })
     }
 
     const makeReport = () => {
@@ -236,13 +237,13 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     const addInventoryViaURL = (items) => {
         const list_items = items.split(", ")
         list_items.forEach(el => {
             window.open(`/inventory/add?inventory_name=${el}`, "_blank")
-        });
+        })
     }
 </script>

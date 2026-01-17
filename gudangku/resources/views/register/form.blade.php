@@ -51,9 +51,9 @@
         height: 1.5em;
         line-height: 1.5em;
         border-radius: 100%;
-        color: #fff;
+        color: var(--whiteColor);
         text-align: center;
-        box-shadow: 0 0 0 3px #fff;
+        box-shadow: 0 0 0 3px var(--whiteColor);
     }
     .circle.finish{
         background: var(--successBG);
@@ -107,8 +107,7 @@
         border: 1px solid #573D8B;
         outline:none;
     } 
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }

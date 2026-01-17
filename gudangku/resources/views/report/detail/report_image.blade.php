@@ -41,7 +41,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 col-12">
                     <div class="report-image-holder mt-2">
                         <input type="file" class="other_images form-control" accept="image/jpeg,image/png,image/gif">
-                        <img class="image-preview mt-1 d-none" style="max-width: 200px;">
+                        <img class="image-preview mt-1 d-none" style="max-width: 200px">
                     </div>
                 </div>
             `)
@@ -84,11 +84,11 @@
                 const files = this.files
                 if (!files.length) return
 
-                totalFiles += files.length;
+                totalFiles += files.length
                 for (let i = 0; i < files.length; i++) {
                     fd.append("report_image[]", files[i])
                 }
-            });
+            })
 
             if (totalFiles > 10) {
                 failedMsg("You can only upload up to 10 other images")
@@ -110,9 +110,9 @@
                     Swal.fire("Success!", response.message, "success").then(() => window.location.href=`/report/detail/${id}` )
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    generateAPIError(response, true);
+                    generateAPIError(response, true)
                 }
-            });
+            })
         })
     })
 </script>

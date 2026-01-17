@@ -30,7 +30,7 @@
         </div>
         <div id="total-holder" class="mt-2">
             <p class='mb-0'>Showing</p>
-            <h5 class='text-primary mb-0' style='font-size:calc(var(--textXLG)*1.5);'><span id='total-item'>0</span> Items</h5>
+            <h5 class='text-primary mb-0' style='font-size:calc(var(--textXLG)*1.5)'><span id='total-item'>0</span> Items</h5>
         </div>
     </div>
 </div>
@@ -71,6 +71,7 @@
             getAllReport(page,search_key,filter_category,sorting)
         }
     }
+
     const submitOnEnter = (event) => {
         if (event.keyCode === 13) { 
             event.preventDefault() 
@@ -79,6 +80,7 @@
         }
         return true 
     }
+
     $(document).on('blur', '#search_by_title',function(){
         searchByTitle($(this).val())
     })
@@ -93,8 +95,10 @@
         } else {
             window.location.href = '/report'
         }
+        
         getAllReport(page,search_key,filter_category,sorting)
     })
+
     $(document).on('change', '#sorting',function(){
         if($(this).val()){
             const url = new URL(window.location)
@@ -105,6 +109,7 @@
         } else {
             window.location.href = '/report'
         }
+
         getAllReport(page,search_key,filter_category,sorting)
     })
 </script>

@@ -2,10 +2,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col" style='min-width:160px;'>Username</th>
-                <th scope="col" style='min-width:180px;'>History</th>
-                <th scope="col" style='min-width:110px;'>Created At</th>
-                <th scope="col" style='min-width:140px;'>Action</th>
+                <th scope="col" style='min-width:160px'>Username</th>
+                <th scope="col" style='min-width:180px'>History</th>
+                <th scope="col" style='min-width:110px'>Created At</th>
+                <th scope="col" style='min-width:140px'>Action</th>
             </tr>
         </thead>
         <tbody id="history_tb_body"></tbody>
@@ -15,6 +15,7 @@
 
 <script>
     let page = 1
+    
     const getAllHistory = (page) => {
         Swal.showLoading()
         const item_holder = 'history_tb_body'
@@ -58,8 +59,8 @@
                                 </div>
                             </td>
                         </tr>
-                    `);
-                });
+                    `)
+                })
 
                 generatePagination(item_holder, getAllHistory, total_page, current_page)
             },
@@ -71,7 +72,7 @@
                     templateAlertContainer(item_holder, 'no-data', "No history found to show", null, '<i class="fa-solid fa-scroll"></i>')
                 }
             }
-        });
+        })
     }
     getAllHistory(page)
 </script>

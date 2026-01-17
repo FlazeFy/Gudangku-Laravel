@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between mb-2 align-items-center">
     <label>Telegram User ID</label>
     <span id="label-validate-holder"></span>
-    <span id="update-tele-holder" style="display:none;"></span>
+    <span id="update-tele-holder" style="display:none"></span>
 </div>
 <input type="text" name="telegram_user_id" id="telegram_user_id" class="form-control"/><br>
 <input id="telegram_user_id_old" hidden/>
@@ -13,7 +13,7 @@
 
         $( document ).ready(function() {
             $("#telegram_user_id_new_final").text(tele_id_new)
-        });
+        })
     }
 
     $("#telegram_user_id").on("input", function() {
@@ -22,21 +22,11 @@
         
         if(tele_id_old != tele_id_new){
             if(tele_id_new.length != 10){
-                $("#label-validate-holder").css({
-                    'display':'none'
-                })
-                $("#update-tele-holder").css({
-                    'display':'block'
-                }).empty().append(`
-                    <a class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> Telegram ID not valid</a>
-                `)
+                $("#label-validate-holder").css('display','none')
+                $("#update-tele-holder").css('display','block').empty().append(`<a class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> Telegram ID not valid</a>`)
             } else {
-                $("#label-validate-holder").css({
-                    'display':'none'
-                })
-                $("#update-tele-holder").css({
-                    'display':'block'
-                }).empty().append(`
+                $("#label-validate-holder").css('display','none')
+                $("#update-tele-holder").css('display','block').empty().append(`
                     <a type="button" class="btn btn-primary py-1" onclick="validate_telegram_change()" data-bs-toggle="modal" data-bs-target="#updateTelegramIDModal"><i class="fa-solid fa-pen-to-square"></i> Update Telegram ID</a>
                     <div class="modal fade" id="updateTelegramIDModal" tabindex="-1" aria-labelledby="updateTelegramIDModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -60,14 +50,10 @@
                 `)
             }
         } else {
-            $("#label-validate-holder").css({
-                'display':'block'
-            })
-            $("#update-tele-holder").css({
-                'display':'none'
-            }).empty()
+            $("#label-validate-holder").css('display','block')
+            $("#update-tele-holder").css('display','none').empty()
         }
-    });
+    })
 
     const updateTelegramID = () => {
         $('#username_msg').html("")
@@ -84,8 +70,8 @@
                 dataType: 'json',
                 beforeSend: function (xhr) {
                     Swal.showLoading()
-                    xhr.setRequestHeader("Accept", "application/json");
-                    xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
+                    xhr.setRequestHeader("Accept", "application/json")
+                    xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
                 },
                 success: function(response) {
                     $('#updateTelegramIDModal').modal('hide')
@@ -93,12 +79,12 @@
                         if (result.isConfirmed) {
                             get_my_profile()
                         }
-                    });
+                    })
                 },
                 error: function(response, textStatus, errorThrown) {
                     generateAPIError(response, true)
                 }
-            });
-        });
+            })
+        })
     }
 </script>

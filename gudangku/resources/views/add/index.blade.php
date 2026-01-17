@@ -31,6 +31,6 @@
                 event.preventDefault()
                 event.returnValue = ''
             }
-        });
+        })
     </script>
 @endsection

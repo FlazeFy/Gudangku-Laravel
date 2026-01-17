@@ -1,6 +1,7 @@
 <div class='container bordered'>
     <div id="stats_total_low_capacity_inventory_comparison_holder"></div>
 </div>
+
 <script>
     const getTotalLowCapacityInventoryComparison = (page) => {
         const title = 'Low Capacity Inventory Comparison'
@@ -10,6 +11,7 @@
         const failedMsg = () => {
             Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
         }
+        
         const fetchData = () => {
             $.ajax({
                 url: `/api/v1/stats/inventory/low_capacity_inventory_comparison`,
@@ -35,7 +37,7 @@
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                     }
                 }
-            });
+            })
         }
 
         if(ctx in localStorage){

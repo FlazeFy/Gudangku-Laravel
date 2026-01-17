@@ -2,11 +2,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col" style='min-width:160px;'>Message</th>
-                <th scope="col" style='min-width:80px;'>Stack Trace</th>
-                <th scope="col" style='min-width:180px;'>File</th>
-                <th scope="col" style='min-width:140px;'>Faced At</th>
-                <th scope="col" style='min-width:80px;'>Action</th>
+                <th scope="col" style='min-width:160px'>Message</th>
+                <th scope="col" style='min-width:80px'>Stack Trace</th>
+                <th scope="col" style='min-width:180px'>File</th>
+                <th scope="col" style='min-width:140px'>Faced At</th>
+                <th scope="col" style='min-width:80px'>Action</th>
             </tr>
         </thead>
         <tbody id="error_tb_body"></tbody>
@@ -16,6 +16,7 @@
 
 <script>
     let page = 1
+
     const getAllError = (page) => {
         Swal.showLoading()
         const item_holder = 'error_tb_body'
@@ -75,8 +76,8 @@
                                 </div>
                             </td>
                         </tr>
-                    `);
-                });
+                    `)
+                })
 
                 generatePagination(item_holder, getAllError, total_page, current_page)
             },
@@ -88,7 +89,7 @@
                     templateAlertContainer(item_holder, 'no-data', "No error found to show", null, '<i class="fa-solid fa-scroll"></i>')
                 }
             }
-        });
+        })
     }
     getAllError(page)
 </script>

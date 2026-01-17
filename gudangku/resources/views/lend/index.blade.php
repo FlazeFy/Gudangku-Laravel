@@ -10,7 +10,6 @@
 @section('content')
     <!-- JS Collection -->
     <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
-
     <script>
         let lend_id = '<?= $lend_id ?>'
         const SELECTED_STORAGE_KEY = `selected_lend_items_${lend_id}`
@@ -31,6 +30,7 @@
             })
         }
     </script>
+    
     <div class="content">
         <h1 class="main-page-title">@if($role == 0) <span class="inventory-owner"></span> @endif Inventory</h1>
         <a class="btn btn-danger mb-3 me-2" href="/profile"><i class="fa-solid fa-arrow-left"></i> @if(!$isMobile) Back @endif</a>

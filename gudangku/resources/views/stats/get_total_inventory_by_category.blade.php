@@ -1,6 +1,7 @@
 <div class='container bordered'>
     <div id="stats_total_inventory_by_category_holder"></div>
 </div>
+
 <script>
     const getTotalInventoryByCategory = (page) => {
         Swal.showLoading()
@@ -12,6 +13,7 @@
         const failedMsg = () => {
             Swal.fire("Oops!",`Failed to get the stats Total ${title}`, "error")
         }
+        
         const fetchData = () => {
             $.ajax({
                 url: `/api/v1/stats/inventory/total_by_category/${type_chart}`,
@@ -37,7 +39,7 @@
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                     }
                 }
-            });
+            })
         }
 
         if(ctx in localStorage){

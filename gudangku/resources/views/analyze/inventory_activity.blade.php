@@ -37,9 +37,9 @@
                 enabled: false
             },
             colors: ["#3b82f6"],
-        };
+        }
 
-        var chart = new ApexCharts(document.querySelector("#inventory_activity_heatmap"), options);
-        chart.render();
+        var chart = new ApexCharts(document.querySelector("#inventory_activity_heatmap"), options)
+        chart.render()
     }
 </script>

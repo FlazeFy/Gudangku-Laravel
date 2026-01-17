@@ -21,10 +21,10 @@
                             <table class="table table-report">
                                 <thead>
                                     <tr>
-                                        <th style="min-width: 200px;">Name & Description</th>
-                                        <th style="width: 80px;">Qty</th>
-                                        <th style="width: 140px;" id="price_th-holder">Price</th>
-                                        <th style="width: 60px;">Delete</th>
+                                        <th style="min-width: 200px">Name & Description</th>
+                                        <th style="width: 80px">Qty</th>
+                                        <th style="width: 140px" id="price_th-holder">Price</th>
+                                        <th style="width: 60px">Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody id="item_holder">
@@ -57,8 +57,8 @@
                 'item_desc': item_desc && item_desc.trim() !== "" ? item_desc : null,
                 'item_qty': $(this).find('input[name="item_qty[]"]').val() ?? 1,
                 'item_price': $(this).find('input[name="item_price[]"]').val() ?? null,
-            });
-        });
+            })
+        })
 
         if(report_items.length > 0){
             $.ajax({
@@ -87,7 +87,7 @@
                             $('#item_holder').html('<div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>')
                             getDetailReportByID('{{$id}}')
                         } 
-                    });
+                    })
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     generateAPIError(response, true)
@@ -97,14 +97,15 @@
             Swal.fire("Oops!", "You must select at least one item", "warning")
         }
     }
+    
     const getAllInventory = () => {
         $.ajax({
             url: "/api/v1/inventory/list",
             datatype: "json",
             type: "get",
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)
             },
         })
         .done(function (response) {
@@ -113,16 +114,16 @@
 
             for (var i = 0; i < data.length; i++) {
                 let optionText = `${data[i]['inventory_name']}` +
-                    (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '');
-                $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`);
+                    (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '')
+                $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`)
             }
 
             $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
             $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
         })
         .fail(function (jqXHR, ajaxOptions, thrownError) {
-            // Do someting
-        });   
+            generateAPIError(response, true)
+        })   
     }
 
     const post_analyze_image = () => {
@@ -169,12 +170,12 @@
                             </div>
                         </div>
                     `)
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     $(document).on('input','#file',function(){
@@ -188,7 +189,7 @@
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     Swal.fire("Cancelled!", "Your previous item is safe!", "success")
                 }
-            });
+            })
         }
     })
 

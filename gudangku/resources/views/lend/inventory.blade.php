@@ -2,6 +2,8 @@
 <div id="inventory-holder-navigation"></div>
 
 <script>
+    let page = 1
+
     const toggle_select_item = (inventory, buttonEl) => {
         $(document).ready(function () {
             let selected = getSelectedItems()
@@ -19,7 +21,6 @@
         })
     }
 
-    let page = 1
     const get_lend_inventory = (lend_id,page) => {
         Swal.showLoading();
         $.ajax({
@@ -97,6 +98,7 @@
         toggle_select_item(inventory, this)
         getCartButton()
     })
+    
     $(document).on('click','#see-more-button', function() {
         page++
         get_lend_inventory(lend_id,page)

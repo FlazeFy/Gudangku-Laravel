@@ -44,8 +44,8 @@
             dataType: 'json',
             beforeSend: function (xhr) {
                 Swal.showLoading()
-                xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()
@@ -62,22 +62,21 @@
                     }
 
                     window.location.href = '/'
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-
                 if (response.status === 422 || (response.status === 400 && response.responseJSON && response.responseJSON.is_expired)) {
                     Swal.fire("Failed!",response.responseJSON.message,"error").then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = '/'
                         }
-                    });
+                    })
                 } else {
-                    generateAPIError(response, true);
+                    generateAPIError(response, true)
                 }
             }
-        });
+        })
     }
 
     const get_selected_inventory_modal = () => {
@@ -88,17 +87,18 @@
             $('#reset-button-holder').html(`
                 <a class="btn btn-danger mt-3 w-100" id="reset-borrow-button"><i class="fa-solid fa-rotate-left"></i> Reset All</a>
             `)
+
             selected.forEach(el => {
                 $('#selected-inventory-holder').append(`
-                    <button class="btn-feature mb-2 text-start" style="padding:var(--spaceXMD) !important;">
+                    <button class="btn-feature mb-2 text-start" style="padding:var(--spaceXMD) !important">
                         <h2>${el.inventory_name}</h2>
                         <div class="mt-2 d-flex text-start props-box">
-                            <span style="background: var(--successBG);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_category}</span>
-                            <span style="background: var(--primaryColor);" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_room}</span>
+                            <span style="background: var(--successBG)" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_category}</span>
+                            <span style="background: var(--primaryColor)" class="py-1 px-2 me-1 rounded d-inline-flex align-items-center">${el.inventory_room}</span>
                         </div>
                     </button>
                 `)
-            });        
+            })        
         } else {
             $('#selected-inventory-holder').html(`<p class="no-data-message">- No Items Selected -</p>`)
         }
@@ -107,9 +107,11 @@
     $(document).on('click','#save-borrow-button', function() {
         post_borrow(lend_id)
     })
+
     $(document).on('click','#selected-inventory-modal-button',function(){
         get_selected_inventory_modal()
     })
+
     $(document).on('click','#reset-borrow-button',function(){
         localStorage.removeItem(SELECTED_STORAGE_KEY)
         $('#reset-button-holder').empty()

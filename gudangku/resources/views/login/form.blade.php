@@ -21,8 +21,8 @@
     <a onclick="login()" id="submit-login-btn" class="btn btn-success w-100"><i class="fa-solid fa-paper-plane"></i> Submit</a>
     <br><br>
     <p class='mt-4 mb-2 text-center'>New user? please register first to use this app</p>
-    <a href="/register" id="regis_btn" class="btn btn-primary ms-2 w-100 mb-3" style="background:var(--primaryBG) !important;"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Register</a>
-    <a href="/auth/google" class="btn btn-primary ms-2 w-100" style="background:var(--primaryBG) !important;"><i class="fa-brands fa-google mx-1"></i> Sign In With Google</a>
+    <a href="/register" id="regis_btn" class="btn btn-primary ms-2 w-100 mb-3" style="background:var(--primaryBG) !important"><i class="fa-solid fa-arrow-right-to-bracket mx-1"></i> Register</a>
+    <a href="/auth/google" class="btn btn-primary ms-2 w-100" style="background:var(--primaryBG) !important"><i class="fa-brands fa-google mx-1"></i> Sign In With Google</a>
 </form>
 
 <script>
@@ -110,7 +110,7 @@
                     $('#all_msg').html(icon + allMsg)
                 }
             }
-        });
+        })
     }
 
     const auto_login = () => {
@@ -139,7 +139,7 @@
                     localStorage.clear()
                     generateAPIError(response, true)
                 }
-            });
+            })
         } else {
             sessionStorage.clear()
             localStorage.clear()

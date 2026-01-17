@@ -2,13 +2,13 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col" style='min-width:160px;'>Username</th>
-                <th scope="col" style='min-width:160px;'>Inventory</th>
-                <th scope="col" style='min-width:180px;'>Reminder Desc</th>
-                <th scope="col" style='min-width:180px;'>Reminder Type</th>
-                <th scope="col" style='min-width:180px;'>Reminder Context</th>
-                <th scope="col" style='min-width:140px;'>Last Execute</th>
-                <th scope="col" style='min-width:80px;'>Action</th>
+                <th scope="col" style='min-width:160px'>Username</th>
+                <th scope="col" style='min-width:160px'>Inventory</th>
+                <th scope="col" style='min-width:180px'>Reminder Desc</th>
+                <th scope="col" style='min-width:180px'>Reminder Type</th>
+                <th scope="col" style='min-width:180px'>Reminder Context</th>
+                <th scope="col" style='min-width:140px'>Last Execute</th>
+                <th scope="col" style='min-width:80px'>Action</th>
             </tr>
         </thead>
         <tbody id="reminder_tb_body"></tbody>
@@ -18,6 +18,7 @@
 
 <script>
     let page = 1
+
     const getAllReminder = (page) => {
         const item_holder = 'reminder_tb_body'
         $(`#${item_holder}`).empty()
@@ -63,8 +64,8 @@
                                 </div>
                             </td>
                         </tr>
-                    `);
-                });
+                    `)
+                })
 
                 generatePagination(item_holder, getAllReminder, total_page, current_page)
             },
@@ -76,7 +77,7 @@
                     templateAlertContainer('err_no_data-msg', 'no-data', "No reminder found to show", null, '<i class="fa-solid fa-scroll"></i>')
                 }
             }
-        });
+        })
     }
     getAllReminder(page)
 
@@ -100,11 +101,11 @@
                     if (result.isConfirmed) {
                         getAllReminder(1)
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 </script>

@@ -1,6 +1,6 @@
 <div class="row text-center">
     <div class="col">
-        <h5 class="fw-bold" style="font-size:var(--textJumbo);">Most Inventory</h5>
+        <h5 class="fw-bold" style="font-size:var(--textJumbo)">Most Inventory</h5>
         <table class="table">
             <thead>
                 <tr>
@@ -12,7 +12,7 @@
         </table>
     </div>
     <div class="col">
-        <h5 class="fw-bold" style="font-size:var(--textJumbo);">Most Report</h5>
+        <h5 class="fw-bold" style="font-size:var(--textJumbo)">Most Report</h5>
         <table class="table">
             <thead>
                 <tr>
@@ -48,8 +48,8 @@
                                 <td>${el.total}</td>
                             </tr>
                         `)
-                    });
-                });
+                    })
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -59,7 +59,7 @@
                     templateAlertContainer(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
                 }
             }
-        });
+        })
     }
     getLeaderboard()
 </script>

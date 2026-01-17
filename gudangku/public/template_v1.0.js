@@ -28,12 +28,12 @@ const deleteModuleByID = (id, context, type, token, refreshData) => {
                     closeModalBS()  
                     refreshData()
                 } 
-            });
+            })
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
             generateAPIError(response, true)
         }
-    });
+    })
 }
 
 const getAvailableYear = (token,target,selectedYear) => {
@@ -51,13 +51,13 @@ const getAvailableYear = (token,target,selectedYear) => {
 
             data.forEach(el => {
                 $(`#${target}`).append(`<option value="${el.year}" ${selectedYear == el.year ? 'selected' :''}>${el.year}</option>`) 
-            });
+            })
         },
         error: function(response, jqXHR, textStatus, errorThrown) {
             Swal.close()
             Swal.fire("Oops!","Failed to get available year", "error")
         }
-    });
+    })
 }
 
 const getDictionaryByContext = (context, token, selected = null, target_type = '#') => {
@@ -164,6 +164,7 @@ const generateFloorRange = (data) => {
             })
         }
     })
+
     const highestLetter = rawLetter.reduce((max, current) => current > max ? current : max, "A")
     const highestNumber = Math.max(...rawNum)
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(highestLetter) + 2)
@@ -362,7 +363,7 @@ const browseItem = (val) => {
         `)
         $(document).ready(function() {
             autocomplete(document.getElementById("report_title_template"), warehouse)
-        });
+        })
     } else {
         val = JSON.parse(val)
         inventory_id = val['id']
@@ -386,7 +387,6 @@ const browseItem = (val) => {
 
 const addItem = (val, inventory_id) => {
     cleanAlertItem()
-
     let itemExists = false
     const isPriceCategory = $("#report_category_holder").val() === 'Shopping Cart' || $("#report_category_holder").val() === 'Wishlist'
 
@@ -396,7 +396,7 @@ const addItem = (val, inventory_id) => {
             itemExists = true
             return false
         }
-    });
+    })
 
     if(!itemExists){
         let priceInput = ''
@@ -435,7 +435,7 @@ const addItem = (val, inventory_id) => {
                         <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i></a></td>
                     </tr>
                 `)
-            });
+            })
         } else {
             $('#item_holder').append(`
                 <tr class="item-holder-div align-middle">

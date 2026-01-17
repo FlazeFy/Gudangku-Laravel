@@ -87,7 +87,7 @@ table thead tr th:last-child {
 
 /* List */
 li::marker {
-    color: white !important;
+    color: var(--whiteColor) !important;
     font-size: 1.5em !important; 
 }
 

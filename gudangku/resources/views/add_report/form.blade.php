@@ -31,10 +31,10 @@
                     <table class="table table-report">
                         <thead>
                             <tr>
-                                <th style="min-width: 200px;">Name & Description</th>
-                                <th style="width: 80px;">Qty</th>
-                                <th style="width: 140px;" id="price_th-holder">Price</th>
-                                <th style="width: 60px;">Delete</th>
+                                <th style="min-width: 200px">Name & Description</th>
+                                <th style="width: 80px">Qty</th>
+                                <th style="width: 140px" id="price_th-holder">Price</th>
+                                <th style="width: 60px">Delete</th>
                             </tr>
                         </thead>
                         <tbody id="item_holder">
@@ -56,7 +56,6 @@
 
 <script>
     setCurrentLocalDateTime('created_at')
-
     $(async function () {
         await getDictionaryByContext('report_category',token)
     })
@@ -68,8 +67,8 @@
             type: "get",
             beforeSend: function (xhr) {
                 Swal.showLoading()
-                xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)
             },
             success: function(response) {
                 Swal.close()
@@ -78,8 +77,8 @@
 
                 for (var i = 0; i < data.length; i++) {
                     let optionText = `${data[i]['inventory_name']}` +
-                        (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '');
-                    $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`);
+                        (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '')
+                    $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`)
                 }
 
                 $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
@@ -150,12 +149,12 @@
                         Swal.close()
                         getAllInventory()
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     const post_analyze_image = () => {
@@ -188,15 +187,15 @@
                             </td>
                             <td><input class="item_qty_selected form-control w-100" name="item_qty[]" type="number" min="1" value="1"></td>
                             <td><input type="number" class="form-control w-100" min="0" name="item_price[]" value="${el.item_price ?? ''}"></td>
-                            <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i></a></td>
+                            <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD)"><i class="fa-solid fa-trash"></i></a></td>
                         </tr>
                     `)
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     $(document).on('input','#file',function(){
@@ -210,7 +209,7 @@
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     Swal.fire("Cancelled!", "Your previous item is safe!", "success")
                 }
-            });
+            })
         }
     })
 

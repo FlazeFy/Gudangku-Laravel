@@ -3,7 +3,10 @@ $(window).on('scroll', function() {
     if ($(this).scrollTop() > 250) {
         if(closed_control == false){
             $('#collapseControl').collapse('hide')
-            $('#total-holder').addClass('position-absolute').css({'right':0,'top':'-5px'}).toggleClass('mt-2 mt-0')
+            $('#total-holder').addClass('position-absolute').css({
+                'right':0,
+                'top':'-5px'
+            }).toggleClass('mt-2 mt-0')
         }
         closed_control = true
     } else {

@@ -91,7 +91,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     })
     $(document).on('click','#reject_test_acc',function(){
         sessionStorage.removeItem('is_from_flazenapps')

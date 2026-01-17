@@ -83,8 +83,8 @@
     const urlParams = new URL(url).searchParams
     const inventory_name = urlParams.get("inventory_name")
     $('#inventory_name').val(inventory_name)
+    
     setCurrentLocalDateTime('created_at')
-
     $(async function () {
         await getDictionaryByContext('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
     })
@@ -126,11 +126,11 @@
                     } else if (result.isDismissed) {
                         $('#add_inventory').find('input, textarea').val('')
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 </script>

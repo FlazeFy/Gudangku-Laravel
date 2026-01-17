@@ -4,6 +4,7 @@
     const type = '<?= $type ?>'
     const id = '<?= $id ?>'
     const filter_in = '<?= $filter_in ?? ''?>'
+    
     const getGeneratedDefaultDocument = () => {
         $.ajax({
             url: (() => {
@@ -30,7 +31,7 @@
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
     getGeneratedDefaultDocument()
 </script>

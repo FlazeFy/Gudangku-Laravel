@@ -50,13 +50,13 @@
                                 <div class="row m-0 align-items-center">
                                     <div class="col-4">
                                         ${dt.inventory_image == null ? `<i class="fa-solid fa-box catalog-icon"></i>` : `
-                                            <img class="img img-fluid" style="border-radius: var(--roundedMD);" src="${dt.inventory_image}" title="${dt.inventory_name}">
+                                            <img class="img img-fluid" style="border-radius: var(--roundedMD)" src="${dt.inventory_image}" title="${dt.inventory_name}">
                                         `}
                                         <h5 class="mt-3">${dt.inventory_name}</h5>
                                     </div>
                                     <div class="col-8 text-start">
                                         <h6>Detail</h6>
-                                        <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:var(--textSM);">
+                                        <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:var(--textSM)">
                                             ${dt.is_favorite == '1' ? `
                                                 <span class="p-2 rounded d-inline-flex align-items-center bg-danger">
                                                     <i class="fa-solid fa-heart"></i>
@@ -76,13 +76,13 @@
                                 </div>
                             </button>
                         </div>
-                    `);
-                }); 
+                    `)
+                })
                 
                 if(current_page < last_page){
                     $('#inventory-holder').append(`
                         <div class="col-12"><button class="btn btn-primary" onclick="navigate_page(${page})">Next Page</button></div>
-                    `);
+                    `)
                 } 
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
@@ -91,7 +91,7 @@
                     generateAPIError(response, true)
                 }
             }
-        });
+        })
     }
     getAllInventory(page)
 

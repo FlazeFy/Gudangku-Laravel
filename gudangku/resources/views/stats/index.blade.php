@@ -14,6 +14,7 @@
         const year_sess = <?= session()->get('toogle_select_year') ?>;
         const year = year_sess ?? new Date().getFullYear()
     </script>
+    
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="main-page-title">Stats</h1>

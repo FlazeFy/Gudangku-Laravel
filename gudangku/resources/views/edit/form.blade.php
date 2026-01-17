@@ -100,8 +100,8 @@
             type: 'GET',
             beforeSend: function (xhr) {
                 Swal.showLoading()
-                xhr.setRequestHeader("Accept", "application/json");
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`);    
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
             },
             success: function(response) {
                 Swal.close()
@@ -127,7 +127,7 @@
                     $('#img_holder').empty().prepend(`
                         <div class='no-image-picker' title='Change Image' id='image-picker'>
                             <label for='file-input'>
-                                <img id='frame' class='m-2' title='Change Image' style='width: var(--spaceXLG);' src='<?= asset('images/change_image.png') ?>' />
+                                <img id='frame' class='m-2' title='Change Image' style='width: var(--spaceXLG)' src='<?= asset('images/change_image.png') ?>' />
                                 <a class="bg-transparent">No image has been selected</a>
                             </label>
                             <input id='file-input' name='file' type='file' accept='image/*' class='d-none'/>
@@ -164,17 +164,16 @@
                 $('#created_at').text(getDateToContext(data.created_at,'calendar',false))
                 $('#created_at_edit').val(getDateToContext(data.created_at,'calendar',false))
                 $('#updated_at').text(data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-')
-                
                 $('#inventory_name_add_report').val(data.inventory_name)
                 $('#inventory_name_title_add_report').text(data.inventory_name)
                 $('#inventory_id_add_report').val(data.id)
                 $('#form_add_report').attr('action', `/inventory/edit/${data.id}/editInventory/addReport`)
                 $('#form_edit_inventory').attr('action', `/inventory/edit/${data.id}/editInventory`)
-                getAllReport(page,data.inventory_name,data.id)
-
                 $('#inventory_name_add_reminder').val(data.inventory_name)
                 $('#inventory_name_title_add_reminder').text(data.inventory_name)
                 $('#inventory_id_add_reminder').val(data.id)
+
+                getAllReport(page,data.inventory_name,data.id)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -192,10 +191,10 @@
                         if (result.isConfirmed) {
                             window.location.href = '/inventory'
                         }
-                    });
+                    })
                 }
             }
-        });
+        })
     }
     
     $(async function () {
@@ -231,11 +230,11 @@
                         await getDictionaryByContext('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
                         getDetailInventoryByID(id)
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 </script>

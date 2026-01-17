@@ -35,7 +35,6 @@
                 <a class="btn btn-primary" id="add_report-btn" href="/report/add"><i class="fa-solid fa-plus"></i> Report</a>
             @endif
         </div>
-
         @include('report.filter')
         @include('report.report')
     </div>

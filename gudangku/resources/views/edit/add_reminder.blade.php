@@ -38,7 +38,7 @@
         $(async function () {
             await getDictionaryByContext('reminder_type',token)
         })
-    });
+    })
 
     $(document).on('change','#reminder_type_holder',function(){
         const selected = $(this).val()
@@ -77,12 +77,12 @@
                         Swal.close()
                         getDetailInventoryByID("<?= $id ?>")
                     }
-                });
+                })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)
             }
-        });
+        })
     }
 
     $(document).on('click', '#form_add_reminder_btn', function() {
