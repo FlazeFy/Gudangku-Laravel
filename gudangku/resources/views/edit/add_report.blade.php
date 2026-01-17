@@ -17,21 +17,15 @@
         padding: var(--spaceMD);
         cursor: pointer;
         background: transparent;
-        color: var(--whiteColor);
     }
     .autocomplete-items div:hover {
         background: var(--primaryColor);
-    }
-    .autocomplete-active {
-        color: var(--whiteColor);
     }
     .item_qty_selected {
         width: 80px;
     }
     .item_name_selected {
-        font-weight: 500;
         font-size: var(--textJumbo);
-        color: var(--whiteColor);
     }
 </style>
 

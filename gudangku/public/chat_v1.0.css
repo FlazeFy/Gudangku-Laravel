@@ -1,7 +1,7 @@
 #chat-section {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--spaceXMD);
 }
 .bubble {
     background-color: var(--darkColor);
@@ -23,7 +23,7 @@
 .bubble.bot {
     margin-right: auto;
     text-align: left;
-    border-left: 10px solid var(--warningBG);
+    border-left: var(--spaceSM) solid var(--warningBG);
 }
 .bubble.bot::after {
     content: '';
@@ -37,7 +37,7 @@
 .bubble.me {
     margin-left: auto;
     text-align: right;
-    border-right: 10px solid var(--successBG);
+    border-right: var(--spaceSM) solid var(--successBG);
 }
 .bubble.me::after {
     content: '';

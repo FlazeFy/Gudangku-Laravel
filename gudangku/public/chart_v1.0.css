@@ -1,20 +1,4 @@
 /* Apexchart & D3 */
-.apexcharts-legend-text, .d3 .node {
-    font-size: var(--textXMD) !important;
-    font-weight: 500;
-}
-.apexcharts-xaxis-label {
-    font-size: var(--textMD) !important;
-}
-.apexcharts-yaxis-label {
-    font-size: var(--textSM) !important;
-}
-.apexcharts-yaxis-label, .apexcharts-xaxis-label {
-    fill: var(--whiteColor) !important;
-}
-.apexcharts-tooltip {
-    font-size: var(--textXLG) !important;
-}
 .apexcharts-tooltip-title {
     border-bottom: none !important;
     padding-bottom: 0 !important;
@@ -23,12 +7,6 @@
 .apexcharts-tooltip-series-group {
     background: transparent !important;
     padding: var(--spaceMini) var(--spaceSM) !important;
-}
-.apexcharts-tooltip, .apexcharts-tooltip-title, .apexcharts-tooltip-series-group, .apexcharts-legend-text, .d3 .node, .apexcharts-xaxistooltip .apexcharts-xaxistooltip-text {
-    color: var(--whiteColor) !important;   
-}
-.apexcharts-datalabels-group text{
-    fill: var(--whiteColor) !important; 
 }
 .apexcharts-tooltip-title, .apexcharts-tooltip, .apexcharts-xaxistooltip, .apexcharts-xaxistooltip.apexcharts-theme-light, .apexcharts-xaxistooltip.apexcharts-theme-dark {
     background: var(--semiDarkColor) !important;  
@@ -42,16 +20,6 @@
 }
 .apexcharts-tooltip,.apexcharts-xaxistooltip, .apexcharts-xaxistooltip.apexcharts-theme-light, .apexcharts-xaxistooltip.apexcharts-theme-dark {
     border: calc(var(--spaceMini) / 2.5) solid var(--whiteColor);
-}
-.apexcharts-xaxistooltip .apexcharts-xaxistooltip-text, .apexcharts-tooltip-title {
-    font-weight: 600 !important;
-}
-.apexcharts-legend-text {
-    text-transform: capitalize !important;
-    color: var(--whiteColor) !important;
-}
-.apexcharts-legend-text, .apexcharts-tooltip {
-    font-weight: 500 !important;
 }
 .apexcharts-canvas {
     margin-inline: auto;

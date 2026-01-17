@@ -1,5 +1,7 @@
 <style>
-    h1 { font-size:calc(var(--textJumbo)*1.5); font-weight: bold; }
+    h1 { 
+        font-size:calc(var(--textJumbo)*1.5); 
+    }
 </style>
 
 <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

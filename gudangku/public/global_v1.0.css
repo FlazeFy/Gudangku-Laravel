@@ -63,7 +63,6 @@ body {
     border-radius: var(--roundedMD) !important;
 }
 hr {
-    color: var(--whiteColor) !important;
     margin-top: var(--spaceXLG) !important;
 }
 .content {
@@ -88,7 +87,8 @@ hr {
 }
 
 /* Transition */
-button, .btn, tr, .btn-page, .img-responsive, .img-holder, .btn-feature, i, #col-analyze, #total-holder {
+button, .btn, tr, .btn-page, .img-responsive, .img-holder, .btn-feature, i, #col-analyze, #total-holder, .fc-daygrid-event, .fc-timegrid-event, .btn-icon-reset-image,
+.fc-daygrid-event, .fc-timegrid-event {
     -webkit-transition: all 0.3s !important;
     -o-transition: all 0.3s !important;
     transition: all 0.3s !important;

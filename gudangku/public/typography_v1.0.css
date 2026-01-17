@@ -1,14 +1,77 @@
 a {
     text-decoration: none;
 }
-b {
-    color: var(--primaryColor);
+li::marker {
+    font-size: 1.5em !important; 
 }
-a, label, h1, h2, h3, h4, h5, h6, p, table {
+
+/* Color */
+b, .btn-link, .fc-toolbar-chunk .fc-button-group button.fc-button-active, .fc-toolbar-chunk .fc-button-group button:hover, .fc-today-button.fc-button.fc-button-primary:disabled,
+.fc-toolbar-chunk .fc-button-group button, .fc-today-button.fc-button.fc-button-primary {
+    color: var(--primaryColor) !important;
+}
+a, label, h1, h2, h3, h4, h5, h6, p, table, a.relative.inline-flex.items-center, span.relative.inline-flex.items-center, footer, 
+.btn-icon-reset-image, .btn-feature, .apexcharts-tooltip, .apexcharts-tooltip-title, .apexcharts-tooltip-series-group, .apexcharts-legend-text, 
+.d3 .node, .apexcharts-xaxistooltip .apexcharts-xaxistooltip-text, .apexcharts-legend-text, .modal-content, .swal2-popup, .popover,
+input, button, .btn, textarea, select, .form-check-input:checked::after, input[type="file"].form-control::file-selector-button, input[type="file"].form-control,
+.rte-toolbar-desktop *, rte-bottom *, hr, .autocomplete-items div, .autocomplete-active, .fc .fc-daygrid-day.fc-day-today a.fc-daygrid-day-number,
+li::marker, .fc-event-title, .fc-popover.fc-more-popover .fc-popover-title, .fc-popover-close.fc-icon.fc-icon-x, .fc-daygrid-more-link.fc-more-link, 
+.modal-content, .autocomplete-items div, .autocomplete-active, .item_name_selected, .step.step-finish .caption, .circle  {
     color: var(--whiteColor) !important;
 }
+.text-secondary, .form-text, .date-text, .no-data-message {
+    color: var(--greyColor) !important;
+}
+.apexcharts-yaxis-label, .apexcharts-xaxis-label, .apexcharts-datalabels-group text, .rte-toolbar-desktop *, rte-bottom * {
+    fill: var(--whiteColor) !important;
+}
+
+/* Font Weight */
+.dashboard-title, .dashboard-second, h1, .title {
+    font-weight: 700 !important;
+}
+label, .form-label, .title-chart, h2, .main-page-title, .input-msg, .btn-feature, .apexcharts-xaxistooltip .apexcharts-xaxistooltip-text, .apexcharts-tooltip-title,
+.fc-popover-close.fc-icon.fc-icon-x, .dashboard-subtitle {
+    font-weight: 600 !important;
+}
+.apexcharts-legend-text, .apexcharts-tooltip, .apexcharts-legend-text, .d3 .node, input[type="file"].form-control::file-selector-button, input[type="file"].form-control, .item_name_selected
+.fc-event-title, .fc-daygrid-event, .fc-timegrid-event, .fc-daygrid-event .fc-event-title, .fc-timegrid-event .fc-event-title, .fc-popover.fc-more-popover .fc-popover-title {
+    font-weight: 500 !important;
+}
+
+/* Font Size */
+.apexcharts-tooltip, th.fc-col-header-cell.fc-day a, .dashboard-subtitle {
+    font-size: var(--textXLG) !important;
+}
+.date-text, table th, #nav_scroll-holder button, .apexcharts-legend-text, .d3 .node, .item_name_selected, a.fc-daygrid-day-number  {
+    font-size: var(--textXMD) !important;
+}
+.props-box, table td, .apexcharts-xaxis-label, .box-reminder p, .error-input, input[type="file"].form-control::file-selector-button, input[type="file"].form-control,
+table.table-report tbody span, table.table-report tbody input, table.table-report tbody textarea, .fc-daygrid-more-link.fc-more-link {
+    font-size: var(--textMD) !important;
+}
+.apexcharts-yaxis-label {
+    font-size: var(--textSM) !important;
+}
+.fc-daygrid-event .fc-event-title, .fc-timegrid-event .fc-event-title {
+    font-size: var(--textXSM);
+}
+
+/* Font Style */
+.date-text, .input-msg, .no-data-message  {
+    font-style: italic;
+}
+.apexcharts-legend-text, h2 {
+    text-transform: capitalize !important;
+}
+
+/* Align */
+thead th, .title-chart, .form-check-input:checked::after, .btn-feature, .img-holder, .dashboard-title, .dashboard-subtitle, .pin-code input,
+.circle {
+    text-align: center;
+}
+
 a.relative.inline-flex.items-center {
-    color: var(--whiteColor) !important;
     background: transparent !important;
 }
 a.relative.inline-flex.items-center, span.relative.inline-flex.items-center {
@@ -18,27 +81,16 @@ a.relative.inline-flex.items-center, span.relative.inline-flex.items-center {
 }
 span.relative.inline-flex.items-center,  a.relative.inline-flex.items-center:hover{
     background: var(--primaryColor) !important;
-    border: 2px solid var(--primaryColor);
-    color: var(--whiteColor);
+    border: calc(var(--spaceMini) / 2) solid var(--primaryColor);
 }
 
 /* Form */
 label, .form-label {
-    font-weight: 600 !important;
     margin-bottom: var(--spaceXSM);
-}
-.date-text {
-    font-size: var(--textXMD);
-    color: var(--greyColor) !important;
-    font-style: italic;
-}
-.text-secondary, .form-text {
-    color: var(--greyColor) !important;
 }
 
 /* Section Title */
 .main-page-title {
-    font-weight: bold;
     margin-bottom: 0;
     font-size: calc(var(--textXJumbo)*1.75);
 }
@@ -48,13 +100,8 @@ label, .form-label {
     }
 }
 .title-chart {
-    font-weight: bold;
-    text-align: center;
     font-size: var(--spaceLG);
     margin-bottom: var(--spaceMD);
-}
-.modal-content h2 {
-    font-weight: 600;
 }
 
 /* Table */
@@ -63,14 +110,6 @@ table tr {
 }
 thead th {
     vertical-align: middle;
-    text-align: center;
-}
-table td {
-    font-size: var(--textMD) !important;
-}
-table th {
-    font-size: var(--textXMD) !important;
-    font-weight: 600 !important;
 }
 table tr:hover {
     background-color: rgba(131, 129, 129, 0.15);
@@ -85,23 +124,6 @@ table thead tr th:last-child {
     border-top-right-radius: var(--roundedMD);
 }
 
-/* List */
-li::marker {
-    color: var(--whiteColor) !important;
-    font-size: 1.5em !important; 
-}
-
-/* Footer */
-footer {
-    color: var(--whiteColor) !important;
-}
-
-/* Feature Box */
-.props-box {
-    font-size: var(--textMD) !important;
-}
 .no-data-message {
-    font-style: italic;
-    color: var(--greyColor) !important;
     display: block;
 }

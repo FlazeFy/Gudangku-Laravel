@@ -1,7 +1,6 @@
 <style>
-    .modal-content{
+    .modal-content {
         background: var(--darkColor);
-        color: var(--whiteColor) !important;
         border: none;
         border: 2.5px solid var(--primaryColor);
     }

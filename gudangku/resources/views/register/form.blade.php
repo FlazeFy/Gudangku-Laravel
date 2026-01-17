@@ -22,13 +22,9 @@
     .step.step-finish .circle {
         background: var(--successBG);
     }
-    .step.step-finish .caption {
-        color: var(--whiteColor);
-    }
 
     .title {
         line-height: 1.5em;
-        font-weight: bold;
     }
     .caption {
         font-size: 0.8em;
@@ -51,8 +47,6 @@
         height: 1.5em;
         line-height: 1.5em;
         border-radius: 100%;
-        color: var(--whiteColor);
-        text-align: center;
         box-shadow: 0 0 0 3px var(--whiteColor);
     }
     .circle.finish{
@@ -96,7 +90,6 @@
     } 
     .pin-code input { 
         border: 1.75px solid var(--whiteColor); 
-        text-align: center; 
         width: 48px;
         height:48px;
         font-size: 36px; 

@@ -2,15 +2,15 @@
 <html>
     <head>
         <style>
-            .bg{
-                background: var(--primaryColor);
+            .bg {
+                background: #3b82f6;
                 width: 100vh;
                 padding: 30px 20px;
             }
-            .container{
+            .container {
                 display: block !important;
                 margin-inline: auto !important;
-                border-radius: var(--roundedXLG);
+                border-radius: 24px;
                 width: 50vh;
                 min-width: 300px !important;
                 height: auto;
@@ -18,13 +18,13 @@
                 background: #FFFFFF;
                 box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
                 text-align: center;
-                color: var(--darkColor);
+                color: #121725;
             }
-            h5{
+            h5 {
                 font-size:22px;
                 font-weight: 700 !important;
             }
-            h6{
+            h6 {
                 font-size:14px;
                 font-weight: 600 !important;
             }
@@ -32,7 +32,7 @@
                 margin: 0;
                 margin-bottom: 10px;
             }
-            hr{
+            hr {
                 margin-top: 10px;
                 margin-bottom: 10px;
             }

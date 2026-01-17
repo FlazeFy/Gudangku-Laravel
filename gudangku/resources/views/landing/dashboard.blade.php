@@ -1,21 +1,13 @@
 <style>
-    .dashboard-title, .dashboard-subtitle {
-        text-align: center;
-    }
     .dashboard-title {
         font-size: calc(var(--textXJumbo) * 2.75) !important; 
     }
     .dashboard-second {
         font-size: calc(var(--textXJumbo) * 1.5) !important; 
     }
-    .dashboard-title, .dashboard-second {
-        font-weight: bold;
-    }
     .dashboard-subtitle {
-        font-size: var(--textXLG) !important; 
         padding: var(--spaceXSM) var(--spaceXMD);
         margin-top: var(--spaceXSM);
-        font-weight: 600;
         background: var(--infoBG);
         width: fit-content;
         margin-inline: auto;

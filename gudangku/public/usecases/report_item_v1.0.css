@@ -16,27 +16,18 @@
     padding: var(--spaceMD);
     cursor: pointer;
     background: transparent;
-    color: var(--whiteColor);
 }
 .autocomplete-items div:hover {
     background: var(--primaryColor);
-}
-.autocomplete-active {
-    color: var(--whiteColor);
 }
 .item_qty_selected {
     width: 80px;
 }
 .item_name_selected {
-    font-weight: 500;
-    font-size: var(--textXMD);
     margin-bottom: var(--spaceXXSM) !important;
 }
 table.table-report tr td {
     padding: var(--spaceMD) var(--spaceXSM)  !important;
-}
-table.table-report tbody span, table.table-report tbody input, table.table-report tbody textarea {
-    font-size: var(--textMD) !important;
 }
 table.table-report tbody input, table.table-report tbody textarea {
     padding: var(--spaceXSM) !important;

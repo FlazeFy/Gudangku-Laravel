@@ -33,9 +33,6 @@
 .box-reminder {
     background-color:rgba(0, 195, 99, 0.2);
 }
-.box-reminder p {
-    font-size: var(--textMD);
-}
 .control-panel {
     z-index:997;
     width: 100%;
@@ -76,7 +73,6 @@
     border-radius: var(--roundedJumbo) !important;
     background: var(--darkColor);
     border: 1.75px solid var(--primaryColor);
-    color: var(--whiteColor);
     box-shadow: rgba(59, 130, 246, 0.35) 0px 6px 17px;
 }
 .popover{
