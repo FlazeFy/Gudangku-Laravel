@@ -26,7 +26,7 @@
     let page = 1
     $('#inventory-holder').empty()
 
-    const get_inventory = (page) => {
+    const getAllInventory = (page) => {
         $.ajax({
             url: `/api/v1/inventory/catalog/${view}/${catalog}?page=${page}`,
             type: 'GET',
@@ -93,10 +93,10 @@
             }
         });
     }
-    get_inventory(page)
+    getAllInventory(page)
 
     const navigate_page = (page) => {
         $('#inventory-holder').children().last().remove()
-        get_inventory(page + 1)
+        getAllInventory(page + 1)
     }
 </script>

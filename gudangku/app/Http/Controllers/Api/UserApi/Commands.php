@@ -797,7 +797,7 @@ class Commands extends Controller
 
     /**
      * @OA\DELETE(
-     *     path="/api/v1/user/{id}",
+     *     path="/api/v1/user/destroy/{id}",
      *     summary="Hard Delete User By Id",
      *     description="This request is used to delete user by given user's `id`. This request interacts with the MySQL database and has a protected routes.",
      *     tags={"User"},

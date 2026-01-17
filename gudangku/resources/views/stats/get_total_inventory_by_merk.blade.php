@@ -2,7 +2,7 @@
     <div id="stats_total_inventory_by_merk_holder"></div>
 </div>
 <script>
-    const get_total_inventory_by_merk = (page) => {
+    const getTotalInventoryByMerk = (page) => {
         const title = 'Inventory By Merk'
         const ctx = 'total_inventory_by_merk_temp'
         const ctx_holder = 'stats_total_inventory_by_merk_holder'
@@ -61,5 +61,5 @@
             fetchData()
         }
     }
-    get_total_inventory_by_merk()
+    getTotalInventoryByMerk()
 </script>

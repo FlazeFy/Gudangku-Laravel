@@ -28,7 +28,7 @@
 </div>
 
 <script>
-    const get_inventory = () => {
+    const getInventoryCatalog = () => {
         const holder = ['room','category','storage']
 
         $.ajax({
@@ -78,5 +78,5 @@
             }
         });
     }
-    get_inventory()
+    getInventoryCatalog()
 </script>

@@ -19,7 +19,7 @@
 
 <script>
     const post_borrow = (lend_id) => {
-        const selected = get_selected_items()
+        const selected = getSelectedItems()
         const borrower_name = $('#borrower_name').val()
 
         if (selected.length == 0) {
@@ -81,7 +81,7 @@
     }
 
     const get_selected_inventory_modal = () => {
-        const selected = get_selected_items()
+        const selected = getSelectedItems()
         $('#selected-inventory-holder').empty()
 
         if(selected.length > 0){
@@ -115,6 +115,6 @@
         $('#reset-button-holder').empty()
         $('.inventory-item').css('border-color', 'var(--primaryColor)')
         get_selected_inventory_modal()
-        get_cart_button()
+        getCartButton()
     })
 </script>

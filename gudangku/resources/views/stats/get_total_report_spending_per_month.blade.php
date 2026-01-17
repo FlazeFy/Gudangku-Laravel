@@ -2,7 +2,7 @@
     <div id="stats_total_report_spending_per_month"></div>
 </div>
 <script>
-    const get_total_report_spending_per_month = (year) => {
+    const getTotalReportSpendingPerMonth = (year) => {
         Swal.showLoading()
         const title = `Total Report Spending Per Month (${year})`
         const ctx = 'total_report_spending_per_month_temp'
@@ -60,5 +60,5 @@
             fetchData()
         }
     }
-    get_total_report_spending_per_month(year)
+    getTotalReportSpendingPerMonth(year)
 </script>

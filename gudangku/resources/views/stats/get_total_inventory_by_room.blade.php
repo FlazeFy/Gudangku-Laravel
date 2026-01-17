@@ -2,7 +2,7 @@
     <div id="stats_total_inventory_by_room_holder"></div>
 </div>
 <script>
-    const get_total_inventory_by_room = (page) => {
+    const getTotalInventoryByRoom = (page) => {
         Swal.showLoading()
         const title = 'Inventory By Room'
         const ctx = 'total_inventory_by_room_temp'
@@ -61,5 +61,5 @@
             fetchData()
         }
     }
-    get_total_inventory_by_room()
+    getTotalInventoryByRoom()
 </script>

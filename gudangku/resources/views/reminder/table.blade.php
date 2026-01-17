@@ -18,7 +18,7 @@
 
 <script>
     let page = 1
-    const get_all_reminder = (page) => {
+    const getAllReminder = (page) => {
         const item_holder = 'reminder_tb_body'
         $(`#${item_holder}`).empty()
         $.ajax({
@@ -66,7 +66,7 @@
                     `);
                 });
 
-                generatePagination(item_holder, get_all_reminder, total_page, current_page)
+                generatePagination(item_holder, getAllReminder, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, reminderThrown) {
                 if(response.status != 404){
@@ -78,7 +78,7 @@
             }
         });
     }
-    get_all_reminder(page)
+    getAllReminder(page)
 
     const post_re_remind = (id) => {
         $.ajax({
@@ -98,7 +98,7 @@
                 Swal.close()
                 Swal.fire("Success!",response.message, "success").then((result) => {
                     if (result.isConfirmed) {
-                        get_all_reminder(1)
+                        getAllReminder(1)
                     }
                 });
             },

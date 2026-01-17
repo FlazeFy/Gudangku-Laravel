@@ -47,7 +47,7 @@
                     </table>
                 </div>
                 <div class="d-grid d-md-inline-block">
-                    <a class="btn btn-success mt-4 w-100 w-md-auto mb-2" onclick="post_report()"><i class="fa-solid fa-floppy-disk"></i> Save Report</a>
+                    <a class="btn btn-success mt-4 w-100 w-md-auto mb-2" onclick="postReport()"><i class="fa-solid fa-floppy-disk"></i> Save Report</a>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
         await getDictionaryByContext('report_category',token)
     })
 
-    const get_list_inventory = () => {
+    const getAllInventory = () => {
         $.ajax({
             url: "/api/v1/inventory/list",
             datatype: "json",
@@ -93,9 +93,9 @@
             }
         })
     }
-    get_list_inventory()
+    getAllInventory()
 
-    const post_report = () => {
+    const postReport = () => {
         const report_items = []
 
         $('.item-holder-div').each(function () {
@@ -148,7 +148,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.close()
-                        get_list_inventory()
+                        getAllInventory()
                     }
                 });
             },

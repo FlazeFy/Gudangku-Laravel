@@ -26,7 +26,7 @@
 </div>
 
 <script>
-    const get_leaderboard = () => {
+    const getLeaderboard = () => {
         $.ajax({
             url: `/api/v1/stats/user/leaderboard`,
             type: 'GET',
@@ -61,5 +61,5 @@
             }
         });
     }
-    get_leaderboard()
+    getLeaderboard()
 </script>

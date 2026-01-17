@@ -4,7 +4,7 @@
 </div>
 <div id="report_holder"></div>
 <script>
-    const highlight_item = (find,items) => {
+    const highlightItem = (find,items) => {
         const index = items.toLowerCase().indexOf(find.toLowerCase())
         if (index === -1) return items
         const beforeMatch = items.slice(0, index)
@@ -14,7 +14,7 @@
     } 
 
     let page = 1
-    const get_my_report_all = (page,search,id) => {
+    const getAllReport = (page,search,id) => {
         const item_holder = 'report_holder'
         Swal.showLoading()
         $.ajax({
@@ -38,7 +38,7 @@
                     <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-plus"></i> Add Report</a>
                 `)
 
-                generatePagination(item_holder, get_my_report_all, total_page, current_page)
+                generatePagination(item_holder, getAllReport, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()

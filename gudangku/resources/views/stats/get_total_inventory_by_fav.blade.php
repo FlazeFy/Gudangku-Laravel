@@ -2,7 +2,7 @@
     <div id="stats_total_inventory_by_favorite_holder"></div>
 </div>
 <script>
-    const get_total_inventory_by_favorite = (page) => {
+    const getTotalInventoryByFavorite = (page) => {
         const title = 'Inventory By Favorite'
         const ctx = 'total_inventory_by_favorite_temp'
         const ctx_holder = 'stats_total_inventory_by_favorite_holder'
@@ -61,5 +61,5 @@
             fetchData()
         }
     }
-    get_total_inventory_by_favorite()
+    getTotalInventoryByFavorite()
 </script>

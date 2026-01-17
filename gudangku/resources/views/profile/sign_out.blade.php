@@ -13,7 +13,7 @@
                 <form action="/profile/sign_out" method="POST" id="form-sign-out">
                     @csrf
                     <p>Are you sure want to leave this account?</p>
-                    <a class="btn btn-danger mt-4" onclick="sign_out()" id="validation_sign_out_btn">Yes, Sign Out</a>
+                    <a class="btn btn-danger mt-4" onclick="signOut()" id="validation_sign_out_btn">Yes, Sign Out</a>
                 </form>
             </div>
         </div>
@@ -21,7 +21,7 @@
 </div>
 
 <script>
-    const sign_out = () => {
+    const signOut = () => {
         $.ajax({
             url: "/api/v1/logout",
             type: "POST",

@@ -3,7 +3,7 @@
 <script>
     const room = '<?= session()->get('room_opened') ?>'
 
-    const get_room_layout = () => {
+    const getRoomLayout = () => {
         $(document).ready(function() {
             $('.modal').modal('hide')
         })
@@ -32,9 +32,9 @@
             }
         });
     }
-    get_room_layout()
+    getRoomLayout()
 
-    const get_inventory_room_storage = (room,storage,target) => {
+    const getInventoryRoomStorage = (room,storage,target) => {
         $(`#table-inventory-${target} tbody`).empty()
         $(`#pie-chart-${target}`).empty()
         if(storage != '' && storage){
@@ -81,7 +81,7 @@
         }
     }
 
-    const post_storage = (form) => {
+    const postStorage = (form) => {
         $.ajax({
             url: '/api/v1/inventory/layout',
             type: 'POST',
@@ -99,7 +99,7 @@
                     allowOutsideClick: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        get_room_layout() 
+                        getRoomLayout() 
                     }
                 });
             },
@@ -109,34 +109,7 @@
         });
     }
 
-    const remove_coordinate = (id,coor) => {
-        $.ajax({
-            url: `/api/v1/inventory/delete_layout/${id}/${coor}`,
-            type: 'DELETE',
-            dataType: 'json',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
-            },
-            success: function(response) {
-                Swal.fire({
-                    title: "Success!",
-                    text: response.message,
-                    icon: "success",
-                    allowOutsideClick: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        get_room_layout() 
-                    }
-                });
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                generateAPIError(response, true)
-            }
-        });
-    }
-
-    const expand_floor = () => {
+    const expandFloor = () => {
         let max_letter
         let max_number
         $('#room-container > .row').each(function(idx, el) {
@@ -179,7 +152,7 @@
     $(document).ready(function() {
         $(document).on('click', '.submit_add_storage', function(event) {
             const form_id = $(this).closest('form').attr('id')
-            post_storage(form_id)
+            postStorage(form_id)
         });
 
         $(document).on('click', '.remove_coordinate', function(event) {
@@ -187,7 +160,7 @@
             const id_coor_holder = $('.id-coor-holder').eq(idx).val().split('_')
             const id = id_coor_holder[0]
             const coor = id_coor_holder[1]
-            remove_coordinate(id,coor)
+            deleteModuleByID(`${id}/${coor}`, 'inventory', 'delete_layout', token, () => getRoomLayout())
         })
     });
 </script>

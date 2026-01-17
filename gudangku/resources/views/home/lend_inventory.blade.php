@@ -1,7 +1,7 @@
 <div id="lend-item-section"></div>
 
 <script>
-    const get_lend_item = (list_inventory) => {
+    const getLendItem = (list_inventory) => {
         let item_el = ''
         $('#lend-item-section').empty()
         

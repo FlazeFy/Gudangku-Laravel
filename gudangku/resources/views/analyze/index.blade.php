@@ -62,7 +62,7 @@
         <div id="work_area" class='d-none'></div>
     </div>
     <script>
-        const get_analyze = (id) => {
+        const getAnalyzeInventory = (id) => {
             Swal.showLoading()
             const year_sess = <?= session()->get('toogle_select_year') ?>;
             const year = year_sess ?? new Date().getFullYear()
@@ -201,7 +201,7 @@
                             { name: dy, data: data_inventory_activity_report.filter(el => el.day === dy).map(el => ({ x: el.context, y: el.total })) }
                         )
                     });
-                    generate_heatmap_inventory_activity(data_heatmap_inventory_activity)
+                    generateHeatmapInventoryActivity(data_heatmap_inventory_activity)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     if(response.status != 404){
@@ -221,7 +221,7 @@
                 }
             });
         }
-        get_analyze("<?= $id ?>")
+        getAnalyzeInventory("<?= $id ?>")
 
         let toggle_show_customize = false
         const generate_custom = () => {

@@ -14,7 +14,7 @@
     </div>
 </div>
 <script>
-    const get_total_inventory_by_favorite = (type_chart,ctx_holder) => {
+    const getTotalInventoryByFavorite = (type_chart,ctx_holder) => {
         Swal.showLoading()
         const title = 'Inventory By Favorite'
 
@@ -69,7 +69,7 @@
             fetchData()
         }
     }
-    get_total_inventory_by_favorite('item','stats_total_item_inventory_by_favorite_holder')
-    get_total_inventory_by_favorite('price','stats_total_price_inventory_by_favorite_holder')
+    getTotalInventoryByFavorite('item','stats_total_item_inventory_by_favorite_holder')
+    getTotalInventoryByFavorite('price','stats_total_price_inventory_by_favorite_holder')
 </script>
 @endsection

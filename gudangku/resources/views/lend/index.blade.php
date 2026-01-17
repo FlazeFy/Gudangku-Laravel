@@ -15,18 +15,18 @@
         let lend_id = '<?= $lend_id ?>'
         const SELECTED_STORAGE_KEY = `selected_lend_items_${lend_id}`
 
-        const save_selected_items = (items) => {
+        const saveSelectedItems = (items) => {
             localStorage.setItem(SELECTED_STORAGE_KEY, JSON.stringify(items))
         }
 
-        const get_selected_items = () => {
+        const getSelectedItems = () => {
             const raw = localStorage.getItem(SELECTED_STORAGE_KEY)
             return raw ? JSON.parse(raw) : []
         }
 
-        const get_cart_button = () => {
+        const getCartButton = () => {
             $(document).ready(function () {
-                const selected = get_selected_items()
+                const selected = getSelectedItems()
                 $('#total-item-selected').text(selected.length)
             })
         }

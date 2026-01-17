@@ -9,7 +9,7 @@
 </table>
 
 <script>
-    const get_last_login = () => {
+    const getLastLogin = () => {
         const item_holder = 'last_login-holder'
         $(`#${item_holder}`).empty()
 
@@ -44,5 +44,5 @@
             }
         });
     }
-    get_last_login()
+    getLastLogin()
 </script>

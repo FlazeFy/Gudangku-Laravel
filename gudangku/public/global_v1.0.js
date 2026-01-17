@@ -66,9 +66,9 @@ const getUUID = () => {
 const validateInput = (type, id, max, min) => {
     if(type == "text"){
         const check = $(`#${id}`).val()
-        const check_len = check.trim().length
+        const checkLen = check.trim().length
     
-        if(check && check_len > 0 && check_len <= max && check_len >= min){
+        if(check && checkLen > 0 && checkLen <= max && checkLen >= min){
             return true
         } else {
             return false
@@ -290,7 +290,7 @@ const formValidation = (context) => {
                 if ($(this).attr('name')) {
                     const name = ucEachWord($(this).attr('name').trim().replaceAll('_',' '))
                     const type = $(this).attr('type')
-                    const is_required = $(this).attr('required') === undefined ? false : true
+                    const isRequired = $(this).attr('required') === undefined ? false : true
                     let max
                     let min
                     let lengthTitle = ''
@@ -325,7 +325,7 @@ const formValidation = (context) => {
                         $(this).after(`<span id='alert-holder-${idx}-${$(this).attr('name')}'></span>`)
                     }
 
-                    $(this).before(`<label title='This input is ${is_required ? 'mandatory' : 'optional'}${lengthTitle}'>${is_required == true ? `<span class='text-danger'>*</span>`:''}${name.replace(context,'')}</label>`)
+                    $(this).before(`<label title='This input is ${isRequired ? 'mandatory' : 'optional'}${lengthTitle}'>${isRequired == true ? `<span class='text-danger'>*</span>`:''}${name.replace(context,'')}</label>`)
 
                     $(document).on('input', `.form-validated`, function(idx2, el2) {            
                         const val = $(this).val().trim()

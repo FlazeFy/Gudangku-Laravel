@@ -21,16 +21,16 @@
                     zoomableModal()
                 };
                 reader.readAsDataURL(file)
-                update_image_url(true)
+                updateImageURL(true)
             }
         })
 
         $(document).on('click', '#reset-image-btn', function () {
-            update_image_url(false)
+            updateImageURL(false)
         })
     })
 
-    const update_image_url = (isNew) => {
+    const updateImageURL = (isNew) => {
         const formData = new FormData()
         const img = $("#file-input")[0] ? $("#file-input")[0].files[0] : null
         formData.append("inventory_image", img ? img : null)
@@ -66,7 +66,7 @@
                     confirmButtonText: "OK", 
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        get_detail_inventory("<?= $id ?>")
+                        getDetailInventoryByID("<?= $id ?>")
                     }
                 });
             },

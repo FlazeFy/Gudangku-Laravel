@@ -36,7 +36,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <a class="btn btn-success mt-4 w-100" onclick="post_report_item('<?= $id ?>')"><i class="fa-solid fa-floppy-disk"></i> Save</a>
+                        <a class="btn btn-success mt-4 w-100" onclick="postReportItem('<?= $id ?>')"><i class="fa-solid fa-floppy-disk"></i> Save</a>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
 </div>
 
 <script>
-    const post_report_item = (id) => {
+    const postReportItem = (id) => {
         Swal.showLoading()
         let report_items = []
 
@@ -85,7 +85,7 @@
                         if (result.isConfirmed) {
                             closeModalBS()
                             $('#item_holder').html('<div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>')
-                            get_detail_report('{{$id}}')
+                            getDetailReportByID('{{$id}}')
                         } 
                     });
                 },
@@ -97,7 +97,7 @@
             Swal.fire("Oops!", "You must select at least one item", "warning")
         }
     }
-    const get_list_inventory = () => {
+    const getAllInventory = () => {
         $.ajax({
             url: "/api/v1/inventory/list",
             datatype: "json",
@@ -193,7 +193,7 @@
     })
 
     $(document).ready(function() {
-        get_list_inventory()
+        getAllInventory()
 
         $('#report_category').on('change', function() {
             if($(this).val() != "Shopping Cart" && $(this).val() != "Wishlist"){

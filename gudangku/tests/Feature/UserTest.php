@@ -221,7 +221,7 @@ class UserTest extends TestCase
         // Exec
         $token = $this->login_trait("admin");
         $id = "17223858-9771-11ee-8f4a-3216422910r4";
-        $response = $this->httpClient->delete("$id", [
+        $response = $this->httpClient->delete("destroy/$id", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ],

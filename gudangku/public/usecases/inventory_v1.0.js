@@ -30,7 +30,7 @@ const favToogleInventoryByID = (id, is_favorite, token, refreshData) => {
     });
 }
 
-const recover_inventory_by_id = (id, token, refreshData) => {
+const recoverInventoryByID = (id, token, refreshData) => {
     Swal.showLoading()
     $.ajax({
         url: `/api/v1/inventory/recover/${id}`,

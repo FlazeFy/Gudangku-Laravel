@@ -2,7 +2,7 @@
     <div id="stats_total_favorite_inventory_comparison_holder"></div>
 </div>
 <script>
-    const get_total_favorite_inventory_comparison = (page) => {
+    const getTotalFavoriteInventoryComparison = (page) => {
         const title = 'Favorite Inventory Comparison'
         const ctx = 'total_favorite_inventory_comparison_temp'
         const ctx_holder = 'stats_total_favorite_inventory_comparison_holder'
@@ -58,5 +58,5 @@
             fetchData()
         }
     }
-    get_total_favorite_inventory_comparison()
+    getTotalFavoriteInventoryComparison()
 </script>

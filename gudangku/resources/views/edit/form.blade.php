@@ -93,7 +93,7 @@
 
     const inventory_id = '<?= $id ?>'
 
-    const get_detail_inventory = (id) => {
+    const getDetailInventoryByID = (id) => {
         const item_holder = 'report_holder'
         $.ajax({
             url: `/api/v1/inventory/detail/${id}`,
@@ -138,12 +138,12 @@
 
                 $('#btn-toogle-fav-holder').html(`
                     <a class="btn btn-danger btn-toggle-favorite" onclick="favToogleInventoryByID('${id}', ${data.is_favorite == 0 ? '1' : '0'}, '<?= session()->get("token_key"); ?>', 
-                        ()=>get_detail_inventory('${id}'))" style="${data.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
+                        ()=>getDetailInventoryByID('${id}'))" style="${data.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
                         <i class="fa-solid fa-heart mx-2"></i>
                     </a>
                 `)
 
-                get_reminder_layout(reminder,inventory_id)
+                getReminderLayout(reminder,inventory_id)
                 
                 $('#inventory_name').val(data.inventory_name)
                 $('#inventory_desc').text(data.inventory_desc)
@@ -170,7 +170,7 @@
                 $('#inventory_id_add_report').val(data.id)
                 $('#form_add_report').attr('action', `/inventory/edit/${data.id}/editInventory/addReport`)
                 $('#form_edit_inventory').attr('action', `/inventory/edit/${data.id}/editInventory`)
-                get_my_report_all(page,data.inventory_name,data.id)
+                getAllReport(page,data.inventory_name,data.id)
 
                 $('#inventory_name_add_reminder').val(data.inventory_name)
                 $('#inventory_name_title_add_reminder').text(data.inventory_name)
@@ -200,7 +200,7 @@
     
     $(async function () {
         await getDictionaryByContext('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
-        get_detail_inventory(inventory_id)
+        getDetailInventoryByID(inventory_id)
     })
 
     const save_update = () => {
@@ -229,7 +229,7 @@
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         await getDictionaryByContext('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
-                        get_detail_inventory(id)
+                        getDetailInventoryByID(id)
                     }
                 });
             },

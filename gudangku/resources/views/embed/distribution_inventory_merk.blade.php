@@ -14,7 +14,7 @@
     </div>
 </div>
 <script>
-    const get_total_inventory_by_merk = (type_chart,ctx_holder) => {
+    const getTotalInventoryByMerk = (type_chart,ctx_holder) => {
         Swal.showLoading()
         const title = 'Inventory By Merk'
 
@@ -69,7 +69,7 @@
             fetchData()
         }
     }
-    get_total_inventory_by_merk('item','stats_total_item_inventory_by_merk_holder')
-    get_total_inventory_by_merk('price','stats_total_price_inventory_by_merk_holder')
+    getTotalInventoryByMerk('item','stats_total_item_inventory_by_merk_holder')
+    getTotalInventoryByMerk('price','stats_total_price_inventory_by_merk_holder')
 </script>
 @endsection

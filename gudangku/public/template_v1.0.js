@@ -36,6 +36,30 @@ const deleteModuleByID = (id, context, type, token, refreshData) => {
     });
 }
 
+const getAvailableYear = (token,target,selectedYear) => {
+    Swal.showLoading()
+    $.ajax({
+        url: `/api/v1/user/my_year`,
+        type: 'GET',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Accept", "application/json")
+            xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+        },
+        success: function(response) {
+            Swal.close()
+            const data = response.data
+
+            data.forEach(el => {
+                $(`#${target}`).append(`<option value="${el.year}" ${selectedYear == el.year ? 'selected' :''}>${el.year}</option>`) 
+            });
+        },
+        error: function(response, jqXHR, textStatus, errorThrown) {
+            Swal.close()
+            Swal.fire("Oops!","Failed to get available year", "error")
+        }
+    });
+}
+
 const getDictionaryByContext = (context, token, selected = null, target_type = '#') => {
     return new Promise((resolve, reject) => {
         Swal.showLoading()
@@ -51,7 +75,7 @@ const getDictionaryByContext = (context, token, selected = null, target_type = '
             ctx_holder = `${context}_holder`
         }
 
-        const generate_context_list = (holder, data, selected = null) => {
+        const generateContextList = (holder, data, selected = null) => {
             if (Array.isArray(holder)) {
                 holder.forEach(dt => {
                     $(`${target_type}${dt}`).empty().append(`<option>-</option>`)
@@ -86,7 +110,7 @@ const getDictionaryByContext = (context, token, selected = null, target_type = '
                     localStorage.setItem(`last-hit-${ctx_holder}`, Date.now())
 
                     $(document).ready(function () {
-                        generate_context_list(ctx_holder, data, selected)
+                        generateContextList(ctx_holder, data, selected)
                     })
                 },
                 error: function (response) {
@@ -107,7 +131,7 @@ const getDictionaryByContext = (context, token, selected = null, target_type = '
                 if (data) {
                     Swal.close()
                     $(document).ready(function () {
-                        generate_context_list(ctx_holder, data, selected)
+                        generateContextList(ctx_holder, data, selected)
                     })
                 } else {
                     Swal.close()
@@ -265,7 +289,7 @@ const generateMapRoom = (target,data,is_interact,room) => {
 
             const modal = is_interact ? generateModalDetail(inventory_storage, storage_desc, room, label, id) : ''
             const button = $(`
-                <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${label}" ${inventory_storage && `onclick="get_inventory_room_storage('${room}','${inventory_storage}','${label}')"`}>
+                <button class='d-inline-block room-floor ${used ? 'active':''}' data-bs-toggle="modal" data-bs-target="#modalDetail-${label}" ${inventory_storage && `onclick="getInventoryRoomStorage('${room}','${inventory_storage}','${label}')"`}>
                     <h6 class='coordinate'>${label}</h6>
                 </button>
                 ${modal}
@@ -278,7 +302,7 @@ const generateMapRoom = (target,data,is_interact,room) => {
     if(is_interact){
         $(target).append(`
             <div class='floor-config m-3'>
-                <a class='d-inline-block btn btn-success' onclick='expand_floor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
+                <a class='d-inline-block btn btn-success' onclick='expandFloor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
                 ${data ? `<a class='d-inline-block btn btn-success' href='/doc/layout/${room}'><i class="fa-solid fa-print"></i> Print</a>`:''}
                 ${data ? `<a class='d-inline-block btn btn-success' href='/doc/layout/${room}/custom'><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>`:''}
             </div>
@@ -377,9 +401,9 @@ const addItem = (val, inventory_id) => {
                 `)
             }
         } else if(val == 'copy_report') {
-            const items_list = $('#temp_items_report').val().split(", ")
+            const itemsList = $('#temp_items_report').val().split(", ")
 
-            items_list.forEach(el => {
+            itemsList.forEach(el => {
                 $('#item_holder').append(`
                     <tr class="item-holder-div align-middle">
                         <td>
@@ -534,7 +558,7 @@ const generateReportBox = (el, search = null) => {
             ${el.report_desc ? `<p>${el.report_desc}</p>` : `<p class="no-data-message">- No Description Provided -</p>`}
             <h6><b>Items :</b></h6>
             <div class='d-flex justify-content-start mt-2'>${
-                search ? `<div class="mb-3 d-flex flex-wrap">${highlight_item(search,el.report_items)}</div>` : el.report_items ? `<p>${el.report_items}</p>` : `<p class="no-data-message">- No items attached -</p>`}
+                search ? `<div class="mb-3 d-flex flex-wrap">${highlightItem(search,el.report_items)}</div>` : el.report_items ? `<p>${el.report_items}</p>` : `<p class="no-data-message">- No items attached -</p>`}
             </div><hr class="mt-0">
             ${(el.report_category === 'Shopping Cart' || el.report_category === 'Wishlist') ? `
                 <div class="d-flex justify-content-between mt-2">
@@ -590,7 +614,7 @@ const generateReminderBox = (dt, inventory_id) => {
                                     </div>
                                     <div class="modal-body">
                                         <p><span class="text-danger">Permanently delete</span> this reminder "${dt.reminder_desc}"?</p>
-                                        <a class="btn btn-danger" onclick="deleteModuleByID('${dt.id}', 'reminder', 'destroy', '${token}', () => get_detail_inventory('${inventory_id}'))"> Yes, Delete</a>
+                                        <a class="btn btn-danger" onclick="deleteModuleByID('${dt.id}', 'reminder', 'destroy', '${token}', () => getDetailInventoryByID('${inventory_id}'))"> Yes, Delete</a>
                                     </div>
                                 </div>
                             </div>

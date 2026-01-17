@@ -148,7 +148,7 @@
                     <div class="bubble me">
                         Hmmm, I want to <span id='selected-action'>... <br></span>
                         <div class="mt-2" id='action-list'>
-                            <button class="btn btn-primary py-0" onclick="make_report()">Make same Report</button>
+                            <button class="btn btn-primary py-0" onclick="makeReport()">Make same Report</button>
                         </div>
                     </div>
                 `)
@@ -185,8 +185,8 @@
                             <div class="bubble me">
                                 Hmmm, I want to <span id='selected-action'>... <br></span>
                                 <div class="mt-2" id='action-list'>
-                                    <button class="btn btn-primary py-0 me-2" onclick="make_report()">Make same Report</button>
-                                    <button class="btn btn-primary py-0" onclick="add_inventory_via_url('${not_existing_item}')">Add Inventory</button>
+                                    <button class="btn btn-primary py-0 me-2" onclick="makeReport()">Make same Report</button>
+                                    <button class="btn btn-primary py-0" onclick="addInventoryViaURL('${not_existing_item}')">Add Inventory</button>
                                 </div>
                             </div>
                         `)
@@ -196,16 +196,16 @@
         });
     }
 
-    const make_report = () => {
+    const makeReport = () => {
         $('#selected-action').empty().html('make same report')
         $('#action-list').empty()
         $('#chat-section').append(`
             <div class="bubble bot">Okay, wait some moment</div>
         `)
-        add_report()
+        addReport()
     }
 
-    const add_report = () => {
+    const addReport = () => {
         const form = $('#analyze_form')[0]
         const formData = new FormData(form)
         $.ajax({
@@ -239,7 +239,7 @@
         });
     }
 
-    const add_inventory_via_url = (items) => {
+    const addInventoryViaURL = (items) => {
         const list_items = items.split(", ")
         list_items.forEach(el => {
             window.open(`/inventory/add?inventory_name=${el}`, "_blank")

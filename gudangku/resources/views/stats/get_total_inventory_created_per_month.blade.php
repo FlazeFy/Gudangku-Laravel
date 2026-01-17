@@ -2,7 +2,7 @@
     <div id="stats_total_inventory_created_per_month"></div>
 </div>
 <script>
-    const get_total_inventory_created_per_month = (year) => {
+    const getTotalInventoryCreatedPerMonth = (year) => {
         const title = `Total inventory Created Per Month (${year})`
         const ctx = 'total_inventory_created_per_month_temp'
         const ctx_holder = "stats_total_inventory_created_per_month"
@@ -60,5 +60,5 @@
             fetchData()
         }
     }
-    get_total_inventory_created_per_month(year)
+    getTotalInventoryCreatedPerMonth(year)
 </script>

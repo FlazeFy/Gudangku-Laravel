@@ -35,7 +35,7 @@
         e.textContent = getDateToContext(e.textContent, "datetime")
     });
 
-    const get_inventory = (page,name,category,sort) => {
+    const getAllInventory = (page,name,category,sort) => {
         Swal.showLoading()
         const item_holder = 'inventory_tb_body'
         let search_key_url = name ? `&search_key=${name}`:''
@@ -92,7 +92,7 @@
                                                 <div class="modal-body">
                                                     <input type="hidden" name="reminder_desc" value="${rm.reminder_desc}"/>
                                                     <p><span class="text-danger">Permanently Delete</span> this reminder "${rm.reminder_desc}"?</p>
-                                                    <a class="btn btn-danger" onclick="deleteModuleByID('${rm.id}', 'reminder', 'destroy', '${token}', () => get_inventory(${page},'${name}','${category}','${sort}'))"> Yes, Delete</a>
+                                                    <a class="btn btn-danger" onclick="deleteModuleByID('${rm.id}', 'reminder', 'destroy', '${token}', () => getAllInventory(${page},'${name}','${category}','${sort}'))"> Yes, Delete</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -213,7 +213,7 @@
                                     ${role === 0 ? `
                                         <div class='col p-0 pe-1'>
                                             <a class="btn btn-danger w-100 btn-like" onclick="favToogleInventoryByID('${el.id}', ${el.is_favorite == 0 ? '1' : '0'}, '${token}', 
-                                                ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
+                                                ()=>getAllInventory(${page},'${search_key}','${filter_category}',sorting))" style="${el.is_favorite ? 'background:var(--dangerBG); border:none;' : ''}">
                                                 <i class="fa-solid fa-heart"></i>
                                             </a>
                                         </div>
@@ -234,7 +234,7 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <p>${el.deleted_at ? '<span class="text-danger">Permanently Delete</span>' : 'Delete'} this inventory "${el.inventory_name}"?</p>
-                                                        <a class="btn btn-danger" onclick="deleteModuleByID('${el.id}', 'inventory', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
+                                                        <a class="btn btn-danger" onclick="deleteModuleByID('${el.id}', 'inventory', '${el.deleted_at ? 'destroy' : 'delete'}', '${token}', ()=>getAllInventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Delete</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -263,7 +263,7 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <p>Recover this inventory "${el.inventory_name}"?</p>
-                                                        <a class="btn btn-success" onclick="recover_inventory_by_id('${el.id}', '${token}', ()=>get_inventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Recover</a>
+                                                        <a class="btn btn-success" onclick="recoverInventoryByID('${el.id}', '${token}', ()=>getAllInventory(${page},'${search_key}','${filter_category}',sorting))">Yes, Recover</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -300,9 +300,9 @@
                 })
 
                 zoomableModal()
-                generatePagination(item_holder, get_inventory, total_page, current_page,sorting)
+                generatePagination(item_holder, getAllInventory, total_page, current_page,sorting)
 
-                get_lend_item(response.lend_data)
+                getLendItem(response.lend_data)
 
                 $('#toolbar-button-section').html(`
                     <form class="d-inline" action="/inventory/save_as_csv" method="POST">
@@ -322,7 +322,7 @@
             }
         });
     }
-    get_inventory(page,search_key,filter_category,sorting)
+    getAllInventory(page,search_key,filter_category,sorting)
 
     const reset_reminder_form = () => {
         $(document).ready(function () {
@@ -371,7 +371,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         closeModalBS() 
-                        get_inventory(page,search_key,filter_category,sorting)
+                        getAllInventory(page,search_key,filter_category,sorting)
                     }
                 });
             },

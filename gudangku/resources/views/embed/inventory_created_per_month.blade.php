@@ -5,7 +5,7 @@
     <div id="stats_total_inventory_created_per_month"></div>
 </div>
 <script>
-    const get_total_inventory_created_per_month = (year) => {
+    const getTotalInventoryCreatedPerMonth = (year) => {
         Swal.showLoading()
         const title = `Total inventory Created Per Month (${year})`
         const ctx = `total_inventory_created_per_month_temp-${year}`
@@ -63,6 +63,6 @@
         }
     }
     const year = "<?= $year ?>"
-    get_total_inventory_created_per_month(year)
+    getTotalInventoryCreatedPerMonth(year)
 </script>
 @endsection

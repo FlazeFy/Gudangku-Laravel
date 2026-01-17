@@ -36,7 +36,7 @@
 </div>
 
 <script>
-    const place_reset_btn = () => {
+    const placeResetButton = () => {
         if(search_key != ''){
             $('#reset_search_btn_holder').html(`
                 <a class='btn bg-danger position-absolute' href='/report' style='right:10px; top:13px; font-size:var(--textLG); height:var(--spaceXLG); width:var(--spaceJumbo);'>
@@ -49,9 +49,9 @@
     $(async function () {
         await getDictionaryByContext('report_category',token,"<?= $filter_category ?? "all" ?>")
     })
-    place_reset_btn()
+    placeResetButton()
 
-    const search_by_title = (val) => {
+    const searchByTitle = (val) => {
         const url = new URL(window.location)
         const curr_page = url.href.replace(url.origin, "")
 
@@ -60,7 +60,7 @@
             url.searchParams.set('search_key', search_val)
             search_key = search_val
             window.history.pushState({ path: url.href }, '', url.href)
-            place_reset_btn()
+            placeResetButton()
         } else {
             if(curr_page != "/report"){
                 window.location.href = '/report'
@@ -68,19 +68,19 @@
         }
 
         if((curr_page != "/report" && (val == null || val.trim() == "")) || (val != null && val.trim() != "")){
-            get_my_report_all(page,search_key,filter_category,sorting)
+            getAllReport(page,search_key,filter_category,sorting)
         }
     }
     const submitOnEnter = (event) => {
         if (event.keyCode === 13) { 
             event.preventDefault() 
-            search_by_title($('#search_by_title').val())
+            searchByTitle($('#search_by_title').val())
             return false 
         }
         return true 
     }
     $(document).on('blur', '#search_by_title',function(){
-        search_by_title($(this).val())
+        searchByTitle($(this).val())
     })
 
     $(document).on('change', '#report_category_holder',function(){
@@ -93,7 +93,7 @@
         } else {
             window.location.href = '/report'
         }
-        get_my_report_all(page,search_key,filter_category,sorting)
+        getAllReport(page,search_key,filter_category,sorting)
     })
     $(document).on('change', '#sorting',function(){
         if($(this).val()){
@@ -105,6 +105,6 @@
         } else {
             window.location.href = '/report'
         }
-        get_my_report_all(page,search_key,filter_category,sorting)
+        getAllReport(page,search_key,filter_category,sorting)
     })
 </script>

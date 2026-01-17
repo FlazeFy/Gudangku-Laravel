@@ -14,7 +14,7 @@
     </div>
 </div>
 <script>
-    const get_total_inventory_by_category = (type_chart,ctx_holder) => {
+    const getTotalInventoryByCategory = (type_chart,ctx_holder) => {
         Swal.showLoading()
         const title = 'Inventory By Category'
 
@@ -69,7 +69,7 @@
             fetchData()
         }
     }
-    get_total_inventory_by_category('item','stats_total_item_inventory_by_category_holder')
-    get_total_inventory_by_category('price','stats_total_price_inventory_by_category_holder')
+    getTotalInventoryByCategory('item','stats_total_item_inventory_by_category_holder')
+    getTotalInventoryByCategory('price','stats_total_price_inventory_by_category_holder')
 </script>
 @endsection

@@ -224,7 +224,7 @@
         });
         calendar.render()
 
-        const get_calendar = () => {
+        const getCalendar = () => {
             $.ajax({
                 url: `/api/v1/inventory/calendar`,
                 type: 'GET',
@@ -255,7 +255,7 @@
             });
         };
 
-        get_calendar()
+        getCalendar()
     });
 </script>
 

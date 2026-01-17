@@ -16,7 +16,7 @@
 
 <script>
     let page = 1
-    const get_all_error = (page) => {
+    const getAllError = (page) => {
         Swal.showLoading()
         const item_holder = 'error_tb_body'
         $(`#${item_holder}`).empty()
@@ -68,7 +68,7 @@
                                             <div class="modal-body">
                                                 <p>Delete this error about "${el.message}"?</p>
                                                 <button class="btn btn-danger mt-4" onclick="deleteModuleByID('${el.id}', 'error', 'destroy', '${token}', 
-                                                ()=>get_all_error(${page}))">Yes, Delete</button>
+                                                ()=>getAllError(${page}))">Yes, Delete</button>
                                             </div>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@
                     `);
                 });
 
-                generatePagination(item_holder, get_all_error, total_page, current_page)
+                generatePagination(item_holder, getAllError, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -90,5 +90,5 @@
             }
         });
     }
-    get_all_error(page)
+    getAllError(page)
 </script>

@@ -15,7 +15,7 @@
 
 <script>
     let page = 1
-    const get_all_history = (page) => {
+    const getAllHistory = (page) => {
         Swal.showLoading()
         const item_holder = 'history_tb_body'
         $(`#${item_holder}`).empty()
@@ -51,7 +51,7 @@
                                             <div class="modal-body">
                                                 <p>Delete this history about ${el.history_type} from item called ${el.history_context}?</p>
                                                 <button class="btn btn-danger mt-4" onclick="deleteModuleByID('${el.id}', 'history', 'destroy', '${token}', 
-                                                ()=>get_all_history(${page}))">Yes, Delete</button>
+                                                ()=>getAllHistory(${page}))">Yes, Delete</button>
                                             </div>
                                         </div>
                                     </div>
@@ -61,7 +61,7 @@
                     `);
                 });
 
-                generatePagination(item_holder, get_all_history, total_page, current_page)
+                generatePagination(item_holder, getAllHistory, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -73,5 +73,5 @@
             }
         });
     }
-    get_all_history(page)
+    getAllHistory(page)
 </script>

@@ -4,7 +4,7 @@
 <script>
     const toggle_select_item = (inventory, buttonEl) => {
         $(document).ready(function () {
-            let selected = get_selected_items()
+            let selected = getSelectedItems()
             const isSelected = selected.some(item => item.id === inventory.id)
 
             if (isSelected) {
@@ -15,7 +15,7 @@
                 buttonEl.style.borderColor = 'var(--successBG)'
             }
 
-            save_selected_items(selected)
+            saveSelectedItems(selected)
         })
     }
 
@@ -38,7 +38,7 @@
 
                 $('.inventory-owner').text(`@${owner.username}'s`)
 
-                const selectedItems = get_selected_items()
+                const selectedItems = getSelectedItems()
                 data.forEach(el => {
                     const isSelected = selectedItems.includes(el.id)
                     const buttonStyle = isSelected ? "border-color: var(--successBG) !important;" : ""
@@ -90,12 +90,12 @@
 
     $('#inventory-holder').empty()
     get_lend_inventory(lend_id,page)
-    get_cart_button()
+    getCartButton()
 
     $(document).on('click', '.inventory-item', function () {
         const inventory = JSON.parse(decodeURIComponent($(this).attr('data-inventory')))
         toggle_select_item(inventory, this)
-        get_cart_button()
+        getCartButton()
     })
     $(document).on('click','#see-more-button', function() {
         page++

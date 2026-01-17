@@ -8,6 +8,8 @@
 
 @section('content')
     <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
+    <!-- ApexTree -->
+    <script src="https://cdn.jsdelivr.net/npm/apextree"></script>
     <script>
         const year_sess = <?= session()->get('toogle_select_year') ?>;
         const year = year_sess ?? new Date().getFullYear()

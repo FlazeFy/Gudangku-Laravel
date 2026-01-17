@@ -50,7 +50,7 @@
         }
     })
 
-    const post_reminder = (form,is_checked) => {
+    const postReminder = (form,is_checked) => {
         let formData = $(`#${form}`).serializeArray()
         formData.push({ name: "send_demo", value: is_checked })
         let dataObject = {}
@@ -75,7 +75,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.close()
-                        get_detail_inventory("<?= $id ?>")
+                        getDetailInventoryByID("<?= $id ?>")
                     }
                 });
             },
@@ -86,6 +86,6 @@
     }
 
     $(document).on('click', '#form_add_reminder_btn', function() {
-        post_reminder('form_add_reminder',$('#send_demo').is(":checked"))
+        postReminder('form_add_reminder',$('#send_demo').is(":checked"))
     })
 </script>

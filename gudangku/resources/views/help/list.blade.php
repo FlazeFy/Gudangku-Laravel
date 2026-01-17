@@ -411,7 +411,7 @@
 </div>
 
 <script>
-    const get_dct = () => {
+    const getAllDictionary = () => {
         $.ajax({
             url: '/api/v1/dictionary/type/inventory_unit,inventory_room,inventory_category,inventory_unit_room,report_category,reminder_type,reminder_context',
             type: 'GET',
@@ -453,7 +453,7 @@
             }
         });
     }
-    get_dct()
+    getAllDictionary()
 
     $(document).ready(function () {
         const check_el_viewport = (el) =>{

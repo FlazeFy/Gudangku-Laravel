@@ -129,7 +129,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.close()
-                        get_detail_inventory(inventory_id)
+                        getDetailInventoryByID(inventory_id)
                     }
                 });
             },

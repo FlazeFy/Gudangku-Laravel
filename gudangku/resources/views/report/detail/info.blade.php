@@ -26,7 +26,7 @@
     const is_edit_mode = <?= session()->get('toogle_edit_report') ?>;
     let report_title
 
-    const get_detail_report = async (id) => {
+    const getDetailReportByID = async (id) => {
         try {
             Swal.showLoading()
             const response = await $.ajax({
@@ -105,7 +105,7 @@
                                         <div class="modal-body">
                                             <p>Are you sure want to delete this report image?</p>
                                             <button class="btn btn-danger" onclick="deleteModuleByID('<?= $id ?>/${el.report_image_id}', 'report/report_image', 'destroy', '${token}', 
-                                            ()=>get_detail_report('<?= $id ?>'))">Yes, Delete</button>
+                                            ()=>getDetailReportByID('<?= $id ?>'))">Yes, Delete</button>
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +127,7 @@
                                     <div class="modal-body">
                                         <p>Are you sure want to delete all this report image?</p>
                                         <button class="btn btn-danger" onclick="deleteModuleByID('<?= $id ?>', 'report', 'report_image', '${token}', 
-                                        ()=>get_detail_report('<?= $id ?>'))">Yes, Delete All</button>
+                                        ()=>getDetailReportByID('<?= $id ?>'))">Yes, Delete All</button>
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +180,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <p>Are you sure want to <span class="text-warning">update</span> this report? The generated document will affected too</p>
-                                    <button class="btn btn-success mt-4" id="submit-update-report-btn" onclick="update_report('{{"$id"}}')" >Yes, Update</button>
+                                    <button class="btn btn-success mt-4" id="submit-update-report-btn" onclick="updateReport('{{"$id"}}')" >Yes, Update</button>
                                 </div>
                             </div>
                         </div>
@@ -235,7 +235,7 @@
                                                         <label>Price</label>
                                                         <input class="form-control" name="item_price" type="number" value="${dt.item_price}" min="1">` :''
                                                     }
-                                                    <a class="btn btn-success mt-3 w-100" onclick="update_report_item('${dt.id}')"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
+                                                    <a class="btn btn-success mt-3 w-100" onclick="updateReportItem('${dt.id}')"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
                                                 </form>
                                             </div>
                                         </div>
@@ -253,7 +253,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <p>Remove this inventory "${dt.item_name}" from report "${data.report_title}"?</p>
-                                                <a class="btn btn-danger mt-4" onclick="deleteModuleByID('${dt.id}', 'report', 'destroy/item', '${token}', ()=>get_detail_report('<?= $id ?>'))">Yes, Delete</a>
+                                                <a class="btn btn-danger mt-4" onclick="deleteModuleByID('${dt.id}', 'report', 'destroy/item', '${token}', ()=>getDetailReportByID('<?= $id ?>'))">Yes, Delete</a>
                                             </div>
                                         </div>
                                     </div>
@@ -264,10 +264,10 @@
                 });
                 $('#report_check_extra').html(`
                     <div class="d-flex gap-2 mb-3">
-                        <a class="btn btn-primary py-1" onclick="checkAll('.check-inventory','check'); checked_toggle_event();">
+                        <a class="btn btn-primary py-1" onclick="checkAll('.check-inventory','check'); checkedToggleEvent();">
                             <i class="fa-solid fa-check"></i><span class="d-none d-md-inline"> Check All</span>
                         </a>
-                        <a class="btn btn-danger py-1" onclick="checkAll('.check-inventory','uncheck'); checked_toggle_event();">
+                        <a class="btn btn-danger py-1" onclick="checkAll('.check-inventory','uncheck'); checkedToggleEvent();">
                             <i class="fa-solid fa-xmark"></i><span class="d-none d-md-inline"> Uncheck All</span>
                         </a>
                         <a class="btn btn-success py-1 flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#modalAddReport">
@@ -307,9 +307,9 @@
             });
         }
     };
-    get_detail_report('{{$id}}')
+    getDetailReportByID('{{$id}}')
 
-    const update_report_item = (id) => {
+    const updateReportItem = (id) => {
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/report/update/report_item/${id}`,
@@ -325,7 +325,7 @@
                 Swal.fire("Success!", response.message, "success").then((result) => {
                     if (result.isConfirmed) {
                         closeModalBS()
-                        get_detail_report('{{$id}}')
+                        getDetailReportByID('{{$id}}')
                     }
                 });
             },
@@ -335,7 +335,7 @@
         });
     }
 
-    const update_report = (id) => {
+    const updateReport = (id) => {
         const createdAtOpposite = tidyUpDateTimeFormat($('#created_at_edit').val())
         
         $.ajax({
@@ -358,7 +358,7 @@
                 Swal.fire("Success!",response.message,"success").then((result) => {
                     if (result.isConfirmed) {
                         closeModalBS()
-                        get_detail_report(id)
+                        getDetailReportByID(id)
                     }
                 });
             },
@@ -368,7 +368,7 @@
         });
     }
 
-    const split_report = (id,item_id) => {
+    const splitReport = (id,item_id) => {
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/report/update/report_split/${id}`,
@@ -389,7 +389,7 @@
                 Swal.close()
                 Swal.fire("Success!", response.message, "success").then((result) => {
                     if (result.isConfirmed) {
-                        get_detail_report(id)
+                        getDetailReportByID(id)
                     }
                 });
             },
@@ -399,7 +399,7 @@
         });
     }
 
-    const checked_toggle_event = () => {
+    const checkedToggleEvent = () => {
         const report_action_holder = '#report_check_action'
         let checkedItems = []
 
@@ -464,7 +464,7 @@
                                                     <textarea name="report_desc" id="report_desc_split" class="form-control"></textarea>
                                                     <label>Category</label>
                                                     <select class="form-select" name="report_category"  id="report_category_split_holder" aria-label="Default select example"></select>
-                                                    <a class='btn btn-success w-100 mt-4' onclick="split_report('<?= $id ?>','${selected_item_id}')"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
+                                                    <a class='btn btn-success w-100 mt-4' onclick="splitReport('<?= $id ?>','${selected_item_id}')"><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -483,7 +483,7 @@
                                         <div class="modal-body text-start">
                                             <p>Remove this inventory from report "${report_title}"?</p>
                                             <div class="d-flex gap-2 mb-3">${selected_item_name}</div>
-                                            <a class="btn btn-danger" onclick="deleteModuleByID('${selected_item_id}', 'report', 'destroy/item', '${token}', ()=>get_detail_report('<?= $id ?>'))">Yes, Delete</a>
+                                            <a class="btn btn-danger" onclick="deleteModuleByID('${selected_item_id}', 'report', 'destroy/item', '${token}', ()=>getDetailReportByID('<?= $id ?>'))">Yes, Delete</a>
                                         </div>
                                     </div>
                                 </div>
@@ -503,6 +503,6 @@
     })
 
     $(document).on('change','.check-inventory', function(){
-        checked_toggle_event()
+        checkedToggleEvent()
     })
 </script>

@@ -16,12 +16,12 @@
 <hr>
 
 <script>
-    const get_all_user = () => {
+    const getAllUser = (page) => {
         const item_holder = 'user_tb_body'
         $(`#${item_holder}`).empty()
 
         $.ajax({
-            url: `/api/v1/user`,
+            url: `/api/v1/user?page=${page}`,
             type: 'GET',
             beforeSend: function (xhr) {
                 Swal.showLoading()
@@ -61,7 +61,8 @@
                                             </div>
                                             <div class="modal-body">
                                                 <p><span class="text-danger">Permanently Delete</span> this user "@${el.username}"?</p>
-                                                <a class="btn btn-danger mt-4" onclick="destroy_history_by_id('${el.id}')">Yes, Delete</a>
+                                                <a class="btn btn-danger mt-4" onclick="deleteModuleByID('${el.id}', 'user', 'destroy', '${token}', 
+                                                    ()=>getAllUser(${page}))">Yes, Delete</a>
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +72,7 @@
                     `);
                 });
 
-                generatePagination(item_holder, get_all_user, total_page, current_page)
+                generatePagination(item_holder, getAllUser, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -83,33 +84,5 @@
             }
         });
     }
-    get_all_user()
-
-    const destroy_history_by_id = (id) => {
-        $.ajax({
-            url: `/api/v1/user/${id}`,
-            type: 'DELETE',
-            beforeSend: function (xhr) {
-                Swal.showLoading()
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
-            },
-            success: function(response) {
-                Swal.close()
-                Swal.fire({
-                    title: "Success!",
-                    text: `${response.message}`,
-                    icon: "success",
-                    allowOutsideClick: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        get_all_user()
-                    } 
-                });
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                generateAPIError(response, true)
-            }
-        });
-    }
+    getAllUser(page)
 </script>

@@ -52,7 +52,7 @@
                                 <span id="all_msg" class="text-danger"></span>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" onclick="submit_telegram_id_change()">I Agree</button>
+                                <button type="button" class="btn btn-success" onclick="updateTelegramID()">I Agree</button>
                             </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
         }
     });
 
-    const submit_telegram_id_change = () => {
+    const updateTelegramID = () => {
         $('#username_msg').html("")
         $('#pass_msg').html("")
         $('#all_msg').html("")

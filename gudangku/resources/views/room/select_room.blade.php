@@ -5,7 +5,7 @@
 </form>
 
 <script>
-    const get_list_room = (page) => {
+    const getAllRoom = (page) => {
         $.ajax({
             url: `/api/v1/inventory/room`,
             type: 'GET',
@@ -27,5 +27,5 @@
             }
         });
     }
-    get_list_room()
+    getAllRoom()
 </script>

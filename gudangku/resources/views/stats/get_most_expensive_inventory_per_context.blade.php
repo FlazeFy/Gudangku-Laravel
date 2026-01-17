@@ -23,7 +23,7 @@
     </div>
 </div>
 <script>
-    const get_most_expensive_inventory_per_context = () => {
+    const getMostExpensiveInventoryPerContext = () => {
         const ctx_holders = [
             { holder: "stats_most_expensive_inventory_per_category", object: "inventory_category" },
             { holder: "stats_most_expensive_inventory_per_merk", object: "inventory_merk" },
@@ -95,5 +95,5 @@
         }
     }
 
-    get_most_expensive_inventory_per_context()
+    getMostExpensiveInventoryPerContext()
 </script>

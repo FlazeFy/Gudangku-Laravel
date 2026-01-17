@@ -9,7 +9,7 @@
 </div>
 
 <script>
-    const get_my_qr = () => {
+    const getAllQR = () => {
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/lend/qr`,
@@ -55,7 +55,7 @@
             }
         });
     }
-    get_my_qr()
+    getAllQR()
 
     const generate_qr = () => {
         $.ajax({
@@ -81,7 +81,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.close()
-                        get_my_qr()
+                        getAllQR()
                         get_qr_history()
                     }
                 });
@@ -220,7 +220,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.close()
-                        get_my_qr()
+                        getAllQR()
                         get_qr_history()
                     }
                 });

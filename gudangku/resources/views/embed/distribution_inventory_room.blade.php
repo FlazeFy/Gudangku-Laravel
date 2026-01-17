@@ -14,7 +14,7 @@
     </div>
 </div>
 <script>
-    const get_total_inventory_by_room = (type_chart,ctx_holder) => {
+    const getTotalInventoryByRoom = (type_chart,ctx_holder) => {
         Swal.showLoading()
         const title = 'Inventory By Room'
 
@@ -69,7 +69,7 @@
             fetchData()
         }
     }
-    get_total_inventory_by_room('item','stats_total_item_inventory_by_room_holder')
-    get_total_inventory_by_room('price','stats_total_price_inventory_by_room_holder')
+    getTotalInventoryByRoom('item','stats_total_item_inventory_by_room_holder')
+    getTotalInventoryByRoom('price','stats_total_price_inventory_by_room_holder')
 </script>
 @endsection

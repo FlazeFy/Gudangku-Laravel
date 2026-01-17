@@ -19,7 +19,7 @@
     </div>
 @endif
 <script>
-    const get_my_report_all = (page,name,category,sort) => {
+    const getAllReport = (page,name,category,sort) => {
         Swal.showLoading()
         const item_holder = 'report_holder'
         let search_key_url = name ? `&search_key=${name}`:''
@@ -86,7 +86,7 @@
                                                     <div class="modal-body">
                                                         <p><span class="text-danger">Permanently Delete</span> this report "${el.report_title}" from user @${el.username}?</p>
                                                         <a class="btn btn-danger mt-4" onclick="deleteModuleByID('${el.id}', 'report', 'destroy/report', '${token}', 
-                                                        ()=>get_my_report_all(${page},'${search_key}','${filter_category}','${sorting}'))">Yes, Delete</a>
+                                                        ()=>getAllReport(${page},'${search_key}','${filter_category}','${sorting}'))">Yes, Delete</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -98,7 +98,7 @@
                     }
                 });
 
-                generatePagination(item_holder, get_my_report_all, total_page, current_page)
+                generatePagination(item_holder, getAllReport, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -111,5 +111,5 @@
             }
         });
     }
-    get_my_report_all(page,search_key,filter_category,sorting)
+    getAllReport(page,search_key,filter_category,sorting)
 </script>

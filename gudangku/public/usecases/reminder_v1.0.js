@@ -18,7 +18,7 @@ const updateReminderByID = (id,inventory_id,data) => {
             Swal.close()
             Swal.fire("Success!", response.message, "success").then((result) => {
                 if (result.isConfirmed) {
-                    get_detail_inventory(inventory_id)
+                    getDetailInventoryByID(inventory_id)
                 }
             });
         },

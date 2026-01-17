@@ -112,25 +112,25 @@ const generateLineColumnChart = (title, holder, data) => {
         let keys = Object.keys(data[0])
 
         if(keys.length == 3 || keys.length == 2){
-            const total_1 = data.map(c => Number.isInteger(data[0][keys[1]]) ? c[keys[1]] : Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : c[keys[0]])
-            const total_2 = keys.length == 3 ? data.map(c => Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : Number.isInteger(data[0][keys[0]]) ? c[keys[0]] : c[keys[1]]) : null
-            const title_1 = ucEachWord((Number.isInteger(data[0][keys[1]]) ? keys[1] : Number.isInteger(data[0][keys[2]]) ? keys[2] : keys[0]).replaceAll('_',' '))
-            const title_2 = keys.length == 3 ? ucEachWord((Number.isInteger(data[0][keys[2]]) ? keys[2] : Number.isInteger(data[0][keys[0]]) ? keys[0] : keys[1]).replaceAll('_',' ')) : null
-            const sum_total_1 = total_1.reduce((acc, val) => acc + val, 0)
-            const sum_total_2 = keys.length == 3 ? total_2.reduce((acc, val) => acc + val, 0) : null
+            const total1 = data.map(c => Number.isInteger(data[0][keys[1]]) ? c[keys[1]] : Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : c[keys[0]])
+            const total2 = keys.length == 3 ? data.map(c => Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : Number.isInteger(data[0][keys[0]]) ? c[keys[0]] : c[keys[1]]) : null
+            const title1 = ucEachWord((Number.isInteger(data[0][keys[1]]) ? keys[1] : Number.isInteger(data[0][keys[2]]) ? keys[2] : keys[0]).replaceAll('_',' '))
+            const title2 = keys.length == 3 ? ucEachWord((Number.isInteger(data[0][keys[2]]) ? keys[2] : Number.isInteger(data[0][keys[0]]) ? keys[0] : keys[1]).replaceAll('_',' ')) : null
+            const sumTotal1 = total1.reduce((acc, val) => acc + val, 0)
+            const sumTotal2 = keys.length == 3 ? total2.reduce((acc, val) => acc + val, 0) : null
             const context = data.map(c => c[typeof data[0][keys[0]] === 'string' ? keys[0] : typeof data[0][keys[1]] === 'string' ? keys[1] : keys[2]])
 
             var options = {
                 series: [
                     {
-                        name: sum_total_1 > sum_total_2 && total_2 ? title_2 : title_1,
+                        name: sumTotal1 > sumTotal2 && total2 ? title2 : title1,
                         type: 'column',
-                        data: sum_total_1 > sum_total_2 && total_2 ? total_2 : total_1
+                        data: sumTotal1 > sumTotal2 && total2 ? total2 : total1
                     }, 
-                    ...(total_2 !== null ? [{
-                        name: sum_total_1 < sum_total_2 ? title_2 : title_1,
+                    ...(total2 !== null ? [{
+                        name: sumTotal1 < sumTotal2 ? title2 : title1,
                         type: 'line',
-                        data: sum_total_1 < sum_total_2 ? total_2 : total_1
+                        data: sumTotal1 < sumTotal2 ? total2 : total1
                     }] : [])
                 ],
                 chart: {
@@ -325,10 +325,10 @@ const convertToCSV = (data) => {
 const downloadCSV = (csvData, filename) => {
     const blob = new Blob([csvData], { type: 'text/csv' })
     const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.setAttribute('href', url)
-    a.setAttribute('download', filename)
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+    const anchor = document.createElement('a')
+    anchor.setAttribute('href', url)
+    anchor.setAttribute('download', filename)
+    document.body.appendChild(anchor)
+    anchor.click()
+    document.body.removeChild(anchor)
 }

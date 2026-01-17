@@ -10,7 +10,7 @@
 <div id="history_holder"></div>
 <script>
     let page = 1
-    const get_history = (page) => {
+    const getAllHistory = (page) => {
         Swal.showLoading()
         const item_holder = 'history_holder'
         $.ajax({
@@ -48,7 +48,7 @@
                                                 <div class="modal-body">
                                                     <p>Delete this history about ${el.history_type} from item called ${el.history_context}?</p>
                                                     <button class="btn btn-danger mt-4" onclick="deleteModuleByID('${el.id}', 'history', 'destroy', '${token}', 
-                                                    ()=>get_history(${page}))">Yes, Delete</button>
+                                                    ()=>getAllHistory(${page}))">Yes, Delete</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -59,7 +59,7 @@
                     `);
                 });
 
-                generatePagination(item_holder, get_history, total_page, current_page)
+                generatePagination(item_holder, getAllHistory, total_page, current_page)
                 $('#export-section').html(`
                     <form class="d-inline" action="/history/save_as_csv" method="POST">
                         @csrf
@@ -78,5 +78,5 @@
             }
         });
     }
-    get_history(page)
+    getAllHistory(page)
 </script>

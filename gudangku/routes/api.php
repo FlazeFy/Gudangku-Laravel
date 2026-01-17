@@ -183,5 +183,5 @@ Route::prefix('/v1/user')->middleware(['auth:sanctum'])->group(function () {
     Route::put('/update_profile', [CommandsUserController::class, 'putUpdateProfile']);
     Route::put('/validate_telegram_id', [CommandsUserController::class, 'putValidateTelegramID']);
     Route::put('/update_timezone_fcm', [CommandsUserController::class, 'updateTimezoneFCM']);
-    Route::delete('/{id}', [CommandsUserController::class, 'hardDeleteUserById']);
+    Route::delete('/destroy/{id}', [CommandsUserController::class, 'hardDeleteUserById']);
 });

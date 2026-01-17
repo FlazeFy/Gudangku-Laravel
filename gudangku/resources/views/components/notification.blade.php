@@ -13,7 +13,7 @@
 
         $(document).on('click','#open-notification-btn', function(){
             $(document).ready(function() {
-                const get_reminder_history = (page) => {
+                const getReminderHistory = (page) => {
                     const item_holder = 'reminder-holder'
 
                     $.ajax({
@@ -51,7 +51,7 @@
                         }
                     });
                 }
-                get_reminder_history(page_reminder) 
+                getReminderHistory(page_reminder) 
             });
         })
     </script>

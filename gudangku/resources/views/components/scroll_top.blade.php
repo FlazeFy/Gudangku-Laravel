@@ -1,6 +1,6 @@
 <div id="nav_scroll-holder"></div>
 <script>
-    const handle_scroll_top_btn = () => {
+    const handleScrollTopButton = () => {
         if (window.scrollY > window.innerHeight) {
             if ($('#scroll-to-top-btn').length === 0) {
                 $('#nav_scroll-holder').prepend(`
@@ -15,8 +15,8 @@
             $('#scroll-to-top-btn').remove();
         }
     };
-    handle_scroll_top_btn()
+    handleScrollTopButton()
     $(window).on('scroll resize', () => {
-        handle_scroll_top_btn()
+        handleScrollTopButton()
     });
 </script>

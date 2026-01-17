@@ -50,7 +50,7 @@
         })
     })
 
-    const get_reminder_layout = (reminder, inventory_id) => {
+    const getReminderLayout = (reminder, inventory_id) => {
         if(reminder){
             $('#reminder_holder').empty().addClass('pt-2')
             reminder.forEach(dt => {

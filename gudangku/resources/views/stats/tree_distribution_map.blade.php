@@ -3,13 +3,11 @@
         min-height: 70vh;
     }
 </style>
-<!-- ApexTree -->
-<script src="https://cdn.jsdelivr.net/npm/apextree"></script>
 
 <div id="inventory-tree_map"></div>
 
 <script>
-    const get_inventory_tree_map = () => {
+    const getInventoryTreeMap = () => {
         Swal.showLoading()
         const title = 'My Inventory'
         const ctx = 'inventory-tree_map_temp'
@@ -31,7 +29,7 @@
                     const data = response.data
                     localStorage.setItem(ctx,JSON.stringify(data))
                     localStorage.setItem(`last-hit-${ctx}`,Date.now())
-                    generate_tree_map(title,ctx_holder,data)
+                    generateTreeMap(title,ctx_holder,data)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
@@ -45,7 +43,7 @@
             });
         }
 
-        const generate_tree_map = (title,ctx_holder,raw_data) => {
+        const generateTreeMap = (title,ctx_holder,raw_data) => {
             const data = {
                 id: title,
                 name: title,
@@ -113,7 +111,7 @@
             if(((now - lastHit) / 1000) < statsFetchRestTime){
                 const data = JSON.parse(localStorage.getItem(ctx))
                 if(data){
-                    generate_tree_map(title,ctx_holder,data)
+                    generateTreeMap(title,ctx_holder,data)
                     Swal.close()
                 } else {
                     Swal.close()
@@ -126,7 +124,7 @@
             fetchData()
         }
     }
-    get_inventory_tree_map()
+    getInventoryTreeMap()
 
     
 </script>

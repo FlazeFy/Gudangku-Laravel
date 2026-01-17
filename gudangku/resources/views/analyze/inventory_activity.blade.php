@@ -4,7 +4,7 @@
 <br>
 
 <script type="text/javascript">
-    const generate_heatmap_inventory_activity = (series) => {
+    const generateHeatmapInventoryActivity = (series) => {
         var options = {
             series: series,
             plotOptions: {

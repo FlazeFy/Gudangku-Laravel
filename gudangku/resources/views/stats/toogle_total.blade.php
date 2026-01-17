@@ -69,30 +69,5 @@
         });
         $('#toogle_year_select').submit()
     })
-    
-    const get_available_year = () => {
-        Swal.showLoading()
-        $.ajax({
-            url: `/api/v1/user/my_year`,
-            type: 'GET',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
-            },
-            success: function(response) {
-                Swal.close()
-                const data = response.data
-                const selected_year = <?= session()->get('toogle_select_year') ?>;
-
-                data.forEach(el => {
-                    $('#toogle_year').append(`<option value="${el.year}" ${selected_year == el.year ? 'selected' :''}>${el.year}</option>`) 
-                });
-            },
-            error: function(response, jqXHR, textStatus, errorThrown) {
-                Swal.close()
-                Swal.fire("Oops!","Failed to get available year", "error")
-            }
-        });
-    }
-    get_available_year()
+    getAvailableYear(token,'toogle_year',<?= session()->get('toogle_select_year') ?>)
 </script>

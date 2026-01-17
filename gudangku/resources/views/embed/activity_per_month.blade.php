@@ -5,7 +5,7 @@
     <div id="stats_total_activity_per_month"></div>
 </div>
 <script>
-    const get_total_activity_per_month = (year) => {
+    const getTotalActivityPerMonth = (year) => {
         Swal.showLoading()
         const title = `Total Activity Per Month (${year})`
         const ctx = `total_activity_per_month_temp-${year}`
@@ -62,6 +62,6 @@
         }
     }
     const year = "<?= $year ?>"
-    get_total_activity_per_month(year)
+    getTotalActivityPerMonth(year)
 </script>
 @endsection
