@@ -265,7 +265,7 @@ const generateMapRoom = (target,data,is_interact,room) => {
     }
 
     for (let row = 1; row <= rows; row++) {
-        const rowContainer = $('<div class="row"></div>')
+        const rowContainer = $('<div class="floor-row"></div>')
         for (let col = 0; col < cols; col++) {
             const label = `${letters[col]}${row}`
             let used = false

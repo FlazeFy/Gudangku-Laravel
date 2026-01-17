@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.0.css') }}"/>
+<link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.css') }}"/>
 
 <div class="d-flex flex-column gap-1 w-100">
     <div class="img-holder">

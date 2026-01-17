@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.0.css') }}"/>
+<link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.css') }}"/>
 
 <div id='chat-section' class="ms-4 text-start text-white">
     <div class="bubble bot">Do you have a GudangKu generated document and feel lazy to find what inventory contain in the report?

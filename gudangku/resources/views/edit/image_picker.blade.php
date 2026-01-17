@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.0.css') }}"/>
+<link rel="stylesheet" href="{{ asset('/usecases/manage_image_v1.0.css') }}"/>
 
 <div class="img-holder" id='img_holder'></div>
 <canvas id="imageCanvas" style="display: none;"></canvas>

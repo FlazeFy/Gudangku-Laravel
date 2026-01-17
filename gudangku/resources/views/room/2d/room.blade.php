@@ -72,9 +72,7 @@
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
                     $(`#table-inventory-${target} tbody`).append(`
-                        <tr>
-                            <td colspan='4' class='text-secondary fst-italic text-center'>- No inventory to show -</td>
-                        </tr>
+                        <tr><td colspan='4' class='text-secondary fst-italic text-center'>- No inventory to show -</td></tr>
                     `)
                 }
             });
@@ -112,7 +110,7 @@
     const expandFloor = () => {
         let max_letter
         let max_number
-        $('#room-container > .row').each(function(idx, el) {
+        $('#room-container > .floor-row').each(function(idx, el) {
             const coor = $(this).find('.coordinate').last().text()
             const match = coor.match(/^([A-Z]+)(\d+)$/)
 
@@ -134,7 +132,7 @@
         })
 
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice(0, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(max_letter) + 1)
-        const rowContainer = $('<div class="row"></div>')
+        const rowContainer = $('<div class="floor-row"></div>')
 
         for (let idx = 0; idx < letters.length; idx++) {
             const label = `${letters[idx]}${max_number+1}`
@@ -147,6 +145,12 @@
             `)
         }
         $('#room-container .floor-config').first().before(rowContainer)
+
+        requestAnimationFrame(() => {
+            const $container = $('#room-container')
+            $container.scrollTop($container[0].scrollHeight)
+            $container.scrollLeft(0)
+        })
     }
 
     $(document).ready(function() {
