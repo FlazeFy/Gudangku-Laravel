@@ -13,7 +13,7 @@
     
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">User</h1>
+            <h1>User</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')
@@ -31,18 +31,18 @@
         <div class="row">
             <div class="col-lg-4 col-md-5 col-sm-12">
                 <div class="container bordered" id="last_login-section">
-                    <h2 class="fw-bold my-3">Last Login</h2>
+                    <h2 class="my-3">Last Login</h2>
                     @include('user.last_login')
                 </div>      
             </div>
             <div class="col-lg-8 col-md-7 col-sm-12">
                 <div class="container bordered" id="last_login-section">
-                    <h2 class="fw-bold my-3">Leaderboard</h2>
+                    <h2 class="my-3">Leaderboard</h2>
                     @include('user.leaderboard')
                 </div>      
             </div>
         </div>
-        <h2 class="fw-bold my-3">All User</h2>
+        <h2 class="my-3">All User</h2>
         @include('user.table')
     </div>
 @endsection

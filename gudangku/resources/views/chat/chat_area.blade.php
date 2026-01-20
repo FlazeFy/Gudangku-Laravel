@@ -104,7 +104,7 @@
                     inventory_element += `
                         <button class='container bordered text-start bg-dark' onclick='window.location.href="/inventory/edit/${el.id}"'>
                             <div class='d-flex justify-content-between'>
-                                <h2 class='fw-bold' style='font-size:var(--textXLG)'>${el.inventory_name}</h2>
+                                <h4>${el.inventory_name}</h4>
                                 <div class='d-flex justify-content-between'>
                                     <span class='bg-success rounded-pill px-3 py-1 me-2'>${el.inventory_category}</span>
                                     <span class='bg-primary rounded-pill px-3 py-1'>${ucFirst(el.status)}</span>

@@ -11,7 +11,7 @@
 
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">2D Room</h1>
+            <h1>2D Room</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')

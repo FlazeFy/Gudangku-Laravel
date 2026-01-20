@@ -15,7 +15,7 @@
 @section('content')
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">3D Room</h1>
+            <h1>3D Room</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')

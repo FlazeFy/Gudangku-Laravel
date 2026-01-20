@@ -60,6 +60,7 @@
                     </form>
                 `)
             }
+            
             if(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist'){
                 $('#report_item_tb thead').html(`
                     <tr>

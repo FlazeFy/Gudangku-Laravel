@@ -10,7 +10,7 @@
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h1 class="main-page-title">Custom Print</h1>
+                <h1>Custom Print</h1>
                 <h3 class="mb-0">{{ucfirst($type)}}</h3>
             </div>
             <div>

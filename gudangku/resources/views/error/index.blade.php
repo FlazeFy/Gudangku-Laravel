@@ -10,7 +10,7 @@
 @section('content')
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">Error History</h1>
+            <h1>Error History</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')

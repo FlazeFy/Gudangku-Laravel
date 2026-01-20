@@ -30,7 +30,7 @@ li::marker, .fc-event-title, .fc-popover.fc-more-popover .fc-popover-title, .fc-
 .dashboard-title, .dashboard-second, h1, .title {
     font-weight: 700 !important;
 }
-label, .form-label, .title-chart, h2, .main-page-title, .input-msg, .btn-feature, .apexcharts-xaxistooltip .apexcharts-xaxistooltip-text, .apexcharts-tooltip-title,
+label, .form-label, .title-chart, h2, h1, .input-msg, .btn-feature, .apexcharts-xaxistooltip .apexcharts-xaxistooltip-text, .apexcharts-tooltip-title,
 .fc-popover-close.fc-icon.fc-icon-x, .dashboard-subtitle {
     font-weight: 600 !important;
 }
@@ -90,12 +90,11 @@ label, .form-label {
 }
 
 /* Section Title */
-.main-page-title {
-    margin-bottom: 0;
+h1 {
     font-size: calc(var(--textXJumbo)*1.75);
 }
 @media screen and (max-width: 1023px) {
-    .main-page-title {
+    h1 {
         font-size: var(--textXJumbo);
     }
 }

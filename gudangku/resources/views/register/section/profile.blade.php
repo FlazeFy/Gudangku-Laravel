@@ -59,13 +59,13 @@
         }
     }, false)
 
-    function formatTime(seconds){
+    const formatTime = (seconds) => {
         var minutes = Math.floor(seconds / 60)
         var remainingSeconds = seconds % 60
         return minutes + ':' + remainingSeconds.toString().padStart(2, '0')
     }
 
-    function controlPin(type) {
+    const controlPin = (type) => {
         var pins = pin_holder.querySelectorAll('input')
         var result = ""
 
@@ -88,7 +88,7 @@
         return result
     }
 
-    function validatePin(){
+    const validatePin = () => {
         var pins = pin_holder.querySelectorAll('input')
         var is_empty = false
 
@@ -105,7 +105,7 @@
         }
     }
 
-    function validateToken(token){
+    const validateToken = (token) => {
         $.ajax({
             url: `/api/v1/register/account`,
             dataType: 'json',
@@ -131,7 +131,7 @@
                 <a class='btn btn-success ms-1 mb-1' href='/'><i class="fa-solid fa-arrow-right"></i> Start Browsing</a>
             `).attr('style', 'height: auto !important; min-height: auto !important;')
 
-            $('#service_section').css("display","block")
+            $('#service_section').toggleClass('d-none d-block')
             $('html, body').animate({
                 scrollTop: $('#service_section').offset().top
             }, [])
@@ -172,10 +172,10 @@
         })
     }
     
-    function startTimer(duration) {
+    const startTimer = (duration) => {
         var remain = duration
 
-        function updateTimer() {
+        const updateTimer = () => {
             timer.innerHTML = formatTime(remain)
 
             if (remain > 0) {

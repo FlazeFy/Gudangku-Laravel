@@ -12,7 +12,7 @@
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h1 class="main-page-title">Analyze {{ucfirst($type)}}</h1>
+                <h1>Analyze {{ucfirst($type)}}</h1>
                 <h3 class="mb-0"><b class='inventory_name'></b></h3>
             </div>
             <div style="min-width:120px">

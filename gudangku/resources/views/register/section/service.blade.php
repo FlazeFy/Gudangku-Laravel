@@ -7,13 +7,11 @@
     </div>
 </div>
 
-<script>
-    let socmedStyleProps = 'bottom:var(--spaceXLG); right:var(--spaceXLG); padding:var(--spaceXXSM) var(--spaceMD) !important; font-size:var(--textXMD); font-weight:600;'
-    
+<script>    
     $( document ).ready(function() {
         $(document).on('input','#telegram_user_id', function(){
             if($(this).val().length == 10){
-                $(this).after(`<a class='btn btn-success position-absolute' style='${socmedStyleProps}' id='validate-telegram-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
+                $(this).after(`<a class='btn btn-success' id='validate-telegram-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
             } else {
                 $('#validate-telegram-id-btn').remove()
             }
@@ -21,7 +19,7 @@
 
         $(document).on('input','#line_user_id', function(){
             if($(this).val().length == 144){
-                $(this).after(`<a class='btn btn-success position-absolute' style='${socmedStyleProps}' id='validate-line-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
+                $(this).after(`<a class='btn btn-success' id='validate-line-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
             } else {
                 $('#validate-line-id-btn').remove()
             }

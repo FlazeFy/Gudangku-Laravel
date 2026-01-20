@@ -13,7 +13,7 @@
 
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">Edit Inventory</h1>
+            <h1>Edit Inventory</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')

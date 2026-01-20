@@ -9,7 +9,7 @@
 @section('content')
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">Features</h1>
+            <h1>Features</h1>
             @if(session()->get("token_key"))
                 <div>
                     @include('components.profile')

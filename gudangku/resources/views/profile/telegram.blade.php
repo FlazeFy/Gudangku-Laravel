@@ -8,7 +8,7 @@
 <div id="telegram_validation_status_box"></div>
 
 <script>
-    function validate_telegram_change(){
+    const validate_telegram_change = () => {
         const tele_id_new = $("#telegram_user_id").val()
 
         $( document ).ready(function() {

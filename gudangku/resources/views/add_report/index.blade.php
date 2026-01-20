@@ -3,7 +3,7 @@
 @section('content')
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">Add Report</h1>
+            <h1>Add Report</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')

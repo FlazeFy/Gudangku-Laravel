@@ -17,7 +17,7 @@
     
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">Stats</h1>
+            <h1>Stats</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')

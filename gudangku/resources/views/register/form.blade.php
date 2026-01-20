@@ -79,9 +79,7 @@
     .section-form {
         border-top: 2px solid var(--shadowColor);
         padding-top: calc(var(--spaceJumbo)*1.25);
-        min-height: 90vh;
     }
-
     .pin-code{ 
         padding: 0; 
         margin: 0 auto; 
@@ -120,7 +118,7 @@
                 <div id='start-browsing-holder-btn'></div>
             </div>
             <hr>
-            <h1 class="text-white fw-bold my-4">Register</h1>
+            <h1>Register</h1>
             <div class="d-none d-md-block">
                 <div class="step step-active" id="indicator-tnc">
                     <div>

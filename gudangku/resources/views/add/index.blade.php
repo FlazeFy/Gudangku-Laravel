@@ -7,7 +7,7 @@
 
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">Add Inventory</h1>
+            <h1>Add Inventory</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')
@@ -23,6 +23,7 @@
     <script>
         is_process = false
         is_submit = false
+        
         window.addEventListener('beforeunload', function(event) {
             is_process = checkFillingStatus([
                 'inventory_name','inventory_desc','inventory_color','inventory_merk','inventory_price','inventory_vol','inventory_capacity_vol','inventory_rack','inventory_storage'

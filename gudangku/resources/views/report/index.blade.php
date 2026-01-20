@@ -22,7 +22,7 @@
 
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
-            <h1 class="main-page-title">Report</h1>
+            <h1>Report</h1>
             <div>
                 @include('components.profile')
                 @include('components.notification')
