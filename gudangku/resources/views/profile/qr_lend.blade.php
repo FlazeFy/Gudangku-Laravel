@@ -128,7 +128,7 @@
                         <div class="report-box mt-1">
                             <div class="d-flex justify-content-between mb-2">
                                 <div>
-                                    <h2 style="font-weight:500; font-size:var(--textJumbo);">${ucFirst(el.lend_status)}</h2>
+                                    <h2>${ucFirst(el.lend_status)}</h2>
                                 </div>
                                 <div>
                                     <span class="bg-success text-white rounded-pill px-3 py-2 report-category">For ${el.qr_period} hours</span>

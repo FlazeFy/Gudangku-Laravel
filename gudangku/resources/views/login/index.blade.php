@@ -7,6 +7,13 @@
 @php($isMobile = Generator::isMobileDevice()) 
 
 @section('content')
+    <style>
+        @media (max-width: 767px) {
+            .translate-middle-y {
+                transform: none !important;
+            }
+        }
+    </style>
     <script>
         is_process = false
         is_submit = false
@@ -18,13 +25,6 @@
             }
         })
     </script>
-    <style>
-        @media (max-width: 767px) {
-            .translate-middle-y {
-                transform: none !important;
-            }
-        }
-    </style>
 
     <div class="content" style="width:100vw; max-width:1480px;">
         <div class="row pt-5 pt-sm-0">

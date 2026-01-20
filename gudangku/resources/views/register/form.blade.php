@@ -181,25 +181,25 @@
             </div>
         </div>
 
-        <div id="profile_section" style="display:none;" class="section-form">
+        <div id="profile_section" class="section-form d-none">
             <h2>Profile</h2>
             <div class="py-3 mb-3">
                 @include('register.section.profile')
             </div>
         </div>
 
-        <div id="service_section" style="display:none;" class="section-form">
+        <div id="service_section" class="section-form d-none">
             <h2>Other Service</h2>
             <div class="py-3 mb-3">
                 @include('register.section.service')
             </div>
         </div>
 
-        <div id="add_inventory_section" style="display:none;" class="section-form">
+        <div id="add_inventory_section" class="section-form d-none">
             <h2>Add Inventory (Optional)</h2>
         </div>
 
-        <div id="welcome_section" style="display:none;" class="section-form">
+        <div id="welcome_section" class="section-form d-none">
             <h2>Welcome</h2>
         </div>
     </div>

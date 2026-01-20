@@ -1,6 +1,6 @@
 const templateAlertContainer = (target, type, msg, btn_title, icon, href) => {
     $(`#${target}`).html(`
-        <div class="container-fluid p-3" style="${type == 'no-data'? 'background-color:rgba(59, 131, 246, 0.2);':''}">
+        <div class="container-fluid p-3" style="${type == 'no-data'? 'background-color:rgba(59, 131, 246, 0.2)':''}">
             <h6>${icon} ${msg}</h6>
             ${btn_title != null ? `<a class="btn btn-primary mt-3" href=${href}><i class="${type == 'no-data'? 'fa-solid fa-plus':''}"></i> ${ucEachWord(btn_title)}</a>`:''}
         </div>
@@ -200,14 +200,14 @@ const generateModalDetail = (storage, storage_desc, room, coor, id) => {
                                     </div>
                                 </div>
                                 <div class='col-lg-8 col-md-7 col-sm-12'>
-                                    <div style='overflow-x:auto;'>
-                                        <table id='table-inventory-${coor}' class='table' style='min-width:600px;'>
+                                    <div style='overflow-x:auto'>
+                                        <table id='table-inventory-${coor}' class='table' style='min-width:600px'>
                                             <thead>
                                                 <tr class='text-center'>
-                                                    <th style="width: 120px;">Rack</th>
-                                                    <th style="width: 200px;">Name, Unit & Volume</th>
-                                                    <th style="width: 140px;">Category</th>
-                                                    <th style="width: 140px;">Price</th>
+                                                    <th style="width: 120px">Rack</th>
+                                                    <th style="width: 200px">Name, Unit & Volume</th>
+                                                    <th style="width: 140px">Category</th>
+                                                    <th style="width: 140px">Price</th>
                                                     <th>Edit</th>
                                                 </tr>
                                             </thead>
@@ -298,8 +298,8 @@ const generateMapRoom = (target,data,is_interact,room) => {
                             storage_desc = dt.storage_desc
                             id = dt.id
                         }
-                    });
-                });
+                    })
+                })
             }
 
             const modal = is_interact ? generateModalDetail(inventory_storage, storage_desc, room, label, id) : ''
@@ -356,7 +356,7 @@ const browseItem = (val) => {
     } else if(val == 'copy_report'){
         $('#item_form').empty().append(`
             <label>Report Title</label><br>
-            <div class="autocomplete" style="width:300px;">
+            <div class="autocomplete" style="width:300px">
                 <input id="report_title_template" class="form-control w-100" type="text">
             </div>
             <input id="temp_items_report" hidden>
@@ -415,7 +415,7 @@ const addItem = (val, inventory_id) => {
                         </td>
                         <td><input class="item_qty_selected form-control w-100" name="item_qty[]" type="number" min="1" value="${$('#item_qty').val()}"></td>
                         ${isPriceCategory ? `<td class="td-price">${priceInput}</td>`:''}
-                        <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i></a></td>
+                        <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD)"><i class="fa-solid fa-trash"></i></a></td>
                     </tr>
                 `)
             }
@@ -432,7 +432,7 @@ const addItem = (val, inventory_id) => {
                         </td>
                         <td><input class="item_qty_selected form-control w-100" name="item_qty[]" type="number" min="1" value="1"></td>
                         ${isPriceCategory ? `<td class="td-price">${priceInput}</td>`:''}
-                        <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i></a></td>
+                        <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD)"><i class="fa-solid fa-trash"></i></a></td>
                     </tr>
                 `)
             })
@@ -447,7 +447,7 @@ const addItem = (val, inventory_id) => {
                     </td>
                     <td><input class="item_qty_selected form-control w-100" name="item_qty[]" type="number" min="1" value="${$('#item_qty').val()}"></td>
                     ${isPriceCategory ? `<td class="td-price">${priceInput}</td>`:''}
-                    <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD);"><i class="fa-solid fa-trash"></i></a></td>
+                    <td><a class="btn btn-danger delete-item" style="font-size:var(--textMD)"><i class="fa-solid fa-trash"></i></a></td>
                 </tr>
             `)
         }
@@ -611,7 +611,7 @@ const generateReminderBox = (dt, inventory_id) => {
         <div class="reminder-box" data-reminder-type="${dt.reminder_type}" data-reminder-context="${dt.reminder_context}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReminder${dt.id}" aria-expanded="false" aria-controls="collapseExample">
             <div class='d-flex justify-content-between flex-wrap gap-2 text-white'>
                 <p class="mb-0"><b>Description :</b> ${dt.reminder_desc}</p>
-                <span class='rounded-pill bg-success px-2 py-1' style='font-size:var(--textMD);'><i class="fa-solid fa-bell"></i> ${dt.reminder_type} at ${dt.reminder_context}</span>
+                <span class='rounded-pill bg-success px-2 py-1' style='font-size:var(--textMD)'><i class="fa-solid fa-bell"></i> ${dt.reminder_type} at ${dt.reminder_context}</span>
             </div>
         </div>
         <div class="accordion-collapse collapse" data-bs-parent="#reminder_holder" id="collapseReminder${dt.id}">

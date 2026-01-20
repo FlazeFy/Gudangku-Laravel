@@ -11,6 +11,7 @@
 </style>
 
 <div id="room-container"></div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('room-container')

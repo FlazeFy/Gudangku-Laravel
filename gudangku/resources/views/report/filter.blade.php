@@ -1,6 +1,6 @@
 <div class='control-panel <?php if(!$isMobile){ echo 'position-sticky'; } ?>' style='<?php if(!$isMobile){ echo 'top:var(--spaceMD)'; } ?>'>
     <div class="position-relative pt-2">
-        <a class="fw-bold bg-transparent" style='font-size:var(--textJumbo);' data-bs-toggle="collapse" href="#collapseControl">Control Panel</a>
+        <a class="fw-bold bg-transparent" style='font-size:var(--textJumbo)' data-bs-toggle="collapse" href="#collapseControl">Control Panel</a>
         <div class="mt-1 mb-2 row collapse show" id="collapseControl">
             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <label>Search by Title</label>

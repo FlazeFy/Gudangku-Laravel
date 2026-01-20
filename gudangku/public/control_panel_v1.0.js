@@ -1,4 +1,5 @@
 let closed_control = false
+
 $(window).on('scroll', function() {
     if ($(this).scrollTop() > 250) {
         if(closed_control == false){
@@ -16,4 +17,4 @@ $(window).on('scroll', function() {
         }
         closed_control = false
     }
-});
+})

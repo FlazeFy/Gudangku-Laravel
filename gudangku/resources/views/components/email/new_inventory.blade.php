@@ -51,7 +51,7 @@
                 <p style="color: grey; font-style: italic;">This inventory doesnt provide description</p>
             @endif
             <hr>
-            <div style="text-align: left;">
+            <div style="text-align: left">
                 <h6>Properties</h6>
                 <h6>Located at : {{$body['inventory_room']}} 
                     @if($body['inventory_storage'] != null)

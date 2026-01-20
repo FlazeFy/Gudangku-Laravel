@@ -249,7 +249,7 @@ const zoomableModal = () => {
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <div class="modal-body">
-                                <img class="img img-fluid d-block mx-auto" style="border-radius: var(--roundedMD);" src="${url}" title="${url}">
+                                <img class="img img-fluid d-block mx-auto" style="border-radius: var(--roundedMD)" src="${url}" title="${url}">
                             </div>
                         </div>
                     </div>

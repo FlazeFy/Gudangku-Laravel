@@ -11,7 +11,7 @@
                 })
             }
         } else {
-            $('#scroll-to-top-btn').remove();
+            $('#scroll-to-top-btn').remove()
         }
     }
     handleScrollTopButton()

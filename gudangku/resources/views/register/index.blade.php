@@ -11,7 +11,7 @@
             }
         }
     </style>
-    <div class="p-3 d-block mx-auto pt-custom" style="max-width:1080px;">
+    <div class="p-3 d-block mx-auto pt-custom" style="max-width:1080px">
         <br><br>
         @include('register.form')
     </div>

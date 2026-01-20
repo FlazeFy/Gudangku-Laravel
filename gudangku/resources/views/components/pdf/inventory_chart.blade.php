@@ -12,13 +12,13 @@
     </style>
 </head>
 <body>
-    <div style='text-align:center;'>
+    <div style='text-align:center'>
         <h1 style='color:#3b82f6; margin:0;'>GudangKu</h1>
         <h4 style='color:#212121; margin:0; font-style:italic;'>Smart Inventory, Easy Life</h4><br>
     </div>
     <hr>
 
-    <h3 style='margin:0 0 6px 0;'>Username : {{$username}}</h3>
+    <h3 style='margin:0 0 6px 0'>Username : {{$username}}</h3>
     <p style='font-size:13px; text-align: justify;'>
         At {{$date}}, the system just run weekly audit for your inventory. Here you can see the stats in this document :
     </p>  
@@ -31,8 +31,8 @@
 
     <br><hr>
     <div>
-        <p class='date-text' style='margin: 0;'>Parts of FlazenApps</p>
-        <p class='date-text' style='margin: 0; float:right; margin-top:-12px;'>Generated at {{$datetime}} by <span style='color:#3b82f6;'>https://gudangku.leonardhors.com</span></p>
+        <p class='date-text' style='margin: 0'>Parts of FlazenApps</p>
+        <p class='date-text' style='margin: 0; float:right; margin-top:-12px;'>Generated at {{$datetime}} by <span style='color:#3b82f6'>https://gudangku.leonardhors.com</span></p>
     </div>
 </body>
 </html>

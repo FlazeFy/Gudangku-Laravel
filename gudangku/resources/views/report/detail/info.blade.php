@@ -8,11 +8,9 @@
 <div class="container-form" id="edit_report_detail-section">
     <div id="report_holder"></div>
 </div>
-
 <div class="container-form" id="edit_attached_image-section">
     @include('report.detail.report_image')
 </div>
-
 <div class="container-form" id="edit_attached_item-section">
     <h3>Attached Item</h3>
     <div id="report_item_holder" class='table-holder'>

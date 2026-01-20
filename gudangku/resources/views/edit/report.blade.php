@@ -3,6 +3,7 @@
     <span id="add_report-holder"></span>
 </div>
 <div id="report_holder"></div>
+
 <script>
     let page = 1
 
@@ -12,6 +13,7 @@
         const beforeMatch = items.slice(0, index)
         const match = items.slice(index, index + find.length)
         const afterMatch = items.slice(index + find.length)
+
         return `${beforeMatch}<div class='fst-italic bg-primary rounded px-2 py-0'>${match}</div>${afterMatch}`
     } 
    

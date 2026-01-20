@@ -89,7 +89,7 @@
     </head>
     <body class="antialiased">
         @include('others.detect_flazenapps')
-        <div style="min-height: 90vh;">
+        <div style="min-height: 90vh">
             @yield('content')
         </div>
         <?php if(!preg_match('(embed)', $cleanedUrl)): ?>

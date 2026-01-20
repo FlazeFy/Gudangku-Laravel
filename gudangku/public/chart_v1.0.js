@@ -1,3 +1,10 @@
+const chartNoDataMessage = (holder) => {
+    $(`#${holder}`).html(`
+        <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
+        <h6 class="text-center">No Data</h6>
+    `)
+}
+
 const generatePieChart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
@@ -28,7 +35,7 @@ const generatePieChart = (title, holder, data) => {
                         }
                     }
                 }]
-            };
+            }
 
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
@@ -36,10 +43,7 @@ const generatePieChart = (title, holder, data) => {
             $(`#${holder}`).html(`<h6 class="text-center">Data is Not Valid</h6>`)
         }
     } else {
-        $(`#${holder}`).html(`
-            <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
-            <h6 class="text-center">No Data</h6>
-        `)
+        chartNoDataMessage(holder)
     }
 }
 
@@ -89,19 +93,16 @@ const generateBarChart = (title, holder, data) => {
                         }
                     }
                 }]
-            };
+            }
 
-            $(`#${holder}`).wrap(`<div style='overflow-x:auto;' class="p-2"><div style='min-width:560px;'></div></div>`)
+            $(`#${holder}`).wrap(`<div style='overflow-x:auto' class="p-2"><div style='min-width:560px'></div></div>`)
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
         } else {
             $(`#${holder}`).html(`<h6 class="text-center">Data is Not Valid</h6>`)
         }
     } else {
-        $(`#${holder}`).html(`
-            <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
-            <h6 class="text-center">No Data</h6>
-        `)
+        chartNoDataMessage(holder)
     }
 }
 
@@ -153,23 +154,20 @@ const generateLineColumnChart = (title, holder, data) => {
                 yaxis: {
                     labels: {
                         formatter: function (value) {
-                            return value >= 10000 ? (value / 1000).toFixed(1) + 'K' : value;
+                            return value >= 10000 ? (value / 1000).toFixed(1) + 'K' : value
                         }
                     }
                 }
-            };
+            }
 
-            $(`#${holder}`).wrap(`<div style='overflow-x:auto;' class="p-2"><div style='min-width:560px;'></div></div>`)
+            $(`#${holder}`).wrap(`<div style='overflow-x:auto' class="p-2"><div style='min-width:560px'></div></div>`)
             let chart = new ApexCharts(document.querySelector(`#${holder}`), options)
             chart.render()
         } else {
             $(`#${holder}`).html(`<h6 class="text-center">Data is Not Valid</h6>`)
         }
     } else {
-        $(`#${holder}`).html(`
-            <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
-            <h6 class="text-center">No Data</h6>
-        `)
+        chartNoDataMessage(holder)
     }
 }
 
@@ -186,7 +184,7 @@ const generateGaugeChart = (title, holder, data, type_color = 'single_color') =>
             const percentages = totals.map(val => Math.round((val / sum) * 100))
 
             let selectedIndex = 0
-            let percentage = percentages[selectedIndex];
+            let percentage = percentages[selectedIndex]
             let fillColor = "var(--successBG)"
 
             if(type_color != 'single_color'){
@@ -252,10 +250,7 @@ const generateGaugeChart = (title, holder, data, type_color = 'single_color') =>
             $(`#${holder}`).html(`<h6 class="text-center">Data is Not Valid</h6>`)
         }
     } else {
-        $(`#${holder}`).html(`
-            <img src="{{asset('images/nodata.png')}}" class="img nodata-icon">
-            <h6 class="text-center">No Data</h6>
-        `)
+        chartNoDataMessage(holder)
     }
 }
 
@@ -263,20 +258,21 @@ const generateGaugeChart = (title, holder, data, type_color = 'single_color') =>
 const generateTableContextTotal = (holder, data, key_currency) => {
     if(data.length > 0){
         let keys = Object.keys(data[0])
-        let thead = `<thead style='background:var(--primaryColor);'><tr>`
+        let thead = `<thead style='background:var(--primaryColor)'><tr>`
         keys.forEach(dt => {
             thead += `<th>${ucEachWord(dt.replaceAll('_',' '))}</th>`
-        });
+        })
         thead += `</tr></thead>`
 
         let tbody = ''
         data.forEach(el => {
             tbody += '<tr>'
             keys.forEach(key => {
-                tbody += `<td>${key.includes('price') || (key.includes(key_currency) && key_currency) ? `Rp. ${el[key].toLocaleString()}` : el[key]}</td>`
-            });
+                const isPrice = key.includes('price') || (key.includes(key_currency) && key_currency)
+                tbody += `<td ${isPrice ? `style="min-width: 130px"`:''}>${isPrice ? `Rp. ${el[key].toLocaleString()}` : el[key]}</td>`
+            })
             tbody += '</tr>'
-        });
+        })
 
         $(`#${holder}`).append(`
             <table class='table table-bordered text-center mt-4'>
@@ -296,13 +292,13 @@ const exportButtonData = (holder, data) => {
             <button id='download-btn-data-${holder}' class='btn btn-primary w-100'>
                 <i class="fa-solid fa-download"></i> Download CSV
             </button>
-        `);
+        `)
 
         $(`#download-btn-data-${holder}`).on('click', function() {
             const csvData = convertToCSV(data)
             downloadCSV(csvData, `data_export_${holder}.csv`)
             Swal.fire("Downloaded!", `You have downloaded ${ucEachWord(holder.replaceAll('_',' '))} data`, "success")
-        });
+        })
     } 
 }
 
@@ -315,9 +311,9 @@ const convertToCSV = (data) => {
         const values = headers.map(header => {
             const escapeValue = String(row[header]).replace(/"/g, '""')
             return `"${escapeValue}"`
-        });
+        })
         csvRows.push(values.join(','))
-    });
+    })
 
     return csvRows.join('\n')
 }

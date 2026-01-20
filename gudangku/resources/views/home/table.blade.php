@@ -69,7 +69,7 @@
                     const idCollapse = el.reminder ? `collapseReminder-${el.id}` : null
 
                     if(el.reminder){
-                        reminders += `<tr class="collapse" id="${idCollapse}" style="border-style: hidden !important;"><td colspan="5">`
+                        reminders += `<tr class="collapse" id="${idCollapse}" style="border-style: hidden !important"><td colspan="5">`
                         el.reminder.forEach(rm => {
                             reminders += `
                                 <div class="box-reminder mb-3">
@@ -115,10 +115,10 @@
                                                         <input type="hidden" value="${rm.reminder_type}" name="reminder_type">
 
                                                         <div style='overflow-x:auto'>
-                                                            <table class="table" id="tb-inventory-name-${rm.id}" style="min-width: 530px;">
+                                                            <table class="table" id="tb-inventory-name-${rm.id}" style="min-width: 530px">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th scope="col" style="width:110px"><a class="btn btn-primary checked_all_holder_btn py-1" style="font-size:var(--textSM);">Check All</a></th>
+                                                                        <th scope="col" style="width:110px"><a class="btn btn-primary checked_all_holder_btn py-1" style="font-size:var(--textSM)">Check All</a></th>
                                                                         <th scope="col" style="min-width:240px">Inventory Name</th>
                                                                         <th scope="col" style="width:180px">Category</th>
                                                                     </tr>

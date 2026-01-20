@@ -1,3 +1,9 @@
+<style>
+    img {
+        max-height:360px;
+    }
+</style>
+
 <div class="text-center">
     <h2><b>GudangKu</b> Features</h2>
     <p class='text-secondary fst-italic'>- Smart Inventory, Easy Life -</p>
@@ -9,10 +15,10 @@
             placement, and more. <b>GudangKu</b> streamlines your inventory management, making it easier than ever to search for and find exactly what you need, when you need it.</p>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/inventory.png')}}" style="max-height:360px;">
+            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/inventory.png')}}">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/report.png')}}" style="max-height:360px;">
+            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/report.png')}}">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
             <h4>Instant Reporting</h4><hr>
@@ -27,10 +33,10 @@
             you'll know exactly where everything is, and you can easily analyze storage usage and item distribution across your home or business.</p>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/layout.png')}}" style="max-height:360px;">
+            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/layout.png')}}">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/reminder.png')}}" style="max-height:360px;">
+            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/reminder.png')}}">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
             <h4>Never Miss a Reminder Again!</h4><hr>
@@ -45,10 +51,10 @@
             <b>GudangKu</b> helps you take your inventory management to the next level with data-driven decision-making.</p>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/document.png')}}" style="max-height:360px;">
+            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/document.png')}}">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/print.png')}}" style="max-height:360px;">
+            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/print.png')}}">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
             <h4>Digital Document Generator</h4><hr>
@@ -61,8 +67,8 @@
             <p class="mb-0">Experience the convenience of <b>GudangKu</b> across multiple platforms. Our app is available on the <b>Web</b>, <b>Mobile</b> devices, and popular messaging platforms like <b>Telegram</b>, <b>LINE</b>, and <b>Discord</b>. 
             Whether you're managing inventory from your desktop, staying organized on the go, or integrating your workflow with chatbots, <b>GudangKu</b> ensures seamless access anytime, anywhere. 
             Enjoy flexibility and efficiency in your inventory management with a platform that adapts to your needs.</p>
-            <p class="mb-0 mt-3 fw-bold" style="font-size:var(--textJumbo);">Get All Our Apps Now!</p>
-            <div style="font-size:calc(var(--textLG)*1.5);" class="mt-2">
+            <p class="mb-0 mt-3 fw-bold" style="font-size:var(--textJumbo)">Get All Our Apps Now!</p>
+            <div style="font-size:calc(var(--textLG)*1.5)" class="mt-2">
                 <a href="https://gudangku.leonardhors.com/" class="me-3"><i class="fa-solid fa-globe"></i></a>
                 <a href="" class="me-3"><i class="fa-solid fa-mobile-screen-button"></i></a>
                 <a href="" class="me-3"><i class="fa-brands fa-line"></i></a>
@@ -70,7 +76,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/platform.png')}}" style="max-height:360px;">
+            <img class="img img-fluid m-3 mx-auto d-block" src="{{asset('images/platform.png')}}">
         </div>
     </div>
 </div>

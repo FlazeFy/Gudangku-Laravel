@@ -40,7 +40,7 @@
             <p>You have successfully {{$context}}</p>
             <p><?php echo $body; ?></p>
             <hr>
-            <div style="text-align: left;">
+            <div style="text-align: left">
                 <h6>Properties</h6>
                 <h6>Created at : {{date("Y M d H:i:s")}}</h6>
             </div>
