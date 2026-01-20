@@ -19,7 +19,7 @@
         Swal.showLoading()
         const title = 'Inventory By Favorite'
 
-        const failedMsg = () => {
+        const failedMessage = () => {
             Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
         }
 
@@ -62,7 +62,7 @@
                     Swal.close()
                 } else {
                     Swal.close()
-                    failedMsg()
+                    failedMessage()
                 }
             } else {
                 fetchData()

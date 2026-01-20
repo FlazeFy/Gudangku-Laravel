@@ -54,7 +54,7 @@
             if (!file) return
             const maxSize = 5 * 1024 * 1024
             if (file.size > maxSize) {
-                failedMsg('File too large. Maximum file size is 5 MB')
+                failedMessage('File too large. Maximum file size is 5 MB')
                 $(this).val('')
                 $preview.addClass('d-none').attr('src', '')
                 return
@@ -91,7 +91,7 @@
             })
 
             if (totalFiles > 10) {
-                failedMsg("You can only upload up to 10 other images")
+                failedMessage("You can only upload up to 10 other images")
                 return
             }
 

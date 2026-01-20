@@ -32,9 +32,8 @@
                         <thead>
                             <tr>
                                 <th style="min-width: 200px">Name & Description</th>
-                                <th style="width: 80px">Qty</th>
-                                <th style="width: 140px" id="price_th-holder">Price</th>
-                                <th style="width: 60px">Delete</th>
+                                <th style="min-width: 60px">Qty</th>
+                                <th style="min-width: 80px">Delete</th>
                             </tr>
                         </thead>
                         <tbody id="item_holder">
@@ -73,11 +72,10 @@
             success: function(response) {
                 Swal.close()
                 let data =  response.data
-                $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
+                $('#report_item').append(`<option selected value="no_item">- No Item Selected -</option>`)
 
                 for (var i = 0; i < data.length; i++) {
-                    let optionText = `${data[i]['inventory_name']}` +
-                        (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '')
+                    let optionText = `${data[i]['inventory_name']}` + (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '')
                     $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`)
                 }
 
@@ -85,16 +83,27 @@
                 $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
-                $('#report_item').append(`<option selected>- Browse Inventory -</option>`)
+                $('#report_item').append(`<option selected value="no_item">- No Item Selected -</option>`)
                 $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
                 $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
-                generateAPIError(response, true)
+                if(response.status !== 404){
+                    generateAPIError(response, true)
+                } else {
+                    $('.container-form').has('#add_report').before(`<div id="no_inventory-holder" class="mb-3"></div>`)
+                    templateAlertContainer('no_inventory-holder', 'no-data', "You have no inventory found to select", null, '<i class="fa-solid fa-warehouse"></i>')
+                }
             }
         })
     }
     getAllInventory()
 
     const postReport = () => {
+        const reportCategory = $('#report_category_holder').val()
+        if (reportCategory === "-"){
+            failedMessage('create report. You must select report category')
+            return
+        }
+
         const report_items = []
 
         $('.item-holder-div').each(function () {
@@ -131,7 +140,7 @@
             data: {
                 report_title: $('#report_title').val(),
                 report_desc: $('#report_desc').val().trim() !== "" ? $('#report_desc').val() : null,
-                report_category: $('#report_category_holder').val(),
+                report_category: reportCategory,
                 created_at: tidyUpDateTimeFormat($('#created_at').val()),
                 report_item: JSON.stringify(report_items),
                 file: null, 
@@ -146,8 +155,8 @@
                     allowOutsideClick: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.close()
-                        getAllInventory()
+                        const data = response.data
+                        window.location.href= `/report/detail/${data.id}`
                     }
                 })
             },
@@ -222,7 +231,14 @@
             $(this).closest('.item-holder-div').remove()
 
             if($('.item-holder-div').length == 0){
-                $('#item_holder').append(`<div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>`)
+                const trLen = $('#item_holder').closest('table').find('thead tr th').length
+                $('#item_holder').append(`
+                    <tr>
+                        <td colspan="${trLen}">
+                            <div class="alert alert-danger w-100"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>
+                        </td>
+                    </tr>
+                `)
             }
         })
     })

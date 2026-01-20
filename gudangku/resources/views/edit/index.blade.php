@@ -20,7 +20,7 @@
             </div>
         </div>
         <hr>
-        <div class="mb-3 d-flex flex-wrap justify-content-between gap-2">
+        <div class="mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
             <div class="d-flex flex-wrap gap-2">
                 @include('components.back_button', ['route' => '/inventory'])
                 <span id='btn-toogle-fav-holder'></span>

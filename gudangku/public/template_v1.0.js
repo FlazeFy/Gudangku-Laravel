@@ -135,7 +135,7 @@ const getDictionaryByContext = (context, token, selected = null, target_type = '
                     })
                 } else {
                     Swal.close()
-                    failedMsg(`get the ${context} list`)
+                    failedMessage(`get the ${context} list`)
                     reject("No cached data")
                 }
             } else {
@@ -338,7 +338,7 @@ const cleanAlertItem = () => {
 
 const browseItem = (val) => {
     let inventory_id = null
-    if(val == 'add_ext'){
+    if(val === 'add_ext'){
         $('#item_form').empty().append(`
             <div class="row">
                 <div class="col-lg-8">
@@ -353,17 +353,88 @@ const browseItem = (val) => {
             <label>Description</label>
             <textarea id="item_desc" class="form-control"></textarea>
         `)
-    } else if(val == 'copy_report'){
+    } else if(val === 'copy_report'){
         $('#item_form').empty().append(`
             <label>Report Title</label><br>
-            <div class="autocomplete" style="width:300px">
-                <input id="report_title_template" class="form-control w-100" type="text">
-            </div>
-            <input id="temp_items_report" hidden>
+            <input id="report_title_search" class="form-control w-100" type="text">
         `)
+
         $(document).ready(function() {
-            autocomplete(document.getElementById("report_title_template"), warehouse)
+            const getAllReport = (page, search) => {
+                $.ajax({
+                    url: `/api/v1/report?page=${page}&search_key=${search}`,
+                    type: 'GET',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Accept", "application/json")
+                        xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+                    },
+                    success: function(response) {
+                        Swal.close()
+                        const data = response.data.data
+                        const current_page = response.data.current_page
+                        const total_page = response.data.last_page
+                        let elReport = ''
+        
+                        data.forEach(el => {
+                            elReport += generateReportBox(el, null, true)
+                        })
+
+                        $('#modalSearchReport').remove()
+                        $('body').append(`
+                            <div class="modal fade" id="modalSearchReport" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold">Search Report</h5>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ${elReport}
+                                            <div id="page-holder" class="mx-2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `)
+                        const modal = new bootstrap.Modal(
+                            document.getElementById('modalSearchReport')
+                        )
+                        modal.show()
+        
+                        generatePagination('page-holder', getAllReport, total_page, current_page)
+                    },
+                    error: function(response, jqXHR, textStatus, errorThrown) {
+                        Swal.close()
+                        if(response.status != 404){
+                            generateAPIError(response, true)
+                        } else {
+                            $('#report_title_search').val('')
+                            failedMessage('search report. You must have at least one report')
+                        }
+                    }
+                })
+            }
+
+            $(document).on('click', '.report-box', function () {
+                const items = $(this).data('items')
+            
+                if(items){
+                    addItem('copy_report', null, items.split(', '))
+                    $('#report_title_search').val('')
+                    closeModalBS()
+                } else {
+                    failedMessage('copy report. Select report with at least one item attached')
+                }
+            })
+
+            $(document).on('blur','#report_title_search',function(){
+                getAllReport(1, $(this).val())
+            })
         })
+    } else if(val === 'no_item'){
+        $('#item_form').empty()
     } else {
         val = JSON.parse(val)
         inventory_id = val['id']
@@ -382,14 +453,21 @@ const browseItem = (val) => {
             </div>
         `)
     }
-    $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='addItem("${val}","${inventory_id}")'><i class="fa-solid fa-plus"></i> Add Item</a>`)
+    
+    if(val !== 'no_item' && val !== 'copy_report'){
+        $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='addItem("${val}","${inventory_id}")'><i class="fa-solid fa-plus"></i> Add Item</a>`)
+    }
 }
 
-const addItem = (val, inventory_id) => {
+const addItem = (val, inventory_id, itemsList = null) => {
+    if($('#item_name').val() === "" && val === "add_ext"){
+        failedMessage(`add item. Item name can't be empty`)
+        return
+    }
+
     cleanAlertItem()
     let itemExists = false
     const isPriceCategory = $("#report_category_holder").val() === 'Shopping Cart' || $("#report_category_holder").val() === 'Wishlist'
-
     $('.item_name_selected').each(function(index) {
         if ($(this).text() == val || $(this).text() == $('#item_name').val()) {
             $('.item_qty_selected').eq(index).val(parseInt($('.item_qty_selected').eq(index).val()) + 1)
@@ -420,8 +498,6 @@ const addItem = (val, inventory_id) => {
                 `)
             }
         } else if(val == 'copy_report') {
-            const itemsList = $('#temp_items_report').val().split(", ")
-
             itemsList.forEach(el => {
                 $('#item_holder').append(`
                     <tr class="item-holder-div align-middle">
@@ -456,80 +532,6 @@ const addItem = (val, inventory_id) => {
     $('#item_name').val('')
     $('#item_qty').val(1)
     $('#item_desc').val('')
-}
-
-const autocomplete = (inp, arr) => {
-    var currentFocus
-
-    inp.addEventListener("input", function(e) {
-        var a, b, i, val = this.value
-
-        closeAllLists()
-        if (!val) { return false }
-        currentFocus = -1
-
-        a = document.createElement("DIV")
-        a.setAttribute("id", this.id + "autocomplete-list")
-        a.setAttribute("class", "autocomplete-items")
-        this.parentNode.appendChild(a)
-
-        for (i = 0; i < arr.length; i++) {
-            if (arr[i]['title'].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                b = document.createElement("DIV")
-                b.innerHTML = "<strong>" + arr[i]['title'].substr(0, val.length) + "</strong>"
-                b.innerHTML += arr[i]['title'].substr(val.length)
-                b.innerHTML += "<input type='hidden' value='" + arr[i]['title'] + "'>"
-                const items = arr[i]['items']
-
-                b.addEventListener("click", function(e) {
-                    inp.value = this.getElementsByTagName("input")[0].value
-                    closeAllLists()
-                    $('#temp_items_report').val(items)
-                })
-                a.appendChild(b)
-            }
-        }
-    })
-
-    inp.addEventListener("keydown", function(e) {
-        var x = document.getElementById(this.id + "autocomplete-list")
-        if (x) x = x.getElementsByTagName("div")
-        if (e.keyCode == 40) {
-            currentFocus++
-            addActive(x)
-        } else if (e.keyCode == 38) {
-            currentFocus--
-            addActive(x)
-        } else if (e.keyCode == 13) {
-            e.preventDefault()
-            if (currentFocus > -1) {
-                if (x) x[currentFocus].click()
-            }
-        }
-    })
-    const addActive = (x) => {
-        if (!x) return false
-        removeActive(x)
-        if (currentFocus >= x.length) currentFocus = 0
-        if (currentFocus < 0) currentFocus = (x.length - 1)
-        x[currentFocus].classList.add("autocomplete-active")
-    }
-    const removeActive = (x) => {
-        for (var i = 0; i < x.length; i++) {
-            x[i].classList.remove("autocomplete-active")
-        }
-    }
-    const closeAllLists = (elmnt) => {
-        var x = document.getElementsByClassName("autocomplete-items")
-        for (var i = 0; i < x.length; i++) {
-            if (elmnt != x[i] && elmnt != inp) {
-                x[i].parentNode.removeChild(x[i])
-            }
-        }
-    }
-    document.addEventListener("click", function (e) {
-        closeAllLists(e.target)
-    })
 }
 
 const reportCategoryHolderEventHandler = (el) => {
@@ -567,9 +569,9 @@ const reportCategoryHolderEventHandler = (el) => {
     }
 }
 
-const generateReportBox = (el, search = null) => {
+const generateReportBox = (el, search = null, isCopy = false) => {
     return `
-        <button class="report-box mt-2" onclick="window.location.href='/report/detail/${el.id}'">
+        <button class="report-box mt-2" ${!isCopy ? `onclick="window.location.href='/report/detail/${el.id}'"` : ''} data-items="${el.report_items}" data-copy="${isCopy}">
             <div class="d-flex justify-content-between mb-3">
                 <h5>${el.report_title}</h5>
                 <span class="bg-success rounded-pill px-2 py-1">${el.report_category}</span>

@@ -619,7 +619,7 @@ class Commands extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Successfully created report",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
@@ -717,9 +717,11 @@ class Commands extends Controller
 
                         // Iterate to create report item
                         foreach ($report_item as $idx => $dt) {
+                            $item_desc = trim($dt->item_desc);
+
                             // Create report item
                             $res = ReportItemModel::createReportItem(
-                                $dt->inventory_id ?? null, $id_report, $dt->item_name, $dt->item_desc, $dt->item_qty, ($dt->item_price && $dt->item_price) > 0 ?? null, $user_id
+                                $dt->inventory_id ?? null, $id_report, $dt->item_name, $item_desc === "" ? null : $item_desc, $dt->item_qty, ($dt->item_price && $dt->item_price) > 0 ?? null, $user_id
                             );
 
                             if($res){
@@ -740,18 +742,21 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("create", 'report'),
+                            'data' => $report
                         ], Response::HTTP_CREATED);
                     } else if($failed_exec > 0 && $success_exec > 0){
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", "report created and some item has been added: $success_exec. about $failed_exec inventory failed to add"),
-                            'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
+                            'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null,
+                            'data' => $report
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", 'report created but failed to add item report'),
-                            'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null
+                            'image_upload_detail' => $validation_image_failed != "" ? $validation_image_failed : null,
+                            'data' => $report
                         ], Response::HTTP_CREATED);
                     }
                 } else {

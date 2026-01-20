@@ -14,7 +14,7 @@
         const ctx = `total_activity_per_month_temp-${year}`
         const ctx_holder = "stats_total_activity_per_month"
 
-        const failedMsg = () => {
+        const failedMessage = () => {
             Swal.fire("Oops!", `Failed to get the stats Total ${title}`,"error")
         }
 
@@ -56,7 +56,7 @@
                     Swal.close()
                 } else {
                     Swal.close()
-                    failedMsg()
+                    failedMessage()
                 }
             } else {
                 fetchData()

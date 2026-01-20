@@ -10,5 +10,5 @@
 <?php endif; ?>
 
 <?php if(preg_match('(report/add|report/detail)', $cleanedUrl)): ?>
-    <link rel="stylesheet" href="{{ asset('/report_item_v1.0.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('/usecases/report_item_v1.0.css') }}"/>
 <?php endif; ?>

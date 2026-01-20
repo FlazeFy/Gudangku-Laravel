@@ -32,7 +32,7 @@
             { holder: "stats_most_expensive_inventory_per_storage", object: "inventory_storage" }
         ]
 
-        const failedMsg = () => {
+        const failedMessage = () => {
             Swal.fire("Oops!",`Failed to get the stats Total ${title}`, "error")
         }
 
@@ -86,7 +86,7 @@
                     })
                 } else {
                     Swal.close()
-                    failedMsg()
+                    failedMessage()
                 }
             } else {
                 fetchData()

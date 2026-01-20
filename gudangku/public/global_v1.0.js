@@ -1,5 +1,9 @@
 const statsFetchRestTime = 120
 
+const failedMessage = (context) => {
+    Swal.fire("Oops!", `Failed to ${context}`, "error")
+}
+
 const isMobile = () => {
     const key = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
     return key.test(navigator.userAgent)

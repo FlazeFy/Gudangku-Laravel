@@ -13,7 +13,7 @@
         const ctx = 'inventory-tree_map_temp'
         const ctx_holder = "inventory-tree_map"
 
-        const failedMsg = () => {
+        const failedMessage = () => {
             Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
         }
         
@@ -114,7 +114,7 @@
                     Swal.close()
                 } else {
                     Swal.close()
-                    failedMsg()
+                    failedMessage()
                 }
             } else {
                 fetchData()

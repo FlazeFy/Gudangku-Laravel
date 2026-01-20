@@ -121,8 +121,10 @@
             $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
             $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
         })
-        .fail(function (jqXHR, ajaxOptions, thrownError) {
-            generateAPIError(response, true)
+        .fail(function (response, jqXHR, ajaxOptions, thrownError) {
+            if(response.status !== 404){
+                generateAPIError(response, true)
+            } 
         })   
     }
 

@@ -10,7 +10,7 @@
         const ctx_holder = 'stats_total_inventory_by_room_holder'
         const type_chart =  '<?= session()->get('toogle_total_stats') ?>'
 
-        const failedMsg = () => {
+        const failedMessage = () => {
             Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
         }
         
@@ -54,7 +54,7 @@
                     Swal.close()
                 } else {
                     Swal.close()
-                    failedMsg()
+                    failedMessage()
                 }
             } else {
                 fetchData()

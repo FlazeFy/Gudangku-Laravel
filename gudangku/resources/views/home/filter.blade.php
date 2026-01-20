@@ -51,7 +51,7 @@
     const placeResetButton = () => {
         if(search_key != ''){
             $('#reset_search_btn_holder').html(`
-                <a class='btn bg-danger position-absolute' href='/inventory' style='right:10px; top:13px; font-size:var(--textLG); height:var(--spaceXLG); width:var(--spaceJumbo);'>
+                <a class='btn bg-danger position-absolute' href='/inventory' style='right:7.5px; top:7.5px; font-size:var(--textLG); height:var(--spaceXLG); width:var(--spaceJumbo);'>
                     <i class="fa-solid fa-xmark position-absolute" style='margin-top:-7px; margin-left:-6px;'></i>
                 </a>
             `)
