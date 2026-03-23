@@ -114,7 +114,7 @@ class Queries extends Controller
 
             // Inventory fetch
             $res = InventoryModel::selectRaw($check_admin ? 'inventory.*,username' :'*');
-            if(!$check_admin){
+            if (!$check_admin) {
                 $res->where('created_by',$user_id);
             } else {
                 $res->join('users','users.id','=','inventory.created_by');
@@ -129,12 +129,12 @@ class Queries extends Controller
             }     
 
             // Filtering by category or context
-            if($filter_category != 'all'){
-                if($filter_category == 'deleted'){
+            if ($filter_category != 'all') {
+                if ($filter_category == 'deleted') {
                     $res->whereNotNull('deleted_at');
-                } else if($filter_category == 'favorite'){
+                } else if ($filter_category == 'favorite') {
                     $res->where('is_favorite',1);
-                } else if($filter_category == 'reminder'){
+                } else if ($filter_category == 'reminder') {
                     $res->where('is_reminder',1);
                 } else {
                     $res->where('inventory_category',$filter_category);
@@ -285,7 +285,7 @@ class Queries extends Controller
             $res_category = InventoryModel::getInventoryCatalogByContext($user_id,'inventory_category');
             $res_storage = InventoryModel::getInventoryCatalogByContext($user_id,'inventory_storage');
 
-            if($res_room || $res_category || $res_storage){
+            if ($res_room || $res_category || $res_storage) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',
@@ -400,7 +400,7 @@ class Queries extends Controller
 
             // Get inventory by catalog with pagination
             $res = InventoryModel::getInventoryByViewAndCatalog($user_id, $view, $catalog);
-            if($res->count() > 0){
+            if ($res->count() > 0) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',
@@ -807,7 +807,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getInventoryByStorage(Request $request,$room,$storage){
+    public function getInventoryByStorage(Request $request,$room,$storage) {
         try{
             $user_id = $request->user()->id;
 
@@ -921,7 +921,7 @@ class Queries extends Controller
      *     )
      * )
      */
-    public function getInventoryByID(Request $request, $id){
+    public function getInventoryByID(Request $request, $id) {
         try{
             $user_id = $request->user()->id;
 

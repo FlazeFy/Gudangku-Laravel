@@ -6,7 +6,7 @@ use App\Models\HistoryModel;
 
 class Audit
 {
-    public static function auditRecordText($ctx, $name, $data){ 
+    public static function auditRecordText($ctx, $name, $data) { 
         $props = time(); 
         $filePath = "tests_reports/text/$name-$props.txt";
 
@@ -24,7 +24,7 @@ class Audit
         }
     }
 
-    public static function auditRecordSheet($ctx, $name, $request, $response){ 
+    public static function auditRecordSheet($ctx, $name, $request, $response) { 
         $props = time(); 
         $filePath = "tests_reports/csv/template-report.csv";
     
@@ -46,14 +46,14 @@ class Audit
         }
     }
 
-    public static function countTime($start){
+    public static function countTime($start) {
         $end = microtime(true);
         $elp = round($end - $start, 4); 
 
         return "Time taken: {$elp} seconds";
     }
 
-    public static function createHistory($type, $ctx, $user_id){        
+    public static function createHistory($type, $ctx, $user_id) {        
         HistoryModel::createHistory($type, $ctx, $user_id);
     }
 }

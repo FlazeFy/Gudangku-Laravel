@@ -88,7 +88,7 @@ class ReportTest extends TestCase
 
         $check_nullable_str = ['report_desc','report_image','remind_at','updated_at','deleted_at'];
         foreach ($check_nullable_str as $dt) {
-            if(!is_null($data['data'][$dt])){
+            if (!is_null($data['data'][$dt])) {
                 $this->assertIsString($data['data'][$dt]);
             }
         }
@@ -115,7 +115,7 @@ class ReportTest extends TestCase
                 $this->assertEquals(36,strlen($dt[$col]));
 
             }
-            if(!is_null($dt['inventory_id'])){
+            if (!is_null($dt['inventory_id'])) {
                 $this->assertEquals(36,strlen($dt['inventory_id']));
             }
 
@@ -133,7 +133,7 @@ class ReportTest extends TestCase
 
             $check_nullable_str = ['inventory_id','item_desc'];
             foreach ($check_nullable_str as $col) {
-                if(!is_null($dt[$col])){
+                if (!is_null($dt[$col])) {
                     $this->assertNotNull($dt[$col]);
                     $this->assertIsString($dt[$col]);
                 }
@@ -191,7 +191,7 @@ class ReportTest extends TestCase
 
             $check_nullable_int = ['total_item','item_price'];
             foreach ($check_nullable_int as $col) {
-                if(!is_null($dt[$col])){
+                if (!is_null($dt[$col])) {
                     $this->assertIsInt($dt[$col]);
                     $this->assertGreaterThanOrEqual(0, $dt[$col]);
                 }
@@ -199,7 +199,7 @@ class ReportTest extends TestCase
 
             $check_nullable_str = ['report_desc','remind_at','report_items'];
             foreach ($check_nullable_str as $col) {
-                if(!is_null($dt[$col])){
+                if (!is_null($dt[$col])) {
                     $this->assertIsString($dt[$col]);
                 }
             }
@@ -253,7 +253,7 @@ class ReportTest extends TestCase
 
             $check_nullable_int = ['total_item','item_price'];
             foreach ($check_nullable_int as $col) {
-                if(!is_null($dt[$col])){
+                if (!is_null($dt[$col])) {
                     $this->assertIsInt($dt[$col]);
                     $this->assertGreaterThanOrEqual(0, $dt[$col]);
                 }
@@ -261,7 +261,7 @@ class ReportTest extends TestCase
 
             $check_nullable_str = ['report_desc','remind_at','report_items'];
             foreach ($check_nullable_str as $col) {
-                if(!is_null($dt[$col])){
+                if (!is_null($dt[$col])) {
                     $this->assertIsString($dt[$col]);
                 }
             }

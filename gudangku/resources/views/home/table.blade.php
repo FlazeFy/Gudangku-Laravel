@@ -68,7 +68,7 @@
                     }
                     const idCollapse = el.reminder ? `collapseReminder-${el.id}` : null
 
-                    if(el.reminder){
+                    if (el.reminder) {
                         reminders += `<tr class="collapse" id="${idCollapse}" style="border-style: hidden !important"><td colspan="5">`
                         el.reminder.forEach(rm => {
                             reminders += `
@@ -312,7 +312,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     $('#total-item').text(0)

@@ -35,10 +35,8 @@ use App\Models\UserModel;
 class AdminModel extends Authenticatable
 {
     use HasFactory;
-    //use HasUuids;
     use HasApiTokens;
     public $incrementing = false;
-
     protected $table = 'admin';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'username', 'password', 'email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','timezone', 'created_at', 'updated_at'];
@@ -46,15 +44,11 @@ class AdminModel extends Authenticatable
         'telegram_is_valid' => 'integer'
     ];
 
-    public static function  getAllContact(){
-        return AdminModel::select('id','username','email','telegram_user_id','telegram_is_valid','line_user_id','firebase_fcm_token')->get();
-    }
-
-    public static function getByUsername($username){
+    public static function getByUsername($username) {
         return AdminModel::where('username',$username)->first();
     }
 
-    public static function getAppsSummaryForLastNDays($days){
+    public static function getAppsSummaryForLastNDays($days) {
         $res_inventory = InventoryModel::selectRaw('count(1) as total')
             ->whereDate('created_at', '>=', Carbon::now()->subDays($days))
             ->first();
@@ -79,5 +73,9 @@ class AdminModel extends Authenticatable
         ];
 
         return $final_res;
+    }
+
+    public static function getAllContact() {
+        return AdminModel::select('id','username','email','telegram_user_id','telegram_is_valid','line_user_id','firebase_fcm_token')->get();
     }
 }

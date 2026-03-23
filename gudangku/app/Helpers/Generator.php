@@ -9,7 +9,7 @@ use App\Models\UserModel;
 
 class Generator
 {
-    public static function getUUID(){
+    public static function getUUID() {
         $result = '';
         $bytes = random_bytes(16);
         $hex = bin2hex($bytes);
@@ -24,12 +24,12 @@ class Generator
         return $uuid;
     }
 
-    public static function getUserId($role){
+    public static function getUserId($role) {
         $token = session()->get("token_key");
         $accessToken = PersonalAccessToken::findToken($token);
 
         if ($accessToken) {
-            if($accessToken->tokenable){
+            if ($accessToken->tokenable) {
                 Auth::login($accessToken->tokenable);
                 $user = Auth::user();
                 
@@ -43,13 +43,13 @@ class Generator
         }
     }
 
-    public static function getUserEmail($user_id){
+    public static function getUserEmail($user_id) {
         $profile = UserModel::select('email')->where('id',$user_id)->first();
 
         return $profile->email;
     }
 
-    public static function getTokenValidation($len){
+    public static function getTokenValidation($len) {
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $res = '';
         
@@ -61,7 +61,7 @@ class Generator
         return $res;
     }
 
-    public static function isMobileDevice(){
+    public static function isMobileDevice() {
         $user = $_SERVER['HTTP_USER_AGENT'];
     
         $type = ['mobile', 'android', 'iphone', 'ipod', 'blackberry', 'windows phone'];
@@ -75,20 +75,20 @@ class Generator
         return false;
     }
 
-    public static function generateMonthName($idx,$type){
+    public static function generateMonthName($idx,$type) {
         $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     
-        if($type == 'short'){
+        if ($type == 'short') {
             return substr($months[$idx-1], 0, 3);
-        } else if($type == 'full'){
+        } else if ($type == 'full') {
             return $months[$idx-1];
         }
     }
 
-    public static function getDocTemplate($type){
+    public static function getDocTemplate($type) {
         $datetime = date("d M Y H:i");
 
-        if($type == "footer"){
+        if ($type == "footer") {
             return "
                 <br><hr>
                 <div>
@@ -96,7 +96,7 @@ class Generator
                     <p class='date-text' style='margin: 0; float:right; margin-top:-12px;'>Generated at $datetime by <span style='color:#3b82f6;'>https://gudangku.leonardhors.com</span></p>
                 </div>
             ";
-        } else if($type == "header"){
+        } else if ($type == "header") {
             return "
                 <div style='text-align:center;'>
                     <h1 style='color:#3b82f6; margin:0;'>GudangKu</h1>
@@ -104,7 +104,7 @@ class Generator
                 </div>
                 <hr>
             ";
-        } else if($type == "style"){
+        } else if ($type == "style") {
             return "
                 <style>
                     body { font-family: Helvetica; }
@@ -118,8 +118,8 @@ class Generator
         }
     }
 
-    public static function getRandomDate($null){
-        if($null == 0){
+    public static function getRandomDate($null) {
+        if ($null == 0) {
             $start = strtotime('2023-01-01 00:00:00');
             $end = strtotime(date("Y-m-d H:i:s"));
             $random = mt_rand($start, $end); 
@@ -131,11 +131,11 @@ class Generator
         return $res;
     }
 
-    public static function getRandomTimezone(){
+    public static function getRandomTimezone() {
         $symbol = ['+','-'];
         $ran = mt_rand(0, 1);
         $select_symbol = $symbol[$ran];
-        if($select_symbol == '+'){
+        if ($select_symbol == '+') {
             $hour = mt_rand(0, 14);
         } else {
             $hour = mt_rand(0, 12);
@@ -145,7 +145,7 @@ class Generator
         return $timezone;
     }
 
-    public static function getRandomVol($unit){
+    public static function getRandomVol($unit) {
         if ($unit == 'Kilogram') {
             $res = mt_rand(1, 30);
         } else if ($unit == 'Gram') {
@@ -176,7 +176,7 @@ class Generator
         return $res;
     }
 
-    public static function getRandomReminderContext($reminder_type){
+    public static function getRandomReminderContext($reminder_type) {
         switch ($reminder_type) {
             case 'Every Day':
                 // Hour: 00–23
@@ -202,14 +202,14 @@ class Generator
         }
     }
 
-    public static function getRandomStorage(){
+    public static function getRandomStorage() {
         $storages = ["Main Table","Secondary Table","Desk","Wardrobe","Cabinet","Shelf","Top Drawer","Bottom Drawer","Center Drawer","Locker","Cupboard","Top Rack","Bottom Rack",
             "Center Rack","Box","Container","Crate","Closet","Stand","Case","Safe","Pantry"];
         $ran = mt_rand(0, count($storages)-1);
         return $storages[$ran];
     }
 
-    public static function getDateDiff($datetime){
+    public static function getDateDiff($datetime) {
         $now = new DateTime();
         $date = new DateTime($datetime);
 
@@ -227,7 +227,7 @@ class Generator
         }
     }
 
-    public static function extractText($pos, $text, $start_text, $end_text){
+    public static function extractText($pos, $text, $start_text, $end_text) {
         $start = strpos($text, $start_text);
         $end = strpos($text, $end_text);
 
@@ -283,7 +283,7 @@ class Generator
         }
     }
 
-    public static function checkPossiblePrice($arr){
+    public static function checkPossiblePrice($arr) {
         // Check if start with number, have comma, have stop. or contain o or b
         $res = []; 
 
@@ -308,7 +308,7 @@ class Generator
     {
         $clean = trim($message);
 
-        if(str_starts_with($clean, '"') && str_ends_with($clean, '"')){
+        if (str_starts_with($clean, '"') && str_ends_with($clean, '"')) {
             $clean = trim($clean, '"');
         }
 
@@ -330,22 +330,22 @@ class Generator
         return implode(' ', $messages);
     }
 
-    public static function getMessageTemplate($type, $ctx){
+    public static function getMessageTemplate($type, $ctx) {
         if (in_array($type, ['create', 'update', 'delete', 'permentally delete', 'fetch','recover','analyze','generate'])) {
             $ext = in_array($type, ['fetch','recover']) ? "ed" : "d";
             $res = "$ctx ".$type.$ext;              
-        } else if($type == "not_found"){
+        } else if ($type == "not_found") {
             $res = "$ctx not found";
-        } else if($type == "unknown_error"){
+        } else if ($type == "unknown_error") {
             $res = "something wrong. please contact admin";
-        } else if($type == "conflict"){
+        } else if ($type == "conflict") {
             $res = "$ctx has been used. try another";
-        } else if($type == "custom"){
+        } else if ($type == "custom") {
             $res = "$ctx";
-        } else if($type == "validation_failed"){
+        } else if ($type == "validation_failed") {
             $ctx = self::tidyValidationMessage($ctx);
             $res = "validation failed : $ctx";
-        } else if($type == "permission"){
+        } else if ($type == "permission") {
             $res = "permission denied. only $ctx can use this feature";
         } else {
             $res = "failed to get respond message";
@@ -354,7 +354,7 @@ class Generator
         return $res;
     }
 
-    public static function getRandomLayout(){
+    public static function getRandomLayout() {
         // Max Area
         $cols = range('A', 'J');
         $maxRow = 10;
@@ -370,7 +370,7 @@ class Generator
         for($i = 0; $i < $length; $i++) {
             $coord = $cols[$colIndex].$row;
 
-            if(!isset($used[$coord])){
+            if (!isset($used[$coord])) {
                 $used[$coord] = true;
                 $result[] = $coord;
             }
@@ -384,10 +384,10 @@ class Generator
 
             shuffle($moves);
 
-            foreach($moves as [$c, $r]){
-                if($c >= 0 && $c < count($cols) && $r >= 1 && $r <= $maxRow) {
+            foreach ($moves as [$c, $r]) {
+                if ($c >= 0 && $c < count($cols) && $r >= 1 && $r <= $maxRow) {
                     $next = $cols[$c].$r;
-                    if(!isset($used[$next])){
+                    if (!isset($used[$next])) {
                         $colIndex = $c;
                         $row = $r;
                         break;

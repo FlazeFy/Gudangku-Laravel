@@ -21,23 +21,11 @@ class DictionaryModel extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'dictionary';
     protected $primaryKey = 'id';
     protected $fillable = ['dictionary_type', 'dictionary_name'];
 
-    public static function getRandom($null,$type){
-        if($null == 0){
-            $data = DictionaryModel::inRandomOrder()->take(1)->where('dictionary_type',$type)->first();
-            $res = $data->dictionary_name;
-        } else {
-            $res = null;
-        }
-        
-        return $res;
-    }
-
-    public static function isUsedName($name, $type){
+    public static function isUsedName($name, $type) {
         $res = DictionaryModel::selectRaw('1')
             ->whereRaw('LOWER(dictionary_name) = LOWER(?)', [$name])
             ->whereRaw('LOWER(dictionary_type) = LOWER(?)', [$type])
@@ -46,16 +34,9 @@ class DictionaryModel extends Model
         return $res ? true : false;
     }
 
-    public static function createDictionary($dictionary_type, $dictionary_name){
-        return DictionaryModel::create([
-            'dictionary_type' => $dictionary_type,
-            'dictionary_name' => $dictionary_name,
-        ]);
-    }
-
-    public static function getDictionaryByType($type){
+    public static function getDictionaryByType($type) {
         $res = DictionaryModel::select('dictionary_name','dictionary_type');
-        if(strpos($type, ',')){
+        if (strpos($type, ',')) {
             $dcts = explode(",", $type);
             foreach ($dcts as $dt) {
                 $res = $res->orwhere('dictionary_type',$dt); 
@@ -67,5 +48,23 @@ class DictionaryModel extends Model
         return $res->orderby('dictionary_type', 'ASC')
             ->orderby('dictionary_name', 'ASC')
             ->get();
+    }
+
+    public static function getRandom($null,$type) {
+        if ($null == 0) {
+            $data = DictionaryModel::inRandomOrder()->take(1)->where('dictionary_type',$type)->first();
+            $res = $data->dictionary_name;
+        } else {
+            $res = null;
+        }
+        
+        return $res;
+    }
+
+    public static function createDictionary($dictionary_type, $dictionary_name) {
+        return DictionaryModel::create([
+            'dictionary_type' => $dictionary_type,
+            'dictionary_name' => $dictionary_name,
+        ]);
     }
 }

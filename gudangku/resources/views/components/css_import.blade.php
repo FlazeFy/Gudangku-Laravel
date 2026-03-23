@@ -5,10 +5,10 @@
 <link rel="stylesheet" href="{{ asset('/chart_v1.0.css') }}"/>
 <link rel="stylesheet" href="{{ asset('/typography_v1.0.css') }}"/>
 
-<?php if(preg_match('(chat)', $cleanedUrl)): ?>
+<?php if (preg_match('(chat)', $cleanedUrl)): ?>
     <link rel="stylesheet" href="{{ asset('/chat_v1.0.css') }}"/>
 <?php endif; ?>
 
-<?php if(preg_match('(report/add|report/detail)', $cleanedUrl)): ?>
+<?php if (preg_match('(report/add|report/detail)', $cleanedUrl)): ?>
     <link rel="stylesheet" href="{{ asset('/usecases/report_item_v1.0.css') }}"/>
 <?php endif; ?>

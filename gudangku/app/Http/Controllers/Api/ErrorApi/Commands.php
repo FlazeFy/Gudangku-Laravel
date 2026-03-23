@@ -75,12 +75,12 @@ class Commands extends Controller
 
             // Make sure only admin can access the request
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 // Get error by ID
                 $err = ErrorModel::find($id);
                 // Delete error by message
                 $rows = ErrorModel::hardDeleteErrorByMessage($err->message);
-                if($rows > 0){
+                if ($rows > 0) {
                     // Return success response
                     return response()->json([
                         'status' => 'success',

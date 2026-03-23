@@ -19,7 +19,7 @@
         is_submit = false
         window.addEventListener('beforeunload', function(event) {
             is_process = checkFillingStatus(['username','password'])
-            if(is_process == true && !is_submit){
+            if (is_process == true && !is_submit) {
                 event.preventDefault()
                 event.returnValue = ''
             }

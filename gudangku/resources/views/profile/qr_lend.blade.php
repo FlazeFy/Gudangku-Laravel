@@ -112,7 +112,7 @@
                 data.forEach(el => {
                     let inventory_holder = ''
 
-                    if(el.lend_status == 'used'){
+                    if (el.lend_status == 'used') {
                         el.list_inventory_detail.forEach(inv => {
                             inventory_holder += `
                                 <div class="form-check">

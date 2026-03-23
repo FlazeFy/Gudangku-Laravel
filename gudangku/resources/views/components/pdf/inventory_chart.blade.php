@@ -23,7 +23,7 @@
         At {{$date}}, the system just run weekly audit for your inventory. Here you can see the stats in this document :
     </p>  
 
-    @foreach($charts as $chart)
+    @foreach ($charts as $chart)
         <div>
             <img src="{{ storage_path('app/public/' . $chart) }}" alt="Bar Chart">
         </div>

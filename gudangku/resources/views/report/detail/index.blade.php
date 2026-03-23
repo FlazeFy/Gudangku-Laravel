@@ -8,7 +8,7 @@
 @php($role = session()->get('role_key'))
 
 @section('content')
-    @if($role == 0)
+    @if ($role == 0)
         <script src="{{ asset('/usecases/report_v1.0.js')}}"></script>
     @endif
 

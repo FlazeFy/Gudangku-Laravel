@@ -43,7 +43,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     templateAlertContainer(item_holder, 'no-data', "This inventory doesn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')

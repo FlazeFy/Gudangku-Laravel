@@ -70,7 +70,7 @@
                 generatePagination(item_holder, getAllReminder, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, reminderThrown) {
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     $(`#${item_holder}`).html(`<tr><td colspan='7' id='err_no_data-msg'></td></tr>`)

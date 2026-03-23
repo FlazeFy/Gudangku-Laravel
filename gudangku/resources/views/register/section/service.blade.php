@@ -9,23 +9,23 @@
 
 <script>    
     $( document ).ready(function() {
-        $(document).on('input','#telegram_user_id', function(){
-            if($(this).val().length == 10){
+        $(document).on('input','#telegram_user_id', function() {
+            if ($(this).val().length == 10) {
                 $(this).after(`<a class='btn btn-success' id='validate-telegram-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
             } else {
                 $('#validate-telegram-id-btn').remove()
             }
         })
 
-        $(document).on('input','#line_user_id', function(){
-            if($(this).val().length == 144){
+        $(document).on('input','#line_user_id', function() {
+            if ($(this).val().length == 144) {
                 $(this).after(`<a class='btn btn-success' id='validate-line-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
             } else {
                 $('#validate-line-id-btn').remove()
             }
         })
 
-        $(document).on('click','#validate-telegram-id-btn', function(){
+        $(document).on('click','#validate-telegram-id-btn', function() {
             const token = localStorage.getItem('token_key')
             $.ajax({
                 url: '/api/v1/user/update_telegram_id',
@@ -68,8 +68,8 @@
             })
         })
 
-        $(document).on('input','#telegram_token_validation', function(){
-            if($(this).val().length == 6){
+        $(document).on('input','#telegram_token_validation', function() {
+            if ($(this).val().length == 6) {
                 const token = localStorage.getItem('token_key')
                 $.ajax({
                     url: '/api/v1/user/validate_telegram_id',

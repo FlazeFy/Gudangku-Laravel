@@ -91,7 +91,7 @@ class Commands extends Controller
                 // Delete dictionary
                 $rows = DictionaryModel::destroy($id);
 
-                if($rows > 0){
+                if ($rows > 0) {
                     // Return success response
                     return response()->json([
                         'status' => 'success',
@@ -200,7 +200,7 @@ class Commands extends Controller
 
                 // Check dictionary name availability
                 $isUsedName = DictionaryModel::isUsedName($dictionary_name, $dictionary_type);
-                if($isUsedName){
+                if ($isUsedName) {
                     return response()->json([
                         'status' => 'error',
                         'message' => Generator::getMessageTemplate("conflict", 'dictionary name'),
@@ -209,7 +209,7 @@ class Commands extends Controller
                     // Create dictionary
                     $rows = DictionaryModel::createDictionary($dictionary_type, $dictionary_name);
 
-                    if($rows){
+                    if ($rows) {
                         // Return success response
                         return response()->json([
                             'status' => 'success',

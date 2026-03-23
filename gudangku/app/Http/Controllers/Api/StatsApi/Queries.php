@@ -83,7 +83,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if($check_admin){
+                if ($check_admin) {
                     $user_id = $request->query('user_id') ?? null;
                 } 
             } else {
@@ -160,7 +160,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getMostExpensiveInventoryPerContext(Request $request, $context){
+    public function getMostExpensiveInventoryPerContext(Request $request, $context) {
         try {
             $user_id = $request->user()->id;
 
@@ -283,7 +283,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if($check_admin){
+                if ($check_admin) {
                     $user_id = $request->query('user_id') ?? null;
                 } 
             } else {
@@ -381,7 +381,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if($check_admin){
+                if ($check_admin) {
                     $user_id = $request->query('user_id') ?? null;
                 } 
             } else {
@@ -570,7 +570,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if($check_admin){
+                if ($check_admin) {
                     $user_id = $request->query('user_id') ?? null;
                 } 
             } else {
@@ -586,7 +586,7 @@ class Queries extends Controller
                     $total_report = 0;
                     $total_item = 0;
                     foreach ($res as $idx => $val) {
-                        if($i == $val->context){
+                        if ($i == $val->context) {
                             $total_report = $val->total_report;
                             $total_item = $val->total_item;
                             break;
@@ -685,7 +685,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if($check_admin){
+                if ($check_admin) {
                     $user_id = $request->query('user_id') ?? null;
                 } 
             } else {
@@ -700,7 +700,7 @@ class Queries extends Controller
                 for ($i=1; $i <= 12; $i++) { 
                     $total = 0;
                     foreach ($res as $idx => $val) {
-                        if($i == $val->context){
+                        if ($i == $val->context) {
                             $total = $val->total;
                             break;
                         }
@@ -787,7 +787,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if($check_admin){
+                if ($check_admin) {
                     $user_id = $request->query('user_id') ?? null;
                 } 
             } else {
@@ -882,7 +882,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if($check_admin){
+                if ($check_admin) {
                     $user_id = $request->query('user_id') ?? null;
                 } 
             } else {
@@ -987,7 +987,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if($check_admin){
+                if ($check_admin) {
                     $user_id = $request->query('user_id') ?? null;
                 } 
             } else {
@@ -1001,7 +1001,7 @@ class Queries extends Controller
                 for ($i=1; $i <= 12; $i++) { 
                     $total = 0;
                     foreach ($res as $idx => $val) {
-                        if($i == $val->context){
+                        if ($i == $val->context) {
                             $total = $val->total;
                             break;
                         }
@@ -1180,11 +1180,11 @@ class Queries extends Controller
 
             // Make sure only admin can access this request
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 // Get last login user
                 $res = UserModel::getLastLoginUser($limit);
 
-                if($res){
+                if ($res) {
                     // Return success response
                     return response()->json([
                         'status' => 'success',
@@ -1264,19 +1264,19 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getLeaderboard(Request $request){
+    public function getLeaderboard(Request $request) {
         try{
             $user_id = $request->user()->id;
             $limit = $request->query('limit') ?? 7;
 
             // Make sure only admin can access this request
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 // Get user with most context
                 $res_inventory = UserModel::getUserWithMostContext('inventory');
                 $res_report = UserModel::getUserWithMostContext('report');
 
-                if($res_inventory || $res_report){
+                if ($res_inventory || $res_report) {
                     // Return success response
                     return response()->json([
                         'status' => 'success',
@@ -1382,7 +1382,7 @@ class Queries extends Controller
                     $total_price = 0;
                     $total_item = 0;
                     foreach ($res as $idx => $val) {
-                        if($i == $val->context){
+                        if ($i == $val->context) {
                             $total_price = $val->total_price;
                             $total_item = $val->total_item;
                             break;
@@ -1474,7 +1474,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTotalReportUsedPerMonth(Request $request, $year){
+    public function getTotalReportUsedPerMonth(Request $request, $year) {
         try{
             $user_id = $request->user()->id;
 
@@ -1490,7 +1490,7 @@ class Queries extends Controller
                     $total_checkout = 0;
                     $total_washlist = 0;
                     foreach ($res as $idx => $val) {
-                        if($i == $val->context){
+                        if ($i == $val->context) {
                             $total_checkout = $val->total_checkout;
                             $total_washlist = $val->total_washlist;
                             break;
@@ -1578,13 +1578,13 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getDashboard(Request $request){
+    public function getDashboard(Request $request) {
         try{
             $user_id = $request->user()->id;
 
             // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 $user_id = $request->query('user_id') ?? null;
             } 
 
@@ -1596,7 +1596,7 @@ class Queries extends Controller
             $most_category = InventoryModel::getMostCategoryInventory($user_id);
             $highest_price = InventoryModel::getHighestPriceInventory($user_id);
 
-            if($total_item && $total_item->total != 0){
+            if ($total_item && $total_item->total != 0) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',

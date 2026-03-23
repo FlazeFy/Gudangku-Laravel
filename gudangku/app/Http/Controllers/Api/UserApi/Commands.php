@@ -91,10 +91,10 @@ class Commands extends Controller
 
             // Check if telegram ID has been used
             $check = UserModel::isTelegramIDUsed($new_telegram_id);
-            if($check === null){
+            if ($check === null) {
                 // Update user by ID
                 $res = UserModel::updateUserById(['telegram_user_id' => $new_telegram_id, 'telegram_is_valid' => 0],$user_id);
-                if($res){
+                if ($res) {
                     // Generate token
                     $token_length = 6;
                     $token = Generator::getTokenValidation($token_length);
@@ -106,7 +106,7 @@ class Commands extends Controller
                     $user = UserModel::getSocial($user_id);
 
                     // Check if user Telegram ID is valid
-                    if(TelegramMessage::checkTelegramID($new_telegram_id)){
+                    if (TelegramMessage::checkTelegramID($new_telegram_id)) {
                         // Send telegram message
                         $response = Telegram::sendMessage([
                             'chat_id' => $new_telegram_id,
@@ -223,17 +223,17 @@ class Commands extends Controller
                 
                 // Check if username / email has been used
                 $check = UserModel::isUsernameEmailUsedWithExceptionalId($request->email, $request->username, $user_id);
-                if($check == null){
+                if ($check == null) {
                     // Update user by ID
                     $res = UserModel::updateUserById(['email' => $request->email, 'username' => $request->username],$user_id);
                     if ($res) {
                         // Get user data by ID
                         $user = UserModel::getSocial($user_id);
 
-                        if($user->telegram_is_valid == 1){
+                        if ($user->telegram_is_valid == 1) {
                             // Check if user Telegram ID is valid
                             // If Telegram ID is invalid, keep return success response because this is update profile function. (assume that the telegram is not validated yet)
-                            if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                            if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                                 $response = Telegram::sendMessage([
                                     'chat_id' => $user->telegram_user_id,
                                     'text' => "Hello,\n\nYour profile has been updated",
@@ -321,17 +321,17 @@ class Commands extends Controller
 
             // Check if username has not been used
             $check_user = UserModel::isUsernameUsed($username);
-            if(!$check_user){
+            if (!$check_user) {
                 // Get active request
                 $valid = ValidateRequestModel::getActiveRequest($username, 'register');
-                if(!$valid){
+                if (!$valid) {
                     // Generate token
                     $token_length = 6;
                     $token = Generator::getTokenValidation($token_length);
 
                     // Create validate request
                     $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
-                    if($valid_insert){
+                    if ($valid_insert) {
                         // Send email
                         $ctx = 'Generate registration token';
                         $email = $request->email;
@@ -444,16 +444,16 @@ class Commands extends Controller
 
                 // Get active request
                 $valid = ValidateRequestModel::getActiveRequest($username, 'register', $request->token);
-                if($valid){
+                if ($valid) {
                     // Check if username has not been used
                     $check_user = UserModel::isUsernameUsed($username);
-                    if(!$check_user){
+                    if (!$check_user) {
                         // Hard delete request by id
                         ValidateRequestModel::destroy($valid->id);
 
                         // Create user
                         $user = UserModel::createUser($request->username, $request->password, $request->email);
-                        if($user){
+                        if ($user) {
                             // Send email
                             $ctx = 'Register new account';
                             $email = $request->email;
@@ -461,7 +461,7 @@ class Commands extends Controller
                             dispatch(new UserMailer($ctx, $data, $username, $email));
 
                             // Return success response
-                            if(Hash::check($request->password, $user->password)){
+                            if (Hash::check($request->password, $user->password)) {
                                 // Hash the password
                                 $token = $user->createToken('login')->plainTextToken;
 
@@ -560,15 +560,15 @@ class Commands extends Controller
 
             // Get active register request
             $valid = ValidateRequestModel::getActiveRequest($username, 'register');
-            if($valid){
+            if ($valid) {
                 // Hard delete validate request by ID
                 $delete = ValidateRequestModel::destroy($valid->id);
 
-                if($delete > 0){
+                if ($delete > 0) {
                     // Create validate request
                     $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
 
-                    if($valid_insert){
+                    if ($valid_insert) {
                         // Send email token validation
                         dispatch(new UserMailer($ctx, $data, $username, $email));
 
@@ -593,7 +593,7 @@ class Commands extends Controller
                 // Create validate request
                 $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
 
-                if($valid_insert){
+                if ($valid_insert) {
                     // Send email token validation
                     dispatch(new UserMailer($ctx, $data, $username, $email));
 
@@ -664,9 +664,9 @@ class Commands extends Controller
 
             // Validate timezone format
             $check = Validation::getValidateTimezone($request->timezone);
-            if($check){
+            if ($check) {
                 // Update user by ID
-                if($request->firebase_fcm_token == null){
+                if ($request->firebase_fcm_token == null) {
                     UserModel::updateUserById(['timezone'=> $request->timezone],$user_id);
                 } else {
                     UserModel::updateUserById(['timezone'=> $request->timezone, 'firebase_fcm_token'=> $request->firebase_fcm_token],$user_id);
@@ -739,21 +739,21 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putValidateTelegramID(Request $request){
+    public function putValidateTelegramID(Request $request) {
         try{
             $user_id = $request->user()->id;
 
             // Hard delete validate request by request context
             $res = ValidateRequestModel::deleteValidateRequestByRequestContext($request->request_context, $user_id);
-            if($res > 0){
+            if ($res > 0) {
                 // Update user by ID
                 $res = UserModel::updateUserById(['telegram_is_valid' => 1],$user_id);
-                if($res > 0){
+                if ($res > 0) {
                     // Get user data
                     $user = UserModel::getSocial($user_id);
 
                     // Check if user Telegram ID is valid
-                    if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                    if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                         // Send telegram message with file
                         $response = Telegram::sendMessage([
                             'chat_id' => $user->telegram_user_id,
@@ -850,7 +850,7 @@ class Commands extends Controller
 
             // Make sure only admin can access this request
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 // Hard delete user by ID
                 $res = UserModel::where('id',$id)->delete();
                 

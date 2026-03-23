@@ -35,7 +35,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
-                    if(response.status != 404){
+                    if (response.status != 404) {
                         generateAPIError(response, true)
                     } else {
                         $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
@@ -44,13 +44,13 @@
             })
         }
 
-        if(ctx in localStorage){
+        if (ctx in localStorage) {
             const lastHit = parseInt(localStorage.getItem(`last-hit-${ctx}`))
             const now = Date.now()
 
-            if(((now - lastHit) / 1000) < statsFetchRestTime){
+            if (((now - lastHit) / 1000) < statsFetchRestTime) {
                 const data = JSON.parse(localStorage.getItem(ctx))
-                if(data){
+                if (data) {
                     generateLineColumnChart(title,ctx_holder,data)
                     generateTableContextTotal(ctx_holder,data)
                     Swal.close()

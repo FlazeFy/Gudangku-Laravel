@@ -44,7 +44,7 @@
             <p>You have successfully {{$context}} to inventory called {{$body['inventory_name']}}
                 {{$body['inventory_vol']}} {{$body['inventory_unit']}} 
                 with category as {{$body['inventory_category']}}</p>
-            @if($body['inventory_desc'] != null)
+            @if ($body['inventory_desc'] != null)
                 <h6>Description</h6>
                 <p>{{$body['inventory_desc']}}</p>
             @else 
@@ -54,10 +54,10 @@
             <div style="text-align: left">
                 <h6>Properties</h6>
                 <h6>Located at : {{$body['inventory_room']}} 
-                    @if($body['inventory_storage'] != null)
+                    @if ($body['inventory_storage'] != null)
                         / {{$body['inventory_storage']}}
                     @endif
-                    @if($body['inventory_rack'] != null)
+                    @if ($body['inventory_rack'] != null)
                         / {{$body['inventory_rack']}}
                     @endif
                 </h6>

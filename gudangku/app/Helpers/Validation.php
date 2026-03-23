@@ -13,9 +13,9 @@ use App\Rules\DictionaryType;
 
 class Validation
 {
-    private static function validateInventoryVolumeRelation($validator, $request){
+    private static function validateInventoryVolumeRelation($validator, $request) {
         $validator->after(function ($validator) use ($request) {
-            if($request->inventory_capacity_unit === 'Percentage') {
+            if ($request->inventory_capacity_unit === 'Percentage') {
                 return;
             }
             
@@ -26,14 +26,14 @@ class Validation
         });
     }
 
-    public static function getValidateLogin($request){
+    public static function getValidateLogin($request) {
         return Validator::make($request->all(), [
             'username' => 'required|min:6|max:36|string',
             'password' => 'required|min:6|string'
         ]);
     }
 
-    public static function getValidateUser($request, $type){
+    public static function getValidateUser($request, $type) {
         $rules = [
             'username' => 'required|string|min:6|max:36',
             'email' => 'required|string|min:10|max:255',
@@ -46,7 +46,7 @@ class Validation
         return Validator::make($request->all(), $rules);
     }
 
-    public static function getValidateInventory($request, $type){
+    public static function getValidateInventory($request, $type) {
         $baseRules = [
             'inventory_name' => 'required|string|max:75',
             'inventory_category' => ['required', new InventoryCategory],
@@ -93,16 +93,16 @@ class Validation
         return $validator;
     }
 
-    public static function getValidateLend($request, $type){
-        if($type == 'create_qr'){
+    public static function getValidateLend($request, $type) {
+        if ($type == 'create_qr') {
             return Validator::make($request->all(), [
                 'qr_period' => 'required|numeric|min:1|max:24',
             ]);
-        } else if($type == 'create_borrow'){
+        } else if ($type == 'create_borrow') {
             return Validator::make($request->all(), [
                 'borrower_name' => 'required|string|min:1|max:36',
             ]);
-        } else if($type == 'update_returned'){
+        } else if ($type == 'update_returned') {
             return Validator::make($request->all(), [
                 'list_inventory' => 'required|array',
                 'list_inventory.*.id' => 'required|string|min:36|max:36',
@@ -111,12 +111,12 @@ class Validation
         } 
     }
 
-    public static function getValidateReportItem($request, $type){
-        if($type == 'create'){
+    public static function getValidateReportItem($request, $type) {
+        if ($type == 'create') {
             return Validator::make($request->all(), [
                 'report_item' => 'required|json',
             ]); 
-        } else if($type == 'update'){
+        } else if ($type == 'update') {
             return Validator::make($request->all(), [
                 'item_name' => 'required|string|max:75|min:2',
                 'item_desc' => 'nullable|string|max:144',
@@ -126,7 +126,7 @@ class Validation
         } 
     }
 
-    public static function getValidateReport($request, $type){
+    public static function getValidateReport($request, $type) {
         $rules = [
             'report_title' => 'required|string|max:36',
             'report_desc' => 'nullable|string|max:255',
@@ -145,7 +145,7 @@ class Validation
         return Validator::make($request->all(), $rules);
     }
 
-    public static function getValidateReminder($request, $type){
+    public static function getValidateReminder($request, $type) {
         $rules = [
             'reminder_desc' => 'required|string|max:255',
             'reminder_type' => ['required', new ReminderType],
@@ -162,29 +162,29 @@ class Validation
         return Validator::make($request->all(), $rules);
     }
 
-    public static function getValidateDictionary($request, $type){
-        if($type == 'create'){
+    public static function getValidateDictionary($request, $type) {
+        if ($type == 'create') {
             return Validator::make($request->all(), [
                 'dictionary_name' => 'required|string|max:75|min:2',
                 'dictionary_type' => ['required', new DictionaryType],
             ]);  
-        } else if($type == 'delete'){
+        } else if ($type == 'delete') {
             return Validator::make($request->all(), [
                 'id' => 'required|numeric|max:999',
             ]); 
         }
     }
 
-    public static function getValidateTimezone($val){
+    public static function getValidateTimezone($val) {
         $regex = '/^[+-](0[0-9]|1[0-4]):([0-5][0-9])$/';
-        if(preg_match($regex, $val) === 1){
+        if (preg_match($regex, $val) === 1) {
             return true;
         } else {
             return false;
         }
     }
 
-    public static function getValidateUUID($val){
+    public static function getValidateUUID($val) {
         return preg_match('/^[{]?([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})[}]?$/i', $val) === 1;
     }
 }

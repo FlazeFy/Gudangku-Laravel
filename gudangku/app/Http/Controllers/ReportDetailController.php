@@ -35,7 +35,7 @@ class ReportDetailController extends Controller
         return redirect()->back();
     }
 
-    public function save_as_csv($id){
+    public function save_as_csv($id) {
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check_admin = AdminModel::find($user_id);
         
@@ -46,7 +46,7 @@ class ReportDetailController extends Controller
         });
         $res_inventory = ReportItemModel::getReportInventoryDetailExport($check_admin ? null : $user_id, $check_admin ? true : false, $id);
 
-        if($res_detail->isNotEmpty()){
+        if ($res_detail->isNotEmpty()) {
             try {
                 $user = UserModel::getSocial($user_id);
                 $datetime = date('l, j F Y \a\t H:i:s');
@@ -78,7 +78,7 @@ class ReportDetailController extends Controller
                 }
         
                 if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
-                    if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                    if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                         $inputFile = InputFile::create($storagePath, $file_name);
         
                         Telegram::sendDocument([

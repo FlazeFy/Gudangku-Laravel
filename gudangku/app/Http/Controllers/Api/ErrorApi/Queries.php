@@ -82,7 +82,7 @@ class Queries extends Controller
 
             // Make sure only admin can access the request
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 // Get all error
                 $res = ErrorModel::getAllError($paginate);
                 if (count($res) > 0) {

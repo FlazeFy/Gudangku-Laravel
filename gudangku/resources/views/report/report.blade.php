@@ -1,4 +1,4 @@
-@if($role == 0)
+@if ($role == 0)
     <div id="report_holder"></div>
 @else 
     <div class="table-responsive">
@@ -52,7 +52,7 @@
                 })
 
                 data.forEach(el => {
-                    if(role == 0){
+                    if (role == 0) {
                         $(`#${item_holder}`).append(generateReportBox(el, null))
                     } else {
                         $(`#${item_holder}`).append(`
@@ -102,7 +102,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     $('#total-item').text(0)

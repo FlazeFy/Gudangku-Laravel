@@ -50,7 +50,7 @@ class UserTest extends TestCase
 
         $this->assertContains($data['data']['role'], ['user', 'admin']);
         $this->assertContains($data['data']['telegram_is_valid'], [0, 1]);
-        if(!is_null($data['data']['telegram_user_id'])){
+        if (!is_null($data['data']['telegram_user_id'])) {
             $this->assertIsString($data['data']['telegram_user_id']);
         } else {
             $this->assertEquals(0,$data['data']['telegram_user_id']);
@@ -203,7 +203,7 @@ class UserTest extends TestCase
 
             $check_nullable_str = ['telegram_user_id','firebase_fcm_token','line_user_id','phone','timezone','updated_at'];
             foreach ($check_nullable_str as $col) {
-                if(!is_null($dt[$col])){
+                if (!is_null($dt[$col])) {
                     $this->assertNotNull($dt[$col]);
                     $this->assertIsString($dt[$col]);
                 }

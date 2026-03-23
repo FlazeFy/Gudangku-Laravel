@@ -27,7 +27,7 @@ class UserController extends Controller
         return $user_id != null ? view('user.index') : redirect("/login");
     }
 
-    public function save_as_csv(){
+    public function save_as_csv() {
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check_admin = AdminModel::find($user_id);
         
@@ -39,7 +39,7 @@ class UserController extends Controller
             return $user->total_report == 0;
         });
 
-        if($res_all->isNotEmpty()){
+        if ($res_all->isNotEmpty()) {
             try {
                 $user = UserModel::getSocial($user_id);
                 $datetime = date('l, j F Y \a\t H:i:s');

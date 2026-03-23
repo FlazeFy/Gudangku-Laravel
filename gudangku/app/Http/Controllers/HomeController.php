@@ -25,10 +25,10 @@ class HomeController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if($user_id != null){
+        if ($user_id != null) {
             $selected = session()->get('toogle_view_inventory');
 
-            if($selected == 'table'){
+            if ($selected == 'table') {
                 $search_key = $request->query('search_key');
                 $filter_category = $request->query('filter_category');
                 $sorting = $request->query('sorting');
@@ -37,7 +37,7 @@ class HomeController extends Controller
                     ->with('search_key',$search_key)
                     ->with('sorting',$sorting)
                     ->with('filter_category',$filter_category);
-            } elseif($selected == 'catalog'){
+            } elseif ($selected == 'catalog') {
                 return view('home.index');
             }
         } else {
@@ -52,14 +52,14 @@ class HomeController extends Controller
         return $user_id != null ? view('home.catalog.index')->with('view',$view)->with('context',$context) : redirect('/login');
     }
 
-    public function save_as_csv(){
+    public function save_as_csv() {
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check_admin = AdminModel::find($user_id);
         
         $res_active = InventoryModel::getInventoryExport($check_admin ? null : $user_id, $check_admin ? true : false, 'active');
         $res_deleted = InventoryModel::getInventoryExport($check_admin ? null : $user_id, $check_admin ? true : false, 'deleted');
 
-        if($res_active->isNotEmpty()){
+        if ($res_active->isNotEmpty()) {
             try {
                 $user = UserModel::getSocial($user_id);
                 $datetime = date('l, j F Y \a\t H:i:s');
@@ -91,7 +91,7 @@ class HomeController extends Controller
                 }
         
                 if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
-                    if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                    if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                         $inputFile = InputFile::create($storagePath, $file_name);
             
                         Telegram::sendDocument([

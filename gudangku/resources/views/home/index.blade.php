@@ -14,7 +14,7 @@
     <script src="{{ asset('/control_panel_v1.0.js')}}"></script>
 
     @php($selected = session()->get('toogle_view_inventory'))
-    @if($selected == 'table')
+    @if ($selected == 'table')
         <script>
             let search_key = `<?= $search_key ?>`
             let filter_category = `<?= $filter_category ?>`
@@ -33,13 +33,13 @@
         </div>
         <hr>
         @include('home.home_toolbar')
-        @if($selected == 'table')
+        @if ($selected == 'table')
             @include('home.filter')
         @endif
         @include('home.lend_inventory')
-        @if($selected == 'table')
+        @if ($selected == 'table')
             @include('home.table')
-        @elseif($selected == 'catalog')
+        @elseif ($selected == 'catalog')
             @include('home.catalog')
         @endif
     </div>

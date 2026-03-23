@@ -28,42 +28,11 @@ class ReminderModel extends Model
 {
     use HasFactory;
     public $incrementing = false;
-
     protected $table = 'reminder';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_id', 'reminder_desc', 'reminder_type', 'reminder_context', 'created_at', 'created_by', 'updated_at'];
 
-    public static function getReminderJob($id){
-        $res = ReminderModel::select('reminder.id','username','email','telegram_user_id','firebase_fcm_token','line_user_id','inventory_name','reminder_desc','reminder_type','reminder_context','timezone')
-            ->join('inventory','inventory.id','=','reminder.inventory_id')
-            ->join('users','users.id','=','reminder.created_by');
-
-        if($id){
-            $res = $res->where('reminder.id',$id);
-        }
-
-        return $id ? $res->first() : $res->get();
-    }
-
-    public static function getReminderByInventoryId($id,$user_id){
-        return ReminderModel::select('id','reminder_desc','reminder_type','reminder_context','created_at')
-            ->where('created_by',$user_id)
-            ->where('inventory_id',$id)
-            ->orderby('created_at','desc')
-            ->get();
-    }
-
-    public static function deleteReminderByInventoryId($inventory_id, $user_id = null){
-        $res = ReminderModel::where('inventory_id',$inventory_id);
-        
-        if($user_id){
-            $res = $res->where('created_by',$user_id);
-        }
-
-        return $res->delete();
-    } 
-
-    public static function getReminderAndInventoryById($id,$user_id){
+    public static function getReminderAndInventoryById($id,$user_id) {
         return ReminderModel::select('reminder_desc','inventory_name')
             ->join('inventory','inventory.id','=','reminder.inventory_id')
             ->where('reminder.id',$id)
@@ -71,20 +40,40 @@ class ReminderModel extends Model
             ->first();
     }
 
-    public static function getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id,$exception_id = null){
+    public static function getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id,$exception_id = null) {
         $res = ReminderModel::where('created_by', $user_id)
             ->where('inventory_id',$inventory_id)
             ->where('reminder_type',$reminder_type)
             ->where('reminder_context',$reminder_context);
 
-        if($exception_id){
+        if ($exception_id) {
             $res = $res->whereNot('id',$exception_id);
         }
 
         return $res->first();
     }
+    
+    public static function getReminderJob($id) {
+        $res = ReminderModel::select('reminder.id','username','email','telegram_user_id','firebase_fcm_token','line_user_id','inventory_name','reminder_desc','reminder_type','reminder_context','timezone')
+            ->join('inventory','inventory.id','=','reminder.inventory_id')
+            ->join('users','users.id','=','reminder.created_by');
 
-    public static function createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id){
+        if ($id) {
+            $res = $res->where('reminder.id',$id);
+        }
+
+        return $id ? $res->first() : $res->get();
+    }
+
+    public static function getReminderByInventoryId($id,$user_id) {
+        return ReminderModel::select('id','reminder_desc','reminder_type','reminder_context','created_at')
+            ->where('created_by',$user_id)
+            ->where('inventory_id',$id)
+            ->orderby('created_at','desc')
+            ->get();
+    }
+
+    public static function createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id) {
         return ReminderModel::create([
             'id' => Generator::getUUID(), 
             'inventory_id' => $inventory_id, 
@@ -97,18 +86,28 @@ class ReminderModel extends Model
         ]);
     }
 
-    public static function updateReminderById($data,$id,$user_id){
+    public static function updateReminderById($data,$id,$user_id) {
         $data['updated_at'] = date('Y-m-d H:i:s');
         return ReminderModel::where('id',$id)->where('created_by',$user_id)->update($data);
     }
 
-    public static function hardDeleteReminder($id, $user_id){
+    public static function deleteReminderByInventoryId($inventory_id, $user_id = null) {
+        $res = ReminderModel::where('inventory_id',$inventory_id);
+        
+        if ($user_id) {
+            $res = $res->where('created_by',$user_id);
+        }
+
+        return $res->delete();
+    } 
+
+    public static function hardDeleteReminder($id, $user_id) {
         return ReminderModel::where('created_by', $user_id)
             ->where('id',$id)
             ->delete();
     }
 
-    public static function deleteReminderByUserId($user_id){
+    public static function deleteReminderByUserId($user_id) {
         return ReminderModel::where('created_by',$user_id)->delete();
     }
 }

@@ -83,7 +83,7 @@ class StatsTest extends TestCase
         }
 
         $check_not_null_int = ['total_item','total_fav','total_low'];
-        foreach ($check_not_null_int as $dt){
+        foreach ($check_not_null_int as $dt) {
             $this->assertIsInt($data['data'][$dt]);
             $this->assertGreaterThanOrEqual(0, $data['data'][$dt]);
         }

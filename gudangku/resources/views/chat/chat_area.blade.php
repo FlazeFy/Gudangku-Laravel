@@ -23,7 +23,7 @@
 <script>
     $(document).on('change', '#file-input', function () {
         const file = this.files[0]
-        if(file){
+        if (file) {
             const allowedTypes = ['image/png', 'image/jpeg', 'image/gif', 'application/pdf', 'text/csv']
 
             if (!allowedTypes.includes(file.type)) {
@@ -62,15 +62,15 @@
 
     $(document).ready(function () {
         let is_show_analyze = false
-        $(document).on('click','#nav_analyze_btn',function(){
-            if(is_show_analyze == false){
+        $(document).on('click','#nav_analyze_btn',function() {
+            if (is_show_analyze == false) {
                 $('#col-analyze').addClass('col-lg-12 col-md-12 col-12').removeClass('col-lg-4 col-md-6')
                 $('#nav_analyze_btn').addClass('d-none').closest('.btn-feature').addClass('d-flex justify-content-start')
                 is_show_analyze = true
             } 
         })
-        $(document).on('click','#nav_analyze_close_btn', function(){
-            if(is_show_analyze == true){
+        $(document).on('click','#nav_analyze_close_btn', function() {
+            if (is_show_analyze == true) {
                 $('#col-analyze').addClass('col-lg-4 col-md-6').removeClass('col-lg-12 col-md-12 col-12')
                 $('#nav_analyze_btn').removeClass('d-none').closest('.btn-feature').removeClass('d-flex justify-content-start')
                 is_show_analyze = false
@@ -126,7 +126,7 @@
                 `)
 
                 let not_found_item_element = ''
-                if(data.not_existing_item){
+                if (data.not_existing_item) {
                     const items = data.not_existing_item
                     const not_existing_item = items.join(", ")
                     not_found_item_element = `<br>Item not found ${items.length > 1 ? 'are':'is'} ${not_existing_item}`
@@ -161,9 +161,9 @@
                 if (response.status === 422) {
                     let msg = response.responseJSON.message
                     
-                    if(typeof msg != 'string'){
+                    if (typeof msg != 'string') {
                         const allMsg = Object.values(msg).flat()
-                        if(is_list_format){
+                        if (is_list_format) {
                             msg = '<ol>'
                             allMsg.forEach((dt) => {
                                 msg += `<li>- ${dt.replace('.','')}</li>`
@@ -177,7 +177,7 @@
                     $('#chat-section').append(`<div class="bubble bot">${msg}</div>`)
                 } else {
                     $('#chat-section').append(`<div class="bubble bot">${response.responseJSON?.message || "Something went wrong"}</div>`)
-                    if(response.status === 404){
+                    if (response.status === 404) {
                         const items = response.responseJSON.data.not_existing_item
                         const not_existing_item = items.join(", ")
                         $('#chat-section').append(`

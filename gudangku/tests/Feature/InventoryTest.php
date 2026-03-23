@@ -139,11 +139,11 @@ class InventoryTest extends TestCase
 
         $catalogs = ["room","category","storage"];
         foreach ($catalogs as $ct) {
-            foreach($data['data'][$ct] as $dt) {
+            foreach ($data['data'][$ct] as $dt) {
                 $this->assertArrayHasKey('context', $dt);
                 $this->assertArrayHasKey('total', $dt);
 
-                if($ct !== "storage"){
+                if ($ct !== "storage") {
                     $this->assertNotNull($dt['context']);
                     $this->assertIsString($dt['context']);
                 }
@@ -436,7 +436,7 @@ class InventoryTest extends TestCase
             $this->assertGreaterThanOrEqual(0, $data['data']['inventory_capacity_vol']);
         }
 
-        if(!is_null($data['data']['inventory_price_analyze'])){
+        if (!is_null($data['data']['inventory_price_analyze'])) {
             $check_object = ['average_inventory_price','sub_total','max_inventory_price','min_inventory_price','diff_ammount_average_to_price','diff_status_average_to_price'];
             foreach ($check_object as $col) {
                 $this->assertArrayHasKey($col, $data['data']['inventory_price_analyze']);
@@ -453,7 +453,7 @@ class InventoryTest extends TestCase
 
         $check_total_avg_price_context = ['inventory_category_analyze','inventory_room_analyze','inventory_unit_analyze'];
         foreach ($check_total_avg_price_context as $dt) {
-            if(!is_null($data['data'][$dt])){
+            if (!is_null($data['data'][$dt])) {
                 $check_object = ['total','average_price'];
                 foreach ($check_object as $col) {
                     $this->assertArrayHasKey($col, $data['data'][$dt]);
@@ -507,7 +507,7 @@ class InventoryTest extends TestCase
             }
         }
 
-        if(!is_null($data['data']['inventory_layout'])){
+        if (!is_null($data['data']['inventory_layout'])) {
             $check_object = ['inventory_storage','layout','storage_desc','created_at'];
             foreach ($check_object as $col) {
                 $this->assertArrayHasKey($col, $data['data']['inventory_layout']);
@@ -519,7 +519,7 @@ class InventoryTest extends TestCase
                 $this->assertIsString($data['data']['inventory_layout'][$col]);
             }
 
-            if(!is_null($data['data']['inventory_layout']['storage_desc'])){
+            if (!is_null($data['data']['inventory_layout']['storage_desc'])) {
                 $this->assertIsString($data['data']['inventory_layout']['storage_desc']);
             }
         }

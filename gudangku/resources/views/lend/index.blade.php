@@ -32,9 +32,9 @@
     </script>
     
     <div class="content">
-        <h1>@if($role == 0) <span class="inventory-owner"></span> @endif Inventory</h1>
-        <a class="btn btn-danger mb-3 me-2" href="/profile"><i class="fa-solid fa-arrow-left"></i> @if(!$isMobile) Back @endif</a>
-        <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-home"></i> @if(!$isMobile) Home Page @endif</a>
+        <h1>@if ($role == 0) <span class="inventory-owner"></span> @endif Inventory</h1>
+        <a class="btn btn-danger mb-3 me-2" href="/profile"><i class="fa-solid fa-arrow-left"></i> @if (!$isMobile) Back @endif</a>
+        <a class="btn btn-danger mb-3 me-2" href="/"><i class="fa-solid fa-home"></i> @if (!$isMobile) Home Page @endif</a>
         @include('lend.selected_inventory')
         @include('lend.inventory')
     </div>

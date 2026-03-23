@@ -74,7 +74,7 @@
                 Swal.close()
                 
                 if (response.status === 404 || response.status === 400) {
-                    if(page != 1){
+                    if (page != 1) {
                         generateLastPageError()
                         return
                     }

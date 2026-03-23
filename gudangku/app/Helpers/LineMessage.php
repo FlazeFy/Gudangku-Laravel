@@ -4,7 +4,7 @@ use GuzzleHttp\Client;
 
 class LineMessage
 {
-    public static function sendMessage($type, $text, $user_id){ 
+    public static function sendMessage($type, $text, $user_id) { 
         $httpClient = new Client();
         $channelAccessToken = env('LINE_BOT_TOKEN'); 
         $headers = [

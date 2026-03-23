@@ -40,23 +40,17 @@ class AuditSchedule
     {
         $summary = ErrorModel::getAllErrorAudit();
         
-        if($summary){
+        if ($summary) {
             $firebaseRealtime = new FirebaseRealtime();
             $audit = "";
             $total = count($summary);
 
-            foreach($summary as $dt){
+            foreach ($summary as $dt) {
                 $audit .= "
                     <tr>
                         <td>$dt->message</td>
                         <td style='text-align:center;'>$dt->created_at</td>
-                        <td style='text-align:center;'>";
-                        if($dt->faced_by){
-                            $audit .= $dt->faced_by;
-                        } else {
-                            $audit .= "-";
-                        }
-                        $audit.= "</td>
+                        <td style='text-align:center;'>".($dt->faced_by ?? "-")."</td>
                         <td style='text-align:center;'>$dt->total</td>
                     </tr>
                 ";
@@ -103,10 +97,10 @@ class AuditSchedule
             file_put_contents($pdfFilePath, $pdfContent);
             $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
 
-            foreach($admin as $dt){
+            foreach ($admin as $dt) {
                 $message = "[ADMIN] Hello $dt->username, the system just run an audit error, with result of $total error found. Here's the document";
                 
-                if($dt->telegram_user_id){
+                if ($dt->telegram_user_id) {
                     $response = Telegram::sendDocument([
                         'chat_id' => $dt->telegram_user_id,
                         'document' => $inputFile,
@@ -114,10 +108,10 @@ class AuditSchedule
                         'parse_mode' => 'HTML'
                     ]);
                 }
-                if($dt->line_user_id){
-                    LineMessage::sendMessage('text',"Error has been audited",$dt->line_user_id);
-                }
-                if($dt->firebase_fcm_token){
+
+                if ($dt->line_user_id) LineMessage::sendMessage('text',"Error has been audited",$dt->line_user_id);
+
+                if ($dt->firebase_fcm_token) {
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)
@@ -147,49 +141,47 @@ class AuditSchedule
         }
     }
 
-    public static function audit_dashboard(){
+    public static function audit_dashboard() {
         $dashboard = InventoryModel::getAllDashboard();
 
-        if($dashboard){
-            foreach($dashboard as $index => $dt){
+        if ($dashboard) {
+            foreach ($dashboard as $index => $dt) {
                 $message_template = "Hello $dt->username, here's the weekly dashboard we've gathered so far from your inventory :";
                 $message = "$message_template\n\n- Total Item : $dt->total_inventory\n- Favorite Item : $dt->total_favorite\n- Low Capacity : $dt->total_low_capacity\n- Last Added : $dt->last_created_inventory_name\n- Most Category : $dt->most_category ($dt->most_category_count)\n- The Most Expensive : Rp. ".number_format($dt->max_price)." ($dt->max_price_inventory_name)";
 
-                if($dt->telegram_user_id && $dt->telegram_is_valid == 1){
+                if ($dt->telegram_user_id && $dt->telegram_is_valid == 1) {
                     $response = Telegram::sendMessage([
                         'chat_id' => $dt->telegram_user_id,
                         'text' => $message,
                         'parse_mode' => 'HTML'
                     ]);
                 }
-                if($dt->line_user_id){
-                    LineMessage::sendMessage('text',$message,$dt->line_user_id);
-                }
+
+                if ($dt->line_user_id) LineMessage::sendMessage('text',$message,$dt->line_user_id);
             }
         }
     }
 
-    public static function audit_apps(){
+    public static function audit_apps() {
         $days = 7;
         $summary = AdminModel::getAppsSummaryForLastNDays($days);
 
-        if($summary){
+        if ($summary) {
             $admin = AdminModel::getAllContact();
 
-            foreach($admin as $dt){
+            foreach ($admin as $dt) {
                 $message_template = "[ADMIN] Hello $dt->username, here's the apps summary for the last $days days:";
                 $message = "$message_template\n\n- Inventory Created: $summary->inventory_created\n- New User : $summary->new_user\n- Report Created : $summary->report_created\n- Error Happen : $summary->error_happen";
 
-                if($dt->telegram_user_id && $dt->telegram_is_valid == 1){
+                if ($dt->telegram_user_id && $dt->telegram_is_valid == 1) {
                     $response = Telegram::sendMessage([
                         'chat_id' => $dt->telegram_user_id,
                         'text' => $message,
                         'parse_mode' => 'HTML'
                     ]);
                 }
-                if($dt->line_user_id){
-                    LineMessage::sendMessage('text',$message,$dt->line_user_id);
-                }
+
+                if ($dt->line_user_id) LineMessage::sendMessage('text',$message,$dt->line_user_id);
             }
         }
     }
@@ -265,14 +257,10 @@ class AuditSchedule
             // Clean up File
             foreach ($chartFiles as $file) {
                 $chartPath = storage_path("app/public/$file");
-                if (file_exists($chartPath)) {
-                    unlink($chartPath);
-                }
+                if (file_exists($chartPath)) unlink($chartPath);
             }
 
-            if (file_exists($tmpPdfPath)) {
-                unlink($tmpPdfPath);
-            }
+            if (file_exists($tmpPdfPath)) unlink($tmpPdfPath);
         }
     }
 
@@ -292,7 +280,7 @@ class AuditSchedule
             for ($i=1; $i <= 12; $i++) { 
                 $total = 0;
                 foreach ($res_inventory_monthly as $idx => $val) {
-                    if($i == $val->context){
+                    if ($i == $val->context) {
                         $total = $val->total;
                         break;
                     }
@@ -337,7 +325,7 @@ class AuditSchedule
                 $total_report = 0;
                 $total_item = 0;
                 foreach ($res_report_monthly as $idx => $val) {
-                    if($i == $val->context){
+                    if ($i == $val->context) {
                         $total_report = $val->total_report;
                         $total_item = $val->total_item;
                         break;
@@ -397,7 +385,7 @@ class AuditSchedule
             for ($i=1; $i <= 12; $i++) { 
                 $total = 0;
                 foreach ($res_report_spending_monthly as $idx => $val) {
-                    if($i == $val->context){
+                    if ($i == $val->context) {
                         $total = $val->total_price;
                         break;
                     }
@@ -461,14 +449,10 @@ class AuditSchedule
             // Clean up File
             foreach ($chartFiles as $file) {
                 $chartPath = storage_path("app/public/$file");
-                if (file_exists($chartPath)) {
-                    unlink($chartPath);
-                }
+                if (file_exists($chartPath)) unlink($chartPath);
             }
 
-            if (file_exists($tmpPdfPath)) {
-                unlink($tmpPdfPath);
-            }
+            if (file_exists($tmpPdfPath)) unlink($tmpPdfPath);
         }
     }
 }

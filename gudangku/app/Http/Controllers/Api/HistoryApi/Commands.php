@@ -79,7 +79,7 @@ class Commands extends Controller
 
             // Hard Delete history by ID
             $rows = HistoryModel::hardDeleteHistory($id, $user_id);
-            if($rows > 0){
+            if ($rows > 0) {
                 // Return response code
                 return response()->json([
                     'status' => 'success',

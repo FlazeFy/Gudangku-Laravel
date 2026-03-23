@@ -25,7 +25,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     generateMapRoom('#room-container',null,true,room)
@@ -38,7 +38,7 @@
     const getInventoryRoomStorage = (room,storage,target) => {
         $(`#table-inventory-${target} tbody`).empty()
         $(`#pie-chart-${target}`).empty()
-        if(storage != '' && storage){
+        if (storage != '' && storage) {
             Swal.showLoading()
             $.ajax({
                 url: `/api/v1/inventory/search/by_room_storage/${room}/${storage}`,
@@ -66,7 +66,7 @@
                         `)
                     })
 
-                    if(stats){
+                    if (stats) {
                         generatePieChart('Category Distribution',`pie-chart-${target}`,stats)
                         $(`#pie-chart-${target}`).append('<hr class="mb-1 mt-5">')
                     }

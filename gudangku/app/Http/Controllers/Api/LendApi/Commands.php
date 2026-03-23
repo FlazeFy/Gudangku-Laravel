@@ -148,9 +148,9 @@ class Commands extends Controller
 
                         // Get user's contact to broadcast
                         $user = UserModel::getSocial($user_id);
-                        if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                        if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
                             // Check if user Telegram ID is valid
-                            if(TelegramMessage::checkTelegramID($owner->telegram_user_id)){
+                            if (TelegramMessage::checkTelegramID($owner->telegram_user_id)) {
                                 // Send telegram message with image
                                 $response = Telegram::sendPhoto([
                                     'chat_id' => $user->telegram_user_id,
@@ -286,7 +286,7 @@ class Commands extends Controller
                 $lend_expired_datetime = Carbon::parse($check_lend->created_at)->addHours($check_lend->qr_period);
                 $is_expired = Carbon::now()->greaterThan($lend_expired_datetime);
 
-                if($is_expired){
+                if ($is_expired) {
                     // Update lend by ID
                     LendModel::updateLendByUserId(['lend_status' => 'expired'], null, $lend_id);
 
@@ -302,10 +302,10 @@ class Commands extends Controller
                     $borrower_name = $request->borrower_name;
                     $tbody = "";
 
-                    foreach($inventory_id_list as $id){
+                    foreach ($inventory_id_list as $id) {
                         // Add borrowed inventory
                         $res = LendInventoryRelModel::createLendInventoryRel($lend_id,$id,$borrower_name);
-                        if($res){
+                        if ($res) {
                             $inv = InventoryModel::find($id);
                             $tbody .= "
                                 <tr>
@@ -322,7 +322,7 @@ class Commands extends Controller
                         }
                     }
 
-                    if($success_add > 0){
+                    if ($success_add > 0) {
                         // Update lend status
                         LendModel::updateLendByUserId(['lend_status' => 'used'], null, $lend_id);
 
@@ -380,9 +380,9 @@ class Commands extends Controller
                         $pdfFilePath = public_path("lend inventory-$lend_id-$borrower_name.pdf");
                         file_put_contents($pdfFilePath, $pdfContent);
 
-                        if($owner && $owner->telegram_is_valid == 1 && $owner->telegram_user_id){
+                        if ($owner && $owner->telegram_is_valid == 1 && $owner->telegram_user_id) {
                             // Check if user Telegram ID is valid
-                            if(TelegramMessage::checkTelegramID($owner->telegram_user_id)){
+                            if (TelegramMessage::checkTelegramID($owner->telegram_user_id)) {
                                 // Send telegram message with document
                                 $inputFile = InputFile::create($pdfFilePath, $pdfFilePath);
                                 $response = Telegram::sendDocument([
@@ -516,11 +516,11 @@ class Commands extends Controller
                     }
                 }
                     
-                if($returned_all){
+                if ($returned_all) {
                     // Uodate lend by user ID
                     $lend = LendModel::updateLendByUserId(['lend_status' => 'finished'], $user_id, $lend_id);
 
-                    if($lend){
+                    if ($lend) {
                         // Create history
                         Audit::createHistory('Returned', 'Lend is finished', $user_id);
                     } else {

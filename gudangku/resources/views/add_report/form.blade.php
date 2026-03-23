@@ -86,7 +86,7 @@
                 $('#report_item').append(`<option selected value="no_item">- No Item Selected -</option>`)
                 $('#report_item').append(`<option value="add_ext">- Add External Item -</option>`)
                 $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
-                if(response.status !== 404){
+                if (response.status !== 404) {
                     generateAPIError(response, true)
                 } else {
                     $('.container-form').has('#add_report').before(`<div id="no_inventory-holder" class="mb-3"></div>`)
@@ -99,7 +99,7 @@
 
     const postReport = () => {
         const reportCategory = $('#report_category_holder').val()
-        if (reportCategory === "-"){
+        if (reportCategory === "-") {
             failedMessage('create report. You must select report category')
             return
         }
@@ -207,8 +207,8 @@
         })
     }
 
-    $(document).on('input','#file',function(){
-        if($('.bill-item').length == 0){
+    $(document).on('input','#file',function() {
+        if ($('.bill-item').length == 0) {
             post_analyze_image()
         } else {
             Swal.fire("Are you sure!", "want to upload new bill? this will remove previous item!", "warning").then((result) => {
@@ -230,7 +230,7 @@
         $(document).on('click', '.delete-item', function() {
             $(this).closest('.item-holder-div').remove()
 
-            if($('.item-holder-div').length == 0){
+            if ($('.item-holder-div').length == 0) {
                 const trLen = $('#item_holder').closest('table').find('thead tr th').length
                 $('#item_holder').append(`
                     <tr>

@@ -79,7 +79,7 @@
                     `)
                 })
                 
-                if(current_page < last_page){
+                if (current_page < last_page) {
                     $('#inventory-holder').append(`
                         <div class="col-12"><button class="btn btn-primary" onclick="navigate_page(${page})">Next Page</button></div>
                     `)
@@ -87,7 +87,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 }
             }

@@ -26,23 +26,23 @@ class HistoryController extends Controller
         return $user_id != null ? view('history.index') : redirect("/login");
     }
 
-    public function save_as_csv(){
+    public function save_as_csv() {
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check_admin = AdminModel::find($user_id);
 
         $res = HistoryModel::select('*');
-            if(!$check_admin){
+            if (!$check_admin) {
                 $res->where('created_by',$user_id);
             }
         $res = $res->orderBy('created_at', 'DESC')
             ->get();
 
-        if($res->isNotEmpty()){
+        if ($res->isNotEmpty()) {
             try {
                 $datetime = date('l, j F Y \a\t H:i:s');
                 $user = UserModel::getSocial($user_id);
                 $username = "";
-                if(!$check_admin){
+                if (!$check_admin) {
                     $username = "-$user->username";
                 }
                 $file_name = "History Data$username-$datetime.xlsx";
@@ -72,7 +72,7 @@ class HistoryController extends Controller
                 }
         
                 if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
-                    if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                    if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                         $inputFile = InputFile::create($storagePath, $file_name);
         
                         Telegram::sendDocument([

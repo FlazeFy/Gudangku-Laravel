@@ -40,7 +40,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
-                    if(response.status != 404){
+                    if (response.status != 404) {
                         generateAPIError(response, true)
                     } else {
                         templateAlertContainer(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>','/inventory/add')
@@ -50,13 +50,13 @@
             })
         }
 
-        if(ctx_holder in localStorage){
+        if (ctx_holder in localStorage) {
             const lastHit = parseInt(localStorage.getItem(`last-hit-${ctx_holder}`))
             const now = Date.now()
 
-            if(((now - lastHit) / 1000) < statsFetchRestTime){
+            if (((now - lastHit) / 1000) < statsFetchRestTime) {
                 const data = JSON.parse(localStorage.getItem(ctx_holder))
-                if(data){
+                if (data) {
                     generatePieChart(`Total ${type_chart} ${title}`,ctx_holder,data)
                     generateTableContextTotal(ctx_holder,data,type_chart == 'price' && ['total'])
                     Swal.close()

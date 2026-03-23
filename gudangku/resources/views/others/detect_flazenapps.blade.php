@@ -74,7 +74,7 @@
         $('#alert-flazenapps').remove()
     }
 
-    $(document).on('click','#login_test_acc',function(){
+    $(document).on('click','#login_test_acc',function() {
         Swal.showLoading()
         $.ajax({
             url: '/api/v1/login',
@@ -93,7 +93,7 @@
             }
         })
     })
-    $(document).on('click','#reject_test_acc',function(){
+    $(document).on('click','#reject_test_acc',function() {
         sessionStorage.removeItem('is_from_flazenapps')
         window.location.href = '/'        
     })

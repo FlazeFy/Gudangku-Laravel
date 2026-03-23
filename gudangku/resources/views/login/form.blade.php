@@ -30,7 +30,7 @@
     let btn_pwd = document.getElementById("btn-toogle-pwd")
 
     const viewPassword = () => {
-        if(pwd_input.getAttribute('type') == "text"){
+        if (pwd_input.getAttribute('type') == "text") {
             pwd_input.setAttribute('type', 'password')
             btn_pwd.innerHTML = '<i class="fa-sharp fa-solid fa-eye-slash"></i>'
         } else {
@@ -52,11 +52,11 @@
             success: function(response) {
                 let found = false
 
-                if(response.hasOwnProperty('role')){
+                if (response.hasOwnProperty('role')) {
                     found = true
                 }
                 
-                if(found){
+                if (found) {
                     localStorage.setItem('token_key',response.token)
                     $('#token').val(response.token)
                     $('#role').val(response.role)
@@ -82,31 +82,31 @@
 
                 if (response && response.responseJSON && response.responseJSON.hasOwnProperty('message')) {   
                     //Error validation
-                    if(typeof response.responseJSON.message === "string"){
+                    if (typeof response.responseJSON.message === "string") {
                         allMsg = response.responseJSON.message
                     } else {
-                        if(response.responseJSON.message.hasOwnProperty('username')){
+                        if (response.responseJSON.message.hasOwnProperty('username')) {
                             usernameMsg = response.responseJSON.message.username[0]
                         }
-                        if(response.responseJSON.message.hasOwnProperty('password')){
+                        if (response.responseJSON.message.hasOwnProperty('password')) {
                             passMsg = response.responseJSON.message.password[0]
                         }
                     }
                     
-                } else if(response && response.responseJSON && response.responseJSON.hasOwnProperty('errors')){
+                } else if (response && response.responseJSON && response.responseJSON.hasOwnProperty('errors')) {
                     allMsg = response.responseJSON.errors.message[0]
                 } else {
                     allMsg = errorMessage
                 }
 
                 //Set to html
-                if(usernameMsg){
+                if (usernameMsg) {
                     $('#username_msg').html(icon + usernameMsg)
                 }
-                if(passMsg){
+                if (passMsg) {
                     $('#pass_msg').html(icon + passMsg)
                 }
-                if(allMsg){
+                if (allMsg) {
                     $('#all_msg').html(icon + allMsg)
                 }
             }
@@ -114,7 +114,7 @@
     }
 
     const auto_login = () => {
-        if(localStorage.getItem('token_key') !== null){
+        if (localStorage.getItem('token_key') !== null) {
             const token = localStorage.getItem('token_key')
             Swal.showLoading()
             $.ajax({

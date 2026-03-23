@@ -98,7 +98,7 @@ class Queries extends Controller
             $res = ReportModel::getMyReport(!$check_admin ? $user_id : null,null,$search_key,null,$filter_category);
             if (count($res) > 0) {
                 $res_header = [];
-                foreach($res as $dt){
+                foreach ($res as $dt) {
                     $res_header[] = [
                         'report_title' => $dt->report_title,
                         'report_items' => $dt->report_items
@@ -356,8 +356,8 @@ class Queries extends Controller
                 $total_item = 0;
                 $total_price = 0;   
 
-                if($res_item){ 
-                    foreach($res_item as $dt){
+                if ($res_item) { 
+                    foreach ($res_item as $dt) {
                         $total_item = $total_item + $dt->item_qty;
                         $total_price = $total_price + $dt->item_price;
                     }
@@ -366,7 +366,7 @@ class Queries extends Controller
                 $res['total_item'] = $total_item;
                 $res['total_price'] = $total_price; 
 
-                if($check_admin){
+                if ($check_admin) {
                     // Get user data
                     $user = UserModel::getSocial($res->created_by);
                     $res['username'] = $user->username;
@@ -449,8 +449,8 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $filter_in = $request->query('filter_in', null);
 
-            if($filter_in){
-                if(Validation::getValidateUUID($filter_in)){
+            if ($filter_in) {
+                if (Validation::getValidateUUID($filter_in)) {
                     return response()->json([
                         'status' => 'failed',
                         'message' =>  Generator::getMessageTemplate("custom", 'selected item not valid'),

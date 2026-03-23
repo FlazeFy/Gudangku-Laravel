@@ -29,19 +29,25 @@ class InventoryLayoutModel extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'inventory_layout';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'inventory_room', 'inventory_storage', 'layout', 'storage_desc', 'created_at', 'created_by'];
 
-    public static function getInventoryByLayout($user_id, $room){
+    public static function isLayoutRoomUsedByCoordinate($user_id, $inventory_room, $layout) {
+        return InventoryLayoutModel::where('inventory_room',$inventory_room)
+            ->where('created_by', $user_id)
+            ->where('layout', 'like', '%' . $layout . '%')
+            ->exists();
+    }
+
+    public static function getInventoryByLayout($user_id, $room) {
         return InventoryLayoutModel::select('id','inventory_storage','layout','storage_desc')
             ->where('created_by',$user_id)
             ->where('inventory_room',$room)
             ->get();
     }
 
-    public static function getInventoryByRoomStorage($user_id,$room,$storage){
+    public static function getInventoryByRoomStorage($user_id,$room,$storage) {
         return InventoryLayoutModel::select('id','inventory_storage','layout','storage_desc','created_at')
             ->where('created_by',$user_id)
             ->where('inventory_room',$room)
@@ -49,7 +55,7 @@ class InventoryLayoutModel extends Model
             ->first();
     }
     
-    public static function getLayoutByCoor($id, $user_id, $coor){
+    public static function getLayoutByCoor($id, $user_id, $coor) {
         return InventoryLayoutModel::select('layout','inventory_storage')
             ->where('id',$id)
             ->where('created_by',$user_id)
@@ -57,7 +63,7 @@ class InventoryLayoutModel extends Model
             ->first();
     }
 
-    public static function createInventoryLayout($inventory_room, $inventory_storage, $storage_desc, $layout, $user_id){
+    public static function createInventoryLayout($inventory_room, $inventory_storage, $storage_desc, $layout, $user_id) {
         return InventoryLayoutModel::create([
             'id' => Generator::getUUID(),
             'inventory_room' => $inventory_room,
@@ -68,19 +74,12 @@ class InventoryLayoutModel extends Model
             'created_by' => $user_id
         ]);
     }
-    
-    public static function deleteInventoryLayoutByUserId($user_id){
-        return InventoryLayoutModel::where('created_by',$user_id)->delete();
-    }
 
-    public static function updateInventoryLayoutById($user_id = null, $id, $data){
+    public static function updateInventoryLayoutById($user_id = null, $id, $data) {
         return InventoryLayoutModel::where('id', $id)->where('created_by', $user_id)->update($data);
     }
-
-    public static function isLayoutRoomUsedByCoordinate($user_id, $inventory_room, $layout){
-        return InventoryLayoutModel::where('inventory_room',$inventory_room)
-            ->where('created_by', $user_id)
-            ->where('layout', 'like', '%' . $layout . '%')
-            ->exists();
+    
+    public static function deleteInventoryLayoutByUserId($user_id) {
+        return InventoryLayoutModel::where('created_by',$user_id)->delete();
     }
 }

@@ -112,8 +112,8 @@ class Commands extends Controller
             $inventory = InventoryModel::getInventoryNameById($id);
             // Soft Delete inventory by ID
             $rows = InventoryModel::updateInventoryById($user_id,$id,['deleted_at' => date('Y-m-d H:i:s')]);
-            if($rows > 0){
-                if(!$check_admin){
+            if ($rows > 0) {
+                if (!$check_admin) {
                     // Create history
                     Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
                 }
@@ -211,11 +211,11 @@ class Commands extends Controller
 
             // Get inventory by ID
             $inventory = InventoryModel::getInventoryDetail($id,$user_id);
-            if($inventory){
+            if ($inventory) {
                 // Check if a inventory image exists in the old inventory data
                 $inventory_image = $inventory->inventory_image;
-                if($inventory_image){
-                    if(Firebase::deleteFile($inventory_image)){
+                if ($inventory_image) {
+                    if (Firebase::deleteFile($inventory_image)) {
                         $inventory_image = null;
                     } else {
                         return response()->json([
@@ -263,7 +263,7 @@ class Commands extends Controller
 
                 // Update inventory by ID
                 $rows = InventoryModel::updateInventoryById($user_id,$id,['inventory_image' => $inventory_image]);
-                if($rows > 0){
+                if ($rows > 0) {
                     // Create history
                     Audit::createHistory('Update Image', $inventory->inventory_name, $user_id);
                     
@@ -354,11 +354,11 @@ class Commands extends Controller
             $inventory = InventoryModel::getInventoryNameById($id);
             // Hard Delete inventory by ID
             $rows = InventoryModel::deleteInventoryById($id, $user_id);
-            if($rows > 0){
+            if ($rows > 0) {
                 // Delete Firebase uploaded image
-                if($inventory->inventory_image){
+                if ($inventory->inventory_image) {
                     // Delete failed if file not found (already gone)
-                    if(!Firebase::deleteFile($inventory->inventory_image)){
+                    if (!Firebase::deleteFile($inventory->inventory_image)) {
                         return response()->json([
                             'status' => 'failed',
                             'message' => Generator::getMessageTemplate("not_found", 'failed to delete inventory image'),
@@ -370,12 +370,12 @@ class Commands extends Controller
                 ReminderModel::deleteReminderByInventoryId($id, $user_id);
                 ReportItemModel::deleteReportItemByInventoryId($id, $user_id);
 
-                if(!$check_admin){
+                if (!$check_admin) {
                     // Get user's contact to broadcast
                     $user = UserModel::getSocial($user_id);
 
                     // Send Firebase notification (mobile)
-                    if($user->firebase_fcm_token){
+                    if ($user->firebase_fcm_token) {
                         $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($message));
                         $response = $this->firebaseMessaging->send($fcm);
                     }
@@ -466,7 +466,7 @@ class Commands extends Controller
             
             // Update inventory by ID
             $rows = InventoryModel::updateInventoryById($user_id,$id,['is_favorite' => $request->is_favorite]);;
-            if($rows > 0){
+            if ($rows > 0) {
                 // Get inventory name by ID
                 $inventory = InventoryModel::getInventoryNameById($id);
 
@@ -553,8 +553,8 @@ class Commands extends Controller
             
             // Update inventory by ID
             $rows = InventoryModel::updateInventoryById($user_id,$id,['deleted_at' => null]);
-            if($rows > 0){
-                if(!$check_admin){
+            if ($rows > 0) {
+                if (!$check_admin) {
                     // Get inventory name by ID
                     $inventory = InventoryModel::getInventoryNameById($id);
 
@@ -711,7 +711,7 @@ class Commands extends Controller
 
                 // Check if inventory name already exist
                 $is_exist = InventoryModel::isInventoryNameUsed($request->inventory_name,$user_id);
-                if(!$is_exist){
+                if (!$is_exist) {
                     // Create inventory
                     $res = InventoryModel::createInventory(
                         $request->inventory_name, $request->inventory_category, $request->inventory_desc, $request->inventory_merk, $request->inventory_color, $request->inventory_room, 
@@ -719,7 +719,7 @@ class Commands extends Controller
                         $request->inventory_capacity_unit, $request->inventory_capacity_vol, $request->is_favorite, $user_id, $request->created_at
                     );
                     $id = $res->id;
-                    if($res){
+                    if ($res) {
                         // Create history
                         Audit::createHistory('Create', $request->inventory_name, $user_id);
                         // Get user's contact to broadcast
@@ -739,7 +739,7 @@ class Commands extends Controller
                         $imageOnTableDoc = "";
 
                         // Column inventory image if exist
-                        if($inventory_image){
+                        if ($inventory_image) {
                             $imageOnTableDoc = "
                             <tr>
                                 <th>Image</th>
@@ -832,9 +832,9 @@ class Commands extends Controller
 
                         $message = "inventory created, its called '$request->inventory_name'";
 
-                        if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                        if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
                             // Check if user Telegram ID is valid
-                            if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                            if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                                 // Prepare document to send via Telegram
                                 $pdfContent = $dompdf->output();
                                 $pdfFilePath = public_path("inventory-$id-$request->inventory_name.pdf");
@@ -859,7 +859,7 @@ class Commands extends Controller
                         }
 
                         // Send Firebase notification (mobile)
-                        if($user->firebase_fcm_token){
+                        if ($user->firebase_fcm_token) {
                             $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)
                                 ->withNotification(Notification::create($message))
                                 ->withData(['inventory_id' => $id]);
@@ -985,7 +985,7 @@ class Commands extends Controller
                 // Check inventory name
                 $is_exist = InventoryModel::isInventoryNameUsed($inventory_name,$user_id,$id);
 
-                if(!$is_exist){
+                if (!$is_exist) {
                     // Update inventory by ID
                     $res = InventoryModel::updateInventoryById($user_id,$id,[
                         'inventory_name' => $inventory_name, 
@@ -1004,7 +1004,7 @@ class Commands extends Controller
                         'created_at' => $request->created_at
                     ]);
 
-                    if($res){
+                    if ($res) {
                         // Create history
                         Audit::createHistory('Update', $inventory_name, $user_id);
                         
@@ -1116,14 +1116,14 @@ class Commands extends Controller
                 // Get inventory layout by ID
                 $old_data = InventoryLayoutModel::find($id);
 
-                if($old_data){
+                if ($old_data) {
                     // Update inventory layout by ID
                     $rows = InventoryLayoutModel::updateInventoryLayoutById($user_id, $id, [
                         'inventory_storage' => $request->inventory_storage,
                         'storage_desc' => $request->storage_desc
                     ]);
 
-                    if($rows > 0){
+                    if ($rows > 0) {
                         // Update inventory by storage
                         $rows_inventory = InventoryModel::updateInventoryByStorage($user_id,$old_data->inventory_storage,['inventory_storage' => $request->inventory_storage]);
                         
@@ -1223,7 +1223,7 @@ class Commands extends Controller
             } else {  
                 // Check if layout in specific room has been used
                 $exist = InventoryLayoutModel::isLayoutRoomUsedByCoordinate($user_id, $request->inventory_room, $request->layout);
-                if($exist){
+                if ($exist) {
                     return response()->json([
                         'status' => 'failed',
                         'message' => Generator::getMessageTemplate("conflict", "inventory layout"),
@@ -1233,13 +1233,13 @@ class Commands extends Controller
 
                     // Check if layout with same room & storage already exist
                     $check_layout = InventoryLayoutModel::getInventoryByRoomStorage($user_id,$request->inventory_room,$request->inventory_storage);
-                    if($check_layout){
+                    if ($check_layout) {
                         // Update inventory layout by ID
                         $rows_layout = InventoryLayoutModel::updateInventoryLayoutById($user_id, $check_layout->id, [
                             'layout' => $check_layout->layout.':'.$request->layout
                         ]);
                         
-                        if($rows_layout > 0){
+                        if ($rows_layout > 0) {
                             $is_success = true;
                             // Create history
                             Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
@@ -1248,7 +1248,7 @@ class Commands extends Controller
                         // Create inventory layout
                         $rows_layout = InventoryLayoutModel::createInventoryLayout($request->inventory_room, $request->inventory_storage, $request->storage_desc, $request->layout, $user_id);
 
-                        if($rows_layout){
+                        if ($rows_layout) {
                             $is_success = true;
 
                             // Create history
@@ -1259,14 +1259,14 @@ class Commands extends Controller
                             $message = "inventory storage has been created, its called '$request->inventory_storage'";
                             
                             // Send Firebase notification (mobile)
-                            if($user->firebase_fcm_token){
+                            if ($user->firebase_fcm_token) {
                                 $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($message));
                                 $response = $this->firebaseMessaging->send($fcm);
                             }
 
-                            if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                            if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
                                 // Check if user Telegram ID is valid
-                                if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                                     // Send telegram message
                                     $response = Telegram::sendMessage([
                                         'chat_id' => $user->telegram_user_id,
@@ -1281,7 +1281,7 @@ class Commands extends Controller
                         }
                     }
                     
-                    if($is_success){
+                    if ($is_success) {
                         // Return success response
                         return response()->json([
                             'status' => 'success',
@@ -1336,7 +1336,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteInventoryLayoutByIDCoor(Request $request, $id, $coor){
+    public function hardDeleteInventoryLayoutByIDCoor(Request $request, $id, $coor) {
         try{
             $user_id = $request->user()->id;
             $extra_msg = "";
@@ -1349,13 +1349,13 @@ class Commands extends Controller
             $layout = $check_layout->layout;
             $storage = $check_layout->inventory_storage;            
 
-            if(substr_count($layout, $find) > 0){
+            if (substr_count($layout, $find) > 0) {
                 $new_layout = str_replace($coor, "", $layout);
                 $new_layout = trim($new_layout, ":");
 
                 // Update inventory layout by ID
                 $rows_layout = InventoryLayoutModel::updateInventoryLayoutById($user_id,$id,['layout' => $new_layout]);
-                if($rows_layout > 0){
+                if ($rows_layout > 0) {
                     $msg = "$storage's coordinate is updated";
                     $is_success = true;
 
@@ -1367,7 +1367,7 @@ class Commands extends Controller
                 $rows_layout = InventoryLayoutModel::destroy($id);
 
                 $msg = Generator::getMessageTemplate("delete", $storage);
-                if($rows_layout > 0){
+                if ($rows_layout > 0) {
                     $is_success = true;
                     
                     // Create history
@@ -1379,7 +1379,7 @@ class Commands extends Controller
                     $res_inv = InventoryModel::updateInventoryByStorage($user_id,$storage,['inventory_storage' => null]);
 
                     // Define message based on impacted inventory after layout change
-                    if($res_inv > 0){
+                    if ($res_inv > 0) {
                         $extra_msg = ". At least $res_inv item in inventory has been updated due to storage deletion";
                     } else {
                         $extra_msg = ". No item in inventory has been impacted";
@@ -1387,14 +1387,14 @@ class Commands extends Controller
                     $msg = "$msg$extra_msg";
 
                     // Send Firebase notification (mobile)
-                    if($user->firebase_fcm_token){
+                    if ($user->firebase_fcm_token) {
                         $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($msg));
                         $response = $this->firebaseMessaging->send($fcm);
                     }
 
-                    if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                    if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
                         // Check if user Telegram ID is valid
-                        if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                        if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                             // Send telegram message
                             $response = Telegram::sendMessage([
                                 'chat_id' => $user->telegram_user_id,
@@ -1409,7 +1409,7 @@ class Commands extends Controller
                 }
             }
             
-            if($is_success){
+            if ($is_success) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',

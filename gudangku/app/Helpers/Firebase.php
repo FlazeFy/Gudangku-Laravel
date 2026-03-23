@@ -17,7 +17,7 @@ class Firebase
         }
     }
 
-    public static function uploadFile($ctx, $user_id, $username, $file, $file_ext){
+    public static function uploadFile($ctx, $user_id, $username, $file, $file_ext) {
         self::init();
         // Firebase Storage instance
         $storage = self::$factory->createStorage();
@@ -41,7 +41,7 @@ class Firebase
         return $fileUrl;
     }
 
-    public static function deleteFile($url){
+    public static function deleteFile($url) {
         self::init();
         $storage = self::$factory->createStorage();
         $bucket = $storage->getBucket();

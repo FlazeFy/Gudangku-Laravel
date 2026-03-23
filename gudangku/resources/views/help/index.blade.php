@@ -10,7 +10,7 @@
     <div class="content">
         <div class="d-flex justify-content-between align-items-center">
             <h1>Help</h1>
-            @if(session()->get("token_key"))
+            @if (session()->get("token_key"))
                 <div>
                     @include('components.profile')
                     @include('components.notification')

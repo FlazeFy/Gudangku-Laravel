@@ -20,7 +20,7 @@ class LoginController extends Controller
         return view('login.index');
     }
 
-    private function setUserSession(Request $request, $username, $role, $token, $email, $id){
+    private function setUserSession(Request $request, $username, $role, $token, $email, $id) {
         $request->session()->put([
             'username_key' => $username,
             'role_key' => $role,
@@ -30,25 +30,25 @@ class LoginController extends Controller
         ]);
     }
 
-    private function setGoogleToken($user_id, $access_token, $expiry_date){
+    private function setGoogleToken($user_id, $access_token, $expiry_date) {
         GoogleTokensModel::deleteGoogleTokensByUserId($user_id);
         GoogleTokensModel::createGoogleTokens($access_token, $expiry_date, $user_id);
     }
 
-    public function login_auth(Request $request){
+    public function login_auth(Request $request) {
         $this->setUserSession($request, $request->username, $request->role, $request->token, $request->email, $request->id);
 
         return redirect()->route('landing');
     }
 
-    public function redirect_to_google(){
+    public function redirect_to_google() {
         return Socialite::driver('google')
             ->scopes(['https://www.googleapis.com/auth/calendar']) 
             ->with(['access_type' => 'offline', 'prompt' => 'consent'])
             ->redirect();    
     }
 
-    public function login_google_callback(Request $request){
+    public function login_google_callback(Request $request) {
         try {
             $googleUser = Socialite::driver('google')
                 ->stateless()
@@ -66,7 +66,7 @@ class LoginController extends Controller
             $expiry_date = now()->addSeconds($googleUser->expiresIn);
 
             $user = UserModel::getUserByUsernameOrEmail($username,$email);
-            if($user){
+            if ($user) {
                 $user_id = $user->id;
                 $token = $user->createToken('login')->plainTextToken;
                 $this->setUserSession($request, $user->username, 0, $token, $user->email, $user->id);
@@ -75,7 +75,7 @@ class LoginController extends Controller
                 return redirect('/')->with('success_message', "Welcome $username"); 
             } else {
                 $user = UserModel::createUser($username, "GOOGLE_SIGN_IN", $email);
-                if($user){
+                if ($user) {
                     $user_id = $user->id;
                     $token = $user->createToken('login')->plainTextToken;
                     $this->setUserSession($request, $user->username, 0, $token, $user->email, $user->id);

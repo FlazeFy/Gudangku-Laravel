@@ -110,7 +110,7 @@ class Commands extends Controller
                 // Check for Admin account
                 $user = AdminModel::getByUsername($request->username);
                 $role = 1;
-                if($user == null){
+                if ($user == null) {
                     // Check for User account
                     $user = UserModel::getByUsername($request->username);
                     $role = 0;

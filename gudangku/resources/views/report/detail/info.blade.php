@@ -45,12 +45,12 @@
             const created_at = getDateToContext(data.created_at,'calendar',false)
             const updated_at = data.updated_at ? getDateToContext(data.updated_at,'calendar') : '-'
 
-            if(!isMobile()){
+            if (!isMobile()) {
                 $('#created_at').text(created_at)
                 $('#updated_at').text(updated_at)
             }
 
-            if(data_item.length > 0){
+            if (data_item.length > 0) {
                 $(`#btn-doc-preview-holder`).html(`
                     <a class="btn btn-primary" href="/doc/report/${data.id}"><i class="fa-solid fa-print"></i> Print</a>
                     <a class="btn btn-primary" href="/doc/report/${data.id}/custom"><i class="fa-solid fa-pen-to-square"></i> Custom Print</a>
@@ -61,7 +61,7 @@
                 `)
             }
             
-            if(data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist'){
+            if (data.report_category === 'Shopping Cart' || data.report_category === 'Wishlist') {
                 $('#report_item_tb thead').html(`
                     <tr>
                         <th scope="col">#</th>
@@ -87,7 +87,7 @@
                     </tr>
                 `)
             }
-            if(data.report_image && data.report_image.length > 0){
+            if (data.report_image && data.report_image.length > 0) {
                 $('#report_img_holder').empty()
                 data.report_image.forEach(el => {
                     $('#report_img_holder').append(`
@@ -113,7 +113,7 @@
                     `)
                 })
 
-                if(data.report_image.length > 1){
+                if (data.report_image.length > 1) {
                     $('#report_image_button-holder').prepend(`
                         <a class="btn btn-danger py-1" data-bs-toggle="modal" data-bs-target="#modalDeleteAllImage"><i class="fa-solid fa-fire"></i><span class="d-none d-md-inline"> Remove All</span></a>
                         <div class="modal fade" id="modalDeleteAllImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -196,7 +196,7 @@
             `)
 
             $('#report_item_tb tbody').empty()
-            if(data_item.length > 0){
+            if (data_item.length > 0) {
                 data_item.forEach(dt => {
                     $('#report_item_tb tbody').append(`
                         <tr class="align-middle">
@@ -407,13 +407,13 @@
             }
         })
         
-        if(checkedItems.length > 0){
+        if (checkedItems.length > 0) {
             let selected_item_name = ''
             let selected_item_id = ''
             let selected_inventory_id = ''
             checkedItems.forEach((el,idx) => {
                 selected_item_name += `<a class='bordered bg-transparent rounded px-2 py-1 d-inline-block'>${el.item_name}</a>`
-                if(idx < checkedItems.length - 1){
+                if (idx < checkedItems.length - 1) {
                     selected_item_id += `${el.id},`
                     selected_inventory_id += `${el.inventory_id},`
                 } else {
@@ -491,12 +491,12 @@
         }
     }
 
-    $(document).on('click','#split_report-button',async function(){
+    $(document).on('click','#split_report-button',async function() {
         const report_category = $('#report_category_holder').val()
         await getDictionaryByContext('report_category,report_category_split',token,report_category)
     })
 
-    $(document).on('change','.check-inventory', function(){
+    $(document).on('change','.check-inventory', function() {
         checkedToggleEvent()
     })
 </script>

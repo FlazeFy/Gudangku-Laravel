@@ -28,7 +28,7 @@
             is_process = checkFillingStatus([
                 'inventory_name','inventory_desc','inventory_color','inventory_merk','inventory_price','inventory_vol','inventory_capacity_vol','inventory_rack','inventory_storage'
             ])
-            if(is_process == true && !is_submit){
+            if (is_process == true && !is_submit) {
                 event.preventDefault()
                 event.returnValue = ''
             }

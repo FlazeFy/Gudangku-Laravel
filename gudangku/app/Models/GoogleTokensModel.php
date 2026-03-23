@@ -26,12 +26,15 @@ class GoogleTokensModel extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'google_tokens';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'access_token', 'expiry', 'created_at', 'created_by'];
 
-    public static function createGoogleTokens($access_token, $expiry_date, $user_id){
+    public static function getGoogleTokensByUserId($user_id) {
+        return GoogleTokensModel::where('created_by', $user_id)->first();
+    }
+    
+    public static function createGoogleTokens($access_token, $expiry_date, $user_id) {
         return GoogleTokensModel::create([
             'id' => Generator::getUUID(), 
             'access_token' => $access_token, 
@@ -41,11 +44,7 @@ class GoogleTokensModel extends Model
         ]);
     }
 
-    public static function getGoogleTokensByUserId($user_id){
-        return GoogleTokensModel::where('created_by', $user_id)->first();
-    }
-
-    public static function deleteGoogleTokensByUserId($user_id){
+    public static function deleteGoogleTokensByUserId($user_id) {
         return GoogleTokensModel::where('created_by', $user_id)->delete();
     }
 }

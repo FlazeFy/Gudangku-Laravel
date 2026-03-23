@@ -1,4 +1,4 @@
-<a class="btn btn-primary mb-3 me-2" id="selected-inventory-modal-button" data-bs-target="#modalBorrowInventory" data-bs-toggle="modal"><i class="fa-solid fa-cart-shopping"></i> <b id="total-item-selected">0</b> @if(!$isMobile) Item Selected @endif</a>
+<a class="btn btn-primary mb-3 me-2" id="selected-inventory-modal-button" data-bs-target="#modalBorrowInventory" data-bs-toggle="modal"><i class="fa-solid fa-cart-shopping"></i> <b id="total-item-selected">0</b> @if (!$isMobile) Item Selected @endif</a>
 <div class="modal fade" id="modalBorrowInventory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -83,7 +83,7 @@
         const selected = getSelectedItems()
         $('#selected-inventory-holder').empty()
 
-        if(selected.length > 0){
+        if (selected.length > 0) {
             $('#reset-button-holder').html(`
                 <a class="btn btn-danger mt-3 w-100" id="reset-borrow-button"><i class="fa-solid fa-rotate-left"></i> Reset All</a>
             `)
@@ -108,11 +108,11 @@
         post_borrow(lend_id)
     })
 
-    $(document).on('click','#selected-inventory-modal-button',function(){
+    $(document).on('click','#selected-inventory-modal-button',function() {
         get_selected_inventory_modal()
     })
 
-    $(document).on('click','#reset-borrow-button',function(){
+    $(document).on('click','#reset-borrow-button',function() {
         localStorage.removeItem(SELECTED_STORAGE_KEY)
         $('#reset-button-holder').empty()
         $('.inventory-item').css('border-color', 'var(--primaryColor)')

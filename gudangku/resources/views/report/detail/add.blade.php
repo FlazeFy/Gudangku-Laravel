@@ -60,7 +60,7 @@
             })
         })
 
-        if(report_items.length > 0){
+        if (report_items.length > 0) {
             $.ajax({
                 url: `/api/v1/report/item/${id}`,
                 dataType: 'json',
@@ -122,7 +122,7 @@
             $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
         })
         .fail(function (response, jqXHR, ajaxOptions, thrownError) {
-            if(response.status !== 404){
+            if (response.status !== 404) {
                 generateAPIError(response, true)
             } 
         })   
@@ -180,8 +180,8 @@
         })
     }
 
-    $(document).on('input','#file',function(){
-        if($('.bill-item').length == 0){
+    $(document).on('input','#file',function() {
+        if ($('.bill-item').length == 0) {
             post_analyze_image()
         } else {
             Swal.fire("Are you sure!", "want to upload new bill? this will remove previous item!","warning").then((result) => {
@@ -199,14 +199,14 @@
         getAllInventory()
 
         $('#report_category').on('change', function() {
-            if($(this).val() != "Shopping Cart" && $(this).val() != "Wishlist"){
+            if ($(this).val() != "Shopping Cart" && $(this).val() != "Wishlist") {
                 $('.extra-form').empty()
             }
         })
         $(document).on('click', '.delete-item', function() {
             $(this).closest('.item-holder-div').remove()
 
-            if($('.item-holder-div').length == 0){
+            if ($('.item-holder-div').length == 0) {
                 $('#item_holder').append(`<div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>`)
             }
         })

@@ -35,7 +35,7 @@
                     @include('profile.telegram')
                 </div>
             </div>
-            @if($role == 0)
+            @if ($role == 0)
             <div class="col-lg-12 col-sm-12 d-flex">
                 <div class="container-form" id="telegram-section">
                     <h2 class="my-3">Lend Your Inventory</h2>

@@ -54,7 +54,7 @@ class AuthTest extends TestCase
 
         $check_nullable_str = ['telegram_user_id','firebase_fcm_token','line_user_id','phone','timezone','updated_at'];
         foreach ($check_nullable_str as $col) {
-            if(!is_null($data['message'][$col])){
+            if (!is_null($data['message'][$col])) {
                 $this->assertIsString($col, $data['message'][$col]);
             }
         }

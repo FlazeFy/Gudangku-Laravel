@@ -88,7 +88,7 @@ class Queries extends Controller
 
             // Check If user has inventory
             $check_inventory = InventoryModel::getInventoryTotal($user_id);
-            if($check_inventory == 0){
+            if ($check_inventory == 0) {
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'you must have at least one inventory to generate QR',
@@ -97,11 +97,11 @@ class Queries extends Controller
 
             // Get active lend
             $res = LendModel::getLendActive($user_id);
-            if($res) { 
+            if ($res) { 
                 $res->lend_expired_datetime = Carbon::parse($res->created_at)->addHours($res->qr_period);
                 $res->is_expired = Carbon::now()->greaterThan($res->lend_expired_datetime);
 
-                if(!$res->is_expired){
+                if (!$res->is_expired) {
                     // Return success response
                     return response()->json([
                         'status' => 'success',
@@ -195,7 +195,7 @@ class Queries extends Controller
 
             // Get all lend
             $res = LendModel::getAllLend($user_id,$perPage);
-            if ($res->count() > 0){
+            if ($res->count() > 0) {
                 $final_res = [];
                 foreach ($res as $dt) {
                     $final_res[] = [
@@ -320,7 +320,7 @@ class Queries extends Controller
 
             // Get lend by ID
             $check = LendModel::find($lend_id);
-            if($check->lend_status == 'expired' || $check->lend_status == 'used' || $check->is_finished){
+            if ($check->lend_status == 'expired' || $check->lend_status == 'used' || $check->is_finished) {
                 $extra = $check->lend_status == 'expired' ? 'expired' : 'used';
                 return response()->json([
                     'status' => 'failed',
@@ -330,7 +330,7 @@ class Queries extends Controller
 
             // Get lend attached inventory by lend's ID
             $res = LendModel::getAllLendInventory($lend_id,$perPage);
-            if(count($res) > 0) { 
+            if (count($res) > 0) { 
                 // Get lend owner by lend's ID
                 $user = LendModel::getLendOwnerById($lend_id);
 

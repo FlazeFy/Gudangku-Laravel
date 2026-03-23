@@ -86,7 +86,7 @@
                     $('#created_at').text(getDateToContext(data.created_at,'calendar'))
                     $('#days_exist').text(countTime(data.created_at,null))
 
-                    if(data.updated_at){
+                    if (data.updated_at) {
                         $('#updated_at').html(` And the last updated on ${getDateToContext(data.updated_at,'calendar')} that about <b>${countTime(data.updated_at,null)}</b>.`)
                     }
                     const isExpensive = data.inventory_price > data.inventory_price_analyze.average_inventory_price
@@ -96,7 +96,7 @@
 
                     $('#expensiveness_holder').html(`<a class='${capacityClass} rounded-pill px-3 py-2 ms-3' style='font-size:var(--textXMD)'>${capacityIcon} ${capacityText}</a>`)
 
-                    if(data.inventory_history_analyze){
+                    if (data.inventory_history_analyze) {
                         let report_history = ' This inventory also had been used in report '
                         let tbody_report = ''
 
@@ -134,7 +134,7 @@
                         }, 0)
                         $('#whole_year_total_in_report').html(`<p>In whole year ${year}, there is about <b>${totalUsedInReportYear} report</b> are using this inventory.</p>`)
                     }
-                    if(data.inventory_capacity_unit && data.inventory_capacity_vol){
+                    if (data.inventory_capacity_unit && data.inventory_capacity_vol) {
                         $('#capacity_holder').html(`
                             <h2 class='text-primary fw-bolder mt-2' style='font-size:calc(var(--textJumbo)*2.5)'>${data.inventory_capacity_vol} <span class='text-white' style='font-size:calc(var(--textLG)*1.75)'>${data.inventory_capacity_unit == 'percentage' ? '%' : data.inventory_capacity_unit} of remaining capacity</span></h2>
                         `)
@@ -176,7 +176,7 @@
                     generateLineColumnChart(`Average Price Comparison to All Inventory`,'price-line-chart-holder',data_price_avg_line_chart,60)
                     generateBarChart(`Inventory using In Report ${year}`,'monthly_report_history_table',data.inventory_in_monthly_report)
 
-                    if(data.inventory_layout){
+                    if (data.inventory_layout) {
                         $('#layout-holder').html(`
                             <h2>8. The Room Layout</h2>
                             <p>You can find <b>${data.inventory_name}</b> at storage <b>${data.inventory_storage}</span>, layout <b>${data.inventory_layout.layout}</b>.
@@ -205,7 +205,7 @@
                     generateHeatmapInventoryActivity(data_heatmap_inventory_activity)
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    if(response.status != 404){
+                    if (response.status != 404) {
                         generateAPIError(response, true)
                     } else {
                         Swal.fire({
@@ -229,7 +229,7 @@
             const header = `<?= Generator::getDocTemplate('header') ?>`
             const footer = `<?= Generator::getDocTemplate('footer') ?>`
             const style = `<?= Generator::getDocTemplate('style') ?>`
-            if(!toggle_show_customize){
+            if (!toggle_show_customize) {
                 let editor = new RichTextEditor("#work_area")
                 editor.setHTML(`<head>${style}<link rel="stylesheet" href="{{ asset('/room_v1.0.css') }}"/></head>${header}${$('#render_area').html()}${footer}`)
                 toggle_show_customize = true

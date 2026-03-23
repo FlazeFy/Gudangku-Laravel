@@ -8,10 +8,10 @@
 
 <script>
     $(document).ready(function() {
-        $(document).on('click', '#clear_report_image-button', function(){
+        $(document).on('click', '#clear_report_image-button', function() {
             $('#clear_report_image-button').remove()
             $('#save_report_image-button').remove()
-            if($('#report_img_holder .img-zoomable-modal').length > 0) {
+            if ($('#report_img_holder .img-zoomable-modal').length > 0) {
                 $('#report_img_holder').children().not(':has(.img-zoomable-modal)').remove()
             } else {
                 $('#report_img_holder').html(`
@@ -29,7 +29,7 @@
                 return
             }
 
-            if($('#clear_report_image-button').length === 0){
+            if ($('#clear_report_image-button').length === 0) {
                 $('#report_image_button-holder').prepend(`
                     <a class="btn btn-danger py-1" id="clear_report_image-button">
                         <i class="fa-solid fa-circle-xmark"></i><span class="d-none d-md-inline"> Clear</span>
@@ -66,7 +66,7 @@
             }
             reader.readAsDataURL(file)
 
-            if($('#save_report_image-button').length === 0){
+            if ($('#save_report_image-button').length === 0) {
                 $('#report_image_button-holder').append(`
                     <a class="btn btn-success py-1" id="save_report_image-button">
                         <i class="fa-solid fa-floppy-disk"></i><span class="d-none d-md-inline"> Save Image</span>

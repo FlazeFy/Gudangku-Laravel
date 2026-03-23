@@ -22,7 +22,7 @@
             <span id="export-section"></span>
         </div>
         
-        @if($role == 0)
+        @if ($role == 0)
             @include('history.list')
         @else   
             @include('history.table')

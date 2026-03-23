@@ -5,7 +5,7 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class TelegramMessage
 {
-    public static function checkTelegramID($telegram_id){ 
+    public static function checkTelegramID($telegram_id) { 
         try {
             $chat = Telegram::getChat([
                 'chat_id' => $telegram_id,

@@ -35,10 +35,10 @@
 
                 const tele_data = response.telegram_data
 
-                if(data.telegram_is_valid){
+                if (data.telegram_is_valid) {
                     $('#label-validate-holder').html(`<label class="mt-3 text-success" style="font-weight:600"><i class="fa-solid fa-check"></i> Validated!</label>`)
                 } else {
-                    if(tele_data){
+                    if (tele_data) {
                         $('#label-validate-holder').html(`
                             <form action="/profile/validate_telegram" method="POST">
                                 @csrf
@@ -65,13 +65,13 @@
                     }
                 }
 
-                if(data.telegram_is_valid == 0 && data.telegram_user_id == null){
+                if (data.telegram_is_valid == 0 && data.telegram_user_id == null) {
                     $('#telegram_user_id').after(`
                         <div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Sync your GudangKu account with your <b>Telegram ID</b> to use this apps straight at your Telegram Chat</div>
                     `)
                 }
 
-                if(data.is_google_sign_in){
+                if (data.is_google_sign_in) {
                     $('#email_input').prop('readonly', true)
                     $('#login_status_box').html(`<div class="alert alert-success w-100 mt-4"><i class="fa-solid fa-circle-info"></i> Your account login using Google Sign In</div>`)
                     $('#change-pass-button-holder').empty()
@@ -88,7 +88,7 @@
     get_my_profile()
 
     const update_profile = () => {
-        if($('#username_input').val() != "" && $('#email_input').val() != "") {
+        if ($('#username_input').val() != "" && $('#email_input').val() != "") {
             $.ajax({
                 url: '/api/v1/user/update_profile',
                 type: 'PUT',

@@ -70,17 +70,17 @@
         var result = ""
 
         pins.forEach(function(e) {
-            if(type == "time_out"){
+            if (type == "time_out") {
                 e.disabled = true
                 e.style = "background: var(--hoverBG)"
-            } else if(type == "regenerate"){
+            } else if (type == "regenerate") {
                 e.disabled = false
                 e.value = ""
                 e.style = "background: var(--whiteColor)"
-            } else if(type == "invalid"){
+            } else if (type == "invalid") {
                 e.value = ""
                 e.style = "border: 1.5px solid var(--warningBG)"
-            } else if(type == "fetch"){
+            } else if (type == "fetch") {
                 result += e.value
             }
         })
@@ -93,13 +93,13 @@
         var is_empty = false
 
         pins.forEach(function(e) {
-            if(e.value == "" || e.value == null){
+            if (e.value == "" || e.value == null) {
                 is_empty = true
                 return
             }
         })
 
-        if(is_empty == false){
+        if (is_empty == false) {
             const token = controlPin('fetch')
             validateToken(token)
         }
@@ -207,7 +207,7 @@
             }
         })
 
-        $('#btn-regenerate-token').on('click', function(){
+        $('#btn-regenerate-token').on('click', function() {
             $.ajax({
                 url: `/api/v1/register/regen_token`,
                 dataType: 'json',
@@ -236,10 +236,10 @@
             })
         })
 
-        $('#btn-register-acc').on('click', function(){
-            if(validateInput('text', 'username', 36, 6) && validateInput('text', 'password', 36, 6) && validateInput('text', 'email', 255, 10)){
-                if($('#password').val() == $('#password_validation').val()){
-                    if($('#email').val().includes("gmail")){
+        $('#btn-register-acc').on('click', function() {
+            if (validateInput('text', 'username', 36, 6) && validateInput('text', 'password', 36, 6) && validateInput('text', 'email', 255, 10)) {
+                if ($('#password').val() == $('#password_validation').val()) {
+                    if ($('#email').val().includes("gmail")) {
                         $.ajax({
                             url: `/api/v1/register/token`,
                             dataType: 'json',

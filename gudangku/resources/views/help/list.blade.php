@@ -228,7 +228,7 @@
     <ol class="text-white ms-4" style="list-style-type: circle">
         <li>In the landing page, press the <b>Report</b> menu</li>
         <li>It will takes you to Report Page, find a table at the <b>bottom of the section "Control Panel"</b></li>
-        <li>You <b class="text-success">will see</b> the <b>Report Title</b>, <b>Description</b>, <b>Category</b>, <b>Total Item</b>, <b>Total Price</b> if(the category is shopping cart or wishlist), <b>Attached Item</b>, and the <b>Properties</b>
+        <li>You <b class="text-success">will see</b> the <b>Report Title</b>, <b>Description</b>, <b>Category</b>, <b>Total Item</b>, <b>Total Price</b> if (the category is shopping cart or wishlist), <b>Attached Item</b>, and the <b>Properties</b>
         . You can use the page nativator at the bottom of the page</li>
         <li>If you want to edit or see more detail. Click the <b class='text-success fst-italic'>report box</b> and it will takes you to Detail Report Page</li>
     </ol>
@@ -475,7 +475,7 @@
                 const $el = $(`#${dt.element}`)
                 const btnId = `scroll-to-${dt.element}-btn`
 
-                if ($el.length != 0){ 
+                if ($el.length != 0) { 
                     if (!check_el_viewport($el) && $(`#${btnId}`).length === 0) {
                         $('#nav_scroll-holder').append(`
                             <button class="btn btn-primary mb-2 w-100" id="${btnId}">${dt.text}</button>

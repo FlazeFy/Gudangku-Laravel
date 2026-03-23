@@ -32,7 +32,7 @@
 
                     const icon = el === 'room' ? 'fa-house' : el === 'category' ? 'fa-toolbox' : 'fa-box-archive'
 
-                    if(data){
+                    if (data) {
                         data.forEach((dt, idx) => {
                             $(`#inventory_by_${el}-holder`).append(`
                                 <a class="p-2 ${el === view && catalog === dt.context ? 'bg-primary' : 'bordered bg-transparent'} rounded d-inline-flex gap-2 text-nowrap" href="/inventory/by/${el}/${dt.context}">
@@ -47,7 +47,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     holder.forEach(el => {

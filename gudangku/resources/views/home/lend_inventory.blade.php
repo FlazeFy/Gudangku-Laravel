@@ -5,7 +5,7 @@
         let item_el = ''
         $('#lend-item-section').empty()
         
-        if(list_inventory.length > 0){
+        if (list_inventory.length > 0) {
             list_inventory.forEach(el => {
                 item_el += `
                     <h6 class="fw-bold mb-1 mt-3 bg-success rounded-pill px-3 py-2 ms-2" style="width: fit-content; font-size:var(--textXMD);">${el.inventory_category}</h6>

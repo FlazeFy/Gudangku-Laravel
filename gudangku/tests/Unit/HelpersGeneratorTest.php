@@ -74,7 +74,7 @@ class HelpersGeneratorTest extends TestCase
         Audit::auditRecordSheet("Test - Generator Helper", "Generator-getUserEmail", $user_id,$check);
     }
 
-    public function test_generator_getToken(){
+    public function test_generator_getToken() {
         // Sample
         $len = 6;
         $token = Generator::getTokenValidation($len);
@@ -91,7 +91,7 @@ class HelpersGeneratorTest extends TestCase
         Audit::auditRecordSheet("Test - Generator Helper", "Generator-getTokenValidation",'',$token);
     }
 
-    public function test_generator_getRandomDate(){
+    public function test_generator_getRandomDate() {
         // Sample
         $start = '2023-01-01 00:00:00';
         $date = Generator::getRandomDate(0);
@@ -110,7 +110,7 @@ class HelpersGeneratorTest extends TestCase
         Audit::auditRecordSheet("Test - Generator Helper", "Generator-getRandomDate",'',$date);
     }
 
-    public function test_generator_getDocTemplate(){
+    public function test_generator_getDocTemplate() {
         // Sample
         $type = "footer";
         $html_doc = Generator::getDocTemplate($type);

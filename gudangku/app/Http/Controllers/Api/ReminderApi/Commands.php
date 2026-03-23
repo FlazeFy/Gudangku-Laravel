@@ -126,21 +126,21 @@ class Commands extends Controller
 
                 // Get reminder data
                 $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id);
-                if(!$is_exist){
+                if (!$is_exist) {
                     // Get inventory name by ID
                     $inventory = InventoryModel::getInventoryNameById($request->inventory_id);
-                    if($inventory){
+                    if ($inventory) {
                         // Create reminder
                         ReminderModel::createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id);
 
                         // Get google token by user
                         $google_token = GoogleTokensModel::getGoogleTokensByUserId($user_id);
                         $reminder_desc = "$reminder_desc for inventory $inventory->inventory_name";
-                        if($google_token){
+                        if ($google_token) {
                             $access_token = $google_token->access_token;
 
                             // Define event in google calendar
-                            if($reminder_type == 'Every Day'){
+                            if ($reminder_type == 'Every Day') {
                                 $hour = (int) str_replace("Every ", "", $reminder_context);
                                 $start = now()->setTime($hour, 0)->toRfc3339String();
 
@@ -153,12 +153,12 @@ class Commands extends Controller
                                 $start = now()->next($carbonDayMap[$byDay])->setTime(4, 0)->toRfc3339String();
                             
                                 GoogleCalendar::createRecurringEvent($access_token, $reminder_desc, $start, 'WEEKLY', $byDay);
-                            } else if($reminder_type == 'Every Month'){
+                            } else if ($reminder_type == 'Every Month') {
                                 $day = (int) str_replace("Every ", "", $reminder_context);
                                 $start = now()->startOfMonth()->addDays($day - 1)->setTime(9, 0)->toRfc3339String();
 
                                 GoogleCalendar::createRecurringEvent($access_token, $reminder_desc,$start,'MONTHLY',null,$byMonthDay = $day);
-                            } else if($reminder_type == 'Every Year'){
+                            } else if ($reminder_type == 'Every Year') {
                                 [$day, $month] = explode(' ', str_replace("Every ", "", $reminder_context));
                                 $monthMap = ['Jan'=>1, 'Feb'=>2, 'Mar'=>3, 'Apr'=>4, 'May'=>5, 'Jun'=>6,'Jul'=>7, 'Aug'=>8, 'Sep'=>9, 'Oct'=>10, 'Nov'=>11, 'Dec'=>12];
                                 $monthNumber = $monthMap[$month];
@@ -172,18 +172,18 @@ class Commands extends Controller
                         Audit::createHistory('Create Reminder', $reminder_desc, $user_id);
 
                         $msg = "You have create a reminder. Here's the reminder description for [DEMO]. $reminder_desc";
-                        if($request->send_demo == "true"){
+                        if ($request->send_demo == "true") {
                             // Demo Reminder
                             // Get user data
                             $user = UserModel::getSocial($user_id);
                             // Send Firebase notification (mobile)
-                            if($user->firebase_fcm_token){
+                            if ($user->firebase_fcm_token) {
                                 $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($msg));
                                 $response = $messaging->send($fcm);
                             }
-                            if($user && $user->telegram_is_valid == 1 && $user->telegram_user_id){
+                            if ($user && $user->telegram_is_valid == 1 && $user->telegram_user_id) {
                                 // Check if user Telegram ID is valid
-                                if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                                if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                                     // Send telegram message
                                     $response = Telegram::sendMessage([
                                         'chat_id' => $user->telegram_user_id,
@@ -318,7 +318,7 @@ class Commands extends Controller
 
                 // Get reminder data
                 $is_exist = ReminderModel::getReminderByInventoryIdReminderTypeReminderContext($inventory_id,$reminder_type,$reminder_context,$user_id,$id);
-                if(!$is_exist){
+                if (!$is_exist) {
                     // Update reminder
                     $res = ReminderModel::updateReminderByID([
                         'reminder_type' => $reminder_type,
@@ -326,25 +326,25 @@ class Commands extends Controller
                         'reminder_desc' => $reminder_desc]
                     , $id, $user_id);
 
-                    if($res > 0){
+                    if ($res > 0) {
                         // Get google token by user
                         $google_token = GoogleTokensModel::getGoogleTokensByUserId($user_id);
                         
                         // Get inventory name by ID
                         $inventory = InventoryModel::getInventoryNameById($inventory_id);
-                        if($inventory === null){
+                        if ($inventory === null) {
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => Generator::getMessageTemplate("not_found", "inventory"),
                             ], Response::HTTP_NOT_FOUND);
                         }
                             
-                        if($google_token){
+                        if ($google_token) {
                             $reminder_desc = "$reminder_desc for inventory $inventory->inventory_name";
                             $access_token = $google_token->access_token;
 
                             // Define event in google calendar
-                            if($reminder_type == 'Every Day'){
+                            if ($reminder_type == 'Every Day') {
                                 $hour = (int) str_replace("Every ", "", $reminder_context);
                                 $start = now()->setTime($hour, 0)->toRfc3339String();
 
@@ -357,12 +357,12 @@ class Commands extends Controller
                                 $start = now()->next($carbonDayMap[$byDay])->setTime(4, 0)->toRfc3339String();
                             
                                 GoogleCalendar::createRecurringEvent($access_token, $reminder_desc, $start, 'WEEKLY', $byDay);
-                            } else if($reminder_type == 'Every Month'){
+                            } else if ($reminder_type == 'Every Month') {
                                 $day = (int) str_replace("Every ", "", $reminder_context);
                                 $start = now()->startOfMonth()->addDays($day - 1)->setTime(9, 0)->toRfc3339String();
 
                                 GoogleCalendar::createRecurringEvent($access_token, $reminder_desc,$start,'MONTHLY',null,$byMonthDay = $day);
-                            } else if($reminder_type == 'Every Year'){
+                            } else if ($reminder_type == 'Every Year') {
                                 [$day, $month] = explode(' ', str_replace("Every ", "", $reminder_context));
                                 $monthMap = ['Jan'=>1, 'Feb'=>2, 'Mar'=>3, 'Apr'=>4, 'May'=>5, 'Jun'=>6,'Jul'=>7, 'Aug'=>8, 'Sep'=>9, 'Oct'=>10, 'Nov'=>11, 'Dec'=>12];
                                 $monthNumber = $monthMap[$month];
@@ -468,7 +468,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function postCopyReminder(Request $request){
+    public function postCopyReminder(Request $request) {
         try{
             $user_id = $request->user()->id;
 
@@ -517,7 +517,7 @@ class Commands extends Controller
                     $list_inventory_name .= ', and ' . end($names);
                 }
                 
-                if($total_success > 0){
+                if ($total_success > 0) {
                     // Create history
                     Audit::createHistory('Create Reminder', "$request->reminder_desc for inventory $list_inventory_name", $user_id);
 
@@ -596,23 +596,23 @@ class Commands extends Controller
 
             // Make user only admin can use this request
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 $id = $request->reminder_id;
 
                 // Get reminder by ID
                 $reminder = ReminderModel::getReminderJob($id);
-                if($reminder){
+                if ($reminder) {
                     // Hard delete schedule (reminder) mark
                     $deleted = ScheduleMarkModel::deleteScheduleMarkById($id);
 
-                    if($deleted > 0){
+                    if ($deleted > 0) {
                         // Re insert schedule (reminder) mark
                         ScheduleMarkModel::createScheduleMark($id);
 
                         $message = "Hello $reminder->username, your inventory $reminder->inventory_name has remind $reminder->reminder_desc";
-                        if($reminder->telegram_user_id){
+                        if ($reminder->telegram_user_id) {
                             // Check if user Telegram ID is valid
-                            if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                            if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                                 // Send telegram message
                                 $response = Telegram::sendMessage([
                                     'chat_id' => $reminder->telegram_user_id,
@@ -626,12 +626,12 @@ class Commands extends Controller
                         }
 
                         // Send line message
-                        if($reminder->line_user_id){
+                        if ($reminder->line_user_id) {
                             LineMessage::sendMessage('text',$message,$reminder->line_user_id);
                         }
                         
                         // Send Firebase notification (mobile)
-                        if($reminder->firebase_fcm_token){
+                        if ($reminder->firebase_fcm_token) {
                             $fcm = CloudMessage::withTarget('token', $reminder->firebase_fcm_token)
                                 ->withNotification(Notification::create($message, $id))
                                 ->withData(['id_context' => $id]);
@@ -728,7 +728,7 @@ class Commands extends Controller
             
             // Hard delete reminder by ID
             $res = ReminderModel::hardDeleteReminder($id, $user_id);
-            if($reminder && $res > 0){
+            if ($reminder && $res > 0) {
                 // Create history
                 Audit::createHistory('Delete Reminder', "$reminder->reminder_desc for inventory $reminder->inventory_name", $user_id);
 

@@ -28,22 +28,11 @@ class LendInventoryRelModel extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'lend_inventory_rel';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'lend_id', 'inventory_id', 'borrower_name', 'returned_at', 'created_at'];
 
-    public static function createLendInventoryRel($lend_id, $inventory_id, $borrower_name){
-        return LendInventoryRelModel::create([
-            'id' => Generator::getUUID(), 
-            'lend_id' => $lend_id, 
-            'inventory_id' => $inventory_id,  
-            'borrower_name' => $borrower_name,
-            'created_at' => date('Y-m-d H:i:s'), 
-        ]);
-    }
-
-    public static function getAllLendActiveInventory($user_id){
+    public static function getAllLendActiveInventory($user_id) {
         return LendInventoryRelModel::selectRaw("inventory_category,GROUP_CONCAT(CONCAT(inventory_name, ' (', inventory_category, ')') SEPARATOR ', ') as list_inventory")
             ->join('inventory','inventory.id','=','lend_inventory_rel.inventory_id')
             ->join('lend','lend.id','=','lend_inventory_rel.lend_id')
@@ -54,7 +43,7 @@ class LendInventoryRelModel extends Model
             ->get();
     }
 
-    public static function getInventoryByLendId($user_id,$lend_id){
+    public static function getInventoryByLendId($user_id,$lend_id) {
         return LendInventoryRelModel::selectRaw("lend_inventory_rel.id, inventory_category, inventory_name, returned_at")
             ->join('inventory','inventory.id','=','lend_inventory_rel.inventory_id')
             ->where('inventory.created_by',$user_id)
@@ -62,7 +51,17 @@ class LendInventoryRelModel extends Model
             ->get();
     }
 
-    public static function updateLendInventoryById($id,$lend_id,$data){
+    public static function createLendInventoryRel($lend_id, $inventory_id, $borrower_name) {
+        return LendInventoryRelModel::create([
+            'id' => Generator::getUUID(), 
+            'lend_id' => $lend_id, 
+            'inventory_id' => $inventory_id,  
+            'borrower_name' => $borrower_name,
+            'created_at' => date('Y-m-d H:i:s'), 
+        ]);
+    }
+
+    public static function updateLendInventoryById($id,$lend_id,$data) {
         return LendInventoryRelModel::where('id',$id)
             ->where('lend_id',$lend_id)
             ->update($data);

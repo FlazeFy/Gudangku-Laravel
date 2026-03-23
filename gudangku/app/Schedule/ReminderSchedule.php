@@ -24,10 +24,10 @@ class ReminderSchedule
     {
         $summary = ReminderModel::getReminderJob(null);
         
-        if($summary){
+        if ($summary) {
             $firebaseRealtime = new FirebaseRealtime();
 
-            foreach($summary as $index => $dt){
+            foreach ($summary as $index => $dt) {
                 $server_datetime = new DateTime();
 
                 // User time config
@@ -42,29 +42,28 @@ class ReminderSchedule
                 $server_datetime->modify($interval);
 
                 $exec = false;
-
                 $idempoten_pass = true;
                 $idempoten = ScheduleMarkModel::select('id','last_execute','reminder_id')
                     ->where('reminder_id',$dt->id)
                     ->first();
 
-                if($idempoten){
+                if ($idempoten) {
                     $idempoten_datetime = new DateTime($idempoten->last_execute);
                     $idempoten_datetime->modify($interval);
                     $idempoten_pass = false;
                 }
 
-                if($dt->reminder_type == 'Every Day'){
+                if ($dt->reminder_type == 'Every Day') {
                     $server_day = $server_datetime->format('H');
                     $split_reminder_context = explode(" ", $dt->reminder_context);
                     $day_reminder = $split_reminder_context[1];
-                    if($day_reminder == $server_day){
+                    if ($day_reminder == $server_day) {
                         $exec = true;
 
                         // Check idempoten
-                        if($idempoten){
+                        if ($idempoten) {
                             $idempoten_day = $idempoten_datetime->format('H');
-                            if($idempoten_day != $day_reminder){
+                            if ($idempoten_day != $day_reminder) {
                                 $idempoten_pass = true;
                                 ScheduleMarkModel::destroy($idempoten->id);
                             } else {
@@ -74,17 +73,17 @@ class ReminderSchedule
                             $idempoten_pass = true;
                         }
                     }
-                } else if($dt->reminder_type == 'Every Week'){
+                } else if ($dt->reminder_type == 'Every Week') {
                     $server_day = $server_datetime->format('D');
                     $split_reminder_context = explode(" ", $dt->reminder_context);
                     $day_reminder = substr($split_reminder_context[1],0,3);
-                    if($day_reminder == $server_day){
+                    if ($day_reminder == $server_day) {
                         $exec = true;
 
                         // Check idempoten
-                        if($idempoten){
+                        if ($idempoten) {
                             $idempoten_day = $idempoten_datetime->format('D');
-                            if($idempoten_day != $day_reminder){
+                            if ($idempoten_day != $day_reminder) {
                                 $idempoten_pass = true;
                                 ScheduleMarkModel::destroy($idempoten->id);
                             } else {
@@ -94,8 +93,8 @@ class ReminderSchedule
                             $idempoten_pass = true;
                         }
                     }
-                } else if($dt->reminder_type == 'Every Month' || $dt->reminder_type == 'Every Year'){
-                    if($dt->reminder_type == 'Every Month'){
+                } else if ($dt->reminder_type == 'Every Month' || $dt->reminder_type == 'Every Year') {
+                    if ($dt->reminder_type == 'Every Month') {
                         $server_day = $server_datetime->format('d');
                         $split_reminder_context = explode(" ", $dt->reminder_context);
                         $day_reminder = $split_reminder_context[1];
@@ -105,14 +104,14 @@ class ReminderSchedule
                         $day_reminder = $split_reminder_context[1]." ".$split_reminder_context[2];
                     }
                     
-                    if($day_reminder == $server_day){
+                    if ($day_reminder == $server_day) {
                         $exec = true;
 
-                        if($idempoten){
-                            if($dt->reminder_type == 'Every Month'){
+                        if ($idempoten) {
+                            if ($dt->reminder_type == 'Every Month') {
                                 // Check idempoten
                                 $idempoten_day = $idempoten_datetime->format('d');
-                                if($idempoten_day != $day_reminder){
+                                if ($idempoten_day != $day_reminder) {
                                     $idempoten_pass = true;
                                     ScheduleMarkModel::destroy($idempoten->id);
                                 } else {
@@ -121,7 +120,7 @@ class ReminderSchedule
                             } else {
                                 // Check idempoten
                                 $idempoten_day = $idempoten_datetime->format('d F');
-                                if($idempoten_day != $day_reminder){
+                                if ($idempoten_day != $day_reminder) {
                                     $idempoten_pass = true;
                                     ScheduleMarkModel::destroy($idempoten->id);
                                 } else {
@@ -134,8 +133,8 @@ class ReminderSchedule
                     }
                 }
 
-                if($exec){
-                    if($idempoten_pass){
+                if ($exec) {
+                    if ($idempoten_pass) {
                         ScheduleMarkModel::create([
                             'id' => Generator::getUUID(), 
                             'reminder_id' => $dt->id,
@@ -144,17 +143,17 @@ class ReminderSchedule
 
                         $message = "Hello $dt->username, your inventory $dt->inventory_name has remind $dt->reminder_desc";
 
-                        if($dt->telegram_user_id){
+                        if ($dt->telegram_user_id) {
                             $response = Telegram::sendMessage([
                                 'chat_id' => $dt->telegram_user_id,
                                 'text' => $message,
                                 'parse_mode' => 'HTML'
                             ]);
                         }
-                        if($dt->line_user_id){
-                            LineMessage::sendMessage('text',$message,$dt->line_user_id);
-                        }
-                        if($dt->firebase_fcm_token){
+
+                        if ($dt->line_user_id) LineMessage::sendMessage('text',$message,$dt->line_user_id);
+                    
+                        if ($dt->firebase_fcm_token) {
                             $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
                             $messaging = $factory->createMessaging();
                             $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)
@@ -183,30 +182,30 @@ class ReminderSchedule
         }
     }
 
-    public static function remind_low_capacity(){
+    public static function remind_low_capacity() {
         $low_inventory = InventoryModel::getAllLowCapacity();
 
-        if($low_inventory){
+        if ($low_inventory) {
             $firebaseRealtime = new FirebaseRealtime();
 
-            foreach($low_inventory as $index => $dt){
+            foreach ($low_inventory as $index => $dt) {
                 $arr_inventory = explode(', ', $dt->list_inventory);
                 $list_inventory = "- " . implode("\n- ", $arr_inventory);
                 $message_template = "Hello $dt->username, you have total $dt->total inventory who at the low capacity status, please check each of these inventory. Here's the list :";
                 $message = "$message_template\n\n$list_inventory";
                 $message_notif = "$message_template $dt->list_inventory";
 
-                if($dt->telegram_user_id && $dt->telegram_is_valid == 1){
+                if ($dt->telegram_user_id && $dt->telegram_is_valid == 1) {
                     $response = Telegram::sendMessage([
                         'chat_id' => $dt->telegram_user_id,
                         'text' => $message,
                         'parse_mode' => 'HTML'
                     ]);
                 }
-                if($dt->line_user_id){
-                    LineMessage::sendMessage('text',$message,$dt->line_user_id);
-                }
-                if($dt->firebase_fcm_token){
+
+                if ($dt->line_user_id) LineMessage::sendMessage('text',$message,$dt->line_user_id);
+            
+                if ($dt->firebase_fcm_token) {
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)

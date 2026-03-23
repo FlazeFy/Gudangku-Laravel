@@ -87,7 +87,7 @@
 </div>
 
 <script>
-    $(document).on('click','#save_changes',function(){
+    $(document).on('click','#save_changes',function() {
         save_update()
     })
 
@@ -108,7 +108,7 @@
                 const data = response.data
                 const reminder = response.reminder
 
-                if(data.inventory_image){
+                if (data.inventory_image) {
                     $('#inventory_color_holder').html(`
                         <label>Color</label>
                         <input type="text" name="inventory_color" id="inventory_color" value='${data.inventory_color ?? ''}' class="form-control" readonly/>
@@ -177,7 +177,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     Swal.fire({

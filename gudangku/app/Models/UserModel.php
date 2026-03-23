@@ -49,23 +49,15 @@ class UserModel extends Authenticatable
         'telegram_is_valid' => 'integer'
     ];
 
-    public static function getUserBroadcastAll(){
-        return UserModel::select('id','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')->get();
-    }
-
-    public static function getByUsername($username){
-        return UserModel::where('username',$username)->first();
-    }
-
-    public static function isTelegramIDUsed($telegram_id){
+    public static function isTelegramIDUsed($telegram_id) {
         return UserModel::where('telegram_user_id',$telegram_id)->exists();
     }
 
-    public static function isUsernameUsed($username){
+    public static function isUsernameUsed($username) {
         return UserModel::where('username',$username)->exists();
     }
 
-    public static function isUsernameEmailUsedWithExceptionalId($email, $username, $user_id){
+    public static function isUsernameEmailUsedWithExceptionalId($email, $username, $user_id) {
         return UserModel::where(function ($query) use ($email, $username) {
                 $query->where('email', $email)
                     ->orWhere('username', $username);
@@ -74,12 +66,12 @@ class UserModel extends Authenticatable
             ->exists();
     }
 
-    public static function getSocial($id){
+    public static function getSocial($id) {
         $res = UserModel::select('username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
             ->where('id',$id)
             ->first();
 
-        if($res == null){
+        if ($res == null) {
             $res = AdminModel::select('username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
                 ->where('id',$id)
                 ->first();
@@ -88,8 +80,49 @@ class UserModel extends Authenticatable
         return $res;
     }
 
-    public static function getRandom($null){
-        if($null == 0){
+    public static function getByUsername($username) {
+        return UserModel::where('username',$username)->first();
+    }
+
+    public static function getUserByUsernameOrEmail($username,$email) {
+        return UserModel::where('username',$username)
+            ->orwhere('email',$email)
+            ->first();
+    }
+
+    public static function getUserById($user_id) {
+        $select_query = 'id,username,email,telegram_user_id,telegram_is_valid,created_at,password';
+
+        $res = UserModel::selectRaw($select_query)
+            ->where('id',$user_id)
+            ->first();
+        if ($res) {
+            $res->role = 'user';
+
+            if ($res->password == "GOOGLE_SIGN_IN") {
+                unset($res->password);
+                $res->is_google_sign_in = true;
+            }
+        }
+        if (!$res) {
+            $res = AdminModel::selectRaw($select_query)
+                ->where('id',$user_id)
+                ->first();
+            if ($res) {
+                $res->role = 'admin';
+                $res->is_google_sign_in = false;
+            }
+        }
+
+        return $res;
+    }
+    
+    public static function getUserBroadcastAll() {
+        return UserModel::select('id','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')->get();
+    }
+
+    public static function getRandom($null) {
+        if ($null == 0) {
             $data = UserModel::inRandomOrder()->take(1)->first();
             $res = $data->id;
         } else {
@@ -99,8 +132,8 @@ class UserModel extends Authenticatable
         return $res;
     }
 
-    public static function getRandomWithInventory($null){
-        if($null == 0){
+    public static function getRandomWithInventory($null) {
+        if ($null == 0) {
             $data = UserModel::select('users.id')->join('inventory','inventory.created_by','=','users.id')->inRandomOrder()->take(1)->first();
             $res = $data->id;
         } else {
@@ -110,15 +143,15 @@ class UserModel extends Authenticatable
         return $res;
     }
 
-    public static function getAllWithInventory(){
+    public static function getAllWithInventory() {
         return UserModel::select('users.id')
             ->join('inventory','inventory.created_by','=','users.id')
             ->groupby('users.id')
             ->get();
     }
 
-    public static function getRandomWithInventoryAndReport($null){
-        if($null == 0){
+    public static function getRandomWithInventoryAndReport($null) {
+        if ($null == 0) {
             $data = UserModel::select('users.id')
                 ->join('inventory','inventory.created_by','=','users.id')
                 ->join('report','report.created_by','=','users.id')
@@ -133,60 +166,13 @@ class UserModel extends Authenticatable
         return $res;
     }
 
-    public static function getUserByUsernameOrEmail($username,$email){
-        return UserModel::where('username',$username)
-            ->orwhere('email',$email)
-            ->first();
-    }
-
-    public static function createUser($username, $password, $email){
-        return UserModel::create([
-            'id' => Generator::getUUID(), 
-            'username' => $username, 
-            'password' => $password != "GOOGLE_SIGN_IN" ? Hash::make($password) : "GOOGLE_SIGN_IN",
-            'telegram_user_id' => null,
-            'telegram_is_valid' => 0,
-            'email' => $email,
-            'phone' => null,
-            'created_at' => date('Y-m-d H:i:s'), 
-            'updated_at' => null
-        ]);
-    }
-
-    public static function getUserById($user_id){
-        $select_query = 'id,username,email,telegram_user_id,telegram_is_valid,created_at,password';
-
-        $res = UserModel::selectRaw($select_query)
-            ->where('id',$user_id)
-            ->first();
-        if($res){
-            $res->role = 'user';
-
-            if($res->password == "GOOGLE_SIGN_IN"){
-                unset($res->password);
-                $res->is_google_sign_in = true;
-            }
-        }
-        if(!$res){
-            $res = AdminModel::selectRaw($select_query)
-                ->where('id',$user_id)
-                ->first();
-            if($res){
-                $res->role = 'admin';
-                $res->is_google_sign_in = false;
-            }
-        }
-
-        return $res;
-    }
-
-    public static function getAllUser($paginate){
+    public static function getAllUser($paginate) {
         return UserModel::select('id','username','email','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','phone','timezone','created_at','updated_at')
             ->orderby('created_at','desc')
             ->paginate($paginate);
     }
 
-    public static function getAvailableYear($user_id, $is_admin){
+    public static function getAvailableYear($user_id, $is_admin) {
         $res_inventory = InventoryModel::selectRaw('YEAR(created_at) as year');
         if (!$is_admin) {
             $res_inventory = $res_inventory->where('created_by', $user_id);
@@ -207,7 +193,7 @@ class UserModel extends Authenticatable
             ->values();
     }
 
-    public static function getUserExport(){
+    public static function getUserExport() {
         return UserModel::selectRaw("users.id,username,telegram_user_id,telegram_is_valid,firebase_fcm_token,line_user_id,email,phone,timezone,users.created_at,users.updated_at, 
             CAST(COALESCE(SUM(CASE WHEN inventory.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS UNSIGNED) as total_inventory,
             CAST(COALESCE(SUM(CASE WHEN report.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS UNSIGNED) as total_report")
@@ -218,7 +204,7 @@ class UserModel extends Authenticatable
             ->get();
     }
 
-    public static function getLastLoginUser($limit = 7){
+    public static function getLastLoginUser($limit = 7) {
         return UserModel::select("username","personal_access_tokens.created_at as login_at")
             ->join('personal_access_tokens','users.id','=','personal_access_tokens.tokenable_id')
             ->groupby('users.id')
@@ -227,7 +213,7 @@ class UserModel extends Authenticatable
             ->get();
     }
 
-    public static function getUserWithMostContext($table_ctx){
+    public static function getUserWithMostContext($table_ctx) {
         return UserModel::selectRaw("username,COUNT(1) as total")
             ->join($table_ctx,'users.id','=',$table_ctx.'.created_by')
             ->groupby('users.id')
@@ -236,7 +222,21 @@ class UserModel extends Authenticatable
             ->get();
     }
 
-    public static function updateUserById($data,$id){
+    public static function createUser($username, $password, $email) {
+        return UserModel::create([
+            'id' => Generator::getUUID(), 
+            'username' => $username, 
+            'password' => $password != "GOOGLE_SIGN_IN" ? Hash::make($password) : "GOOGLE_SIGN_IN",
+            'telegram_user_id' => null,
+            'telegram_is_valid' => 0,
+            'email' => $email,
+            'phone' => null,
+            'created_at' => date('Y-m-d H:i:s'), 
+            'updated_at' => null
+        ]);
+    }
+
+    public static function updateUserById($data,$id) {
         $data['updated_at'] = date('Y-m-d H:i:s');
         return UserModel::where('id',$id)->update($data);
     }

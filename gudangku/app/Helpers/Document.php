@@ -4,16 +4,16 @@ use Illuminate\Support\Collection;
 
 class Document
 {
-    public static function documentTemplateReport($header_template,$style_template,$footer_template,$report,$report_item){ 
+    public static function documentTemplateReport($header_template,$style_template,$footer_template,$report,$report_item) { 
         $tbody = "";
         $datetime = now();
-        if($header_template == null){
+        if ($header_template == null) {
             $header_template = Generator::getDocTemplate('header');
         }
-        if($style_template == null){
+        if ($style_template == null) {
             $style_template = Generator::getDocTemplate('style');
         }
-        if($footer_template == null){
+        if ($footer_template == null) {
             $footer_template = Generator::getDocTemplate('footer');
         }
 
@@ -22,13 +22,13 @@ class Document
         $total = 0;
         $total_qty = 0;
 
-        foreach($report_item as $dt){
-            if($dt->item_desc){
+        foreach ($report_item as $dt) {
+            if ($dt->item_desc) {
                 $item_desc = $dt->item_desc;
             } else {
                 $item_desc = "<i style='color:grey;'>- No Description Provided-</i>";
             }
-            if($report->report_category == "Shopping Cart" || $report->report_category == "Wishlist"){
+            if ($report->report_category == "Shopping Cart" || $report->report_category == "Wishlist") {
                 $total = $dt->item_qty * $dt->item_price;
                 $sub_total = $sub_total + $total;
 
@@ -57,7 +57,7 @@ class Document
 
         $report_desc = "Also, in this report come with some notes : $report->report_desc.";
         
-        if($report->report_category == "Shopping Cart" || $report->report_category == "Wishlist"){
+        if ($report->report_category == "Shopping Cart" || $report->report_category == "Wishlist") {
             $thead_template = "
                 <th>Price</th>
                 <th>Total</th>
@@ -105,16 +105,16 @@ class Document
         return $html;
     }
 
-    public static function documentTemplateLayout($header_template,$style_template,$footer_template,$layout,$inventory,$room){ 
+    public static function documentTemplateLayout($header_template,$style_template,$footer_template,$layout,$inventory,$room) { 
         $tbody = "";
         $datetime = now();
-        if($header_template == null){
+        if ($header_template == null) {
             $header_template = Generator::getDocTemplate('header');
         }
-        if($style_template == null){
+        if ($style_template == null) {
             $style_template = Generator::getDocTemplate('style');
         }
-        if($footer_template == null){
+        if ($footer_template == null) {
             $footer_template = Generator::getDocTemplate('footer');
         }
         $extra_template = "";
@@ -246,16 +246,16 @@ class Document
         return $html;
     }
 
-    public static function documentTemplateInventory($header_template,$style_template,$footer_template,$inventory,$reminder){ 
+    public static function documentTemplateInventory($header_template,$style_template,$footer_template,$inventory,$reminder) { 
         $tbody = "";
         $datetime = now();
-        if($header_template == null){
+        if ($header_template == null) {
             $header_template = Generator::getDocTemplate('header');
         }
-        if($style_template == null){
+        if ($style_template == null) {
             $style_template = Generator::getDocTemplate('style');
         }
-        if($footer_template == null){
+        if ($footer_template == null) {
             $footer_template = Generator::getDocTemplate('footer');
         }
         $reminder_template = "";
@@ -296,14 +296,14 @@ class Document
         }
 
         foreach ($arr_inventory as $dt) {
-            if($dt->is_favorite == 1){
+            if ($dt->is_favorite == 1) {
                 $is_favorite = "True";
             } else {
                 $is_favorite = "False";
             }
     
             $img = "";
-            if($dt->inventory_image){
+            if ($dt->inventory_image) {
                 $img = "
                 <tr>
                     <th>Image</th>

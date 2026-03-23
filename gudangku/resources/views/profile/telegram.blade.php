@@ -20,8 +20,8 @@
         const tele_id_old = $("#telegram_user_id_old").val()
         const tele_id_new = $("#telegram_user_id").val()
         
-        if(tele_id_old != tele_id_new){
-            if(tele_id_new.length != 10){
+        if (tele_id_old != tele_id_new) {
+            if (tele_id_new.length != 10) {
                 $("#label-validate-holder").css('display','none')
                 $("#update-tele-holder").css('display','block').empty().append(`<a class="text-danger"><i class="fa-solid fa-triangle-exclamation"></i> Telegram ID not valid</a>`)
             } else {

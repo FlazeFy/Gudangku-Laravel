@@ -12,7 +12,7 @@ class ReportController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if($user_id != null){
+        if ($user_id != null) {
             $search_key = $request->query('search_key');
             $filter_category = $request->query('filter_category');
             $sorting = $request->query('sorting');

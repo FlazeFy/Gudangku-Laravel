@@ -16,7 +16,7 @@ const closeModalBS = () => {
 }
 
 const getDateToContext = (datetime, type, isFlexible = true) => {
-    if(datetime){
+    if (datetime) {
         const result = new Date(datetime)
 
         if (type == "full") {
@@ -42,7 +42,7 @@ const getDateToContext = (datetime, type, isFlexible = true) => {
         } else if (type == "date") {
             return `${result.getFullYear()}-${("0" + (result.getMonth() + 1)).slice(-2)}-${("0" + result.getDate()).slice(-2)}`
         } else if (type == "calendar") {
-            if(isFlexible){
+            if (isFlexible) {
                 const offsetHours = getUTCHourOffset()
                 result.setUTCHours(result.getUTCHours() + offsetHours)
             }
@@ -68,11 +68,11 @@ const getUUID = () => {
 }
 
 const validateInput = (type, id, max, min) => {
-    if(type == "text"){
+    if (type == "text") {
         const check = $(`#${id}`).val()
         const checkLen = check.trim().length
     
-        if(check && checkLen > 0 && checkLen <= max && checkLen >= min){
+        if (check && checkLen > 0 && checkLen <= max && checkLen >= min) {
             return true
         } else {
             return false
@@ -124,9 +124,9 @@ const generateAPIError = (response, is_list_format) => {
     if (response.status === 422) {
         let msg = response.responseJSON.message
         
-        if(typeof msg != 'string'){
+        if (typeof msg != 'string') {
             const allMsg = Object.values(msg).flat()
-            if(is_list_format){
+            if (is_list_format) {
                 msg = '<ol>'
                 allMsg.forEach((dt) => {
                     msg += `<li>- ${dt.replace('.','')}</li>`
@@ -142,7 +142,7 @@ const generateAPIError = (response, is_list_format) => {
             html: msg,
             icon: "error"
         })
-    } else if(response.status === 404){
+    } else if (response.status === 404) {
         Swal.fire("Oops!", "Data not found","error")
     } else {
         Swal.fire("Oops!", response.responseJSON?.message || "Something went wrong", "error")
@@ -160,7 +160,7 @@ const generateLastPageError = () => {
 const checkFillingStatus = (list) => {
     return list.some((dt) => {
         const el = $(`#${dt}`)
-        if(el && el.length > 0){
+        if (el && el.length > 0) {
             const tag = el.prop("tagName").toLowerCase()
             const type = el.attr("type") || null
             
@@ -297,7 +297,7 @@ const formValidation = (context) => {
                     let min
                     let lengthTitle = ''
 
-                    if(type == 'number'){
+                    if (type == 'number') {
                         max = $(this).attr('max') === undefined ? null : $(this).attr('max')
                         min = $(this).attr('min') === undefined ? null : $(this).attr('min')
                     } else {
@@ -305,22 +305,22 @@ const formValidation = (context) => {
                         min = $(this).attr('minlength') === undefined ? null : $(this).attr('minlength')
                     }
 
-                    if(max || min){
+                    if (max || min) {
                         lengthTitle += '. Have '
-                        if(type == 'number'){
-                            if(max){
+                        if (type == 'number') {
+                            if (max) {
                                 lengthTitle += `max value up to ${max}`
                             }
-                            if(max && min){ lengthTitle += ' and ' }
-                            if(min){
+                            if (max && min) { lengthTitle += ' and ' }
+                            if (min) {
                                 lengthTitle += `min value down to ${min}`
                             }
                         } else {
-                            if(max){
+                            if (max) {
                                 lengthTitle += `max character up to ${max} characters`
                             }
-                            if(max && min){ lengthTitle += ' and ' }
-                            if(min){
+                            if (max && min) { lengthTitle += ' and ' }
+                            if (min) {
                                 lengthTitle += `min character down to ${min} characters`
                             }
                         }
@@ -333,23 +333,23 @@ const formValidation = (context) => {
                         const val = $(this).val().trim()
                         let lengthWarning = ''
                         
-                        if(type == 'number'){
-                            if(max && val >= max){
+                        if (type == 'number') {
+                            if (max && val >= max) {
                                 lengthWarning = `${name} has reached the maximum value. The limit is ${max}`
                             }
-                            if(min && val <= min){
+                            if (min && val <= min) {
                                 lengthWarning = `${name} has reached the minimum value. The limit is ${min}`
                             }
                         } else {
-                            if(max && val.length >= max){
+                            if (max && val.length >= max) {
                                 lengthWarning = `${name} has reached the maximum characters. The limit is ${max} characters`
                             }
-                            if(min && val.length <= min){
+                            if (min && val.length <= min) {
                                 lengthWarning = `${name} has reached the minimum characters. The limit is ${min} characters`
                             }
                         }
 
-                        if(lengthWarning != ''){
+                        if (lengthWarning != '') {
                             $(`#alert-holder-${idx}-${$(this).attr('name')}`).html(`<label class='text-danger fst-italic' style='font-size:12px'><i class="fa-solid fa-triangle-exclamation"></i> ${lengthWarning}</label><br>`)
                             $(this).css('border','2px solid var(--dangerBG)')
                         } else {

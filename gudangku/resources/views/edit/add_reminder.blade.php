@@ -40,10 +40,10 @@
         })
     })
 
-    $(document).on('change','#reminder_type_holder',function(){
+    $(document).on('change','#reminder_type_holder',function() {
         const selected = $(this).val()
 
-        if(selected !== "-"){
+        if (selected !== "-") {
             getReminderContextSelect(selected,'#reminder_context')
         } else {
             generateEmptyFieldError('reminder type')

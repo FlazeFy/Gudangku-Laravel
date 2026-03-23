@@ -77,11 +77,11 @@ Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () 
     Route::get('/room', [QueriesInventoryController::class, 'getListRoom']);
     Route::get('/calendar', [QueriesInventoryController::class, 'getListCalendar']);
     Route::get('/analyze/{id}', [QueriesInventoryController::class, 'getAnalyzeInventory']);
-    Route::prefix('/layout/{room}')->group(function (){
+    Route::prefix('/layout/{room}')->group(function () {
         Route::get('/', [QueriesInventoryController::class, 'getRoomLayout']);
         Route::get('/doc', [QueriesInventoryController::class, 'getRoomDocument']);
     });
-    Route::prefix('/detail/{id}')->group(function (){
+    Route::prefix('/detail/{id}')->group(function () {
         Route::get('/', [QueriesInventoryController::class, 'getInventoryByID']);
         Route::get('/doc', [QueriesInventoryController::class, 'getInventoryDetailDocument']);
     });
@@ -160,16 +160,16 @@ Route::prefix('/v1/report')->middleware(['auth:sanctum'])->group(function () {
         Route::post('/{id}', [CommandsReportController::class, 'postUpdateReportImageByReportID']);
         Route::delete('/destroy/{report_id}/{image_id}', [CommandsReportController::class, 'hardDeleteReportImageByReportIDAndImageID']);
     });
-    Route::prefix('/detail/item/{id}')->group(function (){
+    Route::prefix('/detail/item/{id}')->group(function () {
         Route::get('/', [QueriesReportController::class, 'getReportDetailByID']);
         Route::get('/doc', [QueriesReportController::class, 'getReportDetailDocFormatByID']);
     });
-    Route::prefix('/update')->group(function (){
+    Route::prefix('/update')->group(function () {
         Route::put('/report/{id}', [CommandsReportController::class, 'putUpdateReportByID']);
         Route::put('/report_item/{id}', [CommandsReportController::class, 'putUpdateReportItemByID']);
         Route::put('/report_split/{id}', [CommandsReportController::class, 'putUpdateSplitReportItemByID']);
     });
-    Route::prefix('/destroy')->group(function (){
+    Route::prefix('/destroy')->group(function () {
         Route::delete('/item/{id}', [CommandsReportController::class, 'hardDeleteReportItemByID']);
         Route::delete('/report/{id}', [CommandsReportController::class, 'hardDeleteReportByID']);
     });

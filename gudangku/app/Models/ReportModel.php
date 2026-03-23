@@ -33,7 +33,6 @@ class ReportModel extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'report';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'report_title', 'report_desc', 'report_category', 'report_image', 'is_reminder', 'remind_at', 'created_at', 'created_by', 'updated_at', 'deleted_at'];
@@ -42,7 +41,18 @@ class ReportModel extends Model
         'is_reminder' => 'integer'
     ];
 
-    public static function getReportPlanDestroy($days){
+    public static function getReportDetail($user_id = null,$id,$type) {
+        $res = ReportModel::selectRaw($type == 'data' ? '*' : 'id,report_title, report_desc, report_category, report_image, created_at')
+            ->where('id',$id);
+
+        if ($type == 'data' && $user_id != null) {
+            $res = $res->where('created_by',$user_id);
+        }
+
+        return $res->first();
+    }   
+
+    public static function getReportPlanDestroy($days) {
         $res = ReportModel::select('report.id','report_title','deleted_at','username','telegram_user_id','telegram_is_valid','firebase_fcm_token','line_user_id','email')
             ->join('users','users.id','=','report.created_by')
             ->whereDate('deleted_at', '<', Carbon::now()
@@ -53,9 +63,9 @@ class ReportModel extends Model
         return count($res) > 0 ? $res : null;
     }
 
-    public static function getMyReport($user_id, $search_item, $search_report_title, $id, $filter_category){
+    public static function getMyReport($user_id, $search_item, $search_report_title, $id, $filter_category) {
         $extra = "";
-        if(!$user_id){
+        if (!$user_id) {
             $extra = ", username";
         }
         $res = ReportModel::selectRaw('
@@ -64,7 +74,7 @@ class ReportModel extends Model
                 CAST(SUM(item_price * item_qty) AS UNSIGNED) as item_price'.$extra)
             ->leftjoin('report_item','report_item.report_id','=','report.id')
             ->leftjoin('inventory','inventory.id','=','report_item.inventory_id');
-            if($user_id){
+            if ($user_id) {
                 $res->where('report.created_by',$user_id);
             } else {
                 $res->join('users','users.id','=','report.created_by');
@@ -87,26 +97,15 @@ class ReportModel extends Model
         }
 
         // Filtering by category
-        if($filter_category){
+        if ($filter_category) {
             $res->where('report_category',$filter_category);
         }     
 
         return $res->get();
     }   
 
-    public static function getReportDetail($user_id = null,$id,$type){
-        $res = ReportModel::selectRaw($type == 'data' ? '*' : 'id,report_title, report_desc, report_category, report_image, created_at')
-            ->where('id',$id);
-
-        if($type == 'data' && $user_id != null){
-            $res = $res->where('created_by',$user_id);
-        }
-
-        return $res->first();
-    }   
-
-    public static function getRandom($null,$user_id){
-        if($null == 0){
+    public static function getRandom($null,$user_id) {
+        if ($null == 0) {
             $res = ReportModel::inRandomOrder()->take(1)->where('created_by',$user_id)->first();
         } else {
             $res = null;
@@ -115,22 +114,12 @@ class ReportModel extends Model
         return $res;
     }
 
-    public static function getLastFoundInventoryReport($user_id,$inventory_id){
+    public static function getLastFoundInventoryReport($user_id,$inventory_id) {
         return ReportModel::select('report.created_at','report_title','report_category')
             ->join('report_item','report_item.report_id','=','report.id')
             ->where('report.created_by',$user_id)
             ->where('inventory_id',$inventory_id)
             ->get();
-    }
-
-    public static function deleteReportById($user_id = null,$report_id){
-        $rows = ReportModel::where('id', $report_id);
-        
-        if($user_id){
-            $rows = $rows->where('created_by', $user_id);
-        }
-
-        return $rows->delete();
     }
 
     public static function getInventoryMonthlyInReport($user_id, $inventory_id, $year = null) {
@@ -149,7 +138,7 @@ class ReportModel extends Model
         for ($i=1; $i <= 12; $i++) { 
             $total = 0;
             foreach ($res as $idx => $val) {
-                if($i == $val->context){
+                if ($i == $val->context) {
                     $total = $val->total;
                     break;
                 }
@@ -163,19 +152,19 @@ class ReportModel extends Model
         return $res_final;
     }
 
-    public static function getTotalReportCreatedOrSpendingPerMonth($user_id = null, $year, $is_admin, $type){
-        if($type == "created"){
+    public static function getTotalReportCreatedOrSpendingPerMonth($user_id = null, $year, $is_admin, $type) {
+        if ($type == "created") {
             $select_query = "COUNT(DISTINCT report.id) as total_report, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context";
-        } else if($type == "spending"){
+        } else if ($type == "spending") {
             $select_query = "CAST(SUM(item_price) AS UNSIGNED) as total_price, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context";
         }
 
         $res = ReportModel::selectRaw($select_query)
             ->join('report_item','report_item.report_id','=','report.id');
-        if($user_id){
+        if ($user_id) {
             $res = $res->where('report.created_by', $user_id);
         }
-        if($type == "spending") {
+        if ($type == "spending") {
             $res = $res->where('report_category','Shopping Cart');
         }
         $res = $res->whereRaw("YEAR(report.created_at) = '$year'")
@@ -185,7 +174,7 @@ class ReportModel extends Model
         return $res;
     }
 
-    public static function getTotalReportUsedPerMonth($user_id, $year, $is_admin){
+    public static function getTotalReportUsedPerMonth($user_id, $year, $is_admin) {
         $res = ReportModel::selectRaw("
                 CAST(SUM(CASE WHEN report_category = 'Checkout' THEN 1 ELSE 0 END) AS UNSIGNED) as total_checkout,
                 CAST(SUM(CASE WHEN report_category = 'Wash List' THEN 1 ELSE 0 END) AS UNSIGNED) as total_washlist,
@@ -193,7 +182,7 @@ class ReportModel extends Model
             ")
             ->join('report_item', 'report_item.report_id', '=', 'report.id');
             
-        if(!$is_admin){
+        if (!$is_admin) {
             $res = $res->where('report.created_by', $user_id);
         }
 
@@ -221,10 +210,10 @@ class ReportModel extends Model
         ]);
     }
 
-    public static function updateReportById($user_id = null, $id, $data){
+    public static function updateReportById($user_id = null, $id, $data) {
         $rows = ReportModel::where('id', $id);
         
-        if($user_id){
+        if ($user_id) {
             $rows = $rows->where('created_by', $user_id);
         }
         $data['updated_at'] = date('Y-m-d H:i:s');
@@ -232,7 +221,17 @@ class ReportModel extends Model
         return $rows->update($data);
     }
 
-    public static function deleteReportByUserId($user_id){
+    public static function deleteReportById($user_id = null,$report_id) {
+        $rows = ReportModel::where('id', $report_id);
+        
+        if ($user_id) {
+            $rows = $rows->where('created_by', $user_id);
+        }
+
+        return $rows->delete();
+    }
+
+    public static function deleteReportByUserId($user_id) {
         return ReportModel::where('created_by',$user_id)->delete();
     }
 }

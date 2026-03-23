@@ -20,7 +20,7 @@
         is_process = false
         window.addEventListener('beforeunload', function(event) {
             is_process = checkFillingStatus(['checkTerm','username','password','email','password_validation'])
-            if(is_process == true){
+            if (is_process == true) {
                 event.preventDefault()
                 event.returnValue = ''
             }

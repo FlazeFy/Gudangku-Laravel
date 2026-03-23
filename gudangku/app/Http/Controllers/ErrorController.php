@@ -26,14 +26,14 @@ class ErrorController extends Controller
         return $user_id != null ? view('error.index') : redirect("/login");
     }
 
-    public function save_as_csv(){
+    public function save_as_csv() {
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check_admin = AdminModel::find($user_id);
 
-        if($check_admin){
+        if ($check_admin) {
             $res = ErrorModel::getAllError(false);
 
-            if($res->isNotEmpty()){
+            if ($res->isNotEmpty()) {
                 try {
                     $user = UserModel::getSocial($user_id);
                     $datetime = date('l, j F Y \a\t H:i:s');

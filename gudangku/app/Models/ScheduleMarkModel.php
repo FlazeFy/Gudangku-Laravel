@@ -24,12 +24,11 @@ class ScheduleMarkModel extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'schedule_mark';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'reminder_id', 'last_execute'];
 
-    public static function getAllReminderMark($is_paginate){
+    public static function getAllReminderMark($is_paginate) {
         $res = ScheduleMarkModel::select('reminder.id','inventory_name','inventory_category','reminder_desc','reminder_type','reminder_context','reminder.created_at','last_execute','username')
             ->join('reminder','reminder.id','=','schedule_mark.reminder_id')
             ->join('inventory','reminder.inventory_id','=','inventory.id')
@@ -39,7 +38,7 @@ class ScheduleMarkModel extends Model
         return $is_paginate ? $res->paginate(12) : $res->get();
     }
 
-    public static function getAllReminderHistory($user_id,$is_paginate){
+    public static function getAllReminderHistory($user_id,$is_paginate) {
         $res = ScheduleMarkModel::select('inventory.id','inventory_name','reminder_desc','reminder_type','reminder_context','last_execute')
             ->join('reminder','reminder.id','=','schedule_mark.reminder_id')
             ->join('inventory','reminder.inventory_id','=','inventory.id')
@@ -48,7 +47,7 @@ class ScheduleMarkModel extends Model
         return $is_paginate ? $res->paginate(12) : $res->get();
     }
 
-    public static function createScheduleMark($id){
+    public static function createScheduleMark($id) {
         return ScheduleMarkModel::create([
             'id' => Generator::getUUID(), 
             'reminder_id' => $id,
@@ -56,7 +55,7 @@ class ScheduleMarkModel extends Model
         ]);
     }
 
-    public static function deleteScheduleMarkById($id){
+    public static function deleteScheduleMarkById($id) {
         return ScheduleMarkModel::where('reminder_id',$id)->delete();
     }
 }

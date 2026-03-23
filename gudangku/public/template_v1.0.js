@@ -177,7 +177,7 @@ const generateFloorRange = (data) => {
 }
 
 const generateModalDetail = (storage, storage_desc, room, coor, id) => {
-    if(storage){
+    if (storage) {
         return `
             <div class="modal fade" id="modalDetail-${coor}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
@@ -268,7 +268,7 @@ const generateMapRoom = (target,data,is_interact,room) => {
     let letters
     let cols
 
-    if(data){
+    if (data) {
         const floor_range = generateFloorRange(data)
         rows = floor_range.rows
         letters = floor_range.letters
@@ -288,11 +288,11 @@ const generateMapRoom = (target,data,is_interact,room) => {
             let storage_desc = null
             let id = null
 
-            if(data){
+            if (data) {
                 data.forEach(dt => {
                     const coor = dt.layout.split(':')
                     coor.forEach(cr => {
-                        if(cr == label){
+                        if (cr == label) {
                             used = true
                             inventory_storage = dt.inventory_storage
                             storage_desc = dt.storage_desc
@@ -314,7 +314,7 @@ const generateMapRoom = (target,data,is_interact,room) => {
         $(target).append(rowContainer)
     }
 
-    if(is_interact){
+    if (is_interact) {
         $(target).append(`
             <div class='floor-config m-3 d-flex gap-2 text-nowrap'>
                 <a class='d-inline-block btn btn-success' onclick='expandFloor()'><i class="fa-solid fa-up-right-and-down-left-from-center"></i> Expand</a>
@@ -338,7 +338,7 @@ const cleanAlertItem = () => {
 
 const browseItem = (val) => {
     let inventory_id = null
-    if(val === 'add_ext'){
+    if (val === 'add_ext') {
         $('#item_form').empty().append(`
             <div class="row">
                 <div class="col-lg-8">
@@ -353,7 +353,7 @@ const browseItem = (val) => {
             <label>Description</label>
             <textarea id="item_desc" class="form-control"></textarea>
         `)
-    } else if(val === 'copy_report'){
+    } else if (val === 'copy_report') {
         $('#item_form').empty().append(`
             <label>Report Title</label><br>
             <input id="report_title_search" class="form-control w-100" type="text">
@@ -407,7 +407,7 @@ const browseItem = (val) => {
                     },
                     error: function(response, jqXHR, textStatus, errorThrown) {
                         Swal.close()
-                        if(response.status != 404){
+                        if (response.status != 404) {
                             generateAPIError(response, true)
                         } else {
                             $('#report_title_search').val('')
@@ -420,7 +420,7 @@ const browseItem = (val) => {
             $(document).on('click', '.report-box', function () {
                 const items = $(this).data('items')
             
-                if(items){
+                if (items) {
                     addItem('copy_report', null, items.split(', '))
                     $('#report_title_search').val('')
                     closeModalBS()
@@ -429,11 +429,11 @@ const browseItem = (val) => {
                 }
             })
 
-            $(document).on('blur','#report_title_search',function(){
+            $(document).on('blur','#report_title_search',function() {
                 getAllReport(1, $(this).val())
             })
         })
-    } else if(val === 'no_item'){
+    } else if (val === 'no_item') {
         $('#item_form').empty()
     } else {
         val = JSON.parse(val)
@@ -454,13 +454,13 @@ const browseItem = (val) => {
         `)
     }
     
-    if(val !== 'no_item' && val !== 'copy_report'){
+    if (val !== 'no_item' && val !== 'copy_report') {
         $('#item_form').append(`<a class="btn btn-success mt-3 w-100" onclick='addItem("${val}","${inventory_id}")'><i class="fa-solid fa-plus"></i> Add Item</a>`)
     }
 }
 
 const addItem = (val, inventory_id, itemsList = null) => {
-    if($('#item_name').val() === "" && val === "add_ext"){
+    if ($('#item_name').val() === "" && val === "add_ext") {
         failedMessage(`add item. Item name can't be empty`)
         return
     }
@@ -476,14 +476,14 @@ const addItem = (val, inventory_id, itemsList = null) => {
         }
     })
 
-    if(!itemExists){
+    if (!itemExists) {
         let priceInput = ''
-        if($('#report_category_holder').val() == 'Shopping Cart' || $('#report_category_holder').val() == 'Wishlist'){
+        if ($('#report_category_holder').val() == 'Shopping Cart' || $('#report_category_holder').val() == 'Wishlist') {
             priceInput = `<input type="number" class="form-control w-100" min="0" name="item_price[]" value="0">`
         }
 
-        if(val == 'add_ext'){
-            if($('#item_name').val() != ''){
+        if (val == 'add_ext') {
+            if ($('#item_name').val() != '') {
                 $('#item_holder').append(`
                     <tr class="item-holder-div align-middle">
                         <td>
@@ -497,7 +497,7 @@ const addItem = (val, inventory_id, itemsList = null) => {
                     </tr>
                 `)
             }
-        } else if(val == 'copy_report') {
+        } else if (val == 'copy_report') {
             itemsList.forEach(el => {
                 $('#item_holder').append(`
                     <tr class="item-holder-div align-middle">

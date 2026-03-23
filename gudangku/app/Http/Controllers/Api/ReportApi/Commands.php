@@ -97,9 +97,9 @@ class Commands extends Controller
 
             // Hard Delete report item
             $rows = ReportItemModel::deleteManyReportItemById($list_id, $user_id);
-            if($rows > 0){
+            if ($rows > 0) {
                 $extra = "";
-                if(count($list_id) > 1){
+                if (count($list_id) > 1) {
                     $extra = count($list_id);
                 }
                 return response()->json([
@@ -183,8 +183,8 @@ class Commands extends Controller
 
             // Hard delete report by ID
             $rows = ReportModel::deleteReportById($user_id,$id);
-            if($rows > 0){
-                if(!$check_admin){
+            if ($rows > 0) {
+                if (!$check_admin) {
                     // Create history
                     Audit::createHistory('Delete Report', $report->report_title, $user_id);
                 }
@@ -299,7 +299,7 @@ class Commands extends Controller
                     'created_at' => $request->created_at
                 ]);
 
-                if($rows > 0){
+                if ($rows > 0) {
                     // Create history
                     Audit::createHistory('Update Report', $request->report_title, $user_id);
 
@@ -410,7 +410,7 @@ class Commands extends Controller
                     'item_qty' => $request->item_qty,
                     'item_price' => $request->item_price
                 ]);
-                if($rows > 0){
+                if ($rows > 0) {
                     // Create history
                     Audit::createHistory('Update Report Item', $request->item_name, $user_id);
 
@@ -502,7 +502,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function putUpdateSplitReportItemByID(Request $request, $id){
+    public function putUpdateSplitReportItemByID(Request $request, $id) {
         try{
             $validator = Validation::getValidateReport($request,'create');
 
@@ -518,7 +518,7 @@ class Commands extends Controller
 
                 // Get report by ID
                 $old_check_report = ReportModel::find($id);
-                if($old_check_report){
+                if ($old_check_report) {
                     // Validate uuid
                     if (Validation::getValidateUUID($request->list_id)) {
                         return response()->json([
@@ -529,7 +529,7 @@ class Commands extends Controller
 
                     // Create report
                     $report = ReportModel::createReport($request->report_title, $request->report_desc, $request->report_category, null, $request->is_reminder, $request->remind_at, $user_id, null);
-                    if($report){
+                    if ($report) {
                         $success_migrate = 0;
                         $failed_migrate = 0;
                         $list_item_name = "";
@@ -554,12 +554,12 @@ class Commands extends Controller
                             }
                         }
         
-                        if($success_migrate > 0){
+                        if ($success_migrate > 0) {
                             // History
                             Audit::createHistory('Split Report', "From $old_check_report->report_title has been removed item of $list_item_name to $report->report_title", $user_id);
                             Audit::createHistory('Create Report', $request->report_title, $user_id);
         
-                            if($success_migrate > 0) {
+                            if ($success_migrate > 0) {
                                 $status_message = $failed_migrate == 0 ? 'all report items updated' : 'some report items updated';
                             }
                             
@@ -653,7 +653,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function postCreateReport(Request $request){
+    public function postCreateReport(Request $request) {
         try{
            // Validate request body
             $validator = Validation::getValidateReport($request,'create');
@@ -707,11 +707,11 @@ class Commands extends Controller
                 );
                 $id_report = $report->id;
 
-                if($report){
+                if ($report) {
                     $success_exec = 0;
                     $failed_exec = 0;
 
-                    if($request->report_item){
+                    if ($request->report_item) {
                         $report_item = json_decode($request->report_item);
                         $item_count = count($report_item);
 
@@ -724,7 +724,7 @@ class Commands extends Controller
                                 $dt->inventory_id ?? null, $id_report, $dt->item_name, $item_desc === "" ? null : $item_desc, $dt->item_qty, ($dt->item_price && $dt->item_price) > 0 ?? null, $user_id
                             );
 
-                            if($res){
+                            if ($res) {
                                 $success_exec++;
                             } else {
                                 $failed_exec++;
@@ -732,19 +732,19 @@ class Commands extends Controller
                         }
                     }
 
-                    if($success_exec > 0 || $request->report_item == null){
+                    if ($success_exec > 0 || $request->report_item == null) {
                         // Create history
                         Audit::createHistory('Create', $report->report_title, $user_id);
                     }
 
                     // Return success response
-                    if($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == ""){
+                    if ($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == "") {
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("create", 'report'),
                             'data' => $report
                         ], Response::HTTP_CREATED);
-                    } else if($failed_exec > 0 && $success_exec > 0){
+                    } else if ($failed_exec > 0 && $success_exec > 0) {
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", "report created and some item has been added: $success_exec. about $failed_exec inventory failed to add"),
@@ -830,7 +830,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function postCreateReportItem(Request $request,$id){
+    public function postCreateReportItem(Request $request,$id) {
         try{
             // Validate request body
             $validator = Validation::getValidateReportItem($request,'create');
@@ -853,7 +853,7 @@ class Commands extends Controller
                         $dt->inventory_id ?? null, $id, $dt->item_name, $dt->item_desc, $dt->item_qty, $dt->item_price ?? null, $user_id
                     );
 
-                    if($res){
+                    if ($res) {
                         $success_exec++;
                     } else {
                         $failed_exec++;
@@ -861,12 +861,12 @@ class Commands extends Controller
                 }
 
                 // Return success response
-                if($failed_exec == 0 && $success_exec == $item_count){
+                if ($failed_exec == 0 && $success_exec == $item_count) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("create", 'report item'),
                     ], Response::HTTP_CREATED);
-                } else if($failed_exec > 0 && $success_exec > 0){
+                } else if ($failed_exec > 0 && $success_exec > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("custom", "some item has been added: $success_exec. about $failed_exec inventory failed to add"),
@@ -950,10 +950,10 @@ class Commands extends Controller
 
             // Get report by ID
             $report = ReportModel::getReportDetail($user_id,$id,'doc');
-            if($report){
+            if ($report) {
                 $report_images = [];
                 // Check if file attached
-                if($request->hasFile('report_image')){
+                if ($request->hasFile('report_image')) {
                     // Iterate to upload file
                     foreach ($request->file('report_image') as $file) {
                         if ($file->isValid()) {
@@ -990,11 +990,11 @@ class Commands extends Controller
                             }
                         }
                     }
-                } else if($report->report_image && !$request->hasFile('report_image')){
+                } else if ($report->report_image && !$request->hasFile('report_image')) {
                     // If file not attached and there is some image exist in the old data
                     foreach ($report->report_image as $dt) {
                         // Delete failed if file not found (already gone)
-                        if(!Firebase::deleteFile($dt['report_image_url'])){
+                        if (!Firebase::deleteFile($dt['report_image_url'])) {
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
@@ -1004,10 +1004,10 @@ class Commands extends Controller
                 }
 
                 // Make null if array image empty
-                if(count($report_images) === 0){
+                if (count($report_images) === 0) {
                     $report_images = null;
                 } else {
-                    if($report->report_image){
+                    if ($report->report_image) {
                         // If old report image not empty, combine with the new report image
                         $report_images = array_merge($report_images, $report->report_image);
                     }
@@ -1015,7 +1015,7 @@ class Commands extends Controller
 
                 // Update report by ID
                 $rows = ReportModel::updateReportById($user_id, $id, ['report_image' => $report_images]);
-                if($rows > 0){
+                if ($rows > 0) {
                     // Return success response
                     return response()->json([
                         'status' => 'success',
@@ -1111,13 +1111,13 @@ class Commands extends Controller
 
             // Get report by ID
             $report = ReportModel::getReportDetail($user_id,$report_id,'doc');
-            if($report){
+            if ($report) {
                 $report_images = $report->report_image;
                 // Iterate to delete file
                 foreach ($report_images as $dt) {
                     if ($dt['report_image_id'] === $image_id) {
                         // Delete failed if file not found (already gone)
-                        if(!Firebase::deleteFile($dt['report_image_url'])){
+                        if (!Firebase::deleteFile($dt['report_image_url'])) {
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
@@ -1138,7 +1138,7 @@ class Commands extends Controller
                     'report_image' => count($report_image) > 0 ? $report_image : null,
                 ]);
 
-                if($rows > 0){
+                if ($rows > 0) {
                     // Return success response
                     return response()->json([
                         'status' => 'success',
@@ -1268,7 +1268,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function postAnalyzeReport(Request $request){
+    public function postAnalyzeReport(Request $request) {
         try{ 
             $user_id = $request->user()->id;
             $validation_image_failed = "";
@@ -1331,7 +1331,7 @@ class Commands extends Controller
                         // Get similar inventory by list item
                         $mapping_inventory = InventoryModel::getInventoryByNameSearch($search);
 
-                        if($mapping_inventory){
+                        if ($mapping_inventory) {
                             $category_count = [];
                             $total_matched = 0;
 
@@ -1339,7 +1339,7 @@ class Commands extends Controller
                             $total_price = 0;
                             $total_item = count($mapping_inventory);
                             foreach ($mapping_inventory as $dt) {
-                                if($dt['status'] == 'matched'){
+                                if ($dt['status'] == 'matched') {
                                     $total_matched++;
                                 }
 
@@ -1365,10 +1365,10 @@ class Commands extends Controller
 
                             // Analyze items that not exist
                             $not_existing_item = [];
-                            if(count($items) != $total_matched){
+                            if (count($items) != $total_matched) {
                                 foreach ($items as $dt) {
                                     foreach ($mapping_inventory as $map) {
-                                        if($map->inventory_name == $dt){
+                                        if ($map->inventory_name == $dt) {
                                             $not_existing_item[] = $dt;
                                             break;
                                         }
@@ -1529,7 +1529,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function postCreateAnalyzedReport(Request $request){
+    public function postCreateAnalyzedReport(Request $request) {
         try{ 
             $user_id = $request->user()->id;
             $validation_image_failed = "";
@@ -1600,12 +1600,12 @@ class Commands extends Controller
                         // Get inventory by name
                         $mapping_inventory = InventoryModel::getInventoryByNameSearch($search);
 
-                        if($mapping_inventory){
+                        if ($mapping_inventory) {
                             $existing_inventory = []; 
                             foreach ($items as $it) { 
                                 $is_exist = false;
                                 foreach ($mapping_inventory as $dt) {
-                                    if($dt['status'] == "matched" && $dt['inventory_name'] == $it){
+                                    if ($dt['status'] == "matched" && $dt['inventory_name'] == $it) {
                                         $existing_inventory[] = [
                                             'inventory_id' => $dt['id'],
                                             'item_name' => $dt['inventory_name'],
@@ -1618,7 +1618,7 @@ class Commands extends Controller
                                     }
                                 }
 
-                                if(!$is_exist){
+                                if (!$is_exist) {
                                     $existing_inventory[] = [
                                         'inventory_id' => null,
                                         'item_name' => $it,
@@ -1633,11 +1633,11 @@ class Commands extends Controller
                             $report_image = null;
                             $report = ReportModel::createReport($report_title, $report_desc, $report_category, $report_image, 0, null, $user_id, null);
                             $id_report = $report->id;
-                            if($report){
+                            if ($report) {
                                 $success_exec = 0;
                                 $failed_exec = 0;
 
-                                if($existing_inventory){
+                                if ($existing_inventory) {
                                     $item_count = count($existing_inventory);
 
                                     // Create report item
@@ -1646,7 +1646,7 @@ class Commands extends Controller
                                             $dt['inventory_id'] ?? null, $id_report, $dt['item_name'],$dt['item_desc'], $dt['item_qty'], $dt['item_price'] ?? null, $user_id
                                         );
 
-                                        if($res){
+                                        if ($res) {
                                             $success_exec++;
                                         } else {
                                             $failed_exec++;
@@ -1654,13 +1654,13 @@ class Commands extends Controller
                                     }
                                 }
 
-                                if($success_exec > 0 || $request->report_item == null){
+                                if ($success_exec > 0 || $request->report_item == null) {
                                     // Create history
                                     Audit::createHistory('Create', $report->report_title, $user_id);
                                 }
 
                                 // Return success response
-                                if($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == ""){
+                                if ($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == "") {
                                     return response()->json([
                                         'status' => 'success',
                                         'message' => Generator::getMessageTemplate("create", 'report'),
@@ -1668,7 +1668,7 @@ class Commands extends Controller
                                             'id' => $id_report
                                         ]
                                     ], Response::HTTP_OK);
-                                } else if($failed_exec > 0 && $success_exec > 0){
+                                } else if ($failed_exec > 0 && $success_exec > 0) {
                                     return response()->json([
                                         'status' => 'success',
                                         'message' => Generator::getMessageTemplate("custom", "report created and some item has been added: $success_exec. About $failed_exec inventory failed to add"),
@@ -1782,7 +1782,7 @@ class Commands extends Controller
      *     )
      * )
      */
-    public function postAnalyzeBill(Request $request){
+    public function postAnalyzeBill(Request $request) {
         try{ 
             $user_id = $request->user()->id;
             $validation_image_failed = "";
@@ -1808,7 +1808,7 @@ class Commands extends Controller
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
-                    if($file_ext != "pdf"){
+                    if ($file_ext != "pdf") {
                         // Get Text from Image
                         $filePath = $file->store('temp', 'public');
                         $fullPath = public_path("storage/{$filePath}");
@@ -1831,7 +1831,7 @@ class Commands extends Controller
                                     $ln = str_replace('Rp','', $ln);
                                     $ln = str_replace(' ','', $ln);
                                     $items_num[] = (int)$ln;
-                                } else if(preg_match('/[a-zA-Z]/', $ln)){ // Check if string contain alphabet
+                                } else if (preg_match('/[a-zA-Z]/', $ln)) { // Check if string contain alphabet
                                     $items_text[] = $ln;
                                 }
                             }
@@ -1868,7 +1868,7 @@ class Commands extends Controller
                                     $founded_price = null;
                                     $itemQty = 1;
 
-                                    if(count($columns) > 2){
+                                    if (count($columns) > 2) {
                                         // Extract information
                                         $itemPrice = trim($columns[2]); 
                                         if (!empty($itemPrice) && $itemPrice !== "Description" && $itemPrice !== "Parts of FlazenApps") {

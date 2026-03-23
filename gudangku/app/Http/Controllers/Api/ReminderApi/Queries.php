@@ -82,10 +82,10 @@ class Queries extends Controller
             
             // Make sure only admin can access the request
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 // Get all reminder mark with pagination
                 $res = ScheduleMarkModel::getAllReminderMark(true);
-                if($res->count() > 0) {
+                if ($res->count() > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("fetch", $this->module),
@@ -171,7 +171,7 @@ class Queries extends Controller
 
             // Get all reminder history
             $res = ScheduleMarkModel::getAllReminderHistory($user_id,true);
-            if($res->isNotEmpty()) {
+            if ($res->isNotEmpty()) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',

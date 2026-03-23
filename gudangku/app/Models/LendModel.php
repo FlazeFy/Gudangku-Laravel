@@ -31,7 +31,6 @@ class LendModel extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'lend';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'lend_qr_url', 'qr_period', 'lend_desc', 'lend_status', 'created_at', 'created_by', 'is_finished'];
@@ -40,7 +39,55 @@ class LendModel extends Model
         'is_finished' => 'integer'
     ];
 
-    public static function createLend($lend_qr_url,$qr_period,$lend_desc,$lend_status,$user_id){
+    public static function getLendActive($user_id) {
+        return LendModel::select('id','lend_qr_url','qr_period','lend_desc','created_at')
+            ->where('created_by',$user_id)
+            ->where('is_finished',0)
+            ->whereNot('lend_status','expired')
+            ->first();
+    }
+
+    public static function getLendOwnerById($lend_id) {
+        return LendModel::select('users.id','username')
+            ->join('users','users.id','=','lend.created_by')
+            ->first();
+    }
+    
+    public static function getAllLend($user_id,$paginate) {
+        return LendModel::selectRaw("lend.id,lend_qr_url,qr_period,lend_desc,lend_status,lend.created_at,is_finished,GROUP_CONCAT(CONCAT(inventory_name, ' (', inventory_category, ')') SEPARATOR ', ') as list_inventory,borrower_name")
+            ->leftjoin('lend_inventory_rel','lend_inventory_rel.lend_id','=','lend.id')
+            ->leftjoin('inventory','inventory.id','lend_inventory_rel.inventory_id','=','inventory.id')
+            ->where('lend.created_by',$user_id)
+            ->groupby('lend.id')
+            ->orderby('lend.created_at','desc')
+            ->paginate($paginate);
+    }
+
+    public static function getAllLendInventory($lend_id,$paginate) {
+        return LendModel::select('inventory.id','inventory_name','inventory_category','inventory_desc','inventory_merk','inventory_room','inventory_storage','inventory_rack','inventory_image',
+            'inventory_unit','inventory_vol','inventory_color','inventory.created_at')
+            ->join('inventory','inventory.created_by','=','lend.created_by')
+            ->where('lend.id',$lend_id)
+            ->where('lend.lend_status','open')
+            ->orderby('inventory.updated_at','desc')
+            ->orderby('inventory.created_at','desc')
+            ->paginate($paginate);
+    }
+
+    public static function getLendPlanDestroy($days) {
+        $expiredLends = LendModel::where(function($query) {
+            $query->where('lend_status', 'expired')
+                  ->orWhere('is_finished', 1);
+            })
+            ->whereDate('created_at', '<', Carbon::now()->subDays($days))
+            ->pluck('id'); 
+
+        DB::table('lend_inventory_rel')->whereIn('lend_id', $expiredLends)->delete();
+
+        return LendModel::whereIn('id', $expiredLends)->delete();
+    }
+
+    public static function createLend($lend_qr_url,$qr_period,$lend_desc,$lend_status,$user_id) {
         return LendModel::create([
             'id' => Generator::getUUID(), 
             'lend_qr_url' => $lend_qr_url, 
@@ -53,31 +100,7 @@ class LendModel extends Model
         ]);
     }
 
-    public static function getAllLend($user_id,$paginate){
-        return LendModel::selectRaw("lend.id,lend_qr_url,qr_period,lend_desc,lend_status,lend.created_at,is_finished,GROUP_CONCAT(CONCAT(inventory_name, ' (', inventory_category, ')') SEPARATOR ', ') as list_inventory,borrower_name")
-            ->leftjoin('lend_inventory_rel','lend_inventory_rel.lend_id','=','lend.id')
-            ->leftjoin('inventory','inventory.id','lend_inventory_rel.inventory_id','=','inventory.id')
-            ->where('lend.created_by',$user_id)
-            ->groupby('lend.id')
-            ->orderby('lend.created_at','desc')
-            ->paginate($paginate);
-    }
-
-    public static function getLendActive($user_id){
-        return LendModel::select('id','lend_qr_url','qr_period','lend_desc','created_at')
-            ->where('created_by',$user_id)
-            ->where('is_finished',0)
-            ->whereNot('lend_status','expired')
-            ->first();
-    }
-
-    public static function getLendOwnerById($lend_id){
-        return LendModel::select('users.id','username')
-            ->join('users','users.id','=','lend.created_by')
-            ->first();
-    }
-
-    public static function updateLendByUserId($data,$user_id,$id){
+    public static function updateLendByUserId($data,$user_id,$id) {
         $query = LendModel::where('id', $id);
 
         if (!is_null($user_id)) {
@@ -85,29 +108,5 @@ class LendModel extends Model
         }
 
         return $query->update($data);
-    }
-
-    public static function getAllLendInventory($lend_id,$paginate){
-        return LendModel::select('inventory.id','inventory_name','inventory_category','inventory_desc','inventory_merk','inventory_room','inventory_storage','inventory_rack','inventory_image',
-            'inventory_unit','inventory_vol','inventory_color','inventory.created_at')
-            ->join('inventory','inventory.created_by','=','lend.created_by')
-            ->where('lend.id',$lend_id)
-            ->where('lend.lend_status','open')
-            ->orderby('inventory.updated_at','desc')
-            ->orderby('inventory.created_at','desc')
-            ->paginate($paginate);
-    }
-
-    public static function getLendPlanDestroy($days){
-        $expiredLends = LendModel::where(function($query) {
-            $query->where('lend_status', 'expired')
-                  ->orWhere('is_finished', 1);
-            })
-            ->whereDate('created_at', '<', Carbon::now()->subDays($days))
-            ->pluck('id'); 
-
-        DB::table('lend_inventory_rel')->whereIn('lend_id', $expiredLends)->delete();
-
-        return LendModel::whereIn('id', $expiredLends)->delete();
     }
 }

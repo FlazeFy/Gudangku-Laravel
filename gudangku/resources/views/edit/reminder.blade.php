@@ -6,7 +6,7 @@
 
 <script>
     $(document).ready(function() {
-        $(document).on('click','.reminder-box',async function(){
+        $(document).on('click','.reminder-box',async function() {
             const reminder_type = $(this).data('reminder-type')
             const reminder_context = $(this).data('reminder-context')
             const index = $('.reminder-box').index(this)
@@ -16,27 +16,27 @@
             getReminderContextSelect(reminder_type,$contextHolder,reminder_context)
         })
 
-        $(document).on('change','.reminder_type_holder',function(){
+        $(document).on('change','.reminder_type_holder',function() {
             const selected = $(this).val()
             const index = $('.reminder_type_holder').index(this)
             const $contextHolder = $('.reminder_context_holder').eq(index)
 
-            if(selected !== "-"){
+            if (selected !== "-") {
                 getReminderContextSelect(selected,$contextHolder)
             } else {
                 generateEmptyFieldError('reminder type')
             }
         })
 
-        $(document).on('change','.reminder_context_holder',function(){
+        $(document).on('change','.reminder_context_holder',function() {
             const selected = $(this).val()
 
-            if($(this).val() === "-"){
+            if ($(this).val() === "-") {
                 generateEmptyFieldError('reminder context')
             }
         })
 
-        $(document).on('click','.save_reminder-button',function(){
+        $(document).on('click','.save_reminder-button',function() {
             const id = $(this).data('id')
             const inventory_id = $(this).data('inventory-id')
             const index = $('.save_reminder-button').index(this)
@@ -50,7 +50,7 @@
     })
 
     const getReminderLayout = (reminder, inventory_id) => {
-        if(reminder){
+        if (reminder) {
             $('#reminder_holder').empty().addClass('pt-2')
             reminder.forEach(dt => {
                 $('#reminder_holder').append(generateReminderBox(dt, inventory_id))

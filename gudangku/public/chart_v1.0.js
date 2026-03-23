@@ -8,9 +8,9 @@ const chartNoDataMessage = (holder) => {
 const generatePieChart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
-    if(data.length > 0){
+    if (data.length > 0) {
         let keys = Object.keys(data[0])
-        if(keys.length == 2 && (typeof data[0][keys[0]] === 'string' && Number.isInteger(data[0][keys[1]]) || typeof data[0][keys[1]] === 'string' && Number.isInteger(data[0][keys[0]]))){
+        if (keys.length == 2 && (typeof data[0][keys[0]] === 'string' && Number.isInteger(data[0][keys[1]]) || typeof data[0][keys[1]] === 'string' && Number.isInteger(data[0][keys[0]]))) {
             const totals = data.map(c => c[Number.isInteger(data[0][keys[1]]) ? keys[1] : keys[0]])
             const contexts = data.map(c => c[typeof data[0][keys[0]] === 'string' ? keys[0] : keys[1]])
 
@@ -50,9 +50,9 @@ const generatePieChart = (title, holder, data) => {
 const generateBarChart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
-    if(data.length > 0){
+    if (data.length > 0) {
         let keys = Object.keys(data[0])
-        if(keys.length == 2 && (typeof data[0][keys[0]] === 'string' && Number.isInteger(data[0][keys[1]]) || typeof data[0][keys[1]] === 'string' && Number.isInteger(data[0][keys[0]]))){
+        if (keys.length == 2 && (typeof data[0][keys[0]] === 'string' && Number.isInteger(data[0][keys[1]]) || typeof data[0][keys[1]] === 'string' && Number.isInteger(data[0][keys[0]]))) {
             const totals = data.map(c => c[Number.isInteger(data[0][keys[1]]) ? keys[1] : keys[0]])
             const contexts = data.map(c => c[typeof data[0][keys[0]] === 'string' ? keys[0] : keys[1]])
 
@@ -109,10 +109,10 @@ const generateBarChart = (title, holder, data) => {
 const generateLineColumnChart = (title, holder, data) => {
     $(`#${holder}`).before(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
 
-    if(data.length > 0){
+    if (data.length > 0) {
         let keys = Object.keys(data[0])
 
-        if(keys.length == 3 || keys.length == 2){
+        if (keys.length == 3 || keys.length == 2) {
             const total1 = data.map(c => Number.isInteger(data[0][keys[1]]) ? c[keys[1]] : Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : c[keys[0]])
             const total2 = keys.length == 3 ? data.map(c => Number.isInteger(data[0][keys[2]]) ? c[keys[2]] : Number.isInteger(data[0][keys[0]]) ? c[keys[0]] : c[keys[1]]) : null
             const title1 = ucEachWord((Number.isInteger(data[0][keys[1]]) ? keys[1] : Number.isInteger(data[0][keys[2]]) ? keys[2] : keys[0]).replaceAll('_',' '))
@@ -187,7 +187,7 @@ const generateGaugeChart = (title, holder, data, type_color = 'single_color') =>
             let percentage = percentages[selectedIndex]
             let fillColor = "var(--successBG)"
 
-            if(type_color != 'single_color'){
+            if (type_color != 'single_color') {
                 if (percentage < 30) {
                     fillColor = type_color == 'low_best' ? "var(--successBG)" : "var(--dangerBG)"
                 } else if (percentage < 70) {
@@ -256,7 +256,7 @@ const generateGaugeChart = (title, holder, data, type_color = 'single_color') =>
 
 
 const generateTableContextTotal = (holder, data, key_currency) => {
-    if(data.length > 0){
+    if (data.length > 0) {
         let keys = Object.keys(data[0])
         let thead = `<thead style='background:var(--primaryColor)'><tr>`
         keys.forEach(dt => {
@@ -287,7 +287,7 @@ const generateTableContextTotal = (holder, data, key_currency) => {
 }
 
 const exportButtonData = (holder, data) => {
-    if(data.length > 0){
+    if (data.length > 0) {
         $(`#${holder}`).append(`
             <button id='download-btn-data-${holder}' class='btn btn-primary w-100'>
                 <i class="fa-solid fa-download"></i> Download CSV

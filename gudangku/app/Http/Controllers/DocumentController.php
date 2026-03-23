@@ -29,7 +29,7 @@ class DocumentController extends Controller
         $report = ReportModel::getReportDetail(null,$id,'doc');
         $user_id = $request->user()->id ?? null;
 
-        if($report){
+        if ($report) {
             try {
                 $report_item = ReportItemModel::getReportItem(null,$id,'doc');
                 $options = new DompdfOptions();
@@ -43,14 +43,14 @@ class DocumentController extends Controller
                 $dompdf->render();
 
                 $file_name = "report-$id-$datetime.pdf";
-                if($user_id){
+                if ($user_id) {
                     $user = UserModel::select('telegram_user_id','username')
                         ->where('id',$user_id)
                         ->where('telegram_is_valid',1)
                         ->first();
 
-                    if($user && $user->telegram_user_id){
-                        if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                    if ($user && $user->telegram_user_id) {
+                        if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                             $pdfContent = $dompdf->output();
                             $pdfFilePath = public_path($file_name);
                             file_put_contents($pdfFilePath, $pdfContent);
@@ -81,10 +81,10 @@ class DocumentController extends Controller
         }
     }
 
-    public function custom_report(Request $request, $id){
+    public function custom_report(Request $request, $id) {
         $user_id = $request->user()->id;
 
-        if($user_id){
+        if ($user_id) {
             $filter_in = $request->query('filter_in', null);
             return view('custom.index')
                 ->with('type','report')
@@ -101,7 +101,7 @@ class DocumentController extends Controller
         $inventory = InventoryModel::getInventoryByRoom($room,$user_id);
         $layout = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
 
-        if($inventory || $layout){
+        if ($inventory || $layout) {
             try {
                 $options = new DompdfOptions();
                 $options->set('defaultFont', 'Helvetica');
@@ -116,14 +116,14 @@ class DocumentController extends Controller
                 $user_id = Generator::getUserId(session()->get('role_key'));
                 $file_name = "layout-$room-$datetime.pdf";
 
-                if($user_id){
+                if ($user_id) {
                     $user = UserModel::select('telegram_user_id','username')
                         ->where('id',$user_id)
                         ->where('telegram_is_valid',1)
                         ->first();
 
-                    if($user && $user->telegram_user_id){
-                        if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                    if ($user && $user->telegram_user_id) {
+                        if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                             $pdfContent = $dompdf->output();
                             $pdfFilePath = public_path($file_name);
                             file_put_contents($pdfFilePath, $pdfContent);
@@ -154,10 +154,10 @@ class DocumentController extends Controller
         }
     }
 
-    public function custom_layout(Request $request, $id){
+    public function custom_layout(Request $request, $id) {
         $user_id = $request->user()->id;
 
-        if($user_id){
+        if ($user_id) {
             return view('custom.index')
                 ->with('type','layout')
                 ->with('id',$id)
@@ -172,7 +172,7 @@ class DocumentController extends Controller
         $user_id = $request->user()->id;
         $inventory = InventoryModel::getInventoryDetail($id,$user_id);
 
-        if($inventory){
+        if ($inventory) {
             try {
                 $reminder = ReminderModel::getReminderByInventoryId($id,$user_id);
                 $options = new DompdfOptions();
@@ -186,14 +186,14 @@ class DocumentController extends Controller
                 $dompdf->render();
 
                 $file_name = "inventory-$id-$datetime.pdf";
-                if($user_id){
+                if ($user_id) {
                     $user = UserModel::select('telegram_user_id','username')
                         ->where('id',$user_id)
                         ->where('telegram_is_valid',1)
                         ->first();
 
-                    if($user && $user->telegram_user_id){
-                        if(TelegramMessage::checkTelegramID($user->telegram_user_id)){
+                    if ($user && $user->telegram_user_id) {
+                        if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                             $pdfContent = $dompdf->output();
                             $pdfFilePath = public_path($file_name);
                             file_put_contents($pdfFilePath, $pdfContent);
@@ -224,10 +224,10 @@ class DocumentController extends Controller
         }
     }
 
-    public function custom_inventory(Request $request, $id){
+    public function custom_inventory(Request $request, $id) {
         $user_id = $request->user()->id;
 
-        if($user_id){
+        if ($user_id) {
             return view('custom.index')
                 ->with('type','inventory')
                 ->with('id',$id)

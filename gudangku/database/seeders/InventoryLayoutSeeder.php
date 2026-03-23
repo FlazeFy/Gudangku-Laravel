@@ -22,11 +22,11 @@ class InventoryLayoutSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $users = UserModel::getAllWithInventory();
-        foreach($users as $us) {
+        foreach ($users as $us) {
             $ran = mt_rand(0, 1);
             $inventories = InventoryModel::getInventoryStorageRoom($us->id);
 
-            foreach($inventories as $in) {
+            foreach ($inventories as $in) {
                 $layout = Generator::getRandomLayout();
                 // Factory
                 InventoryLayoutModel::createInventoryLayout($in->inventory_room, $in->inventory_storage, $ran === 1 ? fake()->paragraph() : null, $layout, $us->id);

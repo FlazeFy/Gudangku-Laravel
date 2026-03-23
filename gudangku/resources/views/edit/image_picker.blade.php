@@ -50,7 +50,7 @@
             success: function(response) {
                 Swal.hideLoading()
 
-                if(!isNew){
+                if (!isNew) {
                     $('#image-picker').removeClass('d-none')
                     $('#no-image-picker').addClass('d-none')
                     $('#file-input').val('')

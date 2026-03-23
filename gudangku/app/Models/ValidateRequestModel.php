@@ -26,26 +26,25 @@ class ValidateRequestModel extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'validate_request';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'request_type', 'request_context', 'created_at', 'created_by']; 
 
-    public static function getActiveRequest($user_id, $request_type = null, $request_context = null){
+    public static function getActiveRequest($user_id, $request_type = null, $request_context = null) {
         $res = ValidateRequestModel::select('id','request_type', 'request_context', 'created_at')
             ->where('created_by', $user_id);
 
-        if($request_type){
+        if ($request_type) {
             $res = $res->where('request_type', $request_type);
         }
-        if($request_context){
+        if ($request_context) {
             $res = $res->where('request_context', $request_context);
         }
 
         return $res->first();
     }   
 
-    public static function createValidateRequest($request_type, $token, $user_id){
+    public static function createValidateRequest($request_type, $token, $user_id) {
         return ValidateRequestModel::create([
             'id' => Generator::getUUID(), 
             'request_type' => $request_type,
@@ -55,7 +54,7 @@ class ValidateRequestModel extends Model
         ]);
     }
 
-    public static function deleteValidateRequestByRequestContext($request_context, $user_id){
+    public static function deleteValidateRequestByRequestContext($request_context, $user_id) {
         return ValidateRequestModel::where('request_type','telegram_id_validation')
             ->where('created_by',$user_id)
             ->where('request_context',$request_context)

@@ -1,4 +1,4 @@
-<div class='control-panel <?php if(!$isMobile){ echo 'position-sticky'; } ?>' style='<?php if(!$isMobile){ echo 'top:var(--spaceMD)'; } ?>'>
+<div class='control-panel <?php if (!$isMobile) { echo 'position-sticky'; } ?>' style='<?php if (!$isMobile) { echo 'top:var(--spaceMD)'; } ?>'>
     <div class="position-relative pt-2">
         <a class="fw-bold bg-transparent" style='font-size:var(--textJumbo)' data-bs-toggle="collapse" href="#collapseControl">Control Panel</a>
         <div class="mt-1 mb-2 row collapse show" id="collapseControl">
@@ -37,7 +37,7 @@
 
 <script>
     const placeResetButton = () => {
-        if(search_key != ''){
+        if (search_key != '') {
             $('#reset_search_btn_holder').html(`
                 <a class='btn bg-danger position-absolute' href='/report' style='right:7.5px; top:7.5px; font-size:var(--textLG); height:var(--spaceXLG); width:var(--spaceJumbo);'>
                     <i class="fa-solid fa-xmark position-absolute" style='margin-top:-7px; margin-left:-6px;'></i>
@@ -55,19 +55,19 @@
         const url = new URL(window.location)
         const curr_page = url.href.replace(url.origin, "")
 
-        if(val != null && val.trim() != "" ){
+        if (val != null && val.trim() != "" ) {
             const search_val = val.trim()
             url.searchParams.set('search_key', search_val)
             search_key = search_val
             window.history.pushState({ path: url.href }, '', url.href)
             placeResetButton()
         } else {
-            if(curr_page != "/report"){
+            if (curr_page != "/report") {
                 window.location.href = '/report'
             }
         }
 
-        if((curr_page != "/report" && (val == null || val.trim() == "")) || (val != null && val.trim() != "")){
+        if ((curr_page != "/report" && (val == null || val.trim() == "")) || (val != null && val.trim() != "")) {
             getAllReport(page,search_key,filter_category,sorting)
         }
     }
@@ -81,12 +81,12 @@
         return true 
     }
 
-    $(document).on('blur', '#search_by_title',function(){
+    $(document).on('blur', '#search_by_title',function() {
         searchByTitle($(this).val())
     })
 
-    $(document).on('change', '#report_category_holder',function(){
-        if($(this).val() != 'all'){
+    $(document).on('change', '#report_category_holder',function() {
+        if ($(this).val() != 'all') {
             const url = new URL(window.location)
             const search_val = $(this).val()
             url.searchParams.set('filter_category', search_val)
@@ -99,8 +99,8 @@
         getAllReport(page,search_key,filter_category,sorting)
     })
 
-    $(document).on('change', '#sorting',function(){
-        if($(this).val()){
+    $(document).on('change', '#sorting',function() {
+        if ($(this).val()) {
             const url = new URL(window.location)
             const search_val = $(this).val()
             url.searchParams.set('sorting', search_val)

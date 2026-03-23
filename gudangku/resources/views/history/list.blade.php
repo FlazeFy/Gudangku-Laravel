@@ -71,7 +71,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     templateAlertContainer(item_holder, 'no-data', "No history found to show", null, '<i class="fa-solid fa-rotate-left"></i>')

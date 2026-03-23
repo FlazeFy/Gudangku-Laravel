@@ -48,7 +48,7 @@
 
                     const icon = el === 'room' ? 'fa-house' : el === 'category' ? 'fa-toolbox' : 'fa-box-archive'
 
-                    if(data){
+                    if (data) {
                         data.forEach((dt, idx) => {
                             $(`#inventory_by_${el}-holder`).append(`
                                 <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6 px-2">
@@ -67,7 +67,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if(response.status != 404){
+                if (response.status != 404) {
                     generateAPIError(response, true)
                 } else {
                     holder.forEach(el => {

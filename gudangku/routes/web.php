@@ -41,7 +41,7 @@ Route::prefix('/')->group(function () {
     Route::post('/login/validate', [LoginController::class, 'login_auth']);
 });
 
-Route::prefix('/auth')->group(function (){
+Route::prefix('/auth')->group(function () {
     Route::get('/google', [LoginController::class, 'redirect_to_google']);
     Route::get('/google/callback', [LoginController::class, 'login_google_callback']);
 });
@@ -61,14 +61,14 @@ Route::prefix('/embed')->group(function () {
 });
 
 Route::prefix('/doc')->group(function () {
-    Route::prefix('/report/{id}')->group(function (){
+    Route::prefix('/report/{id}')->group(function () {
         Route::get('/', [DocumentController::class, 'index_report']);
         Route::get('/custom', [DocumentController::class, 'custom_report']);
     });
 });
 
 Route::prefix('/analyze')->group(function () {
-    Route::prefix('/report/{id}')->group(function (){
+    Route::prefix('/report/{id}')->group(function () {
         Route::get('/', [AnalyzeController::class, 'index_report']);
     });
 });
@@ -85,10 +85,10 @@ Route::prefix('/inventory')->middleware(['auth_v2:sanctum'])->group(function () 
     Route::post('/toogleView', [HomeController::class, 'toogle_view']);
     Route::post('/save_as_csv', [HomeController::class, 'save_as_csv']);
 
-    Route::prefix('/add')->group(function (){
+    Route::prefix('/add')->group(function () {
         Route::get('/', [AddController::class, 'index']);
     });
-    Route::prefix('/edit/{id}')->group(function (){
+    Route::prefix('/edit/{id}')->group(function () {
         Route::get('/', [EditController::class, 'index']);
     });
 });
@@ -136,11 +136,11 @@ Route::prefix('/calendar')->middleware(['auth_v2:sanctum'])->group(function () {
 Route::prefix('/report')->middleware(['auth_v2:sanctum'])->group(function () {
     Route::get('/', [ReportController::class, 'index']);
 
-    Route::prefix('/add')->group(function (){
+    Route::prefix('/add')->group(function () {
         Route::get('/', [AddReportController::class, 'index']);
     });
 
-    Route::prefix('/detail/{id}')->group(function (){
+    Route::prefix('/detail/{id}')->group(function () {
         Route::get('/', [ReportDetailController::class, 'index']);
         Route::post('/toogle_edit', [ReportDetailController::class, 'toogle_edit']);  
         Route::post('/save_as_csv', [ReportDetailController::class, 'save_as_csv']);  
@@ -154,21 +154,21 @@ Route::prefix('/room')->middleware(['auth_v2:sanctum'])->group(function () {
 });
 
 Route::prefix('/doc')->middleware(['auth_v2:sanctum'])->group(function () {
-    Route::prefix('/layout/{room}')->group(function (){
+    Route::prefix('/layout/{room}')->group(function () {
         Route::get('/', [DocumentController::class, 'index_layout']);
         Route::get('/custom', [DocumentController::class, 'custom_layout']);
     });
-    Route::prefix('/inventory/{id}')->group(function (){
+    Route::prefix('/inventory/{id}')->group(function () {
         Route::get('/', [DocumentController::class, 'index_inventory']);
         Route::get('/custom', [DocumentController::class, 'custom_inventory']);
     });
 });
 
 Route::prefix('/analyze')->middleware(['auth_v2:sanctum'])->group(function () {
-    Route::prefix('/layout/{room}')->group(function (){
+    Route::prefix('/layout/{room}')->group(function () {
         Route::get('/', [AnalyzeController::class, 'index_layout']);
     });
-    Route::prefix('/inventory/{id}')->group(function (){
+    Route::prefix('/inventory/{id}')->group(function () {
         Route::get('/', [AnalyzeController::class, 'index_inventory']);
     });
 });

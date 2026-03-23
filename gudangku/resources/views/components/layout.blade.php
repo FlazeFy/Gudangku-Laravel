@@ -49,12 +49,12 @@
         <!-- Jquery -->
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
-        <?php if(preg_match('(stats|analyze|embed|room)', $cleanedUrl)): ?>
+        <?php if (preg_match('(stats|analyze|embed|room)', $cleanedUrl)): ?>
             <!--Apex Chart-->
             <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <?php endif; ?>
 
-        <?php if(preg_match('(calendar)', $cleanedUrl)): ?>
+        <?php if (preg_match('(calendar)', $cleanedUrl)): ?>
             <!--Full calendar.-->
             <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
         <?php endif; ?>
@@ -62,7 +62,7 @@
         <!-- Swal -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <?php if(preg_match('(inventory/add|inventory/edit)', $cleanedUrl)): ?>
+        <?php if (preg_match('(inventory/add|inventory/edit)', $cleanedUrl)): ?>
             <!-- Tenserflow -->
             <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
         <?php endif; ?>
@@ -71,11 +71,11 @@
         <script src="{{ asset('/global_v1.0.js')}}"></script>
         <script src="{{ asset('/template_v1.0.js')}}"></script>
 
-        <?php if(preg_match('(stats|analyze|embed|room)', $cleanedUrl)): ?>
+        <?php if (preg_match('(stats|analyze|embed|room)', $cleanedUrl)): ?>
             <script src="{{ asset('/chart_v1.0.js')}}"></script>
         <?php endif; ?>
 
-        <?php if(preg_match('(doc|analyze)', $cleanedUrl)): ?>
+        <?php if (preg_match('(doc|analyze)', $cleanedUrl)): ?>
             <!-- Richtext -->
             <link rel="stylesheet" href="{{ asset('/richtexteditor/rte_theme_default.css')}}" />
             <script type="text/javascript" src="{{ asset('/richtexteditor/rte.js')}}"></script>
@@ -92,7 +92,7 @@
         <div style="min-height: 90vh">
             @yield('content')
         </div>
-        <?php if(!preg_match('(embed)', $cleanedUrl)): ?>
+        <?php if (!preg_match('(embed)', $cleanedUrl)): ?>
             @include('components.footer')
         <?php endif; ?>
         @include('components.scroll_top')

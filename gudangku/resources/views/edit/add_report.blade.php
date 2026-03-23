@@ -72,7 +72,7 @@
 <script>
     $( document ).ready(function() {
         $('#report_category').on('change', function() {
-            if($(this).val() == "Shopping Cart" || $(this).val() == "Wishlist"){
+            if ($(this).val() == "Shopping Cart" || $(this).val() == "Wishlist") {
                 priceInput = `
                     <label>Price (optional)</label>
                     <input type="number" class="form-control w-100" min="1" name="item_price" value="0">

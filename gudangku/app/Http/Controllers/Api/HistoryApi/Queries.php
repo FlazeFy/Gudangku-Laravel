@@ -79,7 +79,7 @@ class Queries extends Controller
 
             // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if($check_admin){
+            if ($check_admin) {
                 $user_id = $request->query('user_id') ?? null;
                 $res = HistoryModel::getAllHistory('admin', $user_id, $paginate);
             } else {

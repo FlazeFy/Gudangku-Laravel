@@ -74,10 +74,10 @@ class ExampleTest extends DuskTestCase
             $admin = AdminModel::getAllContact();
             $firebaseRealtime = new FirebaseRealtime();
 
-            foreach($admin as $dt){
+            foreach ($admin as $dt) {
                 $message = "[ADMIN] Hello $dt->username, the system just run an audit stats. Here's the capture";
                     
-                if($dt->telegram_user_id){
+                if ($dt->telegram_user_id) {
                     $response = Telegram::sendMessage([
                         'chat_id' => $dt->telegram_user_id,
                         'text' => $message,
@@ -85,8 +85,8 @@ class ExampleTest extends DuskTestCase
                     ]);
                 }
 
-                foreach($screenshots as $idxCapture => $capture){                    
-                    if($dt->telegram_user_id){
+                foreach ($screenshots as $idxCapture => $capture) {                    
+                    if ($dt->telegram_user_id) {
                         $response = Telegram::sendPhoto([
                             'chat_id' => $dt->telegram_user_id,
                             'photo' => InputFile::create($capture, $fileNames[$idxCapture]['file_name']),
@@ -95,10 +95,10 @@ class ExampleTest extends DuskTestCase
                     }
                 }
 
-                if($dt->line_user_id){
+                if ($dt->line_user_id) {
                     LineMessage::sendMessage('text',"Error has been audited",$dt->line_user_id);
                 }
-                if($dt->firebase_fcm_token){
+                if ($dt->firebase_fcm_token) {
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/gudangku-94edc-firebase-adminsdk-we9nr-31d47a729d.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)
@@ -122,7 +122,7 @@ class ExampleTest extends DuskTestCase
             }
     
             $firebaseService = new FirebaseStorage();
-            foreach($screenshots as $idx => $capture){
+            foreach ($screenshots as $idx => $capture) {
                 $firebaseUrl = $firebaseService->uploadFile($capture, "audit/stats", $fileNames[$idx]['file_name'].".pdf");
             }    
         });

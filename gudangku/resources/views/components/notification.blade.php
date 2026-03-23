@@ -1,5 +1,5 @@
 @php($role = session()->get('role_key'))
-@if($role == 0)
+@if ($role == 0)
     <a class="btn me-2" data-bs-toggle="popover" id='open-notification-btn' title="Notification" data-bs-placement="left" data-bs-html="true" 
         data-bs-content="
             <div id='reminder-holder'></div>
@@ -11,7 +11,7 @@
     <script>
         let page_reminder = 1
 
-        $(document).on('click','#open-notification-btn', function(){
+        $(document).on('click','#open-notification-btn', function() {
             $(document).ready(function() {
                 const getReminderHistory = (page) => {
                     const item_holder = 'reminder-holder'
@@ -43,7 +43,7 @@
                             })
                         },
                         error: function(response, jqXHR, textStatus, errorThrown) {
-                            if(response.status != 404){
+                            if (response.status != 404) {
                                 generateAPIError(response, true)
                             } else {
                                 templateAlertContainer(item_holder, 'no-data', "No notification to show", null, '<i class="fa-solid fa-rotate-left"></i>')

@@ -9,11 +9,11 @@
 
 @section('content')
     <div class="content">
-        @if($role == 0)
+        @if ($role == 0)
             @include('landing.dashboard')
         @endif
         <div class="row g-3 justify-content-center">
-            @if($role == 0)
+            @if ($role == 0)
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/chat';" id="nav_chat_btn">
                     <i class="fa-solid fa-robot d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
@@ -24,7 +24,7 @@
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/inventory';" id="nav_inventory_btn">
                     <i class="fa-solid fa-warehouse d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
-                    <h4 class="mt-3 mb-0 text-center">@if($role == 0) My @endif Inventory</h4>
+                    <h4 class="mt-3 mb-0 text-center">@if ($role == 0) My @endif Inventory</h4>
                 </button>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
@@ -58,7 +58,7 @@
                     <h4 class="mt-3 mb-0 text-center">My Profile</h4>
                 </button>
             </div>
-            @if($role == 1)
+            @if ($role == 1)
             <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                 <button class="btn-feature d-flex flex-column justify-content-center align-items-center" onclick="location.href='/error';" id="nav_error_history_btn">
                     <i class="fa-solid fa-triangle-exclamation d-block mx-auto fs-1 fs-sm-2 fs-md-3 fs-lg-1"></i>
