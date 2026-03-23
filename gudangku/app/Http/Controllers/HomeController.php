@@ -49,13 +49,7 @@ class HomeController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if($user_id != null){
-            return view('home.catalog.index')
-                ->with('view',$view)
-                ->with('context',$context);
-        } else {
-            return redirect("/login");
-        }
+        return $user_id != null ? view('home.catalog.index')->with('view',$view)->with('context',$context) : redirect('/login');
     }
 
     public function save_as_csv(){

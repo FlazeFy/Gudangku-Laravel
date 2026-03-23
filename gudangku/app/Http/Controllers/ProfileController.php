@@ -17,11 +17,7 @@ class ProfileController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if($user_id != null){
-            return view('profile.index');
-        } else {
-            return redirect("/login");
-        }
+        return $user_id != null ? view('profile.index') : redirect("/login");
     }
 
     public function sign_out()

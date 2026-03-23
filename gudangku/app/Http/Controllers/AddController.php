@@ -11,10 +11,6 @@ class AddController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if($user_id != null){
-            return view('add.index');
-        } else {
-            return redirect("/login");
-        }
+        return $user_id != null ? view('add.index') : redirect('/login');
     }
 }

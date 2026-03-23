@@ -23,11 +23,7 @@ class HistoryController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if($user_id != null){
-            return view('history.index');
-        } else {
-            return redirect("/login");
-        }
+        return $user_id != null ? view('history.index') : redirect("/login");
     }
 
     public function save_as_csv(){

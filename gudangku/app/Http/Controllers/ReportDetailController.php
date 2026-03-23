@@ -25,11 +25,7 @@ class ReportDetailController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if($user_id != null){
-            return view('report.detail.index')->with('id',$id);
-        } else {
-            return redirect("/login");
-        }
+        return $user_id != null ? view('report.detail.index')->with('id',$id) : redirect("/login");
     }
 
     public function toogle_edit(Request $request)

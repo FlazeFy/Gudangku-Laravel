@@ -23,11 +23,7 @@ class ReminderController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check = AdminModel::find($user_id);
 
-        if($check != null){
-            return view('reminder.index');
-        } else {
-            return redirect("/login");
-        }
+        return $user_id != null ? view('reminder.index') : redirect("/login");
     }
 
     public function save_as_csv(){

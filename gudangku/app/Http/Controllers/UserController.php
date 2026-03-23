@@ -24,11 +24,7 @@ class UserController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check = AdminModel::find($user_id);
 
-        if($check != null){
-            return view('user.index');
-        } else {
-            return redirect("/login");
-        }
+        return $user_id != null ? view('user.index') : redirect("/login");
     }
 
     public function save_as_csv(){
