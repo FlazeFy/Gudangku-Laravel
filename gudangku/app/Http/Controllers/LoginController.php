@@ -20,12 +20,23 @@ class LoginController extends Controller
         return view('login.index');
     }
 
+    private function setUserSession(Request $request, $username, $role, $token, $email, $id){
+        $request->session()->put([
+            'username_key' => $username,
+            'role_key' => $role,
+            'token_key' => $token,
+            'email_key' => $email,
+            'id_key'=> $id,
+        ]);
+    }
+
+    private function setGoogleToken($user_id, $access_token, $expiry_date){
+        GoogleTokensModel::deleteGoogleTokensByUserId($user_id);
+        GoogleTokensModel::createGoogleTokens($access_token, $expiry_date, $user_id);
+    }
+
     public function login_auth(Request $request){
-        $request->session()->put('username_key', $request->username);
-        $request->session()->put('role_key', $request->role);
-        $request->session()->put('token_key', $request->token);
-        $request->session()->put('email_key', $request->email);
-        $request->session()->put('id_key', $request->id);
+        $this->setUserSession($request, $request->username, $request->role, $request->token, $request->email, $request->id);
 
         return redirect()->route('landing');
     }
@@ -58,14 +69,8 @@ class LoginController extends Controller
             if($user){
                 $user_id = $user->id;
                 $token = $user->createToken('login')->plainTextToken;
-                $request->session()->put('username_key', $user->username);
-                $request->session()->put('role_key', 0);
-                $request->session()->put('token_key', $token);
-                $request->session()->put('email_key', $user->email);
-                $request->session()->put('id_key', $user->id);
-
-                GoogleTokensModel::deleteGoogleTokensByUserId($user_id);
-                GoogleTokensModel::createGoogleTokens($access_token, $expiry_date, $user_id);
+                $this->setUserSession($request, $user->username, 0, $token, $user->email, $user->id);
+                $this->setGoogleToken($user_id, $access_token, $expiry_date);
 
                 return redirect('/')->with('success_message', "Welcome $username"); 
             } else {
@@ -73,19 +78,13 @@ class LoginController extends Controller
                 if($user){
                     $user_id = $user->id;
                     $token = $user->createToken('login')->plainTextToken;
-                    $request->session()->put('username_key', $user->username);
-                    $request->session()->put('role_key', 0);
-                    $request->session()->put('token_key', $token);
-                    $request->session()->put('email_key', $user->email);
-                    $request->session()->put('id_key', $user_id);
-                    
+                    $this->setUserSession($request, $user->username, 0, $token, $user->email, $user->id);
+                    $this->setGoogleToken($user_id, $access_token, $expiry_date);
+
                     // Send email
                     $ctx = 'Register new account';
                     $data = "Welcome to GudangKu, happy explore!";
                     dispatch(new UserMailer($ctx, $data, $username, $email));
-
-                    GoogleTokensModel::deleteGoogleTokensByUserId($user_id);
-                    GoogleTokensModel::createGoogleTokens($access_token, $expiry_date, $user_id);
 
                     return redirect('/')->with('success_message', "Welcome $username"); 
                 } else {
