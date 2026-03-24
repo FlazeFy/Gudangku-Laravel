@@ -34,20 +34,14 @@
                 const total_page = response.data.last_page
 
                 $(`#${item_holder}`).empty()
-                data.forEach(el => {
-                    $(`#${item_holder}`).append(generateReportBox(el, search))
-                })
+                data.forEach(el => $(`#${item_holder}`).append(generateReportBox(el, search)))
                 $(`#add_report-holder`).html(`<a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReport"><i class="fa-solid fa-plus"></i> Add Report</a>`)
 
                 generatePagination(item_holder, getAllReport, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status != 404) {
-                    generateAPIError(response, true)
-                } else {
-                    templateAlertContainer(item_holder, 'no-data', "This inventory doesn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')
-                }
+                response.status !== 404 ? generateAPIError(response, true) : templateAlertContainer(item_holder, 'no-data', "This inventory isn't asigned in any report", 'assign to report', '<i class="fa-solid fa-scroll"></i>')
             }
         })
     }

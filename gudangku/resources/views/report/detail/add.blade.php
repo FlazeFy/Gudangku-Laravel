@@ -114,7 +114,7 @@
 
             for (var i = 0; i < data.length; i++) {
                 let optionText = `${data[i]['inventory_name']}` +
-                    (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '')
+                    (data[i]['inventory_vol'] !== null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '')
                 $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`)
             }
 
@@ -122,9 +122,7 @@
             $('#report_item').append(`<option value="copy_report">- Copy From Report -</option>`)
         })
         .fail(function (response, jqXHR, ajaxOptions, thrownError) {
-            if (response.status !== 404) {
-                generateAPIError(response, true)
-            } 
+            if (response.status !== 404) generateAPIError(response, true)
         })   
     }
 
@@ -199,16 +197,11 @@
         getAllInventory()
 
         $('#report_category').on('change', function() {
-            if ($(this).val() != "Shopping Cart" && $(this).val() != "Wishlist") {
-                $('.extra-form').empty()
-            }
+            if ($(this).val() != "Shopping Cart" && $(this).val() != "Wishlist") $('.extra-form').empty()
         })
         $(document).on('click', '.delete-item', function() {
             $(this).closest('.item-holder-div').remove()
-
-            if ($('.item-holder-div').length == 0) {
-                $('#item_holder').append(`<div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>`)
-            }
+            if ($('.item-holder-div').length == 0) $('#item_holder').append(`<div class="alert alert-danger w-100 mt-4"><i class="fa-solid fa-triangle-exclamation"></i> No item selected</div>`)
         })
     })
 </script>

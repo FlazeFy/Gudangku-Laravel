@@ -65,9 +65,7 @@
                     allowEscapeKey: false, 
                     confirmButtonText: "OK", 
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        getDetailInventoryByID("<?= $id ?>")
-                    }
+                    if (result.isConfirmed) getDetailInventoryByID("<?= $id ?>")
                 })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {

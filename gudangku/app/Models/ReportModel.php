@@ -45,7 +45,7 @@ class ReportModel extends Model
         $res = ReportModel::selectRaw($type == 'data' ? '*' : 'id,report_title, report_desc, report_category, report_image, created_at')
             ->where('id',$id);
 
-        if ($type == 'data' && $user_id != null) {
+        if ($type == 'data' && $user_id !== null) {
             $res = $res->where('created_by',$user_id);
         }
 

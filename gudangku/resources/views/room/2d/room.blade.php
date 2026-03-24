@@ -25,11 +25,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status != 404) {
-                    generateAPIError(response, true)
-                } else {
-                    generateMapRoom('#room-container',null,true,room)
-                }
+                response.status !== 404 ? generateAPIError(response, true) : generateMapRoom('#room-container',null,true,room)
             }
         })
     }
@@ -73,9 +69,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
-                    $(`#table-inventory-${target} tbody`).append(`
-                        <tr><td colspan='4' class='text-secondary fst-italic text-center'>- No inventory to show -</td></tr>
-                    `)
+                    $(`#table-inventory-${target} tbody`).append(`<tr><td colspan='4' class='text-secondary fst-italic text-center'>- No inventory to show -</td></tr>`)
                 }
             })
         }
@@ -98,9 +92,7 @@
                     icon: "success",
                     allowOutsideClick: false
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        getRoomLayout() 
-                    }
+                    if (result.isConfirmed) getRoomLayout() 
                 })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {

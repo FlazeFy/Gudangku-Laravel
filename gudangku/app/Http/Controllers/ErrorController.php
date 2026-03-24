@@ -23,7 +23,7 @@ class ErrorController extends Controller
         $user_id = Generator::getUserId(session()->get('role_key'));
         $check = AdminModel::find($user_id);
 
-        return $user_id != null ? view('error.index') : redirect("/login");
+        return $user_id !== null ? view('error.index') : redirect("/login");
     }
 
     public function save_as_csv() {

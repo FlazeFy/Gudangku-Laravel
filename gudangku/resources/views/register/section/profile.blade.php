@@ -165,9 +165,7 @@
 
             pins.forEach(function(e, index) {
                 e.value = ""
-                if (index === 0) {
-                    e.focus()
-                }
+                if (index === 0) e.focus()
             })
         })
     }
@@ -182,9 +180,7 @@
                 remain--
                 setTimeout(updateTimer, 1000)
 
-                if (remain <= 180) {
-                    timer.style = "color: var(--warningBG)"
-                }
+                if (remain <= 180) timer.style = "color: var(--warningBG)"
             } else {
                 token_msg.innerHTML = "<span class='text-danger'>Time's up, please try again</span>"
                 controlPin("time_out")

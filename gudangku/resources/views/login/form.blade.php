@@ -52,10 +52,7 @@
             success: function(response) {
                 let found = false
 
-                if (response.hasOwnProperty('role')) {
-                    found = true
-                }
-                
+                if (response.hasOwnProperty('role')) found = true
                 if (found) {
                     localStorage.setItem('token_key',response.token)
                     $('#token').val(response.token)
@@ -68,7 +65,6 @@
                     $('#username_msg').html("")
                     $('#pass_msg').html("")
                     $('#all_msg').html("")
-
                     $('#text-sorry').text("Sorry, something is wrong")
                     $('#sorry_modal').modal('show')
                 }
@@ -81,18 +77,12 @@
                 let icon = `<i class='fa-solid fa-triangle-exclamation'></i> `
 
                 if (response && response.responseJSON && response.responseJSON.hasOwnProperty('message')) {   
-                    //Error validation
                     if (typeof response.responseJSON.message === "string") {
                         allMsg = response.responseJSON.message
                     } else {
-                        if (response.responseJSON.message.hasOwnProperty('username')) {
-                            usernameMsg = response.responseJSON.message.username[0]
-                        }
-                        if (response.responseJSON.message.hasOwnProperty('password')) {
-                            passMsg = response.responseJSON.message.password[0]
-                        }
+                        if (response.responseJSON.message.hasOwnProperty('username')) usernameMsg = response.responseJSON.message.username[0]
+                        if (response.responseJSON.message.hasOwnProperty('password')) passMsg = response.responseJSON.message.password[0]
                     }
-                    
                 } else if (response && response.responseJSON && response.responseJSON.hasOwnProperty('errors')) {
                     allMsg = response.responseJSON.errors.message[0]
                 } else {
@@ -100,15 +90,9 @@
                 }
 
                 //Set to html
-                if (usernameMsg) {
-                    $('#username_msg').html(icon + usernameMsg)
-                }
-                if (passMsg) {
-                    $('#pass_msg').html(icon + passMsg)
-                }
-                if (allMsg) {
-                    $('#all_msg').html(icon + allMsg)
-                }
+                if (usernameMsg) $('#username_msg').html(icon + usernameMsg)
+                if (passMsg) $('#pass_msg').html(icon + passMsg)
+                if (allMsg) $('#all_msg').html(icon + allMsg)
             }
         })
     }

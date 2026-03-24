@@ -67,7 +67,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status != 404) {
+                if (response.status !== 404) {
                     generateAPIError(response, true)
                 } else {
                     holder.forEach(el => {

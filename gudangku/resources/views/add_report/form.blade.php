@@ -75,7 +75,7 @@
                 $('#report_item').append(`<option selected value="no_item">- No Item Selected -</option>`)
 
                 for (var i = 0; i < data.length; i++) {
-                    let optionText = `${data[i]['inventory_name']}` + (data[i]['inventory_vol'] != null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '')
+                    let optionText = `${data[i]['inventory_name']}` + (data[i]['inventory_vol'] !== null ? ` @${data[i]['inventory_vol']} ${data[i]['inventory_unit']}` : '')
                     $('#report_item').append(`<option value='${JSON.stringify(data[i])}'>${optionText}</option>`)
                 }
 

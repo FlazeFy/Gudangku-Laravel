@@ -19,9 +19,7 @@
         Swal.showLoading()
         const title = 'Inventory By Room'
 
-        const failedMessage = () => {
-            Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
-        }
+        const failedMessage = () => Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
         
         const fetchData = () => {
             $.ajax({
@@ -40,7 +38,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
-                    if (response.status != 404) {
+                    if (response.status !== 404) {
                         generateAPIError(response, true)
                     } else {
                         templateAlertContainer(ctx_holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>','/inventory/add')

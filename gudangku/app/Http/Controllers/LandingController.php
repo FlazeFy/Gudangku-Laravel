@@ -11,7 +11,7 @@ class LandingController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if ($user_id != null) {
+        if ($user_id !== null) {
             if (!session()->get('toogle_total_stats')) {
                 session()->put('toogle_total_stats', 'item');
             }

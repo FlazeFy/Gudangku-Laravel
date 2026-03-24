@@ -25,7 +25,7 @@ class HomeController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        if ($user_id != null) {
+        if ($user_id !== null) {
             $selected = session()->get('toogle_view_inventory');
 
             if ($selected == 'table') {
@@ -49,7 +49,7 @@ class HomeController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        return $user_id != null ? view('home.catalog.index')->with('view',$view)->with('context',$context) : redirect('/login');
+        return $user_id !== null ? view('home.catalog.index')->with('view',$view)->with('context',$context) : redirect('/login');
     }
 
     public function save_as_csv() {

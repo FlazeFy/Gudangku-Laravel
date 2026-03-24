@@ -55,7 +55,7 @@
         const url = new URL(window.location)
         const curr_page = url.href.replace(url.origin, "")
 
-        if (val != null && val.trim() != "" ) {
+        if (val !== null && val.trim() != "" ) {
             const search_val = val.trim()
             url.searchParams.set('search_key', search_val)
             search_key = search_val
@@ -67,7 +67,7 @@
             }
         }
 
-        if ((curr_page != "/report" && (val == null || val.trim() == "")) || (val != null && val.trim() != "")) {
+        if ((curr_page != "/report" && (val == null || val.trim() == "")) || (val !== null && val.trim() != "")) {
             getAllReport(page,search_key,filter_category,sorting)
         }
     }

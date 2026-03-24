@@ -11,6 +11,6 @@ class CalendarController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        return $user_id != null ? view('calendar.index') : redirect("/login");
+        return $user_id !== null ? view('calendar.index') : redirect("/login");
     }
 }

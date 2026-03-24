@@ -63,9 +63,7 @@
                 data.forEach((el, idx) => {
                     let styletr = ''
                     let reminders = ''
-                    if (el.deleted_at != null) {
-                        styletr = `style="background:rgba(221, 0, 33, 0.15)"`
-                    }
+                    if (el.deleted_at !== null) styletr = `style="background:rgba(221, 0, 33, 0.15)"`
                     const idCollapse = el.reminder ? `collapseReminder-${el.id}` : null
 
                     if (el.reminder) {
@@ -312,7 +310,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status != 404) {
+                if (response.status !== 404) {
                     generateAPIError(response, true)
                 } else {
                     $('#total-item').text(0)

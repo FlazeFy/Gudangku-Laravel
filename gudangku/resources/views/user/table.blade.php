@@ -76,11 +76,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status != 404) {
-                    generateAPIError(response, true)
-                } else {
-                    templateAlertContainer(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
-                }
+                response.status !== 404 ? generateAPIError(response, true) : templateAlertContainer(item_holder, 'no-data', "No user found to show", 'add a user', '<i class="fa-solid fa-scroll"></i>')
             }
         })
     }

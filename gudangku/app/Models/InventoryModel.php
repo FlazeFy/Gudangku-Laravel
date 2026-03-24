@@ -265,7 +265,7 @@ class InventoryModel extends Model
             ->where('inventory_name',$inventory_name)
             ->where('created_by',$user_id);
 
-        if ($inventory_id != null) {
+        if ($inventory_id !== null) {
             $check->whereNot('id',$inventory_id);
         }
 

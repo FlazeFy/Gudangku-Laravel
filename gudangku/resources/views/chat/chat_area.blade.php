@@ -52,11 +52,7 @@
                 analyze()
             }
 
-            if (file.type.startsWith('image/') || file.type === 'application/pdf') {
-                reader.readAsDataURL(file)
-            } else {
-                reader.onload()
-            }
+            (file.type.startsWith('image/') || file.type === 'application/pdf') ? reader.readAsDataURL(file) : reader.onload()
         }
     })
 
@@ -200,9 +196,7 @@
     const makeReport = () => {
         $('#selected-action').empty().html('make same report')
         $('#action-list').empty()
-        $('#chat-section').append(`
-            <div class="bubble bot">Okay, wait some moment</div>
-        `)
+        $('#chat-section').append(`<div class="bubble bot">Okay, wait some moment</div>`)
         addReport()
     }
 
@@ -242,8 +236,6 @@
 
     const addInventoryViaURL = (items) => {
         const list_items = items.split(", ")
-        list_items.forEach(el => {
-            window.open(`/inventory/add?inventory_name=${el}`, "_blank")
-        })
+        list_items.forEach(el => window.open(`/inventory/add?inventory_name=${el}`, "_blank"))
     }
 </script>

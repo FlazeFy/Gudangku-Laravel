@@ -2,7 +2,7 @@ const templateAlertContainer = (target, type, msg, btn_title, icon, href) => {
     $(`#${target}`).html(`
         <div class="container-fluid p-3" style="${type == 'no-data'? 'background-color:rgba(59, 131, 246, 0.2)':''}">
             <h6>${icon} ${msg}</h6>
-            ${btn_title != null ? `<a class="btn btn-primary mt-3" href=${href}><i class="${type == 'no-data'? 'fa-solid fa-plus':''}"></i> ${ucEachWord(btn_title)}</a>`:''}
+            ${btn_title !== null ? `<a class="btn btn-primary mt-3" href=${href}><i class="${type == 'no-data'? 'fa-solid fa-plus':''}"></i> ${ucEachWord(btn_title)}</a>`:''}
         </div>
     `)
 }
@@ -407,7 +407,7 @@ const browseItem = (val) => {
                     },
                     error: function(response, jqXHR, textStatus, errorThrown) {
                         Swal.close()
-                        if (response.status != 404) {
+                        if (response.status !== 404) {
                             generateAPIError(response, true)
                         } else {
                             $('#report_title_search').val('')

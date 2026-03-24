@@ -11,6 +11,6 @@ class EditController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        return $user_id != null ? view('edit.index')->with('id',$id) : redirect("/login");
+        return $user_id !== null ? view('edit.index')->with('id',$id) : redirect("/login");
     }
 }

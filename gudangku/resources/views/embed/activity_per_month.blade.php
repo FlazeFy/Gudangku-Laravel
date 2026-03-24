@@ -14,9 +14,7 @@
         const ctx = `total_activity_per_month_temp-${year}`
         const ctx_holder = "stats_total_activity_per_month"
 
-        const failedMessage = () => {
-            Swal.fire("Oops!", `Failed to get the stats Total ${title}`,"error")
-        }
+        const failedMessage = () => Swal.fire("Oops!", `Failed to get the stats Total ${title}`,"error")
 
         const fetchData = () => {
             $.ajax({
@@ -35,11 +33,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
-                    if (response.status != 404) {
-                        generateAPIError(response, true)
-                    } else {
-                        $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
-                    }
+                    response.status !== 404 ? generateAPIError(response, true) : $(`#${ctx_holder}`).prepend(`<h2 class='title-chart'>${ucEachWord(title)}</h2>`)
                 }
             })
         }

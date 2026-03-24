@@ -49,7 +49,7 @@ class ReportItemModel extends Model
         $res = ReportItemModel::selectRaw($type == 'data' ? '*' : 'item_name, item_desc, item_qty, item_price')
             ->where('report_id',$id);
 
-        if ($type == 'data' && $user_id != null) {
+        if ($type == 'data' && $user_id !== null) {
             $res = $res->where('created_by',$user_id);
         }
         if ($filter_in) {

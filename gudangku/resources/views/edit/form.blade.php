@@ -177,7 +177,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status != 404) {
+                if (response.status !== 404) {
                     generateAPIError(response, true)
                 } else {
                     Swal.fire({
@@ -188,9 +188,7 @@
                         allowEscapeKey: false, 
                         confirmButtonText: "Back to Inventory", 
                     }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '/inventory'
-                        }
+                        if (result.isConfirmed) window.location.href = '/inventory'
                     })
                 }
             }

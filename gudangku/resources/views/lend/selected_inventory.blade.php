@@ -68,9 +68,7 @@
                 Swal.close()
                 if (response.status === 422 || (response.status === 400 && response.responseJSON && response.responseJSON.is_expired)) {
                     Swal.fire("Failed!",response.responseJSON.message,"error").then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '/'
-                        }
+                        if (result.isConfirmed) window.location.href = '/'
                     })
                 } else {
                     generateAPIError(response, true)
@@ -84,9 +82,7 @@
         $('#selected-inventory-holder').empty()
 
         if (selected.length > 0) {
-            $('#reset-button-holder').html(`
-                <a class="btn btn-danger mt-3 w-100" id="reset-borrow-button"><i class="fa-solid fa-rotate-left"></i> Reset All</a>
-            `)
+            $('#reset-button-holder').html(`<a class="btn btn-danger mt-3 w-100" id="reset-borrow-button"><i class="fa-solid fa-rotate-left"></i> Reset All</a>`)
 
             selected.forEach(el => {
                 $('#selected-inventory-holder').append(`

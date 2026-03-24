@@ -10,19 +10,17 @@
 <script>    
     $(document).ready(function() {
         $(document).on('input','#telegram_user_id', function() {
-            if ($(this).val().length == 10) {
+            $(this).val().length == 10 ? 
                 $(this).after(`<a class='btn btn-success' id='validate-telegram-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
-            } else {
+            :
                 $('#validate-telegram-id-btn').remove()
-            }
         })
 
         $(document).on('input','#line_user_id', function() {
-            if ($(this).val().length == 144) {
+            $(this).val().length == 144 ?
                 $(this).after(`<a class='btn btn-success' id='validate-line-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)
-            } else {
+            :
                 $('#validate-line-id-btn').remove()
-            }
         })
 
         $(document).on('click','#validate-telegram-id-btn', function() {
@@ -91,9 +89,7 @@
                             icon: "success",
                             allowOutsideClick: false
                         }).then((result) => {
-                            if (result.isConfirmed) {
-                                $('#telegram-validation-box').removeClass('box-danger').html(`<span class='text-success'><i class="fa-solid fa-check"></i> Telegram is validated!</span>`)
-                            }
+                            if (result.isConfirmed) $('#telegram-validation-box').removeClass('box-danger').html(`<span class='text-success'><i class="fa-solid fa-check"></i> Telegram is validated!</span>`)
                         })
                     },
                     error: function(response, jqXHR, textStatus, errorThrown) {

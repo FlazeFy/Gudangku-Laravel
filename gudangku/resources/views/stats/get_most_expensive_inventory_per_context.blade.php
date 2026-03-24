@@ -32,9 +32,7 @@
             { holder: "stats_most_expensive_inventory_per_storage", object: "inventory_storage" }
         ]
 
-        const failedMessage = () => {
-            Swal.fire("Oops!",`Failed to get the stats Total ${title}`, "error")
-        }
+        const failedMessage = () => Swal.fire("Oops!",`Failed to get the stats Total ${title}`, "error")
 
         const fetchData = () => {
             $.ajax({
@@ -52,16 +50,12 @@
                     localStorage.setItem(`last-hit-most_expensive_stats`, Date.now())
                     ctx_holders.forEach(ctx_holder => {
                         const ctxData = data[ctx_holder.object]
-                        if (ctxData) {
-                            generateTableContextTotal(ctx_holder.holder, ctxData, 'Rp. ')
-                        } else {
-                            templateAlertContainer(ctx_holder.holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>', '/inventory/add')
-                        }
+                        ctxData ? generateTableContextTotal(ctx_holder.holder, ctxData, 'Rp. ') : templateAlertContainer(ctx_holder.holder, 'no-data', "No inventory found for this context to generate the stats", 'add a inventory', '<i class="fa-solid fa-warehouse"></i>', '/inventory/add')
                     })
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
-                    if (response.status != 404) {
+                    if (response.status !== 404) {
                         generateAPIError(response, true)
                     } else {
                         ctx_holders.forEach(ctx_holder => {

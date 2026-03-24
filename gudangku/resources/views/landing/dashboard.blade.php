@@ -102,11 +102,7 @@
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status != 404) {
-                    generateAPIError(response, true)
-                } else {
-                    templateAlertContainer('dashboard-holder', 'no-data', "No stats found to show", null, '<i class="fa-solid fa-warehouse"></i>')
-                }
+                response.status !== 404 ? generateAPIError(response, true) : templateAlertContainer('dashboard-holder', 'no-data', "No stats found to show", null, '<i class="fa-solid fa-warehouse"></i>')
             }
         })
     }

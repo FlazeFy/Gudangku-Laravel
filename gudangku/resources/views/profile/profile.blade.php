@@ -132,9 +132,7 @@
                 success: function(response) {
                     Swal.close()
                     Swal.fire("Success!", response.message, "success").then((result) => {
-                        if (result.isConfirmed) {
-                            get_my_profile()
-                        }
+                        if (result.isConfirmed) get_my_profile()
                     })
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {

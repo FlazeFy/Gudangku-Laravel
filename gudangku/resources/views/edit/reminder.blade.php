@@ -21,19 +21,11 @@
             const index = $('.reminder_type_holder').index(this)
             const $contextHolder = $('.reminder_context_holder').eq(index)
 
-            if (selected !== "-") {
-                getReminderContextSelect(selected,$contextHolder)
-            } else {
-                generateEmptyFieldError('reminder type')
-            }
+            selected !== "-" ? getReminderContextSelect(selected,$contextHolder) : generateEmptyFieldError('reminder type')
         })
 
         $(document).on('change','.reminder_context_holder',function() {
-            const selected = $(this).val()
-
-            if ($(this).val() === "-") {
-                generateEmptyFieldError('reminder context')
-            }
+            if ($(this).val() === "-") generateEmptyFieldError('reminder context')
         })
 
         $(document).on('click','.save_reminder-button',function() {
@@ -52,12 +44,8 @@
     const getReminderLayout = (reminder, inventory_id) => {
         if (reminder) {
             $('#reminder_holder').empty().addClass('pt-2')
-            reminder.forEach(dt => {
-                $('#reminder_holder').append(generateReminderBox(dt, inventory_id))
-            })
-            $('#add_reminder-holder').html(`
-                <a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReminder"><i class="fa-solid fa-plus"></i> Add Reminder</a>
-            `)
+            reminder.forEach(dt => $('#reminder_holder').append(generateReminderBox(dt, inventory_id)))
+            $('#add_reminder-holder').html(`<a class='btn btn-success' data-bs-toggle="modal" data-bs-target="#modalAddReminder"><i class="fa-solid fa-plus"></i> Add Reminder</a>`)
         } else {
             $('#reminder_holder').html(`
                 <div class="container-fluid p-3" style="background-color:rgba(59, 131, 246, 0.2)">

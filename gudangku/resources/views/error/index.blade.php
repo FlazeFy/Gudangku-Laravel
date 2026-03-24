@@ -1,6 +1,5 @@
 @extends('components.layout')
 
-<!-- PHP Helpers -->
 <?php
     use App\Helpers\Generator;
 ?>  

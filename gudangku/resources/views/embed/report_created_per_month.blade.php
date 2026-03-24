@@ -14,9 +14,7 @@
         const ctx = `total_report_created_per_month_temp-${year}`
         const ctx_holder = "stats_total_report_created_per_month"
 
-        const failedMessage = () => {
-            Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
-        }
+        const failedMessage = () => Swal.fire("Oops!",`Failed to get the stats Total ${title}`,"error")
 
         const fetchData = () => {
             $.ajax({
@@ -35,7 +33,7 @@
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
                     Swal.close()
-                    if (response.status != 404) {
+                    if (response.status !== 404) {
                         generateAPIError(response, true)
                     } else {
                         templateAlertContainer(ctx_holder, 'no-data', "No report found for this context to generate the stats", 'add a report', '<i class="fa-solid fa-warehouse"></i>','/report/add')

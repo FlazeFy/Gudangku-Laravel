@@ -1,6 +1,5 @@
 @extends('components.layout')
 
-<!-- PHP Helpers -->
 <?php
     use App\Helpers\Generator;
 ?>  
@@ -14,9 +13,7 @@
         let lend_id = '<?= $lend_id ?>'
         const SELECTED_STORAGE_KEY = `selected_lend_items_${lend_id}`
 
-        const saveSelectedItems = (items) => {
-            localStorage.setItem(SELECTED_STORAGE_KEY, JSON.stringify(items))
-        }
+        const saveSelectedItems = (items) => localStorage.setItem(SELECTED_STORAGE_KEY, JSON.stringify(items))
 
         const getSelectedItems = () => {
             const raw = localStorage.getItem(SELECTED_STORAGE_KEY)

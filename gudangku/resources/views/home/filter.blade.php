@@ -63,21 +63,17 @@
         const url = new URL(window.location)
         const curr_page = url.href.replace(url.origin, "")
 
-        if (val != null && val.trim() != "" ) {
+        if (val !== null && val.trim() != "" ) {
             const search_val = val.trim()
             url.searchParams.set('search_key', search_val)
             search_key = search_val
             window.history.pushState({ path: url.href }, '', url.href)
             placeResetButton()
         } else {
-            if (curr_page != "/inventory") {
-                window.location.href = '/inventory'
-            }
+            if (curr_page != "/inventory") window.location.href = '/inventory'
         }
 
-        if ((curr_page != "/inventory" && (val == null || val.trim() == "")) || (val != null && val.trim() != "")) {
-            getAllInventory(page,search_key,filter_category,sorting)
-        }
+        if ((curr_page != "/inventory" && (val == null || val.trim() == "")) || (val !== null && val.trim() != "")) getAllInventory(page,search_key,filter_category,sorting)
     }
     
     const submitOnEnter = (event) => {

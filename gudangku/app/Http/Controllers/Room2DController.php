@@ -12,7 +12,7 @@ class Room2DController extends Controller
     {
         $user_id = Generator::getUserId(session()->get('role_key'));
 
-        return $user_id != null ? view('room.2d.index') : redirect("/login");
+        return $user_id !== null ? view('room.2d.index') : redirect("/login");
     }
 
     public function select_room(Request $request)

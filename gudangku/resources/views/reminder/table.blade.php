@@ -70,7 +70,7 @@
                 generatePagination(item_holder, getAllReminder, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, reminderThrown) {
-                if (response.status != 404) {
+                if (response.status !== 404) {
                     generateAPIError(response, true)
                 } else {
                     $(`#${item_holder}`).html(`<tr><td colspan='7' id='err_no_data-msg'></td></tr>`)
@@ -98,9 +98,7 @@
                 $(`#modalReRemind_${id}`).modal('hide')
                 Swal.close()
                 Swal.fire("Success!",response.message, "success").then((result) => {
-                    if (result.isConfirmed) {
-                        getAllReminder(1)
-                    }
+                    if (result.isConfirmed) getAllReminder(1)
                 })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {

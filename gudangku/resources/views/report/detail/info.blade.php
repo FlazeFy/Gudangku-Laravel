@@ -294,9 +294,7 @@
                 allowEscapeKey: false, 
                 confirmButtonText: "Back to Report", 
             }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '/report'
-                }
+                if (result.isConfirmed) window.location.href = '/report'
             })
         }
     }
@@ -381,9 +379,7 @@
             success: function(response) {
                 Swal.close()
                 Swal.fire("Success!", response.message, "success").then((result) => {
-                    if (result.isConfirmed) {
-                        getDetailReportByID(id)
-                    }
+                    if (result.isConfirmed) getDetailReportByID(id)
                 })
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
