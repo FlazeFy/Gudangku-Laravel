@@ -11,6 +11,7 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 // Helper
 use App\Helpers\Generator;
 use App\Helpers\Validation;
+use App\Helpers\TelegramMessage;
 // Models
 use App\Models\UserModel;
 use App\Models\HistoryModel;
@@ -91,7 +92,7 @@ class Commands extends Controller
 
             // Check if telegram ID has been used
             $check = UserModel::isTelegramIDUsed($new_telegram_id);
-            if ($check === null) {
+            if (!$check) {
                 // Update user by ID
                 $res = UserModel::updateUserById(['telegram_user_id' => $new_telegram_id, 'telegram_is_valid' => 0],$user_id);
                 if ($res) {

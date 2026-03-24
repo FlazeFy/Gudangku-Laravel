@@ -176,7 +176,7 @@
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Are you sure want to <span class="text-warning">update</span> this report? The generated document will affected too</p>
+                                    <p>Are you sure want to <span class="text-danger">update</span> this report? The generated document will affected too</p>
                                     <button class="btn btn-success mt-4" id="submit-update-report-btn" onclick="updateReport('{{"$id"}}')" >Yes, Update</button>
                                 </div>
                             </div>

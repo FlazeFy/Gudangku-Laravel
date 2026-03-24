@@ -70,7 +70,7 @@
 </div>
 
 <script>
-    $( document ).ready(function() {
+    $(document).ready(function() {
         $('#report_category').on('change', function() {
             if ($(this).val() == "Shopping Cart" || $(this).val() == "Wishlist") {
                 priceInput = `

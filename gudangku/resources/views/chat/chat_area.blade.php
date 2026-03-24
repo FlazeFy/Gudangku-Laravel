@@ -140,7 +140,7 @@
                     </div>
                 `)
                 
-                $( document ).ready(function() {
+                $(document).ready(function() {
                     generatePieChart(`Category Distribution`,'category_distribution',data.found_inventory_category)
                 })
 

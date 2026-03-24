@@ -11,7 +11,7 @@
     const validate_telegram_change = () => {
         const tele_id_new = $("#telegram_user_id").val()
 
-        $( document ).ready(function() {
+        $(document).ready(function() {
             $("#telegram_user_id_new_final").text(tele_id_new)
         })
     }
@@ -60,7 +60,7 @@
         $('#pass_msg').html("")
         $('#all_msg').html("")
 
-        $( document ).ready(function() {
+        $(document).ready(function() {
             $.ajax({
                 url: '/api/v1/user/update_telegram_id',
                 type: 'PUT',
@@ -78,6 +78,8 @@
                     Swal.fire("Success!", response.message, "success").then((result) => {
                         if (result.isConfirmed) {
                             get_my_profile()
+                            $("#label-validate-holder").css('display','none')
+                            $("#update-tele-holder").css('display','none')
                         }
                     })
                 },

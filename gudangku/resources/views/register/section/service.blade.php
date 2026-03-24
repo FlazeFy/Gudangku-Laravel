@@ -8,7 +8,7 @@
 </div>
 
 <script>    
-    $( document ).ready(function() {
+    $(document).ready(function() {
         $(document).on('input','#telegram_user_id', function() {
             if ($(this).val().length == 10) {
                 $(this).after(`<a class='btn btn-success' id='validate-telegram-id-btn'><i class="fa-solid fa-paper-plane"></i> Validate</a>`)

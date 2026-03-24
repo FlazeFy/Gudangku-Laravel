@@ -36,29 +36,18 @@
                 const tele_data = response.telegram_data
 
                 if (data.telegram_is_valid) {
-                    $('#label-validate-holder').html(`<label class="mt-3 text-success" style="font-weight:600"><i class="fa-solid fa-check"></i> Validated!</label>`)
+                    $('#label-validate-holder').html(`<label class="mt-3 text-success"><i class="fa-solid fa-check"></i> Validated!</label>`)
                 } else {
                     if (tele_data) {
-                        $('#label-validate-holder').html(`
-                            <form action="/profile/validate_telegram" method="POST">
-                                @csrf
-                                <button class="btn btn-danger" type="submit"><i class="fa-solid fa-triangle-exclamation"></i> Your ID is not validated. Validate Now!</button>
-                            </form>
-                        `)
                         $('#telegram_validation_status_box').html(`
-                            <br>
                             <div class="box-danger">
-                                <h6 class="fw-bold">You have pending Token Validation. Please validate it!</h6>
+                                <p class="mb-0">You have pending Token Validation. Please validate it!</p>
                                 <label class="mt-2">Token Validation</label>
-                                <form action="/profile/submit_telegram_validation" method="POST">
-                                    @csrf
-                                    <div class="d-flex justify-content-between">
-                                        <input hidden value="${tele_data.id}" name="id">
-                                        <input type="text" name="validate_token" class="form-control" required/><br>
-                                        <button class="btn btn-success bg-success ms-2" style="width:240px" type="submit">Validate Token</button>
-                                    </div>
-                                </form>
-                                <a class="fst-italic" style="font-size:var(--textMD)">Requested at <span>${getDateToContext(tele_data.created_at,'calendar')}</span></a>
+                                <div class="d-flex justify-content-between">
+                                    <input type="text" name="validate_token" id="validate_token" class="form-control" required/><br>
+                                    <button class="btn btn-success ms-2" id="validate_token_submit-btn" style="width:240px" type="submit">Validate Token</button>
+                                </div>
+                                <a class="text-danger">Requested at <span>${getDateToContext(tele_data.created_at,'calendar')}</span></a>
                             </div>
                         `)
                         $('#telegram_user_id').attr('disabled', true)
@@ -86,6 +75,47 @@
         })
     }
     get_my_profile()
+
+    $(document).on('click','#validate_token_submit-btn',function(){
+        validate_token_telegram()
+    })
+
+    const validate_token_telegram = () => {
+        const reqContext = $('#validate_token').val().trim()
+        if (reqContext != "") {
+            $.ajax({
+                url: '/api/v1/user/validate_telegram_id',
+                type: 'PUT',
+                data: {
+                    request_context: reqContext
+                },
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    Swal.showLoading()
+                    xhr.setRequestHeader("Accept", "application/json")
+                    xhr.setRequestHeader("Authorization", `Bearer ${token}`)    
+                },
+                success: function(response) {
+                    Swal.close()
+                    Swal.fire("Success!", response.message, "success").then((result) => {
+                        if (result.isConfirmed) {
+                            get_my_profile()
+                            $('#telegram_validation_status_box').empty()
+                            $("#label-validate-holder").css('display','block')
+                            $("#update-tele-holder").css('display','none')
+                            $('#telegram_user_id').attr('disabled', false)
+                        }
+                    })
+                },
+                error: function(response, jqXHR, textStatus, errorThrown) {
+                    if (response.status === 404) return Swal.fire("Oops!", response.responseJSON.message, "error")
+                    generateAPIError(response, true)
+                }
+            })
+        } else {
+            Swal.fire("Oops!","Validation failed : token cant be empty","error")
+        }
+    }
 
     const update_profile = () => {
         if ($('#username_input').val() != "" && $('#email_input').val() != "") {
