@@ -48,9 +48,7 @@ class LendModel extends Model
     }
 
     public static function getLendOwnerById($lend_id) {
-        return LendModel::select('users.id','username')
-            ->join('users','users.id','=','lend.created_by')
-            ->first();
+        return LendModel::select('users.id','username')->join('users','users.id','=','lend.created_by')->first();
     }
     
     public static function getAllLend($user_id,$paginate) {
@@ -103,9 +101,7 @@ class LendModel extends Model
     public static function updateLendByUserId($data,$user_id,$id) {
         $query = LendModel::where('id', $id);
 
-        if (!is_null($user_id)) {
-            $query->where('created_by', $user_id);
-        }
+        if (!is_null($user_id)) $query->where('created_by', $user_id);
 
         return $query->update($data);
     }

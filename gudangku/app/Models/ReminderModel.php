@@ -46,9 +46,7 @@ class ReminderModel extends Model
             ->where('reminder_type',$reminder_type)
             ->where('reminder_context',$reminder_context);
 
-        if ($exception_id) {
-            $res = $res->whereNot('id',$exception_id);
-        }
+        if ($exception_id) $res = $res->whereNot('id',$exception_id);
 
         return $res->first();
     }
@@ -58,9 +56,7 @@ class ReminderModel extends Model
             ->join('inventory','inventory.id','=','reminder.inventory_id')
             ->join('users','users.id','=','reminder.created_by');
 
-        if ($id) {
-            $res = $res->where('reminder.id',$id);
-        }
+        if ($id) $res = $res->where('reminder.id',$id);
 
         return $id ? $res->first() : $res->get();
     }
@@ -94,17 +90,13 @@ class ReminderModel extends Model
     public static function deleteReminderByInventoryId($inventory_id, $user_id = null) {
         $res = ReminderModel::where('inventory_id',$inventory_id);
         
-        if ($user_id) {
-            $res = $res->where('created_by',$user_id);
-        }
+        if ($user_id) $res = $res->where('created_by',$user_id);
 
         return $res->delete();
     } 
 
     public static function hardDeleteReminder($id, $user_id) {
-        return ReminderModel::where('created_by', $user_id)
-            ->where('id',$id)
-            ->delete();
+        return ReminderModel::where('created_by', $user_id)->where('id',$id)->delete();
     }
 
     public static function deleteReminderByUserId($user_id) {

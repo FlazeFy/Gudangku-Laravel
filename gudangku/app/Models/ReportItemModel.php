@@ -46,12 +46,10 @@ class ReportItemModel extends Model
     }
 
     public static function getReportItem($user_id = null,$id,$type,$filter_in = null) {
-        $res = ReportItemModel::selectRaw($type == 'data' ? '*' : 'item_name, item_desc, item_qty, item_price')
-            ->where('report_id',$id);
+        $res = ReportItemModel::selectRaw($type == 'data' ? '*' : 'item_name, item_desc, item_qty, item_price')->where('report_id',$id);
 
-        if ($type == 'data' && $user_id !== null) {
-            $res = $res->where('created_by',$user_id);
-        }
+        if ($type == 'data' && $user_id !== null) $res = $res->where('created_by',$user_id);
+    
         if ($filter_in) {
             $list_id = explode(",", $filter_in);
             $res = $res->where(function($query) use ($list_id) {
@@ -67,9 +65,9 @@ class ReportItemModel extends Model
     public static function getReportInventoryDetailExport($user_id, $is_admin, $report_id) {
         $res = ReportItemModel::selectRaw("inventory_name,inventory_category,inventory_desc,inventory_merk,inventory_color,inventory_room,inventory_storage,inventory_rack,inventory_price,inventory_image,inventory_unit,inventory_vol,inventory_capacity_unit,inventory_capacity_vol,is_favorite,is_reminder,inventory.created_at,inventory.updated_at")
             ->join('inventory','inventory.id','=','report_item.inventory_id');
-        if (!$is_admin) {
-            $res = $res->where('inventory.created_by',$user_id);
-        }
+
+        if (!$is_admin) $res = $res->where('inventory.created_by',$user_id);
+
         return $res->where('report_item.report_id',$report_id)
             ->whereNull('deleted_at')
             ->orderBy('report_item.created_at', 'DESC')
@@ -93,9 +91,7 @@ class ReportItemModel extends Model
     public static function updateReportItemById($user_id = null, $id, $data) {
         $rows = ReportItemModel::where('id', $id);
         
-        if ($user_id) {
-            $rows = $rows->where('created_by', $user_id);
-        }
+        if ($user_id) $rows = $rows->where('created_by', $user_id);
 
         return $rows->update($data);
     }
@@ -103,9 +99,7 @@ class ReportItemModel extends Model
     public static function deleteReportItemByInventoryId($inventory_id, $user_id = null) {
         $res = ReportItemModel::where('inventory_id',$inventory_id);
 
-        if ($user_id) {
-            $res = $res->where('created_by',$user_id);
-        }
+        if ($user_id) $res = $res->where('created_by',$user_id);
 
         return $res->delete();
     } 
@@ -113,9 +107,7 @@ class ReportItemModel extends Model
     public static function deleteReportItemByReportId($report_id, $user_id) {
         $res = ReportItemModel::where('report_id', $report_id);
 
-        if ($user_id) {
-            $res = $res->where('created_by', $user_id);
-        }
+        if ($user_id) $res = $res->where('created_by', $user_id);
             
         return $res->delete();
     } 
@@ -123,9 +115,7 @@ class ReportItemModel extends Model
     public static function deleteManyReportItemById($list_id, $user_id = null) {
         $res = ReportItemModel::whereIn('id', $list_id);
 
-        if ($user_id) {
-            $res = $res->where('created_by', $user_id);
-        }
+        if ($user_id) $res = $res->where('created_by', $user_id);
             
         return $res->delete();
     }

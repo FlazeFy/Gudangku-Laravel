@@ -26,12 +26,9 @@ class DictionaryModel extends Model
     protected $fillable = ['dictionary_type', 'dictionary_name'];
 
     public static function isUsedName($name, $type) {
-        $res = DictionaryModel::selectRaw('1')
-            ->whereRaw('LOWER(dictionary_name) = LOWER(?)', [$name])
-            ->whereRaw('LOWER(dictionary_type) = LOWER(?)', [$type])
-            ->first();
-
-        return $res ? true : false;
+        return DictionaryModel::whereRaw('LOWER(dictionary_name) = ?', [strtolower($name)])
+            ->whereRaw('LOWER(dictionary_type) = ?', [strtolower($type)])
+            ->exists();
     }
 
     public static function getDictionaryByType($type) {
@@ -51,14 +48,7 @@ class DictionaryModel extends Model
     }
 
     public static function getRandom($null,$type) {
-        if ($null == 0) {
-            $data = DictionaryModel::inRandomOrder()->take(1)->where('dictionary_type',$type)->first();
-            $res = $data->dictionary_name;
-        } else {
-            $res = null;
-        }
-        
-        return $res;
+        return $null == 0 ? DictionaryModel::inRandomOrder()->take(1)->where('dictionary_type',$type)->first()->dictionary_name : null;
     }
 
     public static function createDictionary($dictionary_type, $dictionary_name) {

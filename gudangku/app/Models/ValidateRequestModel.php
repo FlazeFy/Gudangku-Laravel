@@ -31,15 +31,10 @@ class ValidateRequestModel extends Model
     protected $fillable = ['id', 'request_type', 'request_context', 'created_at', 'created_by']; 
 
     public static function getActiveRequest($user_id, $request_type = null, $request_context = null) {
-        $res = ValidateRequestModel::select('id','request_type', 'request_context', 'created_at')
-            ->where('created_by', $user_id);
+        $res = ValidateRequestModel::select('id','request_type', 'request_context', 'created_at')->where('created_by', $user_id);
 
-        if ($request_type) {
-            $res = $res->where('request_type', $request_type);
-        }
-        if ($request_context) {
-            $res = $res->where('request_context', $request_context);
-        }
+        if ($request_type) $res = $res->where('request_type', $request_type);
+        if ($request_context) $res = $res->where('request_context', $request_context);
 
         return $res->first();
     }   

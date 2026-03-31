@@ -45,9 +45,7 @@ class ReportModel extends Model
         $res = ReportModel::selectRaw($type == 'data' ? '*' : 'id,report_title, report_desc, report_category, report_image, created_at')
             ->where('id',$id);
 
-        if ($type == 'data' && $user_id !== null) {
-            $res = $res->where('created_by',$user_id);
-        }
+        if ($type == 'data' && $user_id !== null) $res = $res->where('created_by',$user_id);
 
         return $res->first();
     }   
@@ -65,20 +63,17 @@ class ReportModel extends Model
 
     public static function getMyReport($user_id, $search_item, $search_report_title, $id, $filter_category) {
         $extra = "";
-        if (!$user_id) {
-            $extra = ", username";
-        }
+        if (!$user_id) $extra = ", username";
+
         $res = ReportModel::selectRaw('
                 report.id, report_title, report_desc, report_category, report.is_reminder, remind_at, report.created_at, 
                 count(1) as total_variety, CAST(COALESCE(SUM(item_qty),0) AS UNSIGNED) as total_item, GROUP_CONCAT(item_name SEPARATOR ", ") as report_items,
                 CAST(SUM(item_price * item_qty) AS UNSIGNED) as item_price'.$extra)
             ->leftjoin('report_item','report_item.report_id','=','report.id')
             ->leftjoin('inventory','inventory.id','=','report_item.inventory_id');
-            if ($user_id) {
-                $res->where('report.created_by',$user_id);
-            } else {
-                $res->join('users','users.id','=','report.created_by');
-            }
+
+        $res = $user_id ? $res->where('report.created_by',$user_id) : $res->join('users','users.id','=','report.created_by');
+
         $res = $res->whereNull('report.deleted_at')
             ->groupby('report.id')
             ->orderby('report.created_at','desc');
@@ -91,27 +86,18 @@ class ReportModel extends Model
             });
             $res = $res->havingRaw('LOWER(report_items) LIKE ?', ['%' . strtolower($search_item) . '%']);
         }
+
         // Search by report title
-        if ($search_report_title) {
-            $res = $res->whereRaw('LOWER(report_title) LIKE ?', ['%' . strtolower($search_report_title) . '%']);
-        }
+        if ($search_report_title) $res = $res->whereRaw('LOWER(report_title) LIKE ?', ['%' . strtolower($search_report_title) . '%']);
 
         // Filtering by category
-        if ($filter_category) {
-            $res->where('report_category',$filter_category);
-        }     
+        if ($filter_category) $res->where('report_category',$filter_category);
 
         return $res->get();
     }   
 
     public static function getRandom($null,$user_id) {
-        if ($null == 0) {
-            $res = ReportModel::inRandomOrder()->take(1)->where('created_by',$user_id)->first();
-        } else {
-            $res = null;
-        }
-        
-        return $res;
+        return $null == 0 ? ReportModel::inRandomOrder()->take(1)->where('created_by',$user_id)->first() : null;
     }
 
     public static function getLastFoundInventoryReport($user_id,$inventory_id) {
@@ -123,9 +109,8 @@ class ReportModel extends Model
     }
 
     public static function getInventoryMonthlyInReport($user_id, $inventory_id, $year = null) {
-        if ($year === null) {
-            $year = date('Y');
-        }        
+        if ($year === null) $year = date('Y');
+        
         $res = ReportModel::selectRaw('MONTH(report.created_at) as context, CAST(COUNT(1) AS UNSIGNED) as total')
             ->join('report_item','report_item.report_id','=','report.id')
             ->where('report.created_by',$user_id)
@@ -159,19 +144,15 @@ class ReportModel extends Model
             $select_query = "CAST(SUM(item_price) AS UNSIGNED) as total_price, CAST(SUM(item_qty) AS UNSIGNED) as total_item, MONTH(report.created_at) as context";
         }
 
-        $res = ReportModel::selectRaw($select_query)
-            ->join('report_item','report_item.report_id','=','report.id');
-        if ($user_id) {
-            $res = $res->where('report.created_by', $user_id);
-        }
-        if ($type == "spending") {
-            $res = $res->where('report_category','Shopping Cart');
-        }
-        $res = $res->whereRaw("YEAR(report.created_at) = '$year'")
+        $res = ReportModel::selectRaw($select_query)->join('report_item','report_item.report_id','=','report.id');
+
+        if ($user_id) $res = $res->where('report.created_by', $user_id);
+
+        if ($type == "spending") $res = $res->where('report_category','Shopping Cart');
+    
+        return $res->whereRaw("YEAR(report.created_at) = '$year'")
             ->groupByRaw('MONTH(report.created_at)')
             ->get();
-
-        return $res;
     }
 
     public static function getTotalReportUsedPerMonth($user_id, $year, $is_admin) {
@@ -182,9 +163,7 @@ class ReportModel extends Model
             ")
             ->join('report_item', 'report_item.report_id', '=', 'report.id');
             
-        if (!$is_admin) {
-            $res = $res->where('report.created_by', $user_id);
-        }
+        if (!$is_admin) $res = $res->where('report.created_by', $user_id);
 
         return $res->whereIn('report_category', ['Checkout', 'Wash List'])
             ->whereRaw("YEAR(report.created_at) = '$year'")
@@ -213,9 +192,7 @@ class ReportModel extends Model
     public static function updateReportById($user_id = null, $id, $data) {
         $rows = ReportModel::where('id', $id);
         
-        if ($user_id) {
-            $rows = $rows->where('created_by', $user_id);
-        }
+        if ($user_id) $rows = $rows->where('created_by', $user_id);
         $data['updated_at'] = date('Y-m-d H:i:s');
 
         return $rows->update($data);
@@ -224,9 +201,7 @@ class ReportModel extends Model
     public static function deleteReportById($user_id = null,$report_id) {
         $rows = ReportModel::where('id', $report_id);
         
-        if ($user_id) {
-            $rows = $rows->where('created_by', $user_id);
-        }
+        if ($user_id) $rows = $rows->where('created_by', $user_id);
 
         return $rows->delete();
     }

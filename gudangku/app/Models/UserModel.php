@@ -85,9 +85,7 @@ class UserModel extends Authenticatable
     }
 
     public static function getUserByUsernameOrEmail($username,$email) {
-        return UserModel::where('username',$username)
-            ->orwhere('email',$email)
-            ->first();
+        return UserModel::where('username',$username)->orwhere('email',$email)->first();
     }
 
     public static function getUserById($user_id) {
@@ -174,18 +172,15 @@ class UserModel extends Authenticatable
 
     public static function getAvailableYear($user_id, $is_admin) {
         $res_inventory = InventoryModel::selectRaw('YEAR(created_at) as year');
-        if (!$is_admin) {
-            $res_inventory = $res_inventory->where('created_by', $user_id);
-        }
-        $res_inventory = $res_inventory->groupBy('year')
-            ->get();
+
+        if (!$is_admin) $res_inventory = $res_inventory->where('created_by', $user_id);
     
+        $res_inventory = $res_inventory->groupBy('year')->get();
         $res_report = ReportModel::selectRaw('YEAR(created_at) as year');
-        if (!$is_admin) {
-            $res_report = $res_report->where('created_by', $user_id);
-        }
-        $res_report = $res_report->groupBy('year')
-            ->get();
+
+        if (!$is_admin) $res_report = $res_report->where('created_by', $user_id);
+
+        $res_report = $res_report->groupBy('year')->get();
     
         return $res_inventory->concat($res_report)
             ->unique('year') 

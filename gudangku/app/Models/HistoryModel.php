@@ -33,31 +33,21 @@ class HistoryModel extends Model
     public static function getTotalActivityPerMonth($user_id = null, $year) {
         $res = HistoryModel::selectRaw("COUNT(1) as total, MONTH(created_at) as context");
         
-        if ($user_id) {
-            $res = $res->where('created_by', $user_id);
-        }
+        if ($user_id) $res = $res->where('created_by', $user_id);
 
-        $res = $res->whereRaw("YEAR(created_at) = '$year'")
+        return $res->whereRaw("YEAR(created_at) = '$year'")
             ->groupByRaw('MONTH(created_at)')
             ->get();
-
-        return $res;
     }
 
     public static function getAllHistory($type, $user_id, $paginate) {
         $select_query = $type == "admin" ? 'history.id, username, history_type, history_context, history.created_at' : '*';
         
         $res = HistoryModel::selectRaw($select_query);
-        if ($type == "admin") {
-            $res = $res->join('users','users.id','=','history.created_by');
-        }
-        if ($type == "user" || $user_id) {
-            $res = $res->where('created_by',$user_id);
-        }    
-        $res = $res->orderby('history.created_at', 'DESC')
-            ->paginate($paginate);
+        if ($type == "admin") $res = $res->join('users','users.id','=','history.created_by');
+        if ($type == "user" || $user_id) $res = $res->where('created_by',$user_id);
 
-        return $res;
+        return $res->orderby('history.created_at', 'DESC')->paginate($paginate);
     }
 
     public static function createHistory($type, $ctx, $user_id) {
@@ -73,9 +63,7 @@ class HistoryModel extends Model
     public static function hardDeleteHistory($id, $user_id = null) {
         $res = HistoryModel::where('id',$id);
 
-        if ($user_id) {
-            $res = $res->where('created_by',$user_id);
-        }
+        if ($user_id) $res = $res->where('created_by',$user_id);
             
         return $res->delete();
     }
