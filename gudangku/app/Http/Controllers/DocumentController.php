@@ -82,9 +82,9 @@ class DocumentController extends Controller
     }
 
     public function custom_report(Request $request, $id) {
-        $user_id = $request->user()->id;
+        $user = $request->user();
 
-        if ($user_id) {
+        if ($user) {
             $filter_in = $request->query('filter_in', null);
             return view('custom.index')
                 ->with('type','report')

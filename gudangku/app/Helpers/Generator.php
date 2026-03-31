@@ -62,7 +62,8 @@ class Generator
     }
 
     public static function isMobileDevice() {
-        $user = $_SERVER['HTTP_USER_AGENT'];
+        // $user = $_SERVER['HTTP_USER_AGENT'];
+        $user = request()->header('User-Agent', '');
     
         $type = ['mobile', 'android', 'iphone', 'ipod', 'blackberry', 'windows phone'];
         

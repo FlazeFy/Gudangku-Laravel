@@ -69,7 +69,7 @@ Route::prefix('/doc')->group(function () {
 
 Route::prefix('/analyze')->group(function () {
     Route::prefix('/report/{id}')->group(function () {
-        Route::get('/', [AnalyzeController::class, 'index_report']);
+        Route::get('/', [AnalyzeController::class, 'index_inventory']);
     });
 });
 
