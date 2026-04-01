@@ -87,60 +87,69 @@ class Commands extends Controller
     public function putUpdateTelegramID(Request $request)
     {
         try{
-            $user_id = $request->user()->id;
-            $new_telegram_id = $request->telegram_user_id;
+            // Validate request body
+            $validator = Validation::getValidateTelegram($request);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $validator->messages()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $user_id = $request->user()->id;
+                $new_telegram_id = $request->telegram_user_id;
 
-            // Check if telegram ID has been used
-            $check = UserModel::isTelegramIDUsed($new_telegram_id);
-            if (!$check) {
-                // Update user by ID
-                $res = UserModel::updateUserById(['telegram_user_id' => $new_telegram_id, 'telegram_is_valid' => 0],$user_id);
-                if ($res) {
-                    // Generate token
-                    $token_length = 6;
-                    $token = Generator::getTokenValidation($token_length);
+                // Check if telegram ID has been used
+                $check = UserModel::isTelegramIDUsed($new_telegram_id);
+                if (!$check) {
+                    // Update user by ID
+                    $res = UserModel::updateUserById(['telegram_user_id' => $new_telegram_id, 'telegram_is_valid' => 0],$user_id);
+                    if ($res) {
+                        // Generate token
+                        $token_length = 6;
+                        $token = Generator::getTokenValidation($token_length);
 
-                    // Create validate request
-                    ValidateRequestModel::createValidateRequest('telegram_id_validation', $token, $user_id);
+                        // Create validate request
+                        ValidateRequestModel::createValidateRequest('telegram_id_validation', $token, $user_id);
 
-                    // Get user by ID
-                    $user = UserModel::getSocial($user_id);
+                        // Get user by ID
+                        $user = UserModel::getSocial($user_id);
 
-                    // Check if user Telegram ID is valid
-                    if (TelegramMessage::checkTelegramID($new_telegram_id)) {
-                        // Send telegram message
-                        $response = Telegram::sendMessage([
-                            'chat_id' => $new_telegram_id,
-                            'text' => "Hello,\n\nWe received a request to validate GudangKu apps's account with username <b>$user->username</b> to sync with this Telegram account. If you initiated this request, please confirm that this account belongs to you by clicking the button YES.\n\nAlso we provided the Token :\n$token\n\nIf you did not request this, please press button NO.\n\nThank you, GudangKu",
-                            'parse_mode' => 'HTML'
-                        ]);
-    
-                        // Return success response
-                        return response()->json([
-                            'status' => 'success',
-                            'message' => Generator::getMessageTemplate("custom", 'telegram id updated! and validation has been sended to you'),
-                        ], Response::HTTP_OK);
+                        // Check if user Telegram ID is valid
+                        if (TelegramMessage::checkTelegramID($new_telegram_id)) {
+                            // Send telegram message
+                            $response = Telegram::sendMessage([
+                                'chat_id' => $new_telegram_id,
+                                'text' => "Hello,\n\nWe received a request to validate GudangKu apps's account with username <b>$user->username</b> to sync with this Telegram account. If you initiated this request, please confirm that this account belongs to you by clicking the button YES.\n\nAlso we provided the Token :\n$token\n\nIf you did not request this, please press button NO.\n\nThank you, GudangKu",
+                                'parse_mode' => 'HTML'
+                            ]);
+        
+                            // Return success response
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => Generator::getMessageTemplate("custom", 'telegram id updated! and validation has been sended to you'),
+                            ], Response::HTTP_OK);
+                        } else {
+                            // Reset telegram from user account if not valid
+                            UserModel::updateUserById(['telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
+                            
+                            // Return success response
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => Generator::getMessageTemplate("custom", 'telegram ID is invalid. Please check your Telegram ID'),
+                            ], Response::HTTP_BAD_REQUEST);
+                        }
                     } else {
-                        // Reset telegram from user account if not valid
-                        UserModel::updateUserById(['telegram_user_id' => null, 'telegram_is_valid' => 0],$user_id);
-                        
-                        // Return success response
                         return response()->json([
-                            'status' => 'success',
-                            'message' => Generator::getMessageTemplate("custom", 'telegram ID is invalid. Please check your Telegram ID'),
-                        ], Response::HTTP_BAD_REQUEST);
+                            'status' => 'failed',
+                            'message' => Generator::getMessageTemplate("not_found", 'user'),
+                        ], Response::HTTP_NOT_FOUND);
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'user'),
-                    ], Response::HTTP_NOT_FOUND);
+                        'message' => Generator::getMessageTemplate("conflict", 'telegram ID'),
+                    ], Response::HTTP_CONFLICT);
                 }
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("conflict", 'telegram ID'),
-                ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {
             return response()->json([
@@ -318,49 +327,58 @@ class Commands extends Controller
     public function postCreateRegisterValidationToken(Request $request)
     {
         try{
-            $username = $request->username;
+            // Validate request body
+            $validator = Validation::getValidateUsername($request);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $validator->messages()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $username = $request->username;
 
-            // Check if username has not been used
-            $check_user = UserModel::isUsernameUsed($username);
-            if (!$check_user) {
-                // Get active request
-                $valid = ValidateRequestModel::getActiveRequest($username, 'register');
-                if (!$valid) {
-                    // Generate token
-                    $token_length = 6;
-                    $token = Generator::getTokenValidation($token_length);
+                // Check if username has not been used
+                $check_user = UserModel::isUsernameUsed($username);
+                if (!$check_user) {
+                    // Get active request
+                    $valid = ValidateRequestModel::getActiveRequest($username, 'register');
+                    if (!$valid) {
+                        // Generate token
+                        $token_length = 6;
+                        $token = Generator::getTokenValidation($token_length);
 
-                    // Create validate request
-                    $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
-                    if ($valid_insert) {
-                        // Send email
-                        $ctx = 'Generate registration token';
-                        $email = $request->email;
-                        $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
-                        dispatch(new UserMailer($ctx, $data, $username, $email));
+                        // Create validate request
+                        $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
+                        if ($valid_insert) {
+                            // Send email
+                            $ctx = 'Generate registration token';
+                            $email = $request->email;
+                            $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
+                            dispatch(new UserMailer($ctx, $data, $username, $email));
 
-                        // Return success response
-                        return response()->json([
-                            'status' => 'success',
-                            'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
-                        ], Response::HTTP_CREATED);
+                            // Return success response
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
+                            ], Response::HTTP_CREATED);
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("unknown_error", null),
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        }
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => Generator::getMessageTemplate("unknown_error", null),
-                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            'message' => Generator::getMessageTemplate("custom", 'there already a request with same username'),
+                        ], Response::HTTP_CONFLICT);
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("custom", 'there already a request with same username'),
+                        'message' => Generator::getMessageTemplate("conflict", 'username'),
                     ], Response::HTTP_CONFLICT);
                 }
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("conflict", 'username'),
-                ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {
             return response()->json([
@@ -549,23 +567,56 @@ class Commands extends Controller
     public function postCreateRegenerateRegisterToken(Request $request)
     {
         try{
-            $username = $request->username;
+            // Validate request body
+            $validator = Validation::getValidateUser($request, null);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $validator->messages()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {
+                $username = $request->username;
 
-            // Generate token
-            $token_length = 6;
-            $token = Generator::getTokenValidation($token_length);
+                // Generate token
+                $token_length = 6;
+                $token = Generator::getTokenValidation($token_length);
 
-            $ctx = 'Generate registration token';
-            $email = $request->email;
-            $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
+                $ctx = 'Generate registration token';
+                $email = $request->email;
+                $data = "You almost finish your registration process. We provided you with this token <br><h5>$token</h5> to make sure this account is yours.<br>If you're the owner just paste this token into the Token's Field. If its not, just leave this message<br>Thank You, Gudangku";
 
-            // Get active register request
-            $valid = ValidateRequestModel::getActiveRequest($username, 'register');
-            if ($valid) {
-                // Hard delete validate request by ID
-                $delete = ValidateRequestModel::destroy($valid->id);
+                // Get active register request
+                $valid = ValidateRequestModel::getActiveRequest($username, 'register');
+                if ($valid) {
+                    // Hard delete validate request by ID
+                    $delete = ValidateRequestModel::destroy($valid->id);
 
-                if ($delete > 0) {
+                    if ($delete > 0) {
+                        // Create validate request
+                        $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
+
+                        if ($valid_insert) {
+                            // Send email token validation
+                            dispatch(new UserMailer($ctx, $data, $username, $email));
+
+                            // Return success response
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
+                            ], Response::HTTP_CREATED);
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("unknown_error", null),
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        }
+                    } else {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => Generator::getMessageTemplate("not_found", 'request'),
+                        ], Response::HTTP_NOT_FOUND);
+                    }
+                } else {
                     // Create validate request
                     $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
 
@@ -584,30 +635,6 @@ class Commands extends Controller
                             'message' => Generator::getMessageTemplate("unknown_error", null),
                         ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
-                } else {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => Generator::getMessageTemplate("not_found", 'request'),
-                    ], Response::HTTP_NOT_FOUND);
-                }
-            } else {
-                // Create validate request
-                $valid_insert = ValidateRequestModel::createValidateRequest('register', $token, $username);
-
-                if ($valid_insert) {
-                    // Send email token validation
-                    dispatch(new UserMailer($ctx, $data, $username, $email));
-
-                    // Return success response
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => Generator::getMessageTemplate("custom", "the validation token has been sended to $email email account"),
-                    ], Response::HTTP_CREATED);
-                } else {
-                    return response()->json([
-                        'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("unknown_error", null),
-                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         } catch(\Exception $e) {

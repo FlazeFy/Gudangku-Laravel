@@ -320,27 +320,34 @@ class Queries extends Controller
 
             // Get lend by ID
             $check = LendModel::find($lend_id);
-            if ($check->lend_status == 'expired' || $check->lend_status == 'used' || $check->is_finished) {
-                $extra = $check->lend_status == 'expired' ? 'expired' : 'used';
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => "lend already $extra",
-                ], Response::HTTP_BAD_REQUEST);
-            }
+            if ($check) {
+                if ($check->lend_status == 'expired' || $check->lend_status == 'used' || $check->is_finished) {
+                    $extra = $check->lend_status == 'expired' ? 'expired' : 'used';
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => "lend already $extra",
+                    ], Response::HTTP_BAD_REQUEST);
+                }
 
-            // Get lend attached inventory by lend's ID
-            $res = LendModel::getAllLendInventory($lend_id,$perPage);
-            if (count($res) > 0) { 
-                // Get lend owner by lend's ID
-                $user = LendModel::getLendOwnerById($lend_id);
+                // Get lend attached inventory by lend's ID
+                $res = LendModel::getAllLendInventory($lend_id,$perPage);
+                if (count($res) > 0) { 
+                    // Get lend owner by lend's ID
+                    $user = LendModel::getLendOwnerById($lend_id);
 
-                // Return success response
-                return response()->json([
-                    'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", "lend inventory"),
-                    'data' => $res,
-                    'owner' => $user
-                ], Response::HTTP_OK);
+                    // Return success response
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => Generator::getMessageTemplate("fetch", "lend inventory"),
+                        'data' => $res,
+                        'owner' => $user
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("not_found", 'lend inventory'),
+                    ], Response::HTTP_NOT_FOUND);
+                }
             } else {
                 return response()->json([
                     'status' => 'failed',

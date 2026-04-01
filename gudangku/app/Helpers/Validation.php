@@ -33,6 +33,18 @@ class Validation
         ]);
     }
 
+    public static function getValidateUsername($request) {
+        return Validator::make($request->all(), [
+            'username' => 'required|min:6|max:36|string'
+        ]);
+    }
+
+    public static function getValidateTelegram($request) {
+        return Validator::make($request->all(), [
+            'telegram_user_id' => 'required|min:10|max:10|string'
+        ]);
+    }
+
     public static function getValidateUser($request, $type) {
         $rules = [
             'username' => 'required|string|min:6|max:36',

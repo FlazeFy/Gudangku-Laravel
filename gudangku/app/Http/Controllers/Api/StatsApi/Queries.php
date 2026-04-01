@@ -90,8 +90,15 @@ class Queries extends Controller
                 $user_id = null;
             }
 
+            if ($type !== "price" && $type !== "item") {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => Generator::getMessageTemplate("validation_failed", 'type must be price or item'),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }            
+
             // Get context total stats
-            $res = InventoryModel::getContextTotalStats('inventory_category',$type,$user_id);
+            $res = InventoryModel::getContextTotalStats('inventory_category', $type, $user_id);
             if ($res) {
                 // Return success response
                 return response()->json([
@@ -388,6 +395,13 @@ class Queries extends Controller
                 $user_id = null;
             }
 
+            if ($type !== "price" && $type !== "item") {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => Generator::getMessageTemplate("validation_failed", 'type must be price or item'),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
             // Get context total stats
             $res = InventoryModel::getContextTotalStats('inventory_room',$type,$user_id);
             if ($res) {
@@ -479,6 +493,13 @@ class Queries extends Controller
             } else {
                 $user_id = null;
             } 
+
+            if ($type !== "price" && $type !== "item") {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => Generator::getMessageTemplate("validation_failed", 'type must be price or item'),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             // Get context total stats
             $res = InventoryModel::getContextTotalStats('inventory_merk',$type,$user_id);
