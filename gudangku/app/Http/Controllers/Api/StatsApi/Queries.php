@@ -102,9 +102,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if ($check_admin) {
-                    $user_id = $request->query('user_id') ?? null;
-                } 
+                if ($check_admin) $user_id = $request->query('user_id') ?? null;
             } else {
                 $user_id = null;
             }
@@ -309,9 +307,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if ($check_admin) {
-                    $user_id = $request->query('user_id') ?? null;
-                } 
+                if ($check_admin) $user_id = $request->query('user_id') ?? null;
             } else {
                 $check_admin = null;
                 $user_id = null;
@@ -407,9 +403,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if ($check_admin) {
-                    $user_id = $request->query('user_id') ?? null;
-                } 
+                if ($check_admin) $user_id = $request->query('user_id') ?? null;
             } else {
                 $user_id = null;
             }
@@ -610,9 +604,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if ($check_admin) {
-                    $user_id = $request->query('user_id') ?? null;
-                } 
+                if ($check_admin) $user_id = $request->query('user_id') ?? null;
             } else {
                 $check_admin = null;
                 $user_id = null;
@@ -725,9 +717,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if ($check_admin) {
-                    $user_id = $request->query('user_id') ?? null;
-                } 
+                if ($check_admin) $user_id = $request->query('user_id') ?? null;
             } else {
                 $check_admin = null;
                 $user_id = null;
@@ -827,9 +817,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if ($check_admin) {
-                    $user_id = $request->query('user_id') ?? null;
-                } 
+                if ($check_admin) $user_id = $request->query('user_id') ?? null;
             } else {
                 $user_id = null;
                 $check_admin = null;
@@ -933,9 +921,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if ($check_admin) {
-                    $user_id = $request->query('user_id') ?? null;
-                } 
+                if ($check_admin) $user_id = $request->query('user_id') ?? null;
             } else {
                 $user_id = null;
                 $check_admin = null;
@@ -1050,9 +1036,7 @@ class Queries extends Controller
                 $user_id = $user ? $user->id : null;
 
                 $check_admin = AdminModel::find($user_id);
-                if ($check_admin) {
-                    $user_id = $request->query('user_id') ?? null;
-                } 
+                if ($check_admin) $user_id = $request->query('user_id') ?? null;
             } else {
                 $user_id = null;
             }
@@ -1654,9 +1638,7 @@ class Queries extends Controller
 
             // Define user id by role
             $check_admin = AdminModel::find($user_id);
-            if ($check_admin) {
-                $user_id = $request->query('user_id') ?? null;
-            } 
+            if ($check_admin) $user_id = $request->query('user_id') ?? null;
 
             $type_key = $check_admin ? ($user_id ?? "global") : $user_id;
             $res = Cache::remember("{$this->cacheKeyDashboard}:$type_key", $this->cacheKeyLifeTime, function () use ($user_id) {

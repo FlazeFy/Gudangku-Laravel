@@ -90,7 +90,6 @@ class Commands extends Controller
             } else {
                 // Delete dictionary
                 $rows = DictionaryModel::destroy($id);
-
                 if ($rows > 0) {
                     // Return success response
                     return response()->json([

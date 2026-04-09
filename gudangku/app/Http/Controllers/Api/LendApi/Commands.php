@@ -174,9 +174,7 @@ class Commands extends Controller
                     }
 
                     // Update lend by user ID
-                    if ($check_lend && $is_expired) {
-                        LendModel::updateLendByUserId(['lend_status' => 'expired'], $user_id, $check_lend->id);
-                    }
+                    if ($check_lend && $is_expired) LendModel::updateLendByUserId(['lend_status' => 'expired'], $user_id, $check_lend->id);
 
                     // Update lend by user ID
                     LendModel::updateLendByUserId(['lend_qr_url' => $qr_image], $user_id, $lend_id);
@@ -511,9 +509,7 @@ class Commands extends Controller
 
                     // Update lend inventory by ID
                     $inventory_rel = LendInventoryRelModel::updateLendInventoryById($dt['id'], $lend_id, ['returned_at' => $returned_at]);
-                    if (!$dt['is_returned']) {
-                        $returned_all = false;
-                    }
+                    if (!$dt['is_returned']) $returned_all = false;
                 }
                     
                 if ($returned_all) {

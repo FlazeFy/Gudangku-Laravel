@@ -113,10 +113,8 @@ class Commands extends Controller
             // Soft Delete inventory by ID
             $rows = InventoryModel::updateInventoryById($user_id,$id,['deleted_at' => date('Y-m-d H:i:s')]);
             if ($rows > 0) {
-                if (!$check_admin) {
-                    // Create history
-                    Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
-                }
+                // Create history
+                if (!$check_admin) Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
                 
                 // Return success response
                 return response()->json([
@@ -381,7 +379,7 @@ class Commands extends Controller
                     }
                     
                     // Create history
-                    Audit::createHistory('Permanently delete', $inventory->inventory_name, $user_id);
+                    if (!$check_admin) Audit::createHistory('Permanently delete', $inventory->inventory_name, $user_id);
                 }
 
                 // Return success response
@@ -559,7 +557,7 @@ class Commands extends Controller
                     $inventory = InventoryModel::getInventoryNameById($id);
 
                     // Create history
-                    Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
+                    if (!$check_admin) Audit::createHistory('Delete', $inventory->inventory_name, $user_id);
                 }
 
                 // Return success response
@@ -1379,11 +1377,7 @@ class Commands extends Controller
                     $res_inv = InventoryModel::updateInventoryByStorage($user_id,$storage,['inventory_storage' => null]);
 
                     // Define message based on impacted inventory after layout change
-                    if ($res_inv > 0) {
-                        $extra_msg = ". At least $res_inv item in inventory has been updated due to storage deletion";
-                    } else {
-                        $extra_msg = ". No item in inventory has been impacted";
-                    }
+                    $extra_msg = $res_inv > 0 ? ". At least $res_inv item in inventory has been updated due to storage deletion" : ". No item in inventory has been impacted";
                     $msg = "$msg$extra_msg";
 
                     // Send Firebase notification (mobile)

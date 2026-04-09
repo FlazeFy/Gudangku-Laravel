@@ -99,9 +99,8 @@ class Commands extends Controller
             $rows = ReportItemModel::deleteManyReportItemById($list_id, $user_id);
             if ($rows > 0) {
                 $extra = "";
-                if (count($list_id) > 1) {
-                    $extra = count($list_id);
-                }
+                if (count($list_id) > 1) $extra = count($list_id);
+
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("delete", $extra." report item"),
@@ -172,10 +171,7 @@ class Commands extends Controller
     public function hardDeleteReportByID(Request $request, $id)
     {
         try{
-            $user_id = $request->user()->id;
-
-            // Get report by ID
-            $report = ReportModel::find($id);            
+            $user_id = $request->user()->id;          
 
             // Define user id by role
             $check_admin = AdminModel::find($user_id);
@@ -184,10 +180,11 @@ class Commands extends Controller
             // Hard delete report by ID
             $rows = ReportModel::deleteReportById($user_id,$id);
             if ($rows > 0) {
-                if (!$check_admin) {
-                    // Create history
-                    Audit::createHistory('Delete Report', $report->report_title, $user_id);
-                }
+                // Get report by ID
+                $report = ReportModel::find($id);  
+
+                // Create history
+                if (!$check_admin) Audit::createHistory('Delete Report', $report->report_title, $user_id);
                 
                 // Hard delete report item by report ID
                 ReportItemModel::deleteReportItemByReportId($id, $user_id);
@@ -544,11 +541,7 @@ class Commands extends Controller
                                     'report_id' => $report->id,
                                     'created_at' => date('Y-m-d H:i:s'),
                                 ]);
-                                if ($updated > 0) {
-                                    $success_migrate++;
-                                } else {
-                                    $failed_migrate++;
-                                }
+                                $updated > 0 ? $success_migrate++ : $failed_migrate++;
                             } else {
                                 $failed_migrate++;
                             }
@@ -559,10 +552,7 @@ class Commands extends Controller
                             Audit::createHistory('Split Report', "From $old_check_report->report_title has been removed item of $list_item_name to $report->report_title", $user_id);
                             Audit::createHistory('Create Report', $request->report_title, $user_id);
         
-                            if ($success_migrate > 0) {
-                                $status_message = $failed_migrate == 0 ? 'all report items updated' : 'some report items updated';
-                            }
-                            
+                            if ($success_migrate > 0) $status_message = $failed_migrate == 0 ? 'all report items updated' : 'some report items updated';
                             // Return success response
                             return response()->json([
                                 'status' => 'success',
@@ -724,18 +714,12 @@ class Commands extends Controller
                                 $dt->inventory_id ?? null, $id_report, $dt->item_name, $item_desc === "" ? null : $item_desc, $dt->item_qty, ($dt->item_price && $dt->item_price) > 0 ?? null, $user_id
                             );
 
-                            if ($res) {
-                                $success_exec++;
-                            } else {
-                                $failed_exec++;
-                            }
+                            $res ? $success_exec++ : $failed_exec++;
                         }
                     }
 
-                    if ($success_exec > 0 || $request->report_item == null) {
-                        // Create history
-                        Audit::createHistory('Create', $report->report_title, $user_id);
-                    }
+                    // Create history
+                    if ($success_exec > 0 || $request->report_item == null) Audit::createHistory('Create', $report->report_title, $user_id);
 
                     // Return success response
                     if ($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == "") {
@@ -853,11 +837,7 @@ class Commands extends Controller
                         $dt->inventory_id ?? null, $id, $dt->item_name, $dt->item_desc, $dt->item_qty, $dt->item_price ?? null, $user_id
                     );
 
-                    if ($res) {
-                        $success_exec++;
-                    } else {
-                        $failed_exec++;
-                    }
+                    $res ? $success_exec++ : $failed_exec++;
                 }
 
                 // Return success response
@@ -1308,9 +1288,7 @@ class Commands extends Controller
                         if ($lineIndex > 0 && preg_match('/\t/', $line)) {
                             $columns = explode("\t", $line);
                             $itemName = trim($columns[0]); 
-                            if (!empty($itemName) && $itemName !== "Item Name" && $itemName !== "Parts of FlazenApps") {
-                                $items[] = $itemName;
-                            }
+                            if (!empty($itemName) && $itemName !== "Item Name" && $itemName !== "Parts of FlazenApps") $items[] = $itemName;
                         }
                     }
 
@@ -1339,17 +1317,13 @@ class Commands extends Controller
                             $total_price = 0;
                             $total_item = count($mapping_inventory);
                             foreach ($mapping_inventory as $dt) {
-                                if ($dt['status'] == 'matched') {
-                                    $total_matched++;
-                                }
+                                if ($dt['status'] == 'matched') $total_matched++;
 
                                 $total_price = $total_price + $dt['inventory_price'];
 
                                 // Analyze inventory category
                                 $category = $dt['inventory_category'];
-                                if (!isset($category_count[$category])) {
-                                    $category_count[$category] = 0;
-                                }                        
+                                if (!isset($category_count[$category])) $category_count[$category] = 0;
                                 $category_count[$category]++;
                             }
                             $average_price = $total_price / $total_item;     
@@ -1577,9 +1551,7 @@ class Commands extends Controller
                         if ($lineIndex > 0 && preg_match('/\t/', $line)) {
                             $columns = explode("\t", $line);
                             $itemName = trim($columns[0]); 
-                            if (!empty($itemName) && $itemName !== "Item Name" && $itemName !== "Parts of FlazenApps") {
-                                $items[] = $itemName;
-                            }
+                            if (!empty($itemName) && $itemName !== "Item Name" && $itemName !== "Parts of FlazenApps") $items[] = $itemName;
                         }
                     }
 
@@ -1646,18 +1618,12 @@ class Commands extends Controller
                                             $dt['inventory_id'] ?? null, $id_report, $dt['item_name'],$dt['item_desc'], $dt['item_qty'], $dt['item_price'] ?? null, $user_id
                                         );
 
-                                        if ($res) {
-                                            $success_exec++;
-                                        } else {
-                                            $failed_exec++;
-                                        }
+                                        $res ? $success_exec++ : $failed_exec++;
                                     }
                                 }
 
-                                if ($success_exec > 0 || $request->report_item == null) {
-                                    // Create history
-                                    Audit::createHistory('Create', $report->report_title, $user_id);
-                                }
+                                // Create history
+                                if ($success_exec > 0 || $request->report_item == null) Audit::createHistory('Create', $report->report_title, $user_id);
 
                                 // Return success response
                                 if ($failed_exec == 0 && $success_exec == $item_count && $validation_image_failed == "") {

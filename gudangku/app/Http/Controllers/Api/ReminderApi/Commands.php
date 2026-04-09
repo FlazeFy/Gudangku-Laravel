@@ -627,9 +627,7 @@ class Commands extends Controller
                         }
 
                         // Send line message
-                        if ($reminder->line_user_id) {
-                            LineMessage::sendMessage('text',$message,$reminder->line_user_id);
-                        }
+                        if ($reminder->line_user_id) LineMessage::sendMessage('text',$message,$reminder->line_user_id);
                         
                         // Send Firebase notification (mobile)
                         if ($reminder->firebase_fcm_token) {
