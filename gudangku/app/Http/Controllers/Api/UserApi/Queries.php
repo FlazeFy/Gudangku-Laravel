@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\UserApi;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 // Models
 use App\Models\UserModel;
@@ -14,6 +15,19 @@ use App\Helpers\Generator;
 
 class Queries extends Controller
 {
+    private $module;
+    private $cacheKeyLifeTime;
+    private $cacheKeyContentYear;
+    private $cacheKeyMyProfile;
+
+    public function __construct()
+    {
+        $this->module = "user";
+        $this->cacheKeyContentYear = "{$this->module}:content_year";
+        $this->cacheKeyMyProfile = "{$this->module}";
+        $this->cacheKeyLifeTime = 1200;
+    }
+    
     /**
      * @OA\GET(
      *     path="/api/v1/user/my_profile",
@@ -76,8 +90,9 @@ class Queries extends Controller
             $user_id = $request->user()->id;
 
             // Get user / admin data by ID
-            $res = UserModel::getUserById($user_id); // with admin too
-
+            $res = Cache::remember("{$this->cacheKeyMyProfile}:$user_id", $this->cacheKeyLifeTime, function () use ($user_id) {
+                return UserModel::getUserById($user_id); // with admin too
+            });
             if ($res) {
                 // Get user's active request
                 $validation_telegram = ValidateRequestModel::getActiveRequest($user_id);
@@ -251,7 +266,10 @@ class Queries extends Controller
             $user_id = $check_admin ? null : $user_id;
 
             // Get available year based on content history
-            $res = UserModel::getAvailableYear($user_id, $check_admin ? true : false);
+            $type_key = $check_admin ? "global" : $user_id;
+            $res = Cache::remember("{$this->cacheKeyContentYear}:$type_key", $this->cacheKeyLifeTime, function () use ($check_admin, $user_id) {
+                return UserModel::getAvailableYear($user_id, $check_admin ? true : false);
+            });
             if ($res) {
                 // Return success response
                 return response()->json([

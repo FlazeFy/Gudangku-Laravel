@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 // Helpers
 use App\Helpers\Document;
@@ -22,10 +23,17 @@ use App\Models\LendInventoryRelModel;
 class Queries extends Controller
 {
     private $module;
+    private $cacheKeyLifeTime;
+    private $cacheKeyListRoom;
+    private $cacheKeyRoomLayout;
 
     public function __construct()
     {
         $this->module = "inventory";
+        $this->cacheKeyLifeTime = 1200;
+        $this->cacheKeyListRoom = "{$this->module}:list_room";
+        $this->cacheKeyRoomLayout = "{$this->module}:room_layout";
+
     }
 
     /**
@@ -627,7 +635,9 @@ class Queries extends Controller
             $user_id = $request->user()->id;
 
             // Get inventory room
-            $res = InventoryModel::getInventoryRoom($user_id);
+            $res = Cache::remember("{$this->module}:{$this->cacheKeyListRoom}:$user_id", $this->cacheKeyLifeTime, function () use ($user_id) {
+                return InventoryModel::getInventoryRoom($user_id);
+            });
             if (count($res) > 0) {
                 // Return success response
                 return response()->json([
@@ -714,7 +724,9 @@ class Queries extends Controller
             $user_id = $request->user()->id;
 
             // Get inventory by room
-            $res = InventoryLayoutModel::getInventoryByLayout($user_id, $room);
+            $res = Cache::remember("{$this->module}:{$this->cacheKeyRoomLayout}:$user_id:$room", $this->cacheKeyLifeTime, function () use ($user_id, $room) {
+                return InventoryLayoutModel::getInventoryByLayout($user_id, $room);
+            });
             if (count($res) > 0) {
                 // Return success response
                 return response()->json([
