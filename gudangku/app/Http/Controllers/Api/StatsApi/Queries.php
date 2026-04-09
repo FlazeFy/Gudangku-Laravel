@@ -16,6 +16,25 @@ use App\Models\HistoryModel;
 
 class Queries extends Controller
 {    
+    private $module;
+    private $cacheKeyLifeTime;
+    private $cacheKeyDashboard;
+    private $cacheKeyLeaderboard;
+    private $cacheKeyInventoryTreeMap;
+    private $cacheKeyLowCapacity;
+    private $cacheKeyFavoriteInventory;
+
+    public function __construct()
+    {
+        $this->module = "stats";
+        $this->cacheKeyDashboard = "{$this->module}:dashboard";
+        $this->cacheKeyLeaderboard = "{$this->module}:leaderboard";
+        $this->cacheKeyInventoryTreeMap = "{$this->module}:tree_map";
+        $this->cacheKeyLowCapacity = "{$this->module}:low_cap";
+        $this->cacheKeyFavoriteInventory = "{$this->module}:favorite_inventory";
+        $this->cacheKeyLifeTime = 1200;
+    }
+
     /**
      * @OA\GET(
      *     path="/api/v1/stats/inventory/total_by_category/{type}",
@@ -103,13 +122,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -191,13 +210,13 @@ class Queries extends Controller
                     // Return success response
                     return response()->json([
                         'status' => 'success',
-                        'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                        'message' => Generator::getMessageTemplate("fetch", $this->module),
                         'data' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
@@ -211,7 +230,7 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $result
                 ], Response::HTTP_OK);
             }
@@ -304,13 +323,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -408,13 +427,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -507,13 +526,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -623,13 +642,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -735,13 +754,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -767,7 +786,7 @@ class Queries extends Controller
      *             @OA\Property(property="message", type="string", example="stats fetched"),
      *                 @OA\Property(property="data", type="array",
      *                     @OA\Items(
-     *                          @OA\Property(property="context", type="string", example="Jan"),
+     *                          @OA\Property(property="context", type="string", example="Favorite"),
      *                          @OA\Property(property="total", type="integer", example=3)
      *                 )
      *             )
@@ -813,30 +832,41 @@ class Queries extends Controller
                 } 
             } else {
                 $user_id = null;
+                $check_admin = null;
             }
 
-            // Get total inventory
-            $total_item = InventoryModel::getTotalInventory($user_id,'item');
-            $total_item = $total_item->total;
-            
-            if ($total_item > 0) {
+            // Define cache key
+            $type_key = $check_admin ? ($user_id ?? "global") : ($user_id ?? "guest");
+            $cache_key = "{$this->cacheKeyFavoriteInventory}:{$type_key}";
+            $res = Cache::remember($cache_key, $this->cacheKeyLifeTime, function () use ($user_id) {
                 // Get total inventory
-                $total_fav = InventoryModel::getTotalInventory($user_id,'favorite');
-                $total_fav = $total_fav->total;
+                $total_item = InventoryModel::getTotalInventory($user_id,'item');
+                $total_item = $total_item ? $total_item->total : 0;
+                
+                if ($total_item > 0) {
+                    // Get total favorite
+                    $total_fav = InventoryModel::getTotalInventory($user_id,'favorite');
+                    $total_fav = $total_fav ? $total_fav->total : 0;
 
+                    return [
+                        [ 'context' => 'Favorited', 'total' => $total_fav ],
+                        [ 'context' => 'Normal Inventory', 'total' => $total_item ]
+                    ];
+                }
+
+                return null;
+            });
+            if (!empty($res)) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
-                    'data' => [
-                        [ 'context' => 'Favorited', 'total' => $total_fav ],
-                        [ 'context' => 'Normal Inventory', 'total' => $total_item ]
-                    ]
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
+                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -862,8 +892,8 @@ class Queries extends Controller
      *             @OA\Property(property="message", type="string", example="stats fetched"),
      *                 @OA\Property(property="data", type="array",
      *                     @OA\Items(
-     *                          @OA\Property(property="context", type="string", example="Jan"),
-     *                          @OA\Property(property="total", type="integer", example=3)
+     *                          @OA\Property(property="context", type="string", example="Low Capacity"),
+     *                          @OA\Property(property="total", type="integer", example=2)
      *                 )
      *             )
      *         )
@@ -908,30 +938,42 @@ class Queries extends Controller
                 } 
             } else {
                 $user_id = null;
+                $check_admin = null;
             }
 
-            // Get total inventory
-            $total_item = InventoryModel::getTotalInventory($user_id,'item');
-            $total_item = $total_item->total;
-            
-            if ($total_item > 0) {
-                // Get total inventory
-                $total_low = InventoryModel::getTotalInventory($user_id,'low');
-                $total_low = $total_low->total;
+            // Define cache key
+            $type_key = $check_admin ? ($user_id ?? "global") : ($user_id ?? "guest");
+            $cache_key = "{$this->cacheKeyLowCapacity}:$type_key";
 
+            $res = Cache::remember($cache_key, $this->cacheKeyLifeTime, function () use ($user_id) {
+                // Get total inventory
+                $total_item = InventoryModel::getTotalInventory($user_id,'item');
+                $total_item = $total_item ? $total_item->total : 0;
+
+                if ($total_item > 0) {
+                    // Get total low capacity
+                    $total_low = InventoryModel::getTotalInventory($user_id,'low');
+                    $total_low = $total_low ? $total_low->total : 0;
+
+                    return [
+                        [ 'context' => 'Low Capacity', 'total' => $total_low ],
+                        [ 'context' => 'Normal Capacity', 'total' => $total_item ]
+                    ];
+                }
+
+                return null;
+            });
+            if (!empty($res)) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
-                    'data' => [
-                        [ 'context' => 'Low Capacity', 'total' => $total_low ],
-                        [ 'context' => 'Normal Capacity', 'total' => $total_item ]
-                    ]
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
+                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -1036,13 +1078,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -1124,18 +1166,20 @@ class Queries extends Controller
             $user_id = $request->user()->id;
 
             // Get inventory tree map format
-            $res = InventoryModel::getInventoryTreeMap($user_id);
+            $res = Cache::remember("{$this->cacheKeyInventoryTreeMap}:$user_id", $this->cacheKeyLifeTime, function () use ($user_id) {
+                return InventoryModel::getInventoryTreeMap($user_id);
+            });
             if (count($res) > 0) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -1209,13 +1253,13 @@ class Queries extends Controller
                     // Return success response
                     return response()->json([
                         'status' => 'success',
-                        'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                        'message' => Generator::getMessageTemplate("fetch", $this->module),
                         'data' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
@@ -1293,24 +1337,29 @@ class Queries extends Controller
             // Make sure only admin can access this request
             $check_admin = AdminModel::find($user_id);
             if ($check_admin) {
-                // Get user with most context
-                $res_inventory = UserModel::getUserWithMostContext('inventory');
-                $res_report = UserModel::getUserWithMostContext('report');
+                $cache_key = "{$this->cacheKeyLeaderboard}:limit_{$limit}";
+                $res = Cache::remember($cache_key, $this->cacheKeyLifeTime, function () use ($limit) {
+                    // Get user with most context
+                    $res_inventory = UserModel::getUserWithMostContext('inventory', $limit);
+                    $res_report = UserModel::getUserWithMostContext('report', $limit);
 
-                if ($res_inventory || $res_report) {
+                    return [
+                        'user_with_most_inventory' => $res_inventory,
+                        'user_with_most_report' => $res_report
+                    ];
+                });
+
+                if (!empty($res) && ($res['user_with_most_inventory'] || $res['user_with_most_report'])) {
                     // Return success response
                     return response()->json([
                         'status' => 'success',
-                        'message' => Generator::getMessageTemplate("fetch", 'stats'),
-                        'data' => [
-                            'user_with_most_inventory' => $res_inventory,
-                            'user_with_most_report' => $res_report
-                        ]
+                        'message' => Generator::getMessageTemplate("fetch", $this->module),
+                        'data' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                        'message' => Generator::getMessageTemplate("not_found", $this->module),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
@@ -1420,13 +1469,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -1527,13 +1576,13 @@ class Queries extends Controller
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
                     'data' => $res_final
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -1609,32 +1658,36 @@ class Queries extends Controller
                 $user_id = $request->query('user_id') ?? null;
             } 
 
-            // Get total inventory stats
-            $total_item = InventoryModel::getTotalInventory($user_id,'item');
-            $total_fav = InventoryModel::getTotalInventory($user_id,'favorite');
-            $total_low = InventoryModel::getTotalInventory($user_id,'low');
-            $last_added = InventoryModel::getLastAddedInventory($user_id);
-            $most_category = InventoryModel::getMostCategoryInventory($user_id);
-            $highest_price = InventoryModel::getHighestPriceInventory($user_id);
-
-            if ($total_item && $total_item->total != 0) {
+            $type_key = $check_admin ? ($user_id ?? "global") : $user_id;
+            $res = Cache::remember("{$this->cacheKeyDashboard}:$type_key", $this->cacheKeyLifeTime, function () use ($user_id) {
+                // Get total inventory stats
+                $total_item = InventoryModel::getTotalInventory($user_id,'item');
+                $total_fav = InventoryModel::getTotalInventory($user_id,'favorite');
+                $total_low = InventoryModel::getTotalInventory($user_id,'low');
+                $last_added = InventoryModel::getLastAddedInventory($user_id);
+                $most_category = InventoryModel::getMostCategoryInventory($user_id);
+                $highest_price = InventoryModel::getHighestPriceInventory($user_id);
+    
+                return [
+                    'total_item' => $total_item ? $total_item->total : null,
+                    'total_fav' => $total_fav ? $total_fav->total : null,
+                    'total_low' => $total_low ? $total_low->total : null,
+                    'last_added' => $last_added ? $last_added->inventory_name : null,
+                    'most_category' => $most_category,
+                    'highest_price' => $highest_price
+                ];
+            });
+            if (!empty($res) && $res['total_item'] != 0) {
                 // Return success response
                 return response()->json([
                     'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'stats'),
-                    'data' => [
-                        'total_item' => $total_item ? $total_item->total : null,
-                        'total_fav' => $total_fav ? $total_fav->total : null,
-                        'total_low' => $total_low ? $total_low->total : null,
-                        'last_added' => $last_added ? $last_added->inventory_name : null,
-                        'most_category' => $most_category,
-                        'highest_price' => $highest_price
-                    ]
+                    'message' => Generator::getMessageTemplate("fetch", $this->module),
+                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'stats'),
+                    'message' => Generator::getMessageTemplate("not_found", $this->module),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
