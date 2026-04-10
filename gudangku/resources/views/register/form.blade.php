@@ -22,7 +22,6 @@
     .step.step-finish .circle {
         background: var(--successBG);
     }
-
     .title {
         line-height: 1.5em;
     }

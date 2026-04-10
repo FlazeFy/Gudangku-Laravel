@@ -97,7 +97,12 @@
         })
     }
 
-    const auto_login = () => {
+    const clearStorage = () => {
+        sessionStorage.clear()
+        localStorage.clear()
+    }
+
+    const autoLogin = () => {
         if (localStorage.getItem('token_key') !== null) {
             const token = localStorage.getItem('token_key')
             Swal.showLoading()
@@ -119,17 +124,15 @@
                     $('#form-login').submit()
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
-                    sessionStorage.clear()
-                    localStorage.clear()
+                    clearStorage()
                     generateAPIError(response, true)
                 }
             })
         } else {
-            sessionStorage.clear()
-            localStorage.clear()
+            clearStorage()
         }
     }
-    auto_login()
+    autoLogin()
 
     const submitOnEnter = (event) => {
         if (event.keyCode === 13) { 

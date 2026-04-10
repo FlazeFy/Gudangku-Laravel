@@ -37,7 +37,7 @@
                             <i class="fa-solid fa-circle-info"></i> ${response.status === 404 ? `There's <b>no active</b> QR, and people can't see your inventory`:`The last QR Code is already <b>expired</b>. Generate a new one?`}
                         </div>
                         <div class="d-grid d-md-inline-block">
-                            <a class="btn btn-success mt-3 w-100 w-md-auto" onclick="generate_qr()"><i class="fa-solid fa-qrcode"></i> Generate QR Code</a>
+                            <a class="btn btn-success mt-3 w-100 w-md-auto" onclick="generateQR()"><i class="fa-solid fa-qrcode"></i> Generate QR Code</a>
                         </div>
                     `)
                 } else if (response.status === 422) {
@@ -57,7 +57,7 @@
     }
     getAllQR()
 
-    const generate_qr = () => {
+    const generateQR = () => {
         $.ajax({
             url: '/api/v1/lend/qr',
             type: 'POST',
@@ -82,7 +82,7 @@
                     if (result.isConfirmed) {
                         Swal.close()
                         getAllQR()
-                        get_qr_history()
+                        getQRHistory()
                     }
                 })
             },
@@ -92,7 +92,7 @@
         })
     }
 
-    const get_qr_history = () => {
+    const getQRHistory = () => {
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/lend/qr/history`,
@@ -166,7 +166,7 @@
                     `)
                 })
 
-                generatePagination(item_holder, get_qr_history, total_page, current_page)
+                generatePagination(item_holder, getQRHistory, total_page, current_page)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
@@ -180,7 +180,7 @@
             }
         })
     }
-    get_qr_history()
+    getQRHistory()
 
     $(document).on('click', '.update-returned-btn', function () {
         const lend_id = $(this).data('lend-id')
@@ -192,10 +192,10 @@
             const is_returned = $(this).find("input[type=checkbox][name=is_returned]").is(":checked")
             list_inventory.push({ id, is_returned })
         })
-        update_returned_status(lend_id, list_inventory)
+        updateReturnedStatus(lend_id, list_inventory)
     })
 
-    const update_returned_status = (lend_id, list_inventory) => {
+    const updateReturnedStatus = (lend_id, list_inventory) => {
         $.ajax({
             url: `/api/v1/lend/update_status/${lend_id}`,
             type: 'PUT',
@@ -218,7 +218,7 @@
                     if (result.isConfirmed) {
                         Swal.close()
                         getAllQR()
-                        get_qr_history()
+                        getQRHistory()
                     }
                 })
             },

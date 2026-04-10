@@ -4,7 +4,7 @@
     <input hidden value="<?php 
         if ($selected == 'table') {
             echo 'catalog';
-        } elseif ($selected == 'catalog') {
+        } else if ($selected == 'catalog') {
             echo 'table';
         }
     ?>" name="toogle_view"/>

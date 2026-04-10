@@ -18,9 +18,7 @@
                 Swal.close()
                 const data = response.data
                 const selected_room = '<?= session()->get('room_opened') ?>'
-                data.forEach(el => {
-                    $('#select_room').append(`<option value='${el.inventory_room}' ${el.inventory_room == selected_room ? 'selected':''}>${el.inventory_room}</option>`)
-                })
+                data.forEach(el => $('#select_room').append(`<option value='${el.inventory_room}' ${el.inventory_room == selected_room ? 'selected':''}>${el.inventory_room}</option>`))
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 generateAPIError(response, true)

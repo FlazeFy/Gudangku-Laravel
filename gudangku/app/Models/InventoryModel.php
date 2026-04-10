@@ -162,7 +162,6 @@ class InventoryModel extends Model
         $res = InventoryModel::selectRaw("$context as context, COUNT(1) as total");
         
         if ($user_id) $res = $res->where('created_by',$user_id);
-        
         $res = $res->groupby($context)->orderby('total','desc')->get();
 
         return count($res) > 0 ? $res : null;
@@ -235,15 +234,10 @@ class InventoryModel extends Model
     }
 
     public static function getCheckInventoryAvaiability($inventory_name, $user_id, $inventory_id) {
-        $check = InventoryModel::selectRaw('1')
-            ->where('inventory_name',$inventory_name)
-            ->where('created_by',$user_id);
-
+        $check = InventoryModel::where('inventory_name',$inventory_name)->where('created_by',$user_id);
         if ($inventory_id !== null) $check->whereNot('id',$inventory_id);
 
-        $check = $check->first();
-
-        return $check ? false : true;
+        return !$query->exists();
     }
 
     public static function getRandom($null,$user_id) {
@@ -264,8 +258,10 @@ class InventoryModel extends Model
 
     public static function getContextTotalStats($context,$type,$user_id = null) {
         $res = InventoryModel::selectRaw("$context as context, ".self::get_inventory_stats_view($type)." as total");
+        
         if ($user_id) $res = $res->where('created_by', $user_id);
         if ($context == "inventory_merk") $res = $res->whereNotNull("inventory_merk");
+        
         $res = $res->groupby($context)
             ->orderby('total','desc')
             ->limit(7)

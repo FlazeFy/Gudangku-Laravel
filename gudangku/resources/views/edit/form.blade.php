@@ -88,7 +88,7 @@
 
 <script>
     $(document).on('click','#save_changes',function() {
-        save_update()
+        saveUpdateInventory()
     })
 
     const inventory_id = '<?= $id ?>'
@@ -200,7 +200,7 @@
         getDetailInventoryByID(inventory_id)
     })
 
-    const save_update = () => {
+    const saveUpdateInventory = () => {
         const id = `<?= $id ?>`
         $.ajax({
             url: `/api/v1/inventory/edit/${id}`,

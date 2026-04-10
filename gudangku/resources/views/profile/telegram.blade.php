@@ -77,7 +77,7 @@
                     $('#updateTelegramIDModal').modal('hide')
                     Swal.fire("Success!", response.message, "success").then((result) => {
                         if (result.isConfirmed) {
-                            get_my_profile()
+                            getMyProfile()
                             $("#label-validate-holder").css('display','none')
                             $("#update-tele-holder").css('display','none')
                         }

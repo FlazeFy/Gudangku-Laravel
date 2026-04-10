@@ -9,13 +9,13 @@
             <p class="fst-italic text-secondary mb-0">Joined since <span id="created_at_holder"></span></p>
         </div>
         <div class="col-md-6 col-sm-12">
-            <a class='btn btn-success mt-3 mt-md-0 w-100' onclick='update_profile()'><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
+            <a class='btn btn-success mt-3 mt-md-0 w-100' onclick='updateProfile()'><i class="fa-solid fa-floppy-disk"></i> Save Changes</a>
         </div>
     </div>
 </form>
 
 <script>
-    const get_my_profile = () => {
+    const getMyProfile = () => {
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/user/my_profile`,
@@ -74,7 +74,7 @@
             }
         })
     }
-    get_my_profile()
+    getMyProfile()
 
     $(document).on('click','#validate_token_submit-btn',function(){
         validate_token_telegram()
@@ -99,7 +99,7 @@
                     Swal.close()
                     Swal.fire("Success!", response.message, "success").then((result) => {
                         if (result.isConfirmed) {
-                            get_my_profile()
+                            getMyProfile()
                             $('#telegram_validation_status_box').empty()
                             $("#label-validate-holder").css('display','block')
                             $("#update-tele-holder").css('display','none')
@@ -117,7 +117,7 @@
         }
     }
 
-    const update_profile = () => {
+    const updateProfile = () => {
         if ($('#username_input').val() != "" && $('#email_input').val() != "") {
             $.ajax({
                 url: '/api/v1/user/update_profile',
@@ -132,7 +132,7 @@
                 success: function(response) {
                     Swal.close()
                     Swal.fire("Success!", response.message, "success").then((result) => {
-                        if (result.isConfirmed) get_my_profile()
+                        if (result.isConfirmed) getMyProfile()
                     })
                 },
                 error: function(response, jqXHR, textStatus, errorThrown) {
@@ -147,7 +147,7 @@
     const submitOnEnter = (event) => {
         if (event.keyCode === 13) { 
             event.preventDefault() 
-            update_profile()
+            updateProfile()
             return false 
         }
         return true 

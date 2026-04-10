@@ -4,7 +4,7 @@
 <script>
     let page = 1
 
-    const toggle_select_item = (inventory, buttonEl) => {
+    const toggleSelectItem = (inventory, buttonEl) => {
         $(document).ready(function () {
             let selected = getSelectedItems()
             const isSelected = selected.some(item => item.id === inventory.id)
@@ -21,7 +21,7 @@
         })
     }
 
-    const get_lend_inventory = (lend_id,page) => {
+    const getLendInventory = (lend_id,page) => {
         Swal.showLoading()
         $.ajax({
             url: `/api/v1/lend/inventory/${lend_id}?per_page_key=18&page=${page}`,
@@ -36,10 +36,9 @@
                 const current_page = response.data.current_page
                 const total_page = response.data.last_page
                 const owner = response.owner
+                const selectedItems = getSelectedItems()
 
                 $('.inventory-owner').text(`@${owner.username}'s`)
-
-                const selectedItems = getSelectedItems()
                 data.forEach(el => {
                     const isSelected = selectedItems.includes(el.id)
                     const buttonStyle = isSelected ? "border-color: var(--successBG) !important" : ""
@@ -90,17 +89,17 @@
     }
 
     $('#inventory-holder').empty()
-    get_lend_inventory(lend_id,page)
+    getLendInventory(lend_id,page)
     getCartButton()
 
     $(document).on('click', '.inventory-item', function () {
         const inventory = JSON.parse(decodeURIComponent($(this).attr('data-inventory')))
-        toggle_select_item(inventory, this)
+        toggleSelectItem(inventory, this)
         getCartButton()
     })
     
     $(document).on('click','#see-more-button', function() {
         page++
-        get_lend_inventory(lend_id,page)
+        getLendInventory(lend_id,page)
     })
 </script>

@@ -96,7 +96,7 @@
                                         </div>
                                     </div>
 
-                                    <button class="btn btn-success py-1 px-3" data-bs-toggle="modal" onclick="reset_reminder_form()" data-bs-target="#modalCopyReminder_${rm.id}">
+                                    <button class="btn btn-success py-1 px-3" data-bs-toggle="modal" onclick="resetReminderForm()" data-bs-target="#modalCopyReminder_${rm.id}">
                                         <i class="fa-solid fa-copy" style="font-size:var(--textMD)"></i>
                                     </button>
                                     <div class="modal fade" id="modalCopyReminder_${rm.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -125,7 +125,7 @@
                                                             </table>
                                                         </div>
                                                         <p>Are you sure to copy this reminder "${rm.reminder_desc}" to inventory <span id="inventory_selected_name"></span>?</p>
-                                                        <a class="btn btn-success" onclick="copy_reminder('${rm.id}')">Yes, Copy</a>
+                                                        <a class="btn btn-success" onclick="copyReminder('${rm.id}')">Yes, Copy</a>
                                                     </form>
                                                 </div>
                                             </div>
@@ -321,13 +321,13 @@
     }
     getAllInventory(page,search_key,filter_category,sorting)
 
-    const reset_reminder_form = () => {
+    const resetReminderForm = () => {
         $(document).ready(function () {
             $('.check_inventory').prop('checked', false)
         })
     }
 
-    const copy_reminder = (id) => {
+    const copyReminder = (id) => {
         const modal = $(`#modalCopyReminder_${id}`)
         const reminder_id = modal.find('.reminder_id').val()
         const reminder_desc = modal.find('input[name="reminder_desc"]').val()

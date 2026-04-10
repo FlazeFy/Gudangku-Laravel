@@ -172,12 +172,10 @@ class UserModel extends Authenticatable
 
     public static function getAvailableYear($user_id, $is_admin) {
         $res_inventory = InventoryModel::selectRaw('YEAR(created_at) as year');
-
         if (!$is_admin) $res_inventory = $res_inventory->where('created_by', $user_id);
     
         $res_inventory = $res_inventory->groupBy('year')->get();
         $res_report = ReportModel::selectRaw('YEAR(created_at) as year');
-
         if (!$is_admin) $res_report = $res_report->where('created_by', $user_id);
 
         $res_report = $res_report->groupBy('year')->get();

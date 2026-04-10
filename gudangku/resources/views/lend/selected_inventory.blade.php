@@ -18,7 +18,7 @@
 </div>
 
 <script>
-    const post_borrow = (lend_id) => {
+    const postBorrow = (lend_id) => {
         const selected = getSelectedItems()
         const borrower_name = $('#borrower_name').val()
 
@@ -77,7 +77,7 @@
         })
     }
 
-    const get_selected_inventory_modal = () => {
+    const getSelectedInventoryModal = () => {
         const selected = getSelectedItems()
         $('#selected-inventory-holder').empty()
 
@@ -101,18 +101,18 @@
     }
 
     $(document).on('click','#save-borrow-button', function() {
-        post_borrow(lend_id)
+        postBorrow(lend_id)
     })
 
     $(document).on('click','#selected-inventory-modal-button',function() {
-        get_selected_inventory_modal()
+        getSelectedInventoryModal()
     })
 
     $(document).on('click','#reset-borrow-button',function() {
         localStorage.removeItem(SELECTED_STORAGE_KEY)
         $('#reset-button-holder').empty()
         $('.inventory-item').css('border-color', 'var(--primaryColor)')
-        get_selected_inventory_modal()
+        getSelectedInventoryModal()
         getCartButton()
     })
 </script>

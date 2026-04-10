@@ -126,7 +126,7 @@
         })   
     }
 
-    const post_analyze_image = () => {
+    const postAnalyzeImage = () => {
         const form = $('#report-form')[0]
         const formData = new FormData(form)
         $.ajax({
@@ -180,12 +180,12 @@
 
     $(document).on('input','#file',function() {
         if ($('.bill-item').length == 0) {
-            post_analyze_image()
+            postAnalyzeImage()
         } else {
             Swal.fire("Are you sure!", "want to upload new bill? this will remove previous item!","warning").then((result) => {
                 if (result.isConfirmed) {
                     $('.bill-item').remove()
-                    post_analyze_image()
+                    postAnalyzeImage()
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
                     Swal.fire("Cancelled!", "Your previous item is safe!", "success")
                 }

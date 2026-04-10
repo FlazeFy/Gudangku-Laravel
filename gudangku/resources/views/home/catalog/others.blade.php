@@ -12,7 +12,7 @@
 </div>
 
 <script>
-    const get_others_inventory = () => {
+    const getOthersInventory = () => {
         const holder = ['room','category','storage']
 
         $.ajax({
@@ -29,7 +29,6 @@
                 holder.forEach(el => {
                     const data = response.data[el]
                     $(`#inventory_by_${el}-holder`).empty()
-
                     const icon = el === 'room' ? 'fa-house' : el === 'category' ? 'fa-toolbox' : 'fa-box-archive'
 
                     if (data) {
@@ -58,5 +57,5 @@
             }
         })
     }
-    get_others_inventory()
+    getOthersInventory()
 </script>

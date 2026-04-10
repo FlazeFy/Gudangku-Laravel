@@ -37,7 +37,6 @@
             },
             success: function(response) {
                 Swal.close()
-
                 const data = response.data.data
                 const current_page = response.data.current_page
                 const last_page = response.data.last_page
@@ -79,17 +78,11 @@
                     `)
                 })
                 
-                if (current_page < last_page) {
-                    $('#inventory-holder').append(`
-                        <div class="col-12"><button class="btn btn-primary" onclick="navigate_page(${page})">Next Page</button></div>
-                    `)
-                } 
+                if (current_page < last_page) $('#inventory-holder').append(`<div class="col-12"><button class="btn btn-primary" onclick="navigate_page(${page})">Next Page</button></div>`)
             },
             error: function(response, jqXHR, textStatus, errorThrown) {
                 Swal.close()
-                if (response.status !== 404) {
-                    generateAPIError(response, true)
-                }
+                if (response.status !== 404) generateAPIError(response, true)
             }
         })
     }

@@ -73,7 +73,6 @@ class ReportModel extends Model
             ->leftjoin('inventory','inventory.id','=','report_item.inventory_id');
 
         $res = $user_id ? $res->where('report.created_by',$user_id) : $res->join('users','users.id','=','report.created_by');
-
         $res = $res->whereNull('report.deleted_at')
             ->groupby('report.id')
             ->orderby('report.created_at','desc');
@@ -147,7 +146,6 @@ class ReportModel extends Model
         $res = ReportModel::selectRaw($select_query)->join('report_item','report_item.report_id','=','report.id');
 
         if ($user_id) $res = $res->where('report.created_by', $user_id);
-
         if ($type == "spending") $res = $res->where('report_category','Shopping Cart');
     
         return $res->whereRaw("YEAR(report.created_at) = '$year'")

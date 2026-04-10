@@ -465,7 +465,7 @@
             )
         }
 
-        const add_nav_el_btn = () => {
+        const addNavElButton = () => {
             const target = [
                 { element: 'user_manual-section', text: '<i class="fa-solid fa-arrow-up"></i> Go to User Manual' },
                 { element: 'data_constraint-section', text: '<i class="fa-solid fa-arrow-down"></i> Go to Data Constraint' }
@@ -491,7 +491,7 @@
             })
         }
 
-        add_nav_el_btn()
-        $(window).on('scroll resize', add_nav_el_btn)
+        addNavElButton()
+        $(window).on('scroll resize', addNavElButton)
     })
 </script>

@@ -161,9 +161,7 @@
                         const allMsg = Object.values(msg).flat()
                         if (is_list_format) {
                             msg = '<ol>'
-                            allMsg.forEach((dt) => {
-                                msg += `<li>- ${dt.replace('.','')}</li>`
-                            })
+                            msg += allMsg.map(dt => `<li>- ${dt.replace('.', '')}</li>`).join('')
                             msg += '</ol>'
                         } else {
                             msg = allMsg.join(', ').replace('.','')

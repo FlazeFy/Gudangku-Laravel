@@ -22,7 +22,7 @@
         <hr>
         <div class="mb-3 d-flex flex-wrap gap-2">
             @include('components.back_button', ['route' => '/inventory/edit/'.$id])
-            <a class="btn btn-primary" onclick="generate_custom()"><i class="fa-solid fa-print"></i> Custom Print</a>
+            <a class="btn btn-primary" onclick="generateCustom()"><i class="fa-solid fa-print"></i> Custom Print</a>
         </div>
 
         <div id="render_area">
@@ -221,7 +221,7 @@
         getAnalyzeInventory("<?= $id ?>")
 
         let toggle_show_customize = false
-        const generate_custom = () => {
+        const generateCustom = () => {
             const header = `<?= Generator::getDocTemplate('header') ?>`
             const footer = `<?= Generator::getDocTemplate('footer') ?>`
             const style = `<?= Generator::getDocTemplate('style') ?>`

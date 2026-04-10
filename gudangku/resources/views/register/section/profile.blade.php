@@ -196,11 +196,7 @@
 
     $(document).ready(function() {
         $('#checkTerm').click(function() {
-            if ($(this).is(':checked')) {
-
-            } else {
-                $('#username, #email, #password, #password_validation').val('')
-            }
+            if (!$(this).is(':checked')) $('#username, #email, #password, #password_validation').val('')
         })
 
         $('#btn-regenerate-token').on('click', function() {
@@ -254,6 +250,7 @@
                                 $('#username, #email, #password, #password_validation').attr('readonly',true)
                                 $('#token-section').removeClass('d-none')
                                 $('#btn-register-acc').remove()
+                                
                                 $(this).attr('disabled', true)
                                 startTimer(900)
                                 $('html, body').animate({

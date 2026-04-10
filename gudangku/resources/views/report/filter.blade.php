@@ -62,14 +62,10 @@
             window.history.pushState({ path: url.href }, '', url.href)
             placeResetButton()
         } else {
-            if (curr_page != "/report") {
-                window.location.href = '/report'
-            }
+            if (curr_page != "/report") window.location.href = '/report'
         }
 
-        if ((curr_page != "/report" && (val == null || val.trim() == "")) || (val !== null && val.trim() != "")) {
-            getAllReport(page,search_key,filter_category,sorting)
-        }
+        if ((curr_page != "/report" && (val == null || val.trim() == "")) || (val !== null && val.trim() != "")) getAllReport(page,search_key,filter_category,sorting)
     }
 
     const submitOnEnter = (event) => {

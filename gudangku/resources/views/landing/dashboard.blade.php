@@ -79,7 +79,7 @@
 </div>
 
 <script>
-    const get_dashboard = () => {
+    const getDashboard = () => {
         $.ajax({
             url: `/api/v1/stats/dashboard`,
             type: 'GET',
@@ -106,5 +106,5 @@
             }
         })
     }
-    get_dashboard()
+    getDashboard()
 </script>

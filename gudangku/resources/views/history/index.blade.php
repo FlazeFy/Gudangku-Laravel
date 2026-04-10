@@ -21,10 +21,6 @@
             <span id="export-section"></span>
         </div>
         
-        @if ($role == 0)
-            @include('history.list')
-        @else   
-            @include('history.table')
-        @endif
+        @include($role == 0 ? 'history.list' : 'history.table')
     </div>
 @endsection

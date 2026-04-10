@@ -73,7 +73,7 @@
         </div>
 
         <div class="d-grid d-md-inline-block mt-3">
-            <a class="btn btn-success w-100 w-md-auto" onclick="submit_add()"><i class="fa-solid fa-floppy-disk"></i> Save Inventory</a>
+            <a class="btn btn-success w-100 w-md-auto" onclick="submitAddInventory()"><i class="fa-solid fa-floppy-disk"></i> Save Inventory</a>
         </div>
     </form>
 </div>
@@ -89,7 +89,7 @@
         await getDictionaryByContext('inventory_category,inventory_room,inventory_capacity_unit,inventory_unit',token)
     })
 
-    const submit_add = () => {
+    const submitAddInventory = () => {
         const form = $('#add_inventory')[0]
         const formData = new FormData(form)
         formData.set('created_at', tidyUpDateTimeFormat(formData.get('created_at')))

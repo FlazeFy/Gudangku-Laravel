@@ -4,7 +4,7 @@
     <input hidden value="<?php 
         if ($selected == 'true') {
             echo 'false';
-        } elseif ($selected == 'false') {
+        } else if ($selected == 'false') {
             echo 'true';
         }
     ?>" name="toogle_edit"/>

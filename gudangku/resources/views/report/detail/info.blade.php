@@ -409,13 +409,8 @@
             let selected_inventory_id = ''
             checkedItems.forEach((el,idx) => {
                 selected_item_name += `<a class='bordered bg-transparent rounded px-2 py-1 d-inline-block'>${el.item_name}</a>`
-                if (idx < checkedItems.length - 1) {
-                    selected_item_id += `${el.id},`
-                    selected_inventory_id += `${el.inventory_id},`
-                } else {
-                    selected_item_id += `${el.id}`
-                    selected_inventory_id += `${el.inventory_id}`
-                }
+                selected_item_id += `${el.id}${idx < checkedItems.length - 1 ? ',':''}`
+                selected_inventory_id += `${el.inventory_id}${idx < checkedItems.length - 1 ? ',':''}`
             })
 
             $(report_action_holder).html(`

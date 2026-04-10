@@ -39,13 +39,10 @@
             <div class="modal-body">
                 <input hidden id='inventory_id_add_report' name="inventory_id">
                 <input hidden id='inventory_name_add_report' name="item_name">
-
                 <label>Title</label>
                 <input name="report_title" class="form-control" type="text" id="report_title" required>
-
                 <label>Description</label>
                 <textarea name="report_desc" id="report_desc" class="form-control"></textarea>
-
                 <label>Category</label>
                 <select class="form-select" name="report_category" id="report_category" aria-label="Default select example"></select>
                 <hr>
@@ -84,7 +81,7 @@
         })
     })
 
-    const add_report = () => {
+    const addReport = () => {
         const formData = new FormData()
         formData.append('report_title', $('#report_title').val())
         formData.append('report_desc', $('#report_desc').val())

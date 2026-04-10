@@ -57,7 +57,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <p>Are you sure to re-remind @${el.username} about this reminder with description <span class="fst-italic fw-bold bg-primary rounded px-2 py-0 mx-1 my-2">"${el.reminder_desc}"</span> that attached with inventory ${el.inventory_name}</p>
-                                                <button class="btn btn-success mt-4" onclick="post_re_remind('${el.id}')">Yes, Remind</button>
+                                                <button class="btn btn-success mt-4" onclick="postReRemind('${el.id}')">Yes, Remind</button>
                                             </div>
                                         </div>
                                     </div>
@@ -81,7 +81,7 @@
     }
     getAllReminder(page)
 
-    const post_re_remind = (id) => {
+    const postReRemind = (id) => {
         $.ajax({
             url: '/api/v1/reminder/re_remind',
             type: 'POST',
