@@ -1,0 +1,18 @@
+[
+    {
+        "question": "total inventory",
+        "sql": "SELECT COUNT(*) as total FROM inventory"
+    },
+    {
+        "question": "total nilai inventory",
+        "sql": "SELECT SUM(inventory_price) as total FROM inventory"
+    },
+    {
+        "question": "inventory paling mahal",
+        "sql": "SELECT inventory_name, inventory_price FROM inventory ORDER BY inventory_price DESC LIMIT 1"
+    },
+    {
+        "question": "list inventory berdasarkan ruangan",
+        "sql": "SELECT inventory_name, inventory_room FROM inventory WHERE inventory_room LIKE :room"
+    }
+]

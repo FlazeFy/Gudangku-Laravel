@@ -257,6 +257,117 @@
                 ]
             }
         },
+        "/api/v1/chat/ai": {
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Post Chat (AI)",
+                "description": "This AI request is used to do analyze and find data using command (prompt) to select context query. This request interacts with the MySQL database.",
+                "operationId": "9b6cc779650ea966e285b9840b3b7f43",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "example": "can you find my vehicle with the most trip?"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "chat answered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "lorem ipsum"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "{validation_msg}",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "{field validation message}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/dictionary/destroy/{id}": {
             "delete": {
                 "tags": [
@@ -7377,7 +7488,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Successfully created report",
                         "content": {
                             "application/json": {
@@ -9867,7 +9978,7 @@
                                                 "properties": {
                                                     "context": {
                                                         "type": "string",
-                                                        "example": "Jan"
+                                                        "example": "Favorite"
                                                     },
                                                     "total": {
                                                         "type": "integer",
@@ -9980,11 +10091,11 @@
                                                 "properties": {
                                                     "context": {
                                                         "type": "string",
-                                                        "example": "Jan"
+                                                        "example": "Low Capacity"
                                                     },
                                                     "total": {
                                                         "type": "integer",
-                                                        "example": 3
+                                                        "example": 2
                                                     }
                                                 },
                                                 "type": "object"
@@ -11825,14 +11936,14 @@
                 }
             }
         },
-        "/api/v1/user/{id}": {
+        "/api/v1/user/destroy/{id}": {
             "delete": {
                 "tags": [
                     "User"
                 ],
                 "summary": "Hard Delete User By Id",
                 "description": "This request is used to delete user by given user's `id`. This request interacts with the MySQL database and has a protected routes.",
-                "operationId": "db995ff281d9001eead654db3400f5c0",
+                "operationId": "15bff11ceb5840dfa3f40aabef77b13a",
                 "parameters": [
                     {
                         "name": "id",
@@ -13229,6 +13340,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Chat",
+            "description": "Chat"
         },
         {
             "name": "Dictionary",

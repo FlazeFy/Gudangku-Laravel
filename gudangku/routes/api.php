@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\DictionaryApi\Commands as CommandsDictionaryControl
 use App\Http\Controllers\Api\ErrorApi\Queries as QueriesErrorController;
 use App\Http\Controllers\Api\ErrorApi\Commands as CommandsErrorController;
 use App\Http\Controllers\Api\LendApi\Commands as CommandsLendController;
+use App\Http\Controllers\Api\ChatApi\Commands as CommandsChatController;
 use App\Http\Controllers\Api\LendApi\Queries as QueriesLendController;
 
 ######################### Public Route #########################
@@ -65,6 +66,8 @@ Route::prefix('/v1/stats')->group(function () {
 ######################### Private Route #########################
 
 Route::post('/v1/logout', [CommandAuthApi::class, 'postLogout'])->middleware(['auth:sanctum']);
+
+Route::post('/v1/chat', [CommandsChatController::class, 'postChat'])->middleware(['auth:sanctum']);
 
 Route::prefix('/v1/inventory')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueriesInventoryController::class, 'getAllInventory']);
