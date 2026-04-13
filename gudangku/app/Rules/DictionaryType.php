@@ -5,11 +5,6 @@ use Illuminate\Contracts\Validation\Rule;
 
 class DictionaryType implements Rule
 {
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         //
@@ -20,9 +15,7 @@ class DictionaryType implements Rule
         $type = ['inventory_category','inventory_unit','inventory_room','reminder_type','reminder_context','report_category'];
 
         foreach ($type as $format) {
-            if ($format === $value) {
-                return true;
-            }
+            if ($format === $value) return true;
         }
 
         return false;

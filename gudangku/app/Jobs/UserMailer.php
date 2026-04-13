@@ -25,11 +25,6 @@ class UserMailer implements ShouldQueue
     protected $username;
     protected $receiver;
 
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
     public function __construct($context, $body, $username, $receiver)
     {
         $this->context = $context;
@@ -38,11 +33,6 @@ class UserMailer implements ShouldQueue
         $this->receiver = $receiver;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
     public function handle()
     {
         try{

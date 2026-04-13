@@ -7,15 +7,10 @@ class Document
     public static function documentTemplateReport($header_template,$style_template,$footer_template,$report,$report_item) { 
         $tbody = "";
         $datetime = now();
-        if ($header_template == null) {
-            $header_template = Generator::getDocTemplate('header');
-        }
-        if ($style_template == null) {
-            $style_template = Generator::getDocTemplate('style');
-        }
-        if ($footer_template == null) {
-            $footer_template = Generator::getDocTemplate('footer');
-        }
+
+        if ($header_template == null) $header_template = Generator::getDocTemplate('header');
+        if ($style_template == null) $style_template = Generator::getDocTemplate('style');
+        if ($footer_template == null) $footer_template = Generator::getDocTemplate('footer');
 
         $extra_template = "";
         $sub_total = 0;
@@ -23,11 +18,8 @@ class Document
         $total_qty = 0;
 
         foreach ($report_item as $dt) {
-            if ($dt->item_desc) {
-                $item_desc = $dt->item_desc;
-            } else {
-                $item_desc = "<i style='color:grey;'>- No Description Provided-</i>";
-            }
+            $item_desc = $dt->item_desc ?? "<i style='color:grey;'>- No Description Provided-</i>";
+
             if ($report->report_category == "Shopping Cart" || $report->report_category == "Wishlist") {
                 $total = $dt->item_qty * $dt->item_price;
                 $sub_total = $sub_total + $total;
@@ -38,9 +30,7 @@ class Document
                     <td></td>
                 ";
             } else {
-                $tbody_template = "
-                    <td></td>
-                ";
+                $tbody_template = "<td></td>";
             }
 
             $tbody .= "
@@ -52,7 +42,7 @@ class Document
                 </tr>
             ";
 
-            $total_qty = $total_qty + $dt->item_qty;
+            $total_qty += $dt->item_qty;
         }
 
         $report_desc = "Also, in this report come with some notes : $report->report_desc.";
@@ -65,9 +55,7 @@ class Document
             ";
             $extra_template = "<h5 style='margin-bottom:0;'>Total Item : $total_qty</h5><h5 style='margin:0;'>Sub-Total : Rp. ".number_format($sub_total)."</h5>";
         } else {
-            $thead_template = "
-                <th>Checklist</th>
-            ";
+            $thead_template = "<th>Checklist</th>";
             $extra_template = "<h5 style='margin-bottom:0;'>Total Item : $total_qty</h5>";
         }
 
@@ -108,15 +96,11 @@ class Document
     public static function documentTemplateLayout($header_template,$style_template,$footer_template,$layout,$inventory,$room) { 
         $tbody = "";
         $datetime = now();
-        if ($header_template == null) {
-            $header_template = Generator::getDocTemplate('header');
-        }
-        if ($style_template == null) {
-            $style_template = Generator::getDocTemplate('style');
-        }
-        if ($footer_template == null) {
-            $footer_template = Generator::getDocTemplate('footer');
-        }
+
+        if ($header_template == null) $header_template = Generator::getDocTemplate('header');
+        if ($style_template == null) $style_template = Generator::getDocTemplate('style');
+        if ($footer_template == null) $footer_template = Generator::getDocTemplate('footer');
+
         $extra_template = "";
             $layout_template = "<div id='room-container'>";
 
@@ -135,6 +119,7 @@ class Document
                     }
                 }
             }
+            
             $highestLetter = array_reduce($rawLetter, function($max, $current) {
                 return $current > $max ? $current : $max;
             }, 'A');
@@ -164,7 +149,6 @@ class Document
                     }
 
                     $buttonClass = $used ? 'active' : '';
-
                     $layout_template .= "<a class='room-floor $buttonClass'><h6 class='coordinate'>$label</h6></a>";
                 }
                 $layout_template .= "</div>";
@@ -249,20 +233,14 @@ class Document
     public static function documentTemplateInventory($header_template,$style_template,$footer_template,$inventory,$reminder) { 
         $tbody = "";
         $datetime = now();
-        if ($header_template == null) {
-            $header_template = Generator::getDocTemplate('header');
-        }
-        if ($style_template == null) {
-            $style_template = Generator::getDocTemplate('style');
-        }
-        if ($footer_template == null) {
-            $footer_template = Generator::getDocTemplate('footer');
-        }
+
+        if ($header_template == null) $header_template = Generator::getDocTemplate('header');
+        if ($style_template == null) $style_template = Generator::getDocTemplate('style');
+        if ($footer_template == null) $footer_template = Generator::getDocTemplate('footer');
+
         $reminder_template = "";
         foreach ($reminder as $dt) {
-            $reminder_template .= "
-                <p>- <b>Reminder $dt->reminder_type $dt->reminder_context</b> : $dt->reminder_desc</p>
-            ";   
+            $reminder_template .= "<p>- <b>Reminder $dt->reminder_type $dt->reminder_context</b> : $dt->reminder_desc</p>";   
         }
 
         $html = "<html>
@@ -296,13 +274,9 @@ class Document
         }
 
         foreach ($arr_inventory as $dt) {
-            if ($dt->is_favorite == 1) {
-                $is_favorite = "True";
-            } else {
-                $is_favorite = "False";
-            }
-    
+            $is_favorite = $dt->is_favorite == 1 ? "True" : "False";
             $img = "";
+
             if ($dt->inventory_image) {
                 $img = "
                 <tr>

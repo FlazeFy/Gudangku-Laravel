@@ -42,17 +42,9 @@ class GoogleCalendar
     {
         $rule = "RRULE:FREQ=$frequency";
 
-        if ($byDay) {
-            $rule .= ";BYDAY=$byDay";
-        }
-
-        if ($byMonthDay) {
-            $rule .= ";BYMONTHDAY=$byMonthDay";
-        }
-
-        if ($byMonth) {
-            $rule .= ";BYMONTH=$byMonth";
-        }
+        if ($byDay) $rule .= ";BYDAY=$byDay";
+        if ($byMonthDay) $rule .= ";BYMONTHDAY=$byMonthDay";
+        if ($byMonth) $rule .= ";BYMONTH=$byMonth";
 
         return $rule;
     }

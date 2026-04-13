@@ -77,6 +77,7 @@ class ReminderSchedule
                     $server_day = $server_datetime->format('D');
                     $split_reminder_context = explode(" ", $dt->reminder_context);
                     $day_reminder = substr($split_reminder_context[1],0,3);
+                    
                     if ($day_reminder == $server_day) {
                         $exec = true;
 

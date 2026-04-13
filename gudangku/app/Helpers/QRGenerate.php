@@ -16,9 +16,7 @@ class QRGenerate
         $filename = "qr_".time()."_$id.png";
         $path = storage_path("app/tmp/{$filename}");
 
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0755, true);
-        }
+        if (!file_exists(dirname($path))) mkdir(dirname($path), 0755, true);
 
         $result = Builder::create()
             ->data($keyword)

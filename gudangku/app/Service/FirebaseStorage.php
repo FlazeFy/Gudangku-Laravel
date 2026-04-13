@@ -36,7 +36,6 @@ class FirebaseStorage
 
         $fileList = [];
 
-        /** @var RemoteFile $file */
         foreach ($files as $file) {
             $fileList[] = [
                 'name' => $file->name(),

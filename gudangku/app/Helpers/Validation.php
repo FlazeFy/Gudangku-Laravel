@@ -15,9 +15,7 @@ class Validation
 {
     private static function validateInventoryVolumeRelation($validator, $request) {
         $validator->after(function ($validator) use ($request) {
-            if ($request->inventory_capacity_unit === 'Percentage') {
-                return;
-            }
+            if ($request->inventory_capacity_unit === 'Percentage') return;
             
             if ($request->filled('inventory_capacity_vol') && is_numeric($request->inventory_capacity_vol) &&
                 is_numeric($request->inventory_vol) && $request->inventory_vol < $request->inventory_capacity_vol) {
@@ -57,9 +55,7 @@ class Validation
             'email' => 'required|string|min:10|max:255',
         ];
 
-        if ($type === 'create') {
-            $rules['password'] = 'required|string|min:6|max:500';
-        }
+        if ($type === 'create') $rules['password'] = 'required|string|min:6|max:500';
 
         return Validator::make($request->all(), $rules);
     }
@@ -170,12 +166,8 @@ class Validation
             'reminder_context' => 'required|string|max:36',
         ];
 
-        if ($type === 'create' || $type === 'update') {
-            $rules['inventory_id'] = 'required|string|min:36|max:36';
-        }
-        if ($type === 'create_copy') {
-            $rules['list_inventory_id'] = 'required|string|min:36';
-        }
+        if ($type === 'create' || $type === 'update') $rules['inventory_id'] = 'required|string|min:36|max:36';
+        if ($type === 'create_copy') $rules['list_inventory_id'] = 'required|string|min:36';
 
         return Validator::make($request->all(), $rules);
     }
@@ -195,11 +187,8 @@ class Validation
 
     public static function getValidateTimezone($val) {
         $regex = '/^[+-](0[0-9]|1[0-4]):([0-5][0-9])$/';
-        if (preg_match($regex, $val) === 1) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return preg_match($regex, $val) === 1;
     }
 
     public static function getValidateUUID($val) {

@@ -15,11 +15,6 @@ class UserMail extends Mailable
     public $body;
     public $username;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($context, $body, $username)
     {
         $this->context = $context;
@@ -27,11 +22,6 @@ class UserMail extends Mailable
         $this->username = $username;
     }
 
-    /**
-     * Get the message envelope.
-     *
-     * @return \Illuminate\Mail\Mailables\Envelope
-     */
     public function envelope()
     {
         return new Envelope(
@@ -39,11 +29,6 @@ class UserMail extends Mailable
         );
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
         return $this->view('components.email.user_info')
@@ -54,11 +39,6 @@ class UserMail extends Mailable
             ]);
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array
-     */
     public function attachments()
     {
         return [];

@@ -47,9 +47,7 @@ class Firebase
         $bucket = $storage->getBucket();
 
         $parsedUrl = parse_url($url);
-        if (!isset($parsedUrl['path'])) {
-            return false; 
-        }
+        if (!isset($parsedUrl['path'])) return false; 
 
         $path = urldecode(substr($parsedUrl['path'], strpos($parsedUrl['path'], '/o/') + 3));
         $object = $bucket->object($path);

@@ -64,13 +64,10 @@ class Generator
     public static function isMobileDevice() {
         // $user = $_SERVER['HTTP_USER_AGENT'];
         $user = request()->header('User-Agent', '');
-    
         $type = ['mobile', 'android', 'iphone', 'ipod', 'blackberry', 'windows phone'];
         
         foreach ($type as $key) {
-            if (stripos($user, $key) !== false) {
-                return true;
-            }
+            if (stripos($user, $key) !== false) return true;
         }
     
         return false;
@@ -136,12 +133,9 @@ class Generator
         $symbol = ['+','-'];
         $ran = mt_rand(0, 1);
         $select_symbol = $symbol[$ran];
-        if ($select_symbol == '+') {
-            $hour = mt_rand(0, 14);
-        } else {
-            $hour = mt_rand(0, 12);
-        }
-
+        
+        $hour = mt_rand(0, $select_symbol == '+' ? 14 : 12);
+        
         $timezone = "$select_symbol$hour:00";
         return $timezone;
     }
@@ -234,9 +228,9 @@ class Generator
 
         if ($start !== false && $end !== false) {
             $start += strlen($start_text);
-            
             $length = $end - $start;
             $result = trim(substr($text, $start, $length));
+
             return [
                 "result" => $result != "" ? $result : null,
                 "is_valid" => true
@@ -308,17 +302,11 @@ class Generator
     private static function tidyValidationMessage(string $message): string
     {
         $clean = trim($message);
-
-        if (str_starts_with($clean, '"') && str_ends_with($clean, '"')) {
-            $clean = trim($clean, '"');
-        }
+        if (str_starts_with($clean, '"') && str_ends_with($clean, '"')) $clean = trim($clean, '"');
 
         $clean = stripslashes($clean);
         $errors = json_decode($clean, true);
-
-        if (!is_array($errors)) {
-            return $message;
-        }
+        if (!is_array($errors)) return $message;
 
         $messages = [];
 
