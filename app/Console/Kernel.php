@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Console;
+
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Laravel\ScheduleMonitor\ScheduleHealth;
+
+use App\Schedule\ReminderSchedule;
+use App\Schedule\CleanSchedule;
+use App\Schedule\AuditSchedule;
+
+class Kernel extends ConsoleKernel
+{
+    /**
+     * Define the application's command schedule.
+     */
+    protected function schedule(Schedule $schedule): void
+    {
+        // In staging
+        // $schedule->call([new ReminderSchedule, 'remind_inventory'])->hourly();
+        // $schedule->call([new ReminderSchedule, 'remind_low_capacity'])->dailyAt('01:30');
+        // $schedule->call([new CleanSchedule, 'clean_history'])->dailyAt('01:00');
+        // $schedule->call([new CleanSchedule, 'clean_deleted_inventory'])->dailyAt('02:00');
+        // $schedule->call([new CleanSchedule, 'clean_deleted_report'])->dailyAt('04:00');
+        // $schedule->call([new CleanSchedule, 'clean_finished_and_expired_lend'])->dailyAt('06:15');
+        // $schedule->call([new AuditSchedule, 'audit_error'])->weeklyOn(1, '3:00');
+        // $schedule->call([new AuditSchedule, 'audit_dashboard'])->weeklyOn(2, '1:50');	
+        // $schedule->call([new AuditSchedule, 'audit_apps'])->weeklyOn(1, '5:00');	
+        // $schedule->call([new AuditSchedule, 'audit_weekly_stats'])->weeklyOn(1, '6:00');	
+        // $schedule->call([new AuditSchedule, 'audit_yearly_stats'])->yearlyOn(1, 3, '01:15');		
+        // $schedule->command('dusk:run')->weeklyOn(6, '6:00');
+
+        // In development
+        // $schedule->command(ReminderSchedule::remind_inventory())->everyMinute();
+        // $schedule->command(ReminderSchedule::remind_low_capacity())->everyMinute();
+        // $schedule->command(CleanSchedule::clean_history())->everyMinute();
+        // $schedule->command(CleanSchedule::clean_deleted_inventory())->everyMinute();
+        // $schedule->command(CleanSchedule::clean_deleted_report())->everyMinute();
+        // $schedule->command(CleanSchedule::clean_finished_and_expired_lend())->everyMinute();
+        // $schedule->command(AuditSchedule::audit_error())->everyMinute();
+        // $schedule->command(AuditSchedule::audit_dashboard())->everyMinute();
+        // $schedule->command(AuditSchedule::audit_apps())->everyMinute();
+        // $schedule->command(AuditSchedule::audit_weekly_stats())->everyMinute();
+        // $schedule->command(AuditSchedule::audit_yearly_stats())->everyMinute();
+        // $schedule->command('dusk:run')->everyMinute();
+    }
+
+    /**
+     * Register the commands for the application.
+     */
+    protected function commands(): void
+    {
+        $this->load(__DIR__.'/Commands');
+
+        require base_path('routes/console.php');
+    }
+}

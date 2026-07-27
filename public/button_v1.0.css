@@ -1,0 +1,112 @@
+button, .btn, a {
+    cursor: pointer;
+    background: var(--darkColor);
+}
+button:hover, .btn:hover {
+    transform: scale(1.025);
+}
+.btn-primary {
+    background: var(--darkColor) !important;
+}
+
+/* Feature Button */
+.btn-feature {
+    cursor: pointer;
+    padding: var(--spaceJumbo) !important;
+    border-radius: var(--roundedLG);
+    margin-right: var(--spaceLG) !important;
+    border: calc(var(--spaceMini) / 2) solid var(--primaryColor);
+    width: 100%;
+}
+.btn-feature:not(.fixed):hover {
+    border: var(--spaceMini) solid var(--primaryColor) !important;
+    transform: scale(1.025);
+}
+.btn-feature.fixed:hover {
+    transform: none; 
+    border: calc(var(--spaceMini) / 2) solid var(--primaryColor) !important;
+}
+.btn-feature:not(.fixed):hover, .btn-feature.fixed:hover {
+    box-shadow: rgba(59, 130, 246, 0.35) 0px 5px 15px;
+}
+
+/* Image */
+.btn-image {
+    padding: 0 !important;
+    border-radius: var(--roundedMD) !important;
+    border: 0 !important;
+    background: var(--primaryColor);
+    cursor: pointer;
+    min-width: 180px;
+    margin-bottom: var(--spaceSM);
+}
+.btn-image img {
+    margin: 0;
+    border-radius: var(--roundedMD) !important;
+}
+
+/* Pagination */
+.btn-page-holder {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: var(--spaceXSM); 
+    padding: var(--spaceXSM);
+    margin: var(--spaceSM) 0;
+}
+.btn-page {
+    border: 1.5px solid var(--primaryColor) !important;
+    cursor: pointer;
+    padding: var(--spaceSM) var(--spaceMD);
+    border-radius: var(--roundedMD);
+    margin: 0;
+}
+.btn-page:hover, .btn-page.active{
+    background: var(--primaryColor) !important;
+}
+.btn-main {
+    margin-right: var(--spaceLG);
+    margin-bottom: var(--spaceLG);
+    background: var(--darkColor);
+}
+
+/* Nav */
+.btn-link {
+    text-decoration: none !important;
+}
+#nav_scroll-holder {
+    max-width: 180px;
+    position: fixed; 
+    right: var(--spaceLG); 
+    bottom: var(--spaceLG); 
+    z-index: 1000;
+}
+
+/* Pagination */
+.paginate_button .page-link {
+    background: transparent !important;
+    border: 1.5px solid var(--primaryColor) !important;
+    cursor: pointer;
+}
+.paginate_button .page-link:hover {
+    background: var(--primaryColor) !important;
+}
+
+@media screen and (max-width: 1023px) {
+    .btn-main.top, .btn-main.bottom{
+        position: fixed;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        z-index: 996;
+    }
+    .btn-main.top {
+        top: calc(var(--spaceJumbo) + var(--spaceMD));
+        left: var(--spaceMD);
+    }
+    .btn-main.bottom {
+        bottom: var(--spaceMini);
+        right: var(--spaceMini);
+    }
+    .btn-feature {
+        padding: var(--spaceXMD) !important;   
+    }
+}
