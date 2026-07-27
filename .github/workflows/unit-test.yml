@@ -1,0 +1,62 @@
+name: GudangKu Unit Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  helpers-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+          extensions: mbstring, dom, fileinfo, sqlite3
+
+      - name: Copy Environment
+        run: cp .env.example .env
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Generate App Key
+        run: php artisan key:generate
+
+      - name: Run Unit Tests
+        id: tests
+        run: |
+          php artisan test --testsuite=Unit | tee test-report.txt
+
+      - name: Send Test Report Via Email
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Unit Test Report - ${{ job.status }} - ${{ github.repository }}"
+          to: ${{ secrets.MAIL_TO }}
+          from: GudangKu Automation Test Bot
+          body: |
+            Test run finished with status: ${{ job.status }}
+
+            Module: PHP Helpers
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Triggered by: ${{ github.actor }}
+
+            See attached test report.
+          attachments: test-report.txt

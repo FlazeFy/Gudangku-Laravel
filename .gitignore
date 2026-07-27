@@ -21,3 +21,4 @@ yarn-error.log
 /.vscode
 /firebase
 /tests/Browser/screenshots
+/public/images
