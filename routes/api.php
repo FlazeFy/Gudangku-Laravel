@@ -63,6 +63,12 @@ Route::prefix('/v1/stats')->group(function () {
     });
 });
 
+######################### Testing Route #########################
+
+Route::prefix('/v1/user')->middleware(['testing'])->group(function () {
+    Route::get('/validate_request/{type}/{created_by}', [QueriesUserController::class, 'getValidateRequestByCreatedBy']);
+});
+
 ######################### Private Route #########################
 
 Route::post('/v1/logout', [CommandAuthApi::class, 'postLogout'])->middleware(['auth:sanctum']);

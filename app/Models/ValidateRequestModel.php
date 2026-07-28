@@ -55,4 +55,13 @@ class ValidateRequestModel extends Model
             ->where('request_context',$request_context)
             ->delete();
     }
+
+    // For Integration / E2E Testing Only
+    public static function getValidateRequestByCreatedBy($type, $created_by) {
+        return ValidateRequestModel::select('request_context')
+            ->where('request_type', $type)
+            ->where('created_by', $created_by)
+            ->orderby('created_at','desc')
+            ->first();
+    }
 }
