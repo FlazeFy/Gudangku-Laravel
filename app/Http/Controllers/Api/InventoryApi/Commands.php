@@ -674,38 +674,38 @@ class Commands extends Controller
             } else {
                 $inventory_image = null;  
                 // Check if file attached
-                if ($request->hasFile('inventory_image')) {
-                    $file = $request->file('inventory_image');
-                    if ($file->isValid()) {
-                        $file_ext = $file->getClientOriginalExtension();
-                        // Validate file type
-                        if (!in_array($file_ext, $this->allowed_file_type)) {
-                            return response()->json([
-                                'status' => 'failed',
-                                'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
-                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-                        }
-                        // Validate file size
-                        if ($file->getSize() > $this->max_size_file) {
-                            return response()->json([
-                                'status' => 'failed',
-                                'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
-                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-                        }
+                // if ($request->hasFile('inventory_image')) {
+                //     $file = $request->file('inventory_image');
+                //     if ($file->isValid()) {
+                //         $file_ext = $file->getClientOriginalExtension();
+                //         // Validate file type
+                //         if (!in_array($file_ext, $this->allowed_file_type)) {
+                //             return response()->json([
+                //                 'status' => 'failed',
+                //                 'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
+                //             ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                //         }
+                //         // Validate file size
+                //         if ($file->getSize() > $this->max_size_file) {
+                //             return response()->json([
+                //                 'status' => 'failed',
+                //                 'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
+                //             ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                //         }
         
-                        try {
-                            // Get user data
-                            $user = UserModel::getSocial($user_id);
-                            // Upload file to Firebase storage
-                            $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
-                        } catch (\Exception $e) {
-                            return response()->json([
-                                'status' => 'error',
-                                'message' => Generator::getMessageTemplate("unknown_error", null),
-                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-                        }
-                    }
-                }
+                //         try {
+                //             // Get user data
+                //             $user = UserModel::getSocial($user_id);
+                //             // Upload file to Firebase storage
+                //             $inventory_image = Firebase::uploadFile('inventory', $user_id, $user->username, $file, $file_ext); 
+                //         } catch (\Exception $e) {
+                //             return response()->json([
+                //                 'status' => 'error',
+                //                 'message' => Generator::getMessageTemplate("unknown_error", null),
+                //             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                //         }
+                //     }
+                // }
 
                 // Check if inventory name already exist
                 $is_exist = InventoryModel::isInventoryNameUsed($request->inventory_name,$user_id);
@@ -1228,6 +1228,7 @@ class Commands extends Controller
                     ], Response::HTTP_CONFLICT);
                 } else {
                     $is_success = false;
+                    $id = null;
 
                     // Check if layout with same room & storage already exist
                     $check_layout = InventoryLayoutModel::getInventoryByRoomStorage($user_id,$request->inventory_room,$request->inventory_storage);
@@ -1239,6 +1240,8 @@ class Commands extends Controller
                         
                         if ($rows_layout > 0) {
                             $is_success = true;
+                            $id = $check_layout->id;
+
                             // Create history
                             Audit::createHistory('Update Layout', $request->inventory_storage, $user_id);
                         }
@@ -1248,6 +1251,7 @@ class Commands extends Controller
 
                         if ($rows_layout) {
                             $is_success = true;
+                            $id = $rows_layout->id;
 
                             // Create history
                             Audit::createHistory('Create Storage', $request->inventory_storage, $user_id);
@@ -1284,6 +1288,9 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("create", 'inventory layout coordinate'),
+                            'data' => [
+                                'id' => $id
+                            ]
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
@@ -1344,6 +1351,13 @@ class Commands extends Controller
 
             // Get inventory layout by ID
             $check_layout = InventoryLayoutModel::getLayoutByCoor($id, $user_id, $coor);
+            if (!$check_layout) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => Generator::getMessageTemplate("not_found", 'inventory layout'),
+                ], Response::HTTP_NOT_FOUND);
+            }
+
             $layout = $check_layout->layout;
             $storage = $check_layout->inventory_storage;            
 

@@ -246,7 +246,7 @@ class Commands extends Controller
                             if (TelegramMessage::checkTelegramID($user->telegram_user_id)) {
                                 $response = Telegram::sendMessage([
                                     'chat_id' => $user->telegram_user_id,
-                                    'text' => "Hello,\n\nYour profile has been updated",
+                                    'text' => "Hello,\n\nYour profile updated",
                                     'parse_mode' => 'HTML'
                                 ]);
                             } else {

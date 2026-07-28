@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Integration;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use GuzzleHttp\Client;
@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 // Helper
 use App\Helpers\Audit;
+use App\Helpers\TestDataReader;
 
 class HistoryTest extends TestCase
 {
@@ -21,15 +22,19 @@ class HistoryTest extends TestCase
             'base_uri' => 'http://127.0.0.1:8000/api/v1/history/',
             'http_errors' => false
         ]);
+
+        // Pre-Condition: User already sign in
+        $this->token = $this->login_trait("user");
+        // Pre-Condition: At least a history exists
+        $this->historyId = TestDataReader::getValue('history_id') ?? "";
     }
 
     public function test_get_all_history(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -60,6 +65,9 @@ class HistoryTest extends TestCase
             }
         }
 
+        // Store founded history
+        TestDataReader::setValue('history_id', $data['data']['data'][0]['id']);
+
         Audit::auditRecordText("Test - Get All History", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Get All History", "TC-XXX", 'TC-XXX test_get_all_history', json_encode($data));
     }
@@ -67,11 +75,9 @@ class HistoryTest extends TestCase
     public function test_hard_delete_history_by_id(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $id = "69dc1f34-9d1d-674e-1d7b-1ccfc3880a0c";
-        $response = $this->httpClient->delete("destroy/$id", [
+        $response = $this->httpClient->delete("destroy/".$this->historyId, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 

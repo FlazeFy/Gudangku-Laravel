@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Integration;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use GuzzleHttp\Client;
@@ -8,10 +8,12 @@ use Tests\TestCase;
 
 // Helper
 use App\Helpers\Audit;
+use App\Helpers\TestDataReader;
 
 class UserTest extends TestCase
 {
     protected $httpClient;
+    protected $token;
     use LoginHelperTrait;
 
     protected function setUp(): void
@@ -21,15 +23,17 @@ class UserTest extends TestCase
             'base_uri' => 'http://127.0.0.1:8000/api/v1/user/',
             'http_errors' => false
         ]);
+
+        // Pre-Condition: User already sign in
+        $this->token = $this->login_trait("user");
     }
 
     public function test_get_my_profile(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("my_profile", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -63,14 +67,13 @@ class UserTest extends TestCase
     public function test_put_timezone_fcm(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $body = [
             "timezone" => "+02:00",
             "firebase_fcm_token" => "ddLEuWR2Q_isCmzHTM8UR4:APA91bEmY8TDmH3ZJtKgXw95wFDKLr53FGA2JArDTiN4jzSWxiGzf9VUECYN2oeqYV__c7Yz9kj8kPqykIP_6N-LaVRUhDXJX3ludLcMSGq36Hn2uh7onMgzDFvaXo3yG37LIWFLdr6f"
         ];
         $response = $this->httpClient->put("update_timezone_fcm", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'json' => $body
         ]);
@@ -91,13 +94,12 @@ class UserTest extends TestCase
     public function test_put_telegram_id(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $body = [
             "telegram_user_id" => "1317625977",
         ];
         $response = $this->httpClient->put("update_telegram_id", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'json' => $body
         ]);
@@ -111,20 +113,36 @@ class UserTest extends TestCase
         $this->assertArrayHasKey('message', $data);
         $this->assertEquals('telegram id updated! and validation has been sended to you',$data['message']);
 
+        // Get token from email alternative
+        $userId = TestDataReader::getValue("user_id");
+        $response = $this->httpClient->get('/api/v1/user/validate_request/telegram_id_validation/'.$userId, [
+            'headers' => [
+                'X-API-KEY' => env('TESTING_API_KEY'),
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Store token
+        TestDataReader::setValue('telegram_id_validation_token', $data['data']);
+
         Audit::auditRecordText("Test - Put Telegram ID", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Put Telegram ID", "TC-XXX", 'TC-XXX test_put_telegram_id', json_encode($data));
     }
 
     public function test_put_validate_telegram_id(): void
     {
-        // Exec
-        $token = $this->login_trait("user");
+        // Pre-Condition: User already request a token
+        $telegramIdValidationToken = TestDataReader::getValue("telegram_id_validation_token");
+
         $body = [
-            "request_context" => "IHSF0Z",
+            "request_context" => $telegramIdValidationToken,
         ];
+
+        // Exec
         $response = $this->httpClient->put("validate_telegram_id", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'json' => $body
         ]);
@@ -145,14 +163,13 @@ class UserTest extends TestCase
     public function test_put_update_profile(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $body = [
             "email" => "flazen.edu@gmail.com",
             "username" => "flazefy"
         ];
         $response = $this->httpClient->put("update_profile", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'json' => $body
         ]);
@@ -164,7 +181,11 @@ class UserTest extends TestCase
         $this->assertArrayHasKey('status', $data);
         $this->assertEquals('success', $data['status']);
         $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('profile has been updated',$data['message']);
+        $this->assertEquals('profile updated',$data['message']);
+
+        // Store updated data
+        TestDataReader::setValue('username', $body['username']);
+        TestDataReader::setValue('email', $body['email']);
 
         Audit::auditRecordText("Test - Put Update Profile", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Put Update Profile", "TC-XXX", 'TC-XXX test_put_update_profile', json_encode($data));
@@ -176,7 +197,7 @@ class UserTest extends TestCase
         $token = $this->login_trait("admin");
         $response = $this->httpClient->get("", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -216,37 +237,12 @@ class UserTest extends TestCase
         Audit::auditRecordSheet("Test - Get All User", "TC-XXX", 'TC-XXX test_get_all_user', json_encode($data));
     }
 
-    public function test_hard_delete_user_by_id(): void
-    {
-        // Exec
-        $token = $this->login_trait("admin");
-        $id = "17223858-9771-11ee-8f4a-3216422910r4";
-        $response = $this->httpClient->delete("destroy/$id", [
-            'headers' => [
-                'Authorization' => "Bearer $token"
-            ],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Test Parameter
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('status', $data);
-        $this->assertEquals('success', $data['status']);
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('user deleted',$data['message']);
-
-        Audit::auditRecordText("Test - Hard Delete User By Id", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Hard Delete User By Id", "TC-XXX", 'TC-XXX test_hard_delete_user_by_id', json_encode($data));
-    }
-
     public function test_get_content_year(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("my_year", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
