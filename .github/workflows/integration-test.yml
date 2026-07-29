@@ -1,0 +1,136 @@
+name: GudangKu Integration Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: gudangku_integration_testing
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -proot"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: gudangku_integration_testing
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      APP_DEBUG: true
+      SESSION_DRIVER: array
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+          extensions: mbstring, dom, fileinfo, pdo_mysql
+
+      - name: Copy Environment
+        run: cp .env.example .env
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Generate App Key
+        run: php artisan key:generate
+
+      - name: Set permissions
+        run: chmod -R 775 storage bootstrap/cache
+
+      - name: Run Migrations
+        run: php artisan migrate --force
+
+      - name: Run Dictionary Seeder
+        run: php artisan db:seed --class=DictionarySeeder --force && php artisan db:seed --class=InventoryLayoutSeeder --force
+
+      - name: Start Server
+        run: php artisan serve --port=8000 &
+
+      - name: Wait for Server
+        run: |
+          for i in {1..10}; do
+            curl -s http://127.0.0.1:8000 && break
+            sleep 1
+          done
+
+      - name: Clean previous test data artifacts
+        run: rm -rf tests/TestData tests_reports
+
+      - name: Reset test data file (before run)
+        run: |
+          mkdir -p tests/TestData
+          echo "key,value,created_at" > tests/TestData/data.csv
+
+      - name: Prepare Report Directories
+        run: mkdir -p tests_reports/text tests_reports/csv
+
+      - name: Run Integration Tests
+        id: tests
+        continue-on-error: true
+        run: php artisan test --testsuite=Integration
+
+      - name: Show Laravel log on failure
+        if: steps.tests.outcome == 'failure'
+        run: |
+          if [ -f storage/logs/laravel.log ]; then
+            cat storage/logs/laravel.log
+          else
+            echo "No laravel.log file found — no errors were logged."
+          fi
+
+      - name: Zip test reports
+        if: always()
+        run: zip -r test-report.zip tests_reports tests/TestData storage/logs/laravel.log 2>/dev/null || zip -r test-report.zip tests_reports tests/TestData
+
+      - name: Send Test Report Via Email
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Integration Test Report - ${{ steps.tests.outcome }} - ${{ github.repository }}"
+          to: ${{ secrets.MAIL_TO }}
+          from: GudangKu Automation Test Bot
+          body: |
+            Test run finished with status: ${{ steps.tests.outcome }}
+
+            Module: Integration Tests
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Triggered by: ${{ github.actor }}
+
+            See attached test report (audit logs, CSV records, and test data snapshot).
+          attachments: test-report.zip
+
+      - name: Reset test data file (after run)
+        if: always()
+        run: |
+          rm -rf tests_reports test-report.zip
+          mkdir -p tests/TestData
+          echo "key,value,created_at" > tests/TestData/data.csv
