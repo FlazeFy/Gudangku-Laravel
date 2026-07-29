@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Integration;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use GuzzleHttp\Client;
@@ -8,10 +8,12 @@ use Tests\TestCase;
 
 // Helper
 use App\Helpers\Audit;
+use App\Helpers\TestDataReader;
 
 class DictionaryTest extends TestCase
 {
     protected $httpClient;
+    protected $token;
     use LoginHelperTrait;
     use WithFaker;
 
@@ -22,16 +24,18 @@ class DictionaryTest extends TestCase
             'base_uri' => 'http://127.0.0.1:8000/api/v1/dictionary/',
             'http_errors' => false
         ]);
+
+        // Pre-Condition: User already sign in
+        $this->token = $this->login_trait("user");
     }
 
     public function test_get_all_dictionary_by_type(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $type = "inventory_unit,inventory_room";
         $response = $this->httpClient->get("type/$type", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -59,41 +63,16 @@ class DictionaryTest extends TestCase
         Audit::auditRecordSheet("Test - Get All Dictionary By Type", "TC-XXX", 'TC-XXX test_get_all_dictionary_by_type', json_encode($data));
     }
 
-    public function test_hard_delete_dictionary_by_id(): void
-    {
-        // Exec
-        $token = $this->login_trait("user");
-        $id = "25";
-        $response = $this->httpClient->delete("$id", [
-            'headers' => [
-                'Authorization' => "Bearer $token"
-            ]
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Test Parameter
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('status', $data);
-        $this->assertEquals('success', $data['status']);
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('dictionary permentally deleted',$data['message']);
-
-        Audit::auditRecordText("Test - Hard Delete Dictionary By Id", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Hard Delete Dictionary By Id", "TC-XXX", 'TC-XXX test_hard_delete_dictionary_by_id', json_encode($data));
-    }
-
     public function test_post_dictionary(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $body = [
             "dictionary_type" => "inventory_category",
             "dictionary_name" => $this->faker->word
         ];
         $response = $this->httpClient->post("", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'json' => $body
         ]);

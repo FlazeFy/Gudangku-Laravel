@@ -657,39 +657,39 @@ class Commands extends Controller
                 $validation_image_failed = "";
 
                 $report_image = []; 
-                if ($request->hasFile('report_image')) {                    
-                    // Get user's contact
-                    $user = UserModel::getSocial($user_id);
+                // if ($request->hasFile('report_image')) {                    
+                //     // Get user's contact
+                //     $user = UserModel::getSocial($user_id);
 
-                    // Iterate to upload file
-                    foreach ($files as $idx => $file) {
-                        if ($file->isValid()) {
-                            $file_ext = $file->getClientOriginalExtension();
+                //     // Iterate to upload file
+                //     foreach ($files as $idx => $file) {
+                //         if ($file->isValid()) {
+                //             $file_ext = $file->getClientOriginalExtension();
 
-                            // Validate file type
-                            if (!in_array($file_ext, $this->allowed_file_type)) {
-                                $validation_image_failed .= 'The '.$idx.'-th file must be a ' . implode(', ', $this->allowed_file_type) . ' file type, ';
-                                continue;
-                            }
-                            // Validate file size
-                            if ($file->getSize() > $this->max_size_file) {
-                                $validation_image_failed .= 'The '.$idx.'-th file size must be under ' . ($this->max_size_file / 1000000) . ' Mb, ';
-                                continue; 
-                            }
+                //             // Validate file type
+                //             if (!in_array($file_ext, $this->allowed_file_type)) {
+                //                 $validation_image_failed .= 'The '.$idx.'-th file must be a ' . implode(', ', $this->allowed_file_type) . ' file type, ';
+                //                 continue;
+                //             }
+                //             // Validate file size
+                //             if ($file->getSize() > $this->max_size_file) {
+                //                 $validation_image_failed .= 'The '.$idx.'-th file size must be under ' . ($this->max_size_file / 1000000) . ' Mb, ';
+                //                 continue; 
+                //             }
                 
-                            try {
-                                // Upload file to Firebase storage
-                                $fileUrl = Firebase::uploadFile('report', $user_id, $user->username, $file, $file_ext);
-                                $report_image[] = [
-                                    'image_id' => Generator::getUUID(),
-                                    'image_url' => $fileUrl
-                                ]; 
-                            } catch (\Exception $e) {
-                                $validation_image_failed .= 'Failed to upload the '.$idx.'-th file';
-                            }
-                        }
-                    }
-                }
+                //             try {
+                //                 // Upload file to Firebase storage
+                //                 $fileUrl = Firebase::uploadFile('report', $user_id, $user->username, $file, $file_ext);
+                //                 $report_image[] = [
+                //                     'image_id' => Generator::getUUID(),
+                //                     'image_url' => $fileUrl
+                //                 ]; 
+                //             } catch (\Exception $e) {
+                //                 $validation_image_failed .= 'Failed to upload the '.$idx.'-th file';
+                //             }
+                //         }
+                //     }
+                // }
 
                 // Create report
                 $report = ReportModel::createReport(
@@ -703,6 +703,10 @@ class Commands extends Controller
 
                     if ($request->report_item) {
                         $report_item = json_decode($request->report_item);
+
+                        // If object, convert to array
+                        if (is_object($report_item)) $report_item = [$report_item];
+
                         $item_count = count($report_item);
 
                         // Iterate to create report item
@@ -826,6 +830,10 @@ class Commands extends Controller
             } else {   
                 $user_id = $request->user()->id;
                 $report_item = json_decode($request->report_item);
+                
+                // If object, convert to array
+                if (is_object($report_item)) $report_item = [$report_item];
+
                 $item_count = count($report_item);
                 $success_exec = 0;
                 $failed_exec = 0;
@@ -935,52 +943,52 @@ class Commands extends Controller
                 // Check if file attached
                 if ($request->hasFile('report_image')) {
                     // Iterate to upload file
-                    foreach ($request->file('report_image') as $file) {
-                        if ($file->isValid()) {
-                            $file_ext = $file->getClientOriginalExtension();
-                            // Validate file type
-                            if (!in_array($file_ext, $this->allowed_file_type)) {
-                                return response()->json([
-                                    'status' => 'failed',
-                                    'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
-                                ], Response::HTTP_UNPROCESSABLE_ENTITY);
-                            }
-                            // Validate file size
-                            if ($file->getSize() > $this->max_size_file) {
-                                return response()->json([
-                                    'status' => 'failed',
-                                    'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
-                                ], Response::HTTP_UNPROCESSABLE_ENTITY);
-                            }
+                    // foreach ($request->file('report_image') as $file) {
+                    //     if ($file->isValid()) {
+                    //         $file_ext = $file->getClientOriginalExtension();
+                    //         // Validate file type
+                    //         if (!in_array($file_ext, $this->allowed_file_type)) {
+                    //             return response()->json([
+                    //                 'status' => 'failed',
+                    //                 'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
+                    //             ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                    //         }
+                    //         // Validate file size
+                    //         if ($file->getSize() > $this->max_size_file) {
+                    //             return response()->json([
+                    //                 'status' => 'failed',
+                    //                 'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
+                    //             ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                    //         }
         
-                            try {
-                                // Get user data
-                                $user = UserModel::getSocial($user_id);
-                                // Upload file to Firebase storage
-                                $report_image = Firebase::uploadFile('report', $user_id, $user->username, $file, $file_ext); 
-                                $report_images[] = (object)[
-                                    'report_image_id' => Generator::getUUID(),
-                                    'report_image_url' => $report_image
-                                ];
-                            } catch (\Exception $e) {
-                                return response()->json([
-                                    'status' => 'error',
-                                    'message' => Generator::getMessageTemplate("unknown_error", null),
-                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
-                            }
-                        }
-                    }
+                    //         try {
+                    //             // Get user data
+                    //             $user = UserModel::getSocial($user_id);
+                    //             // Upload file to Firebase storage
+                    //             $report_image = Firebase::uploadFile('report', $user_id, $user->username, $file, $file_ext); 
+                    //             $report_images[] = (object)[
+                    //                 'report_image_id' => Generator::getUUID(),
+                    //                 'report_image_url' => $report_image
+                    //             ];
+                    //         } catch (\Exception $e) {
+                    //             return response()->json([
+                    //                 'status' => 'error',
+                    //                 'message' => Generator::getMessageTemplate("unknown_error", null),
+                    //             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    //         }
+                    //     }
+                    // }
                 } else if ($report->report_image && !$request->hasFile('report_image')) {
                     // If file not attached and there is some image exist in the old data
-                    foreach ($report->report_image as $dt) {
-                        // Delete failed if file not found (already gone)
-                        if (!Firebase::deleteFile($dt['report_image_url'])) {
-                            return response()->json([
-                                'status' => 'failed',
-                                'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
-                            ], Response::HTTP_NOT_FOUND);
-                        }
-                    }
+                    // foreach ($report->report_image as $dt) {
+                    //     // Delete failed if file not found (already gone)
+                    //     if (!Firebase::deleteFile($dt['report_image_url'])) {
+                    //         return response()->json([
+                    //             'status' => 'failed',
+                    //             'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
+                    //         ], Response::HTTP_NOT_FOUND);
+                    //     }
+                    // }
                 }
 
                 // Make null if array image empty
@@ -1094,18 +1102,18 @@ class Commands extends Controller
             if ($report) {
                 $report_images = $report->report_image;
                 // Iterate to delete file
-                foreach ($report_images as $dt) {
-                    if ($dt['report_image_id'] === $image_id) {
-                        // Delete failed if file not found (already gone)
-                        if (!Firebase::deleteFile($dt['report_image_url'])) {
-                            return response()->json([
-                                'status' => 'failed',
-                                'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
-                            ], Response::HTTP_NOT_FOUND);
-                        }
-                        break;
-                    }
-                }
+                // foreach ($report_images as $dt) {
+                //     if ($dt['report_image_id'] === $image_id) {
+                //         // Delete failed if file not found (already gone)
+                //         if (!Firebase::deleteFile($dt['report_image_url'])) {
+                //             return response()->json([
+                //                 'status' => 'failed',
+                //                 'message' => Generator::getMessageTemplate("not_found", 'failed to delete report image'),
+                //             ], Response::HTTP_NOT_FOUND);
+                //         }
+                //         break;
+                //     }
+                // }
             
                 // Remove image from report image by its image ID
                 $report_images = array_filter($report_images, function ($dt) use ($image_id) {

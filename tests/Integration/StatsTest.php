@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Integration;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use GuzzleHttp\Client;
@@ -8,10 +8,13 @@ use Tests\TestCase;
 
 // Helper
 use App\Helpers\Audit;
+use App\Helpers\TestDataReader;
 
 class StatsTest extends TestCase
 {
     protected $httpClient;
+    protected $token;
+    protected $year;
     use LoginHelperTrait;
 
     protected function setUp(): void
@@ -21,15 +24,19 @@ class StatsTest extends TestCase
             'base_uri' => 'http://127.0.0.1:8000/api/v1/stats/',
             'http_errors' => false
         ]);
+
+        // Pre-Condition: User already sign in
+        $this->token = $this->login_trait("user");
+
+        $this->year = date("Y");
     }
 
     public function test_get_total_inventory_by_category(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/total_by_category/price", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -61,10 +68,9 @@ class StatsTest extends TestCase
     public function test_get_dashboard(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("dashboard", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -116,10 +122,9 @@ class StatsTest extends TestCase
     public function test_get_tree_map(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/tree_map", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -165,10 +170,9 @@ class StatsTest extends TestCase
     public function test_get_total_inventory_by_room(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/total_by_room/price", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -200,10 +204,9 @@ class StatsTest extends TestCase
     public function test_get_total_inventory_by_merk(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/total_by_merk/price", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -235,10 +238,9 @@ class StatsTest extends TestCase
     public function test_get_total_inventory_by_favorite(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/total_by_favorite/price", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -270,11 +272,10 @@ class StatsTest extends TestCase
     public function test_get_most_expensive_inventory_per_context(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $context = "inventory_category";
         $response = $this->httpClient->get("inventory/most_expensive/$context", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -306,10 +307,9 @@ class StatsTest extends TestCase
     public function test_get_total_report_created_per_month(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $response = $this->httpClient->get("report/total_created_per_month/2024", [
+        $response = $this->httpClient->get("report/total_created_per_month/".$this->year, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -347,10 +347,9 @@ class StatsTest extends TestCase
     public function test_get_total_inventory_created_per_month(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $response = $this->httpClient->get("inventory/total_created_per_month/2024", [
+        $response = $this->httpClient->get("inventory/total_created_per_month/".$this->year, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -383,10 +382,9 @@ class StatsTest extends TestCase
     public function test_get_total_activity_per_month(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $response = $this->httpClient->get("history/total_activity_per_month/2024", [
+        $response = $this->httpClient->get("history/total_activity_per_month/".$this->year, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -419,10 +417,9 @@ class StatsTest extends TestCase
     public function test_get_total_favorite_inventory_comparison(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/favorite_inventory_comparison", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -455,10 +452,9 @@ class StatsTest extends TestCase
     public function test_get_total_low_capacity_inventory_comparison(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("inventory/low_capacity_inventory_comparison", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -488,83 +484,12 @@ class StatsTest extends TestCase
         Audit::auditRecordSheet("Test - Get Total Low Capacity Inventory Comparison", "TC-XXX", 'TC-XXX test_get_total_low_capacity_inventory_comparison', json_encode($data));
     }
 
-    public function test_get_last_login_user(): void
-    {
-        // Exec
-        $token = $this->login_trait("admin");
-        $response = $this->httpClient->get("user/last_login", [
-            'headers' => [
-                'Authorization' => "Bearer $token"
-            ]
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Test Parameter
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('status', $data);
-        $this->assertEquals('success', $data['status']);
-        $this->assertArrayHasKey('message', $data);
-        $this->assertArrayHasKey('data', $data);
-
-        foreach ($data['data'] as $dt) {
-            $string_col = ['username','login_at'];
-            foreach ($string_col as $col) {
-                $this->assertArrayHasKey($col, $dt);
-                $this->assertNotNull($dt[$col]);
-                $this->assertIsString($dt[$col]);
-            }
-        }
-
-        Audit::auditRecordText("Test - Get Last Login User", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Get Last Login User", "TC-XXX", 'TC-XXX test_get_last_login_user', json_encode($data));
-    }
-
-    public function test_get_leaderboard(): void
-    {
-        // Exec
-        $token = $this->login_trait("admin");
-        $response = $this->httpClient->get("user/leaderboard", [
-            'headers' => [
-                'Authorization' => "Bearer $token"
-            ]
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Test Parameter
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('status', $data);
-        $this->assertEquals('success', $data['status']);
-        $this->assertArrayHasKey('message', $data);
-        $this->assertArrayHasKey('data', $data);
-
-        $context = ['inventory','report'];
-        foreach ($context as $ctx) {
-            foreach ($data['data']['user_with_most_'.$ctx] as $dt) {
-                $this->assertArrayHasKey('username', $dt);
-                $this->assertArrayHasKey('total', $dt);
-
-                $this->assertNotNull($dt['username']);
-                $this->assertIsString($dt['username']);
-        
-                $this->assertNotNull($dt['total']);
-                $this->assertIsInt($dt['total']);
-                $this->assertGreaterThanOrEqual(0, $dt['total']);
-            }
-        }
-
-        Audit::auditRecordText("Test - Get Leaderboard", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Get Leaderboard", "TC-XXX", 'TC-XXX test_get_leaderboard', json_encode($data));
-    }
-
     public function test_get_total_report_spending_by_month(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $response = $this->httpClient->get("report/total_spending_per_month/2024", [
+        $response = $this->httpClient->get("report/total_spending_per_month/".$this->year, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -614,10 +539,9 @@ class StatsTest extends TestCase
     public function test_get_total_report_used_by_month(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $response = $this->httpClient->get("report/total_used_per_month/2024", [
+        $response = $this->httpClient->get("report/total_used_per_month/".$this->year, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 

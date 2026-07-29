@@ -16,6 +16,11 @@ class ClosingTest extends TestCase
 {
     protected $httpClient;
     protected $token;
+    protected $inventoryId;
+    protected $reportId;
+    protected $reportItemId;
+    protected $dictionaryId;
+    protected $reminderId;
     use LoginHelperTrait;
 
     protected function setUp(): void
@@ -30,6 +35,75 @@ class ClosingTest extends TestCase
         $this->token = $this->login_trait("user");
         // Pre-Condition: At least an inventory exists
         $this->inventoryId = TestDataReader::getValue('inventory_id') ?? "";
+        // Pre-Condition: At least a report exists
+        $this->reportId = TestDataReader::getValue('report_id') ?? "";
+    }
+
+    public function test_delete_reminder_by_id(): void
+    {
+        // Exec
+        $response = $this->httpClient->delete("reminder/destroy/".$this->reminderId, [
+            'headers' => [
+                'Authorization' => "Bearer ".$this->token
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('reminder deleted', $data['message']);
+        
+        Audit::auditRecordText("Test - Delete Reminder By Id", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Delete Reminder By Id", "TC-XXX", 'TC-XXX test_delete_reminder_by_id', json_encode($data));
+    }
+
+    public function test_hard_delete_report_item_by_id(): void
+    {
+        // Exec
+        $response = $this->httpClient->delete("report/destroy/item/".$this->reportItemId, [
+            'headers' => [
+                'Authorization' => "Bearer ".$this->token
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertStringContainsString('report item deleted',$data['message']);
+
+        Audit::auditRecordText("Test - Hard Delete Report Item By Id", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Hard Delete Report Item By Id", "TC-XXX", 'TC-XXX test_hard_delete_report_item_by_id', json_encode($data));
+    }
+
+    public function test_hard_delete_report_by_id(): void
+    {
+        // Exec
+        $token = $this->login_trait("user");
+        $response = $this->httpClient->delete("report/destroy/report/".$this->reportId, [
+            'headers' => [
+                'Authorization' => "Bearer ".$this->token
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('report deleted',$data['message']);
+
+        Audit::auditRecordText("Test - Hard Delete Report By Id", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Hard Delete Report By Id", "TC-XXX", 'TC-XXX test_hard_delete_report_by_id', json_encode($data));
     }
 
     public function test_hard_delete_inventory_by_id(): void
@@ -52,6 +126,28 @@ class ClosingTest extends TestCase
 
         Audit::auditRecordText("Test - Hard Delete Inventory By ID", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Hard Delete Inventory By ID", "TC-XXX", 'TC-XXX test_hard_delete_inventory_by_id', json_encode($data));
+    }
+
+    public function test_hard_delete_dictionary_by_id(): void
+    {
+        // Exec
+        $response = $this->httpClient->delete($this->dictionaryId, [
+            'headers' => [
+                'Authorization' => "Bearer ".$this->token
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('dictionary permentally deleted',$data['message']);
+
+        Audit::auditRecordText("Test - Hard Delete Dictionary By Id", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Hard Delete Dictionary By Id", "TC-XXX", 'TC-XXX test_hard_delete_dictionary_by_id', json_encode($data));
     }
 
     public function test_post_sign_out(): void

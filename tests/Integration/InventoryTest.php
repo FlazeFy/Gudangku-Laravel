@@ -16,6 +16,7 @@ class InventoryTest extends TestCase
 {
     protected $httpClient;
     protected $inventoryRoom;
+    protected $inventoryId;
     protected $inventoryStorage;
     protected $inventoryCategory;
     protected $inventoryLayoutId;
@@ -42,6 +43,48 @@ class InventoryTest extends TestCase
         $this->inventoryCategory = TestDataReader::getValue('inventory_category') ?? "";
         $this->layout = TestDataReader::getValue('layout') ?? "";
         $this->inventoryLayoutId = TestDataReader::getValue('inventory_layout_id') ?? "";
+    }
+
+    private function prepare_another_inventory(): void 
+    {
+        // Pre-Condition: At least another inventory exists with a different context
+        $img1 = UploadedFile::fake()->image('image1.jpg');
+        $form = [
+            ['name' => 'inventory_name', 'contents' => 'Product C - Testing'],
+            ['name' => 'inventory_category', 'contents' => 'Baby Care'],
+            ['name' => 'inventory_desc', 'contents' => 'Testing Add Product'],
+            ['name' => 'inventory_merk', 'contents' => 'Great Product'],
+            ['name' => 'inventory_color', 'contents' => ''],
+            ['name' => 'inventory_room', 'contents' => 'Main Room'],
+            ['name' => 'inventory_storage', 'contents' => 'Shelf'],
+            ['name' => 'inventory_rack', 'contents' => 'Bottom Rack'],
+            ['name' => 'inventory_price', 'contents' => 25000],
+            ['name' => 'inventory_unit', 'contents' => 'Pcs'],
+            ['name' => 'inventory_vol', 'contents' => 5],
+            ['name' => 'inventory_capacity_unit', 'contents' => 'Percentage'],
+            ['name' => 'inventory_capacity_vol', 'contents' => 20],
+            ['name' => 'is_favorite', 'contents' => 0],
+            ['name' => 'created_at', 'contents' => date('Y-m-d H:i:s', strtotime('-1 week'))],
+            [
+                'name'     => 'inventory_image',
+                'contents' => fopen($img1->getPathname(), 'r'),
+                'filename' => 'image1.jpg',
+            ],
+        ];
+        $response = $this->httpClient->post("", [
+            'headers' => [
+                'Authorization' => "Bearer ".$this->token
+            ],
+            'multipart' => $form,
+        ]);
+        $data = json_decode($response->getBody(), true); 
+
+        // Store all created data
+        foreach ($form as $dt) {
+            if (array_key_exists('filename', $dt)) continue; 
+            TestDataReader::setValue($dt['name']."_b", $dt['contents']);
+        }
+        TestDataReader::setValue('inventory_id_b', $data['data']['id']);
     }
 
     public function test_post_inventory(): void
@@ -94,6 +137,9 @@ class InventoryTest extends TestCase
             TestDataReader::setValue($dt['name'], $dt['contents']);
         }
         TestDataReader::setValue('inventory_id', $data['data']['id']);
+
+        // For report item test case
+        $this->prepare_another_inventory();
 
         Audit::auditRecordText("Test - Post Inventory", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Post Inventory", "TC-XXX", 'TC-XXX test_post_inventory', json_encode($data));

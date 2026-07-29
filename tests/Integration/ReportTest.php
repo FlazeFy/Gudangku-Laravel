@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Integration;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -10,12 +10,21 @@ use Tests\TestCase;
 
 // Helper
 use App\Helpers\Audit;
+use App\Helpers\TestDataReader;
 
 class ReportTest extends TestCase
 {
     protected $httpClient;
+    protected $token;
     protected $room;
     protected $storage;
+    protected $inventoryId;
+    protected $inventoryName;
+    protected $inventoryDesc;
+    protected $inventoryIdB;
+    protected $inventoryNameB;
+    protected $inventoryDescB;
+    protected $reportId;
     use LoginHelperTrait;
 
     protected function setUp(): void
@@ -27,16 +36,111 @@ class ReportTest extends TestCase
         ]);
         $this->room = "Main%20Room";
         $this->storage = "Main%20Table";
+
+        // Pre-Condition: User already sign in
+        $this->token = $this->login_trait("user");
+        // Pre-Condition: At least an inventory exists
+        $this->inventoryId = TestDataReader::getValue('inventory_id') ?? "";
+        $this->inventoryName = TestDataReader::getValue('inventory_name') ?? "";
+        $this->inventoryDesc = TestDataReader::getValue('inventory_desc') ?? "";
+
+        $this->inventoryIdB = TestDataReader::getValue('inventory_id_b') ?? "";
+        $this->inventoryNameB = TestDataReader::getValue('inventory_name_b') ?? "";
+        $this->inventoryDescB = TestDataReader::getValue('inventory_desc_b') ?? "";
+        // Pre-Condition: At least a report exists
+        $this->reportId = TestDataReader::getValue('report_id') ?? "";
+    }
+
+    public function test_post_report(): void
+    {
+        // Exec
+        // Create fake images
+        $reportImage = UploadedFile::fake()->image('image1.jpg');
+
+        $form = [
+            ['name' => 'report_title', 'contents' => 'Test Add Report A'],
+            ['name' => 'report_desc', 'contents' => 'Test Add Report'],
+            ['name' => 'report_category', 'contents' => 'Checkout'],
+            ['name' => 'is_reminder', 'contents' => 1],
+            ['name' => 'report_item', 'contents' => json_encode([
+                'inventory_id' => $this->inventoryId,
+                'item_name' => $this->inventoryName,
+                'item_desc' => $this->inventoryDesc,
+                'item_qty' => 1,
+                'item_price' => 650000,
+            ])],
+            ['name' => 'created_at', 'contents' => date('Y-m-d H:i:s', strtotime('-1 week'))],
+            [
+                'name' => 'report_image',
+                'contents' => fopen($reportImage->getPathname(), 'r'),
+                'filename' => 'report_image.jpg',
+            ],
+        ];
+        $response = $this->httpClient->post("", [
+            'headers' => [
+                'Authorization' => "Bearer ".$this->token
+            ],
+            'multipart' => $form,
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('report created', $data['message']);
+
+        // Store all created data
+        foreach ($form as $dt) {
+            if (array_key_exists('filename', $dt)) continue; 
+            TestDataReader::setValue($dt['name'], $dt['contents']);
+        }
+        TestDataReader::setValue('report_id', $data['data']['id']);
+
+        Audit::auditRecordText("Test - Post Report", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Report", "TC-XXX", 'TC-XXX test_post_report', json_encode($data));
+    }
+
+    public function test_post_report_item(): void
+    {
+        // Exec
+        $body = [
+            "report_item" => json_encode([
+                "inventory_id" => $this->inventoryIdB,
+                "item_name" => $this->inventoryNameB,
+                "item_desc" => $this->inventoryDescB,
+                "item_qty" => 1,
+                "item_price" => 650000,
+            ]),
+        ];
+        $response = $this->httpClient->post("item/".$this->reportId, [
+            'headers' => [
+                'Authorization' => "Bearer ".$this->token
+            ],
+            'json' => $body
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        // Test Parameter
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertArrayHasKey('status', $data);
+        $this->assertEquals('success', $data['status']);
+        $this->assertArrayHasKey('message', $data);
+        $this->assertEquals('report item created', $data['message']);
+
+        Audit::auditRecordText("Test - Post Report Item", "TC-XXX", "Result : ".json_encode($data));
+        Audit::auditRecordSheet("Test - Post Report Item", "TC-XXX", 'TC-XXX test_post_report_item', json_encode($data));
     }
 
     public function test_get_report_detail_doc_format_by_id(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $id = "9f8b26ed-750a-ba92-3100-bb0b4b3ffb4b";
-        $response = $this->httpClient->get("detail/item/$id/doc", [
+        $response = $this->httpClient->get("detail/item/$this->reportId/doc", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -56,11 +160,9 @@ class ReportTest extends TestCase
     public function test_get_report_detail_by_id(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $id = "9f8b26ed-750a-ba92-3100-bb0b4b3ffb4b";
-        $response = $this->httpClient->get("detail/item/$id", [
+        $response = $this->httpClient->get("detail/item/".$this->reportId, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -152,10 +254,9 @@ class ReportTest extends TestCase
     public function test_get_all_report(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $response = $this->httpClient->get("", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -212,12 +313,11 @@ class ReportTest extends TestCase
     public function test_get_report_by_inventory_name_or_inventory_id(): void
     {
         // Exec
-        $token = $this->login_trait("user");
         $search = "Herborist%20Aloe%20Vera%20Gel";
-        $id = "29e2754c-667a-0f32-2d26-cd04849f276c";
+        $id = $this->inventoryId;
         $response = $this->httpClient->get("$search/$id", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 
@@ -271,67 +371,17 @@ class ReportTest extends TestCase
         Audit::auditRecordSheet("Test - Get My Report By Inventory", "TC-XXX", 'TC-XXX test_get_my_report_by_inventory', json_encode($data));
     }
 
-    public function test_hard_delete_report_item_by_id(): void
-    {
-        // Exec
-        $token = $this->login_trait("user");
-        $item_id = "4d7c9cc9-d351-a8c7-1d50-82b7f77728b0";
-        $response = $this->httpClient->delete("destroy/item/$item_id", [
-            'headers' => [
-                'Authorization' => "Bearer $token"
-            ],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Test Parameter
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('status', $data);
-        $this->assertEquals('success', $data['status']);
-        $this->assertArrayHasKey('message', $data);
-        $this->assertStringContainsString('report item deleted',$data['message']);
-
-        Audit::auditRecordText("Test - Hard Delete Report Item By Id", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Hard Delete Report Item By Id", "TC-XXX", 'TC-XXX test_hard_delete_report_item_by_id', json_encode($data));
-    }
-
-    public function test_hard_delete_report_by_id(): void
-    {
-        // Exec
-        $token = $this->login_trait("user");
-        $item_id = "41871596-9063-24ba-213c-0f79da705c71";
-        $response = $this->httpClient->delete("destroy/report/$item_id", [
-            'headers' => [
-                'Authorization' => "Bearer $token"
-            ],
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Test Parameter
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('status', $data);
-        $this->assertEquals('success', $data['status']);
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('report deleted',$data['message']);
-
-        Audit::auditRecordText("Test - Hard Delete Report By Id", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Hard Delete Report By Id", "TC-XXX", 'TC-XXX test_hard_delete_report_by_id', json_encode($data));
-    }
-
     public function test_put_update_report_by_id(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $id = "bf5d4411-0115-01cf-06c2-fc56968ed6ee";
         $body = [
             "report_title" => "Test Update Report",
             "report_desc" => "This is an API Testing",
             "report_category" => "Checkout",
         ];
-        $response = $this->httpClient->put("update/report/$id", [
+        $response = $this->httpClient->put("update/report/".$this->reportId, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'json' => $body
         ]);
@@ -352,17 +402,15 @@ class ReportTest extends TestCase
     public function test_put_update_report_item_by_id(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $id = "695e8eea-0c00-3888-085e-ed2fab3c090b";
         $body = [
             "item_name" => 'Product A',
             "item_desc" => 'Test Update Item',
             "item_qty" => 2,
             "item_price" => 19000
         ];
-        $response = $this->httpClient->put("update/report_item/$id", [
+        $response = $this->httpClient->put("update/report_item/".$this->reportItemId, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'json' => $body
         ]);
@@ -383,8 +431,6 @@ class ReportTest extends TestCase
     public function test_put_update_split_report_item_by_id(): void
     {
         // Exec
-        $token = $this->login_trait("user");
-        $id = "8207a8a5-f344-4a49-155d-7ec5aa64c343";
         $body = [
             "list_id" => "29bfadc5-7b4c-df51-0337-12e966ce2f5d,633eaba9-9175-38f9-3b43-0ccd9267cf02",
             "report_title" => "Test Split Report A",
@@ -392,9 +438,9 @@ class ReportTest extends TestCase
             "report_category" => "Checkout",
             "is_reminder" => 0
         ];
-        $response = $this->httpClient->put("update/report_split/$id", [
+        $response = $this->httpClient->put("update/report_split/".$this->reportId, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'json' => $body
         ]);
@@ -412,83 +458,10 @@ class ReportTest extends TestCase
         Audit::auditRecordSheet("Test - Put Update Report Item By Id", "TC-XXX", 'TC-XXX test_put_update_split_report_item_by_id', json_encode($data));
     }
 
-    public function test_post_report(): void
-    {
-        // Exec
-        $token = $this->login_trait("user");
-        $body = [
-            "report_title" => "Test Add Report A",
-            "report_desc" => "Test Add Report",
-            "report_category" => "Checkout",
-            "is_reminder" => 1,
-            "report_image" => null,
-            "report_item" => json_encode([
-                "inventory_id" => "09397f65-211e-3598-2fa5-b50cdba5183c",
-                "item_name" => "Kris Air Friyer",
-                "item_desc" => "penggorengan elektrik",
-                "item_qty" => 1,
-                "item_price" => 650000,
-            ]),
-        ];
-        $response = $this->httpClient->post("", [
-            'headers' => [
-                'Authorization' => "Bearer $token"
-            ],
-            'json' => $body
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Test Parameter
-        $this->assertEquals(201, $response->getStatusCode());
-        $this->assertArrayHasKey('status', $data);
-        $this->assertEquals('success', $data['status']);
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('report created', $data['message']);
-
-        Audit::auditRecordText("Test - Post Report", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Post Report", "TC-XXX", 'TC-XXX test_post_report', json_encode($data));
-    }
-
-    public function test_post_report_item(): void
-    {
-        // Exec
-        $id = "3dd6f961-acb0-821c-220d-7ea14c9200e5";
-        $token = $this->login_trait("user");
-        $body = [
-            "report_item" => json_encode([
-                "inventory_id" => "0216dd75-8ea6-3779-2ea6-9121c1a8c447",
-                "item_name" => "Kris Air Friyer",
-                "item_desc" => "penggorengan elektrik",
-                "item_qty" => 1,
-                "item_price" => 650000,
-            ]),
-        ];
-        $response = $this->httpClient->post("item/$id", [
-            'headers' => [
-                'Authorization' => "Bearer $token"
-            ],
-            'json' => $body
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        // Test Parameter
-        $this->assertEquals(201, $response->getStatusCode());
-        $this->assertArrayHasKey('status', $data);
-        $this->assertEquals('success', $data['status']);
-        $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('report created', $data['message']);
-
-        Audit::auditRecordText("Test - Post Report Item", "TC-XXX", "Result : ".json_encode($data));
-        Audit::auditRecordSheet("Test - Post Report Item", "TC-XXX", 'TC-XXX test_post_report_item', json_encode($data));
-    }
-
     public function test_post_update_report_image_by_report_id(): void
     {
         // Exec
         $id = "9be458e0-48da-d13f-0b41-ef4ce8a4bcad";
-        $token = $this->login_trait("user");
 
         // Create fake images
         $img1 = UploadedFile::fake()->image('image1.jpg');
@@ -509,7 +482,7 @@ class ReportTest extends TestCase
 
         $response = $this->httpClient->post("report_image/$id", [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ],
             'multipart' => $form,
         ]);
@@ -530,13 +503,9 @@ class ReportTest extends TestCase
     public function test_hard_delete_report_image_by_report_id_and_image_id(): void
     {
         // Exec
-        $report_id = "9be458e0-48da-d13f-0b41-ef4ce8a4bcad";
-        $image_id = "5470b8b0-dfbe-bfa9-1aee-e2f156f94d35";
-        $token = $this->login_trait("user");
-
-        $response = $this->httpClient->delete("report_image/destroy/$report_id/$image_id", [
+        $response = $this->httpClient->delete("report_image/destroy/$this->report_id/".$this->reportImageId, [
             'headers' => [
-                'Authorization' => "Bearer $token"
+                'Authorization' => "Bearer ".$this->token
             ]
         ]);
 

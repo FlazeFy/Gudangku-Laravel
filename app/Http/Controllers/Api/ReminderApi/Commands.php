@@ -132,7 +132,13 @@ class Commands extends Controller
                     $inventory = InventoryModel::getInventoryNameById($request->inventory_id);
                     if ($inventory) {
                         // Create reminder
-                        ReminderModel::createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id);
+                        $res = ReminderModel::createReminder($inventory_id, $reminder_desc, $reminder_type, $reminder_context, $user_id);
+                        if (!$res) {
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => Generator::getMessageTemplate("unknown_error", null),
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        }
 
                         // Get google token by user
                         $google_token = GoogleTokensModel::getGoogleTokensByUserId($user_id);
@@ -202,6 +208,9 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("create", $this->module),
+                            'data' => [
+                                'id' => $res->id
+                            ]
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
