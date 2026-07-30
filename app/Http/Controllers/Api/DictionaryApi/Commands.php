@@ -213,6 +213,9 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("create", $this->module),
+                            'data' => [
+                                'id' => $rows->id
+                            ]
                         ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([

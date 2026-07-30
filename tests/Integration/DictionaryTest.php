@@ -68,7 +68,7 @@ class DictionaryTest extends TestCase
         // Exec
         $body = [
             "dictionary_type" => "inventory_category",
-            "dictionary_name" => $this->faker->word
+            "dictionary_name" => $this->faker->word."-".date("H:i:s")
         ];
         $response = $this->httpClient->post("", [
             'headers' => [
@@ -85,6 +85,12 @@ class DictionaryTest extends TestCase
         $this->assertEquals('success', $data['status']);
         $this->assertArrayHasKey('message', $data);
         $this->assertEquals('dictionary created',$data['message']);
+
+        // Store all created data
+        foreach ($body as $key => $val) {
+            TestDataReader::setValue($key, $val);
+        }
+        TestDataReader::setValue('dictionary_id', $data['data']['id']);
 
         Audit::auditRecordText("Test - Post Dictionary", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Post Dictionary", "TC-XXX", 'TC-XXX test_post_dictionary', json_encode($data));

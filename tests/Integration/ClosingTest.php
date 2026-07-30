@@ -18,7 +18,7 @@ class ClosingTest extends TestCase
     protected $token;
     protected $inventoryId;
     protected $reportId;
-    protected $reportItemId;
+    protected $reportItemBId;
     protected $dictionaryId;
     protected $reminderId;
     use LoginHelperTrait;
@@ -35,8 +35,13 @@ class ClosingTest extends TestCase
         $this->token = $this->login_trait("user");
         // Pre-Condition: At least an inventory exists
         $this->inventoryId = TestDataReader::getValue('inventory_id') ?? "";
+        // Pre-Condition: At least a dictionary exists
+        $this->dictionaryId = TestDataReader::getValue('dictionary_id') ?? "";
+        // Pre-Condition: At least a reminder exists
+        $this->reminderId = TestDataReader::getValue('reminder_id') ?? "";
         // Pre-Condition: At least a report exists
         $this->reportId = TestDataReader::getValue('report_id') ?? "";
+        $this->reportItemBId = TestDataReader::getValue('report_item_b_id') ?? "";
     }
 
     public function test_delete_reminder_by_id(): void
@@ -55,7 +60,7 @@ class ClosingTest extends TestCase
         $this->assertArrayHasKey('status', $data);
         $this->assertEquals('success', $data['status']);
         $this->assertArrayHasKey('message', $data);
-        $this->assertEquals('reminder deleted', $data['message']);
+        $this->assertEquals('reminder permentally deleted', $data['message']);
         
         Audit::auditRecordText("Test - Delete Reminder By Id", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Delete Reminder By Id", "TC-XXX", 'TC-XXX test_delete_reminder_by_id', json_encode($data));
@@ -64,7 +69,7 @@ class ClosingTest extends TestCase
     public function test_hard_delete_report_item_by_id(): void
     {
         // Exec
-        $response = $this->httpClient->delete("report/destroy/item/".$this->reportItemId, [
+        $response = $this->httpClient->delete("report/destroy/item/".$this->reportItemBId, [
             'headers' => [
                 'Authorization' => "Bearer ".$this->token
             ],
@@ -108,6 +113,13 @@ class ClosingTest extends TestCase
 
     public function test_hard_delete_inventory_by_id(): void
     {
+        // Pre-Condition: An inventory already deleted
+        $this->httpClient->delete("inventory/delete/".$this->inventoryId, [
+            'headers' => [
+                'Authorization' => "Bearer ".$this->token
+            ]
+        ]);
+
         // Exec
         $response = $this->httpClient->delete("inventory/destroy/".$this->inventoryId, [
             'headers' => [
@@ -131,7 +143,7 @@ class ClosingTest extends TestCase
     public function test_hard_delete_dictionary_by_id(): void
     {
         // Exec
-        $response = $this->httpClient->delete($this->dictionaryId, [
+        $response = $this->httpClient->delete("dictionary/".$this->dictionaryId, [
             'headers' => [
                 'Authorization' => "Bearer ".$this->token
             ]

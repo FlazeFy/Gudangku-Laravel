@@ -354,15 +354,15 @@ class Commands extends Controller
             $rows = InventoryModel::deleteInventoryById($id, $user_id);
             if ($rows > 0) {
                 // Delete Firebase uploaded image
-                if ($inventory->inventory_image) {
-                    // Delete failed if file not found (already gone)
-                    if (!Firebase::deleteFile($inventory->inventory_image)) {
-                        return response()->json([
-                            'status' => 'failed',
-                            'message' => Generator::getMessageTemplate("not_found", 'failed to delete inventory image'),
-                        ], Response::HTTP_NOT_FOUND);
-                    }
-                }
+                // if ($inventory->inventory_image) {
+                //     // Delete failed if file not found (already gone)
+                //     if (!Firebase::deleteFile($inventory->inventory_image)) {
+                //         return response()->json([
+                //             'status' => 'failed',
+                //             'message' => Generator::getMessageTemplate("not_found", 'failed to delete inventory image'),
+                //         ], Response::HTTP_NOT_FOUND);
+                //     }
+                // }
 
                 // Hard Delete inventory relation by ID
                 ReminderModel::deleteReminderByInventoryId($id, $user_id);
@@ -374,8 +374,10 @@ class Commands extends Controller
 
                     // Send Firebase notification (mobile)
                     if ($user->firebase_fcm_token) {
-                        $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($message));
-                        $response = $this->firebaseMessaging->send($fcm);
+                        $message = "An inventory called $inventory->inventory_name has been deleted";
+                        // for now
+                        // $fcm = CloudMessage::withTarget('token', $user->firebase_fcm_token)->withNotification(Notification::create($message));
+                        // $response = $this->firebaseMessaging->send($fcm);
                     }
                     
                     // Create history
@@ -396,7 +398,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Model;
 class DictionaryModel extends Model
 {
     use HasFactory;
-    public $incrementing = false;
     public $timestamps = false;
     protected $table = 'dictionary';
     protected $primaryKey = 'id';

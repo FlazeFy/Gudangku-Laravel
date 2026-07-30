@@ -177,12 +177,12 @@ class Commands extends Controller
             $check_admin = AdminModel::find($user_id);
             $user_id = $check_admin ? null : $user_id; 
 
+            // Get report by ID
+            $report = ReportModel::getReportDetail($user_id, $id, 'data');  
+
             // Hard delete report by ID
             $rows = ReportModel::deleteReportById($user_id,$id);
             if ($rows > 0) {
-                // Get report by ID
-                $report = ReportModel::find($id);  
-
                 // Create history
                 if (!$check_admin) Audit::createHistory('Delete Report', $report->report_title, $user_id);
                 
@@ -203,7 +203,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => Generator::getMessageTemplate("unknown_error", null),
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -837,6 +837,7 @@ class Commands extends Controller
                 $item_count = count($report_item);
                 $success_exec = 0;
                 $failed_exec = 0;
+                $listCreatedId = [];
 
                 // Iterate to create report item
                 foreach ($report_item as $idx => $dt) {
@@ -845,7 +846,14 @@ class Commands extends Controller
                         $dt->inventory_id ?? null, $id, $dt->item_name, $dt->item_desc, $dt->item_qty, $dt->item_price ?? null, $user_id
                     );
 
-                    $res ? $success_exec++ : $failed_exec++;
+                    if ($res) {
+                        $success_exec++;
+                        $listCreatedId[] = [
+                            'id' => $res->id,
+                        ];
+                    } else {
+                        $failed_exec++;
+                    }
                 }
 
                 // Return success response
@@ -853,6 +861,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("create", 'report item'),
+                        'data' => $listCreatedId
                     ], Response::HTTP_CREATED);
                 } else if ($failed_exec > 0 && $success_exec > 0) {
                     return response()->json([

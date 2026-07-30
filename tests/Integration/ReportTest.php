@@ -24,6 +24,7 @@ class ReportTest extends TestCase
     protected $inventoryIdB;
     protected $inventoryNameB;
     protected $inventoryDescB;
+    protected $reportItemBId;
     protected $reportId;
     use LoginHelperTrait;
 
@@ -49,6 +50,7 @@ class ReportTest extends TestCase
         $this->inventoryDescB = TestDataReader::getValue('inventory_desc_b') ?? "";
         // Pre-Condition: At least a report exists
         $this->reportId = TestDataReader::getValue('report_id') ?? "";
+        $this->reportItemBId = TestDataReader::getValue('report_item_b_id') ?? "";
     }
 
     public function test_post_report(): void
@@ -130,6 +132,9 @@ class ReportTest extends TestCase
         $this->assertEquals('success', $data['status']);
         $this->assertArrayHasKey('message', $data);
         $this->assertEquals('report item created', $data['message']);
+
+        // Store created data
+        TestDataReader::setValue('report_item_b_id', $data['data'][0]['id']);
 
         Audit::auditRecordText("Test - Post Report Item", "TC-XXX", "Result : ".json_encode($data));
         Audit::auditRecordSheet("Test - Post Report Item", "TC-XXX", 'TC-XXX test_post_report_item', json_encode($data));
@@ -313,9 +318,7 @@ class ReportTest extends TestCase
     public function test_get_report_by_inventory_name_or_inventory_id(): void
     {
         // Exec
-        $search = "Herborist%20Aloe%20Vera%20Gel";
-        $id = $this->inventoryId;
-        $response = $this->httpClient->get("$search/$id", [
+        $response = $this->httpClient->get($this->inventoryName."/".$this->inventoryId, [
             'headers' => [
                 'Authorization' => "Bearer ".$this->token
             ]
@@ -378,6 +381,7 @@ class ReportTest extends TestCase
             "report_title" => "Test Update Report",
             "report_desc" => "This is an API Testing",
             "report_category" => "Checkout",
+            "created_at" => date('Y-m-d H:i:s', strtotime('-1 week'))
         ];
         $response = $this->httpClient->put("update/report/".$this->reportId, [
             'headers' => [
@@ -408,7 +412,7 @@ class ReportTest extends TestCase
             "item_qty" => 2,
             "item_price" => 19000
         ];
-        $response = $this->httpClient->put("update/report_item/".$this->reportItemId, [
+        $response = $this->httpClient->put("update/report_item/".$this->reportItemBId, [
             'headers' => [
                 'Authorization' => "Bearer ".$this->token
             ],
@@ -432,7 +436,7 @@ class ReportTest extends TestCase
     {
         // Exec
         $body = [
-            "list_id" => "29bfadc5-7b4c-df51-0337-12e966ce2f5d,633eaba9-9175-38f9-3b43-0ccd9267cf02",
+            "list_id" => $this->reportItemBId,
             "report_title" => "Test Split Report A",
             "report_desc" => "Test Split Report",
             "report_category" => "Checkout",
@@ -460,9 +464,6 @@ class ReportTest extends TestCase
 
     public function test_post_update_report_image_by_report_id(): void
     {
-        // Exec
-        $id = "9be458e0-48da-d13f-0b41-ef4ce8a4bcad";
-
         // Create fake images
         $img1 = UploadedFile::fake()->image('image1.jpg');
         $img2 = UploadedFile::fake()->image('image2.jpg');
@@ -480,7 +481,7 @@ class ReportTest extends TestCase
             ],
         ];
 
-        $response = $this->httpClient->post("report_image/$id", [
+        $response = $this->httpClient->post("report_image/".$this->reportId, [
             'headers' => [
                 'Authorization' => "Bearer ".$this->token
             ],
