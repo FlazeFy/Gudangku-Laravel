@@ -1,0 +1,47 @@
+meta {
+  name: Log Out
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/logout
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Post Log Out
+  
+  This authentication request is used to sign out from application or reset current session. This request interacts with the MySQL database.
+  
+  ## Responses
+  
+  **200 — Logout success**
+  ```json
+  {
+    "status": "success",
+    "message": "Logout success"
+  }
+  ```
+  
+  **401 — protected route need to include sign in token as authorization bearer**
+  ```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+  ```
+  
+  **500 — Internal Server Error**
+  ```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+  ```
+}

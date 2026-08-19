@@ -1,0 +1,9 @@
+{
+    "version": "1",
+    "name": "GudangKu",
+    "type": "collection",
+    "variables": {
+        "baseUrl": "http://localhost:8001/api/v1",
+        "token": "3594|U1nZHnLo276EI9YWqhgVT76plOmECATQT8REM4dr05c4bd11"
+    }
+}

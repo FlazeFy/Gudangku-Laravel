@@ -1,0 +1,56 @@
+meta {
+  name: Get Dictionary By Type
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/dictionary/type/:type
+  body: none
+  auth: none
+}
+
+params:path {
+  type: report_category
+}
+
+docs {
+  # Get Dictionary By Type
+
+  This request is used to get dictionary by its `dictionary_type`, that can be inventory_category, inventory_room, inventory_unit, report_category, or inventory_capacity_unit. This request interacts with the MySQL databases.
+
+  ## Path Parameters
+
+  | Name | Type   | Required | Description      | Example          |
+  |------|--------|----------|-------------------|-------------------|
+  | type | string | yes      | Dictionary type   | report_category  |
+
+  ## Responses
+
+  **200 — Dictionary fetched successfully.** Ordered in ascending order by `dictionary_type` and `dictionary_name`
+```json
+  {
+    "status": "success",
+    "message": "dictionary fetched",
+    "data": [
+      { "dictionary_name": "Wishlist" }
+    ]
+  }
+```
+
+  **404 — dictionary failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "dictionary not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

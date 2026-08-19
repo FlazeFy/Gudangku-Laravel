@@ -1,0 +1,66 @@
+meta {
+  name: Get All History
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/history
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get All History
+
+  This request is used to get all history when user use the App. This request interacts with the MySQL database, has a protected routes, and has a pagination.
+
+  ## Responses
+
+  **200 — history fetched**
+```json
+  {
+    "status": "success",
+    "message": "history fetched",
+    "data": {
+      "data": [
+        {
+          "id": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e",
+          "history_type": "Create",
+          "history_context": "Barang bawaan",
+          "created_at": "2024-09-20 22:53:47",
+          "created_by": "2d98f524-de02-11ed-b5ea-0242ac120002"
+        }
+      ]
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — history failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "history not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

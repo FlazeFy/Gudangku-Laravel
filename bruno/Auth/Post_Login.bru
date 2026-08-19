@@ -1,0 +1,79 @@
+meta {
+  name: Login (Basic Auth)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "flazefy",
+    "password": "nopass123"
+  }
+}
+
+script:post-response {
+  const token = res.body.token;
+  if (token) {
+    bru.setEnvVar("token", token);
+  }
+}
+
+docs {
+  # Post Login (Basic Auth)
+  
+  This authentication request is used to access the application and obtain an authorization token for accessing all protected APIs. This request interacts with the MySQL database.
+  
+  ## Responses
+  
+  **200 — login successfully**
+  ```json
+  {
+    "status": "success",
+    "token": "286|L5fqrLCDDCzPRLKngtm2FM9wq1IU2xFZSVAm10yp874a1a85",
+    "role": 1,
+    "message": {
+      "id": "83ce75db-4016-d87c-2c3c-db1e222d0001",
+      "username": "flazefy",
+      "email": "flazen.edu@gmail.com",
+      "telegram_user_id": "123456789",
+      "telegram_is_valid": 1,
+      "firebase_fcm_token": "ddLEuWR2Q_isCmzHTM8UR4:APA91bEmY8TDmH3ZJtKgXw95wFDKLr53FGA2JArDTiN4jzSWxiGzf9VUECYN2oeqYV",
+      "line_user_id": "U3356dbe737f22z278e2ba81c71ec5",
+      "phone": "+628123456789",
+      "timezone": "+07:00",
+      "created_at": "2024-03-14 02:28:37",
+      "updated_at": "2024-10-25 09:37:20"
+    }
+  }
+  ```
+  
+  **422 — {validation_msg}**
+  ```json
+  {
+    "status": "failed",
+    "message": "{field validation message}"
+  }
+  ```
+  
+  **401 — account is not found or have wrong password**
+  ```json
+  {
+    "status": "failed",
+    "message": "wrong username or password"
+  }
+  ```
+  
+  **500 — Internal Server Error**
+  ```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+  ```
+}
