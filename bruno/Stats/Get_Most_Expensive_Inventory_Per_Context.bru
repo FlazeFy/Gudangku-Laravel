@@ -1,0 +1,68 @@
+meta {
+  name: Get Most Expensive Inventory Per Context
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/stats/inventory/most_expensive/:context
+  body: none
+  auth: bearer
+}
+
+params:path {
+  context: inventory_category
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get most expensive inventory per context
+  
+  This request is used to get most expensive inventory for each category. This request interacts with the MySQL database, and have a protected routes.
+  
+  ## Path Parameters
+  
+  | Name    | Type   | Required | Description                      | Example |
+  |---------|--------|----------|------------------------------------|---------|
+  | context | string | yes      | Inventory category context        | inventory_category |
+  
+  ## Responses
+  
+  **200 — stats fetched successfully.** Ordered in descending order by `total`
+  ```json
+  {
+    "status": "success",
+    "message": "stats fetched",
+    "data": [
+      { "context": "Fashion", "total": 200000 }
+    ]
+  }
+  ```
+  
+  **401 — protected route need to include sign in token as authorization bearer**
+  ```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+  ```
+  
+  **404 — stats failed to fetched**
+  ```json
+  {
+    "status": "failed",
+    "message": "stats not found"
+  }
+  ```
+  
+  **500 — Internal Server Error**
+  ```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+  ```
+}

@@ -1,0 +1,68 @@
+meta {
+  name: Get Total Inventory By Favorite
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/stats/inventory/total_by_favorite/:type
+  body: none
+  auth: bearer
+}
+
+params:path {
+  type: item
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get total inventory by favorite
+
+  This request is used to get total inventory by its favorite. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Path Parameters
+
+  | Name | Type   | Required | Description                                                     | Example |
+  |------|--------|----------|--------------------------------------------------------------------|---------|
+  | type | string | yes      | Stats inventory view type: either `item` for count or `price` for sum of prices | item    |
+
+  ## Responses
+
+  **200 — stats fetched successfully.** Ordered in descending order by `total`
+```json
+  {
+    "status": "success",
+    "message": "stats fetched",
+    "data": [
+      { "context": "Favorite", "total": 2 }
+    ]
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — stats failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "stats not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}
