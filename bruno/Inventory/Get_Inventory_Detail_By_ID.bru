@@ -11,7 +11,7 @@ get {
 }
 
 params:path {
-  id: 09397f65-211e-3598-2fa5-b50cdba5183c
+  id: d199711b-fdf7-07f9-2338-89238fad660a
 }
 
 auth:bearer {
@@ -20,19 +20,19 @@ auth:bearer {
 
 docs {
   # Get Inventory Detail By ID
-
+  
   This request is used to get inventory details and reminders by the given inventory's `id`. This request interacts with the MySQL database, and has a protected routes.
-
+  
   ## Path Parameters
-
+  
   | Name | Type   | Required | Description  | Example                               |
   |------|--------|----------|---------------|-----------------------------------------|
   | id   | string | yes      | Inventory ID | 09397f65-211e-3598-2fa5-b50cdba5183c   |
-
+  
   ## Responses
-
+  
   **200 — Inventory details fetched successfully**
-```json
+  ```json
   {
     "status": "success",
     "message": "inventory fetched",
@@ -69,29 +69,29 @@ docs {
       }
     ]
   }
-```
-
+  ```
+  
   **401 — Authorization token required**
-```json
+  ```json
   {
     "status": "failed",
     "message": "you need to include the authorization token from login"
   }
-```
-
+  ```
+  
   **404 — Inventory not found**
-```json
+  ```json
   {
     "status": "failed",
     "message": "inventory not found"
   }
-```
-
+  ```
+  
   **500 — Internal Server Error**
-```json
+  ```json
   {
     "status": "error",
     "message": "something wrong. please contact admin"
   }
-```
+  ```
 }

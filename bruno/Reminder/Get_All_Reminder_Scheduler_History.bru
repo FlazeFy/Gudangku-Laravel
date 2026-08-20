@@ -1,0 +1,67 @@
+meta {
+  name: Get All Reminder Scheduler History
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/reminder/history
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get All Reminder Scheduler History
+
+  This request is used to get all executed reminder history. This request interacts with the MySql database, has protected routes, and has a pagination.
+
+  ## Responses
+
+  **200 — Reminder history fetched successfully.** Ordered in descending order by `last_execute`
+```json
+  {
+    "status": "success",
+    "message": "reminder history fetched",
+    "data": {
+      "data": [
+        {
+          "id": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e",
+          "inventory_name": "Skintific Mugwort Clay Mask",
+          "reminder_desc": "Restock at https://tokopedia.link/rBfBm3vVDIb\r\nBeli 2 boleh",
+          "reminder_type": "Every Month",
+          "reminder_context": "Every 19",
+          "last_execute": "2024-09-20 22:53:47"
+        }
+      ]
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login | only admin can use this request"
+  }
+```
+
+  **404 — reminder history failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "reminder history not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

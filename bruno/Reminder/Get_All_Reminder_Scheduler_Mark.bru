@@ -1,0 +1,69 @@
+meta {
+  name: Get All Reminder Scheduler Mark
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/reminder/mark
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get All Reminder Scheduler Mark
+
+  This request is used to get all executed reminder mark. This request interacts with the MySQL database, has protected routes, and has a pagination.
+
+  ## Responses
+
+  **200 — Reminder mark fetched successfully.** Ordered in descending order by `last_execute`
+```json
+  {
+    "status": "success",
+    "message": "reminder mark fetched",
+    "data": {
+      "data": [
+        {
+          "inventory_name": "Skintific Mugwort Clay Mask",
+          "inventory_category": "Skin & Body Care",
+          "reminder_desc": "Restock at https://tokopedia.link/rBfBm3vVDIb\r\nBeli 2 boleh",
+          "reminder_type": "Every Month",
+          "reminder_context": "Every 19",
+          "last_execute": "2024-09-20 22:53:47",
+          "created_at": "2024-09-20 22:53:47",
+          "username": "flazefy"
+        }
+      ]
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login | permission denied. only admin can use this request"
+  }
+```
+
+  **404 — reminder mark failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "reminder mark not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

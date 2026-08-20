@@ -1,0 +1,118 @@
+meta {
+  name: Get Analyze Data Of Inventory By ID
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/inventory/analyze/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: d199711b-fdf7-07f9-2338-89238fad660a
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Analyze Data Of Inventory By ID
+  
+  This request is used to get analyze data of inventory. This request interacts with the MySQL database, and has protected routes.
+  
+  ## Path Parameters
+  
+  | Name | Type   | Required | Description  | Example                               |
+  |------|--------|----------|---------------|-----------------------------------------|
+  | id   | string | yes      | Inventory ID | e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9   |
+  
+  ## Responses
+  
+  **200 — inventory analyzed**
+  ```json
+  {
+    "status": "success",
+    "message": "inventory analyzed",
+    "data": {
+      "inventory_name": "odio omnis cum",
+      "inventory_price": 4145000,
+      "inventory_category": "Skin & Body Care",
+      "inventory_room": "Car Cabin",
+      "inventory_storage": "Stand",
+      "inventory_rack": "Rack-b3",
+      "inventory_unit": "Pcs",
+      "inventory_vol": 6,
+      "created_at": "2024-10-24 21:15:01",
+      "updated_at": "2024-11-03 18:25:48",
+      "inventory_price_analyze": {
+        "average_inventory_price": 2473052,
+        "max_inventory_price": 4995000,
+        "min_inventory_price": 30000,
+        "diff_ammount_average_to_price": -1671948,
+        "diff_status_average_to_price": "More Expensive"
+      },
+      "inventory_category_analyze": {
+        "total": 98,
+        "average_price": 2418571
+      },
+      "inventory_room_analyze": {
+        "total": 83,
+        "average_price": 2515723
+      },
+      "inventory_unit_analyze": {
+        "total": 84,
+        "average_price": 2439762
+      },
+      "inventory_history_analyze": [
+        { "total": 2, "report_category": "Others" }
+      ],
+      "inventory_report": [
+        {
+          "created_at": "2024-09-14 02:22:18",
+          "report_title": "et amet",
+          "report_category": "Others"
+        }
+      ],
+      "inventory_in_monthly_report": [
+        { "context": "Jan", "total": 2 }
+      ],
+      "inventory_layout": {
+        "inventory_storage": "Wardobe",
+        "layout": "E1",
+        "storage_desc": "Lorem ipsum",
+        "created_at": "2024-10-25 09:13:00"
+      },
+      "inventory_activity_report": [
+        { "context": "2024-12-02", "total": 2, "day": "Monday" }
+      ]
+    }
+  }
+  ```
+  
+  **401 — protected route need to include sign in token as authorization bearer**
+  ```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+  ```
+  
+  **404 — inventory detail document failed to analyze**
+  ```json
+  {
+    "status": "failed",
+    "message": "inventory not found"
+  }
+  ```
+  
+  **500 — Internal Server Error**
+  ```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+  ```
+}

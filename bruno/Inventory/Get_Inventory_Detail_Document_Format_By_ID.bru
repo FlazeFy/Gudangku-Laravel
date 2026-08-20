@@ -11,7 +11,7 @@ get {
 }
 
 params:path {
-  id: e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9
+  id: d199711b-fdf7-07f9-2338-89238fad660a
 }
 
 auth:bearer {
@@ -20,47 +20,47 @@ auth:bearer {
 
 docs {
   # Get Inventory Detail Document Format By ID
-
+  
   This request is used to get inventory detail html format for document generate. This request interacts with the MySQL database, and has a protected routes.
-
+  
   ## Path Parameters
-
+  
   | Name | Type   | Required | Description  | Example                               |
   |------|--------|----------|---------------|-----------------------------------------|
   | id   | string | yes      | Inventory ID | e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9   |
-
+  
   ## Responses
-
+  
   **200 — inventory detail document generated**
-```json
+  ```json
   {
     "status": "success",
     "message": "inventory detail document generated",
     "data": "<p>Ini document</p>"
   }
-```
-
+  ```
+  
   **401 — protected route need to include sign in token as authorization bearer**
-```json
+  ```json
   {
     "status": "failed",
     "message": "you need to include the authorization token from login"
   }
-```
-
+  ```
+  
   **404 — inventory detail document failed to generated**
-```json
+  ```json
   {
     "status": "failed",
     "message": "inventory not found"
   }
-```
-
+  ```
+  
   **500 — Internal Server Error**
-```json
+  ```json
   {
     "status": "error",
     "message": "something wrong. please contact admin"
   }
-```
+  ```
 }
