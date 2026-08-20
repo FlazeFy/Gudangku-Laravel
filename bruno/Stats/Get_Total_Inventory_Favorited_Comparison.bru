@@ -1,0 +1,58 @@
+meta {
+  name: Get Total Inventory Favorited Comparison
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/stats/inventory/favorite_inventory_comparison
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Total Inventory Favorited Comparison
+
+  This request is used to get total inventory comparison by if its favorited or not. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Responses
+
+  **200 — stats fetched**
+```json
+  {
+    "status": "success",
+    "message": "stats fetched",
+    "data": [
+      { "context": "Favorite", "total": 3 }
+    ]
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — stats failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "stats not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

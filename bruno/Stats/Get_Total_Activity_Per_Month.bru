@@ -1,0 +1,68 @@
+meta {
+  name: Get Total Activity Per Month
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/stats/history/total_activity_per_month/:year
+  body: none
+  auth: bearer
+}
+
+params:path {
+  year: 2024
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Total Activity Per Month
+
+  This request is used to get total activity per month by given `year`. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Path Parameters
+
+  | Name | Type    | Required | Description        | Example |
+  |------|---------|----------|----------------------|---------|
+  | year | integer | yes      | Activity created year | 2024  |
+
+  ## Responses
+
+  **200 — Stats fetched successfully.** Ordered in ascending order by `context` (month order format)
+```json
+  {
+    "status": "success",
+    "message": "stats fetched",
+    "data": [
+      { "context": "Jan", "total": 3 }
+    ]
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — stats failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "stats not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

@@ -1,0 +1,58 @@
+meta {
+  name: Get Last User Login
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/stats/user/last_login
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Last User Login
+
+  This request is used to get list of last user login. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Responses
+
+  **200 — Stats fetched successfully.** Ordered in descending order by `login_at`
+```json
+  {
+    "status": "success",
+    "message": "stats fetched",
+    "data": [
+      { "username": "Jan", "login_at": "2024-03-14 02:28:37" }
+    ]
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — stats failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "stats not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

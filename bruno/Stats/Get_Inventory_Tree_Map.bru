@@ -1,0 +1,79 @@
+meta {
+  name: Get Inventory Tree Map
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/stats/inventory/tree_map
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Inventory Tree Map
+
+  This request is used to get inventory mapping in tree map format. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Responses
+
+  **200 — Stats fetched successfully**
+```json
+  {
+    "status": "success",
+    "message": "stats fetched",
+    "data": [
+      {
+        "id": "room_ddd072238abb3528f043222882b92c03",
+        "name": "Main Room",
+        "children": [
+          {
+            "id": "storage_d399fd2dbae5d34c249a34287dfcb9bb",
+            "name": "Wardrobe",
+            "children": [
+              {
+                "id": "rack_f8129906877dbc7b50bf30bc79a2129d",
+                "name": "Shoes & Sandals - Bottom",
+                "children": [
+                  {
+                    "id": "item_387722ed612ed175f47cc906e0e1fdf9",
+                    "name": "New Balance2112"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — stats failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "stats not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}
