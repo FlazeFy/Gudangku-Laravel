@@ -1,0 +1,77 @@
+meta {
+  name: Get Inventory In Storage
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/inventory/search/by_room_storage/:room/:storage
+  body: none
+  auth: bearer
+}
+
+params:path {
+  room: Main Room
+  storage: Main Table
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Inventory In Storage
+
+  This request is used to get all inventory data in layout page. This request interacts with the MySQL database, and has a protected routes.
+
+  ## Path Parameters
+
+  | Name    | Type   | Required | Description             | Example    |
+  |---------|--------|----------|---------------------------|------------|
+  | room    | string | yes      | Inventory storage's room | Main Room  |
+  | storage | string | yes      | Inventory storage         | Main Table |
+
+  ## Responses
+
+  **200 — Inventory fetched successfully.** Ordered in descending order by `inventory_name`
+```json
+  {
+    "status": "success",
+    "message": "inventory fetched",
+    "data": [
+      {
+        "id": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e",
+        "inventory_name": "Cake",
+        "inventory_unit": "Pcs",
+        "inventory_vol": 1,
+        "inventory_price": 200000,
+        "inventory_category": "Food And Beverages"
+      }
+    ]
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — inventory failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "inventory not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

@@ -1,0 +1,58 @@
+meta {
+  name: Get Inventory Room
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/inventory/room
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Inventory Room
+
+  This request is used to get all inventory room. This request interacts with the MySQL database, and has a protected routes.
+
+  ## Responses
+
+  **200 — Inventory fetched successfully.** Ordered in descending order by `created_at`
+```json
+  {
+    "status": "success",
+    "message": "inventory room fetched",
+    "data": [
+      { "inventory_room": "Main Room" }
+    ]
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — inventory room failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "inventory room not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

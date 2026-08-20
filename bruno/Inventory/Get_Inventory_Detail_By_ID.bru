@@ -1,0 +1,97 @@
+meta {
+  name: Get Inventory Detail By ID
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/inventory/detail/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 09397f65-211e-3598-2fa5-b50cdba5183c
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Inventory Detail By ID
+
+  This request is used to get inventory details and reminders by the given inventory's `id`. This request interacts with the MySQL database, and has a protected routes.
+
+  ## Path Parameters
+
+  | Name | Type   | Required | Description  | Example                               |
+  |------|--------|----------|---------------|-----------------------------------------|
+  | id   | string | yes      | Inventory ID | 09397f65-211e-3598-2fa5-b50cdba5183c   |
+
+  ## Responses
+
+  **200 — Inventory details fetched successfully**
+```json
+  {
+    "status": "success",
+    "message": "inventory fetched",
+    "data": {
+      "id": "83ce75db-4016-d87c-2c3c-db1e222d0001",
+      "inventory_name": "Stand Bracket Laptop",
+      "inventory_category": "Office Tools",
+      "inventory_desc": "Stand 2 laptop dan hp",
+      "inventory_merk": "A Merk",
+      "inventory_room": "Main Room",
+      "inventory_storage": "Desk",
+      "inventory_rack": null,
+      "inventory_price": 28200,
+      "inventory_image": "https://firebasestorage.googleapis.com/v0/b/gudangku-94edc.appspot.com/o/inventory%2F2d98f524-de02-11ed-b5ea-0242ac120002_flazefy%2Fdbc22192-f630-4c68-8a95-d148de537bde?alt=media&token=ac5e7d97-9711-4f4e-b22e-4ff911cf6006",
+      "inventory_unit": "Pcs",
+      "inventory_vol": 1,
+      "inventory_capacity_unit": null,
+      "inventory_capacity_vol": null,
+      "inventory_color": null,
+      "is_favorite": 0,
+      "is_reminder": 0,
+      "created_at": "2024-03-14 02:28:37",
+      "created_by": "2d98f524-de02-11ed-b5ea-0242ac120002",
+      "updated_at": "2024-10-25 09:37:20",
+      "deleted_at": null
+    },
+    "reminder": [
+      {
+        "id": "26c0092a-5013-2a81-3a36-fc0abeb7ce6e",
+        "reminder_desc": "Clean using hand sanitizer and micellar water",
+        "reminder_type": "Every Month",
+        "reminder_context": "Every 1",
+        "created_at": "2024-07-16T00:06:05.000000Z"
+      }
+    ]
+  }
+```
+
+  **401 — Authorization token required**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — Inventory not found**
+```json
+  {
+    "status": "failed",
+    "message": "inventory not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}
