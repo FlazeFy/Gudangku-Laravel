@@ -1,0 +1,66 @@
+meta {
+  name: Get Report Detail Document Format By ID
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/report/detail/item/:id/doc
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get report detail document html format by id
+
+  This request is used to get report detail by id and all items found in the report. This request interacts with the MySQL database, and has protected routes.
+
+  ## Path Parameters
+
+  | Name | Type   | Required | Description | Example                               |
+  |------|--------|----------|--------------|------------------------------------------|
+  | id   | string | yes      | Report ID   | e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9   |
+
+  ## Responses
+
+  **200 — Report document generated**
+```json
+  {
+    "status": "success",
+    "message": "report generated",
+    "data": "<p>Ini document</p>"
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — report document failed to generated**
+```json
+  {
+    "status": "failed",
+    "message": "report not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

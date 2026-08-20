@@ -1,0 +1,84 @@
+meta {
+  name: Get All Report By Inventory
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/report/:search/:inventory_id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  search: Nivea%20Extra%20White%20Repair%20&%20Protect
+  inventory_id: e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get All Report By Inventory
+
+  This request is used to get all report found in a inventory by inventory name and report id. This request interacts with the MySQL database, have a protected routes, and a pagination.
+
+  ## Path Parameters
+
+  | Name          | Type   | Required | Description    | Example                                          |
+  |----------------|--------|----------|-----------------|---------------------------------------------------|
+  | search         | string | yes      | Inventory Name | Nivea%20Extra%20White%20Repair%20&%20Protect     |
+  | inventory_id   | string | yes      | Inventory ID   | e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9              |
+
+  ## Responses
+
+  **200 — report fetched successfully.** Ordered in descending order by `created_at`
+```json
+  {
+    "status": "success",
+    "message": "history fetched",
+    "data": {
+      "data": [
+        {
+          "id": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e",
+          "report_title": "Report A",
+          "report_desc": "This is a report description",
+          "report_category": "Shopping Cart",
+          "is_reminder": 0,
+          "reminder_at": {},
+          "total_variety": 1,
+          "total_item": 1,
+          "report_items": "Nivea Extra White Repair & Protect",
+          "item_price": 20000,
+          "created_at": "2024-09-20 22:53:47"
+        }
+      ]
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — report failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "report not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}
