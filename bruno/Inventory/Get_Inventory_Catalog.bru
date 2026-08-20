@@ -1,0 +1,66 @@
+meta {
+  name: Get Inventory Catalog
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/inventory/catalog
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Inventory Catalog
+
+  This request is used to get inventory by catalog (category, room, and storage) and total per each. This request interacts with the MySQL database, and has protected routes.
+
+  ## Responses
+
+  **200 — Inventory fetched successfully.** Ordered in descending order by `total`
+```json
+  {
+    "status": "success",
+    "message": "inventory fetched",
+    "data": {
+      "room": [
+        { "context": "Bed Room", "total": 2 }
+      ],
+      "category": [
+        { "context": "Electronic", "total": 2 }
+      ],
+      "storage": [
+        { "context": "Wardrobe", "total": 2 }
+      ]
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — inventory failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "inventory not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

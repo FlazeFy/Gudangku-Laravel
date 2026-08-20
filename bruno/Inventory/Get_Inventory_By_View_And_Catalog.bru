@@ -1,0 +1,90 @@
+meta {
+  name: Get Inventory By View And Catalog
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/inventory/catalog/:view/:catalog
+  body: none
+  auth: bearer
+}
+
+params:path {
+  view: inventory_room
+  catalog: Main%20Room
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Inventory By View And Catalog
+
+  This request is used to get inventory header by given `view` and `catalog`. This request interacts with the MySQL database, has a pagination, and has protected routes.
+
+  ## Path Parameters
+
+  | Name    | Type   | Required | Description                                                            | Example       |
+  |---------|--------|----------|--------------------------------------------------------------------------|---------------|
+  | view    | string | yes      | Context of inventory like `inventory_room`, `inventory_storage`, or `inventory_category` | inventory_room |
+  | catalog | string | yes      | Value based on view (context)                                          | Main%20Room   |
+
+  ## Responses
+
+  **200 — Inventory fetched successfully.** Ordered in descending order by `is_favorite` and `created_at`
+```json
+  {
+    "status": "success",
+    "message": "inventory fetched",
+    "data": {
+      "data": [
+        {
+          "id": "b3ead76e-95fd-6f99-33f2-c31f40a6a55e",
+          "inventory_name": "Kris Air Friyer",
+          "inventory_category": "Electronics",
+          "inventory_room": "Main Room",
+          "inventory_storage": "Main Table",
+          "inventory_rack": null,
+          "inventory_price": 650000,
+          "inventory_image": null,
+          "inventory_unit": "Pcs",
+          "inventory_vol": 1,
+          "inventory_capacity_unit": null,
+          "inventory_capacity_vol": null,
+          "is_favorite": 1,
+          "created_at": "2025-12-25 21:25:00",
+          "updated_at": null,
+          "deleted_at": null,
+          "reminder_type": null
+        }
+      ]
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — inventory failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "inventory not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

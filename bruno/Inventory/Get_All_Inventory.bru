@@ -1,0 +1,88 @@
+meta {
+  name: Get All Inventory
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/inventory
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get All Inventory
+
+  This request is used to get all inventory data. This request interacts with the MySQL database, has protected routes, and has a pagination.
+
+  ## Responses
+
+  **200 — Inventory fetched successfully.** Ordered in descending order by `is_favorite`
+```json
+  {
+    "status": "success",
+    "message": "inventory fetched",
+    "lend_data": [
+      {
+        "inventory_category": "Food & Beverages",
+        "list_inventory": "Nike Air Force 1 High By You"
+      }
+    ],
+    "data": {
+      "data": [
+        {
+          "id": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e",
+          "inventory_name": "Nike Air Force 1 High By You",
+          "inventory_category": "Fashion",
+          "inventory_desc": "Sepatu High",
+          "inventory_merk": "Nike",
+          "inventory_room": "Main Room",
+          "inventory_storage": "Wardrobe",
+          "inventory_rack": "Shoes & Sandals - Bottom",
+          "inventory_price": 2249000,
+          "inventory_image": "https://example.com/inventory/image.jpg",
+          "inventory_unit": "Pcs",
+          "inventory_vol": 1,
+          "inventory_capacity_unit": "percentage",
+          "inventory_capacity_vol": 80,
+          "inventory_color": "Black",
+          "is_favorite": 1,
+          "is_reminder": 0,
+          "created_at": "2024-03-19 02:37:58",
+          "created_by": "2d98f524-de02-11ed-b5ea-0242ac120002",
+          "updated_at": "2024-07-18 15:50:18",
+          "deleted_at": "2024-05-02 03:32:31"
+        }
+      ]
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — inventory failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "inventory not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

@@ -173,7 +173,7 @@ class InventoryModel extends Model
             'inventory.updated_at', 'inventory.deleted_at',
             DB::raw("GROUP_CONCAT(DISTINCT reminder.reminder_type ORDER BY reminder.reminder_type SEPARATOR ', ') AS reminder_type"))
             ->leftjoin('reminder','reminder.inventory_id','=','inventory.id')
-            ->where("inventory_$view", $catalog);
+            ->where($view, $catalog);
         
         if ($user_id) $res = $res->where('inventory.created_by',$user_id);
         
