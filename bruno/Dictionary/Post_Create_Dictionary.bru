@@ -1,0 +1,67 @@
+meta {
+  name: Post Create Dictionary
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/dictionary
+  body: json
+  auth: bearer
+}
+
+body:json {
+  {
+    "dictionary_type": "inventory_category",
+    "dictionary_name": "test category"
+  }
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Post Create Dictionary
+
+  This request is used to created a dictionary by using given `dictionary_type`, and `dictionary_name`. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Responses
+
+  **201 — Dictionary created successfully**
+```json
+  {
+    "status": "success",
+    "data": {
+      "dictionary_name": "Check",
+      "dictionary_type": "inventory_category",
+      "_id": "674342a8b53aabe966070f3d",
+      "createdAt": "2024-11-24T15:13:44.621Z",
+      "updatedAt": "2024-11-24T15:13:44.621Z"
+    },
+    "message": "dictionary created"
+  }
+```
+
+  **422 — Validation failed** (one of the following)
+```json
+  { "status": "failed", "message": "dictionary name must be at least 2 characters" }
+```
+```json
+  { "status": "failed", "message": "dictionary type must be one of the following values inventory_category, inventory_unit, inventory_room, reminder_type, reminder_context, report_category" }
+```
+```json
+  { "status": "failed", "message": "dictionary_name is a required field" }
+```
+```json
+  { "status": "failed", "message": "dictionary name has been used. try another" }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

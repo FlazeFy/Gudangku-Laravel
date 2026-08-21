@@ -1,0 +1,73 @@
+meta {
+  name: Delete Dictionary By ID
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/dictionary/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Delete Dictionary By ID
+
+  This request is used to permanently delete a dictionary entry based on the provided `ID`. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Path Parameters
+
+  | Name | Type   | Required | Description   | Example                               |
+  |------|--------|----------|----------------|------------------------------------------|
+  | id   | string | yes      | Dictionary ID | e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9   |
+
+  ## Responses
+
+  **200 — dictionary permentally deleted**
+```json
+  {
+    "status": "success",
+    "message": "dictionary permentally deleted"
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — dictionary failed to permentally deleted**
+```json
+  {
+    "status": "failed",
+    "message": "dictionary not found"
+  }
+```
+
+  **422 — {validation_msg}**
+```json
+  {
+    "status": "failed",
+    "message": "{field validation message}"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

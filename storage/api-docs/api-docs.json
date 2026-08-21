@@ -368,14 +368,14 @@
                 }
             }
         },
-        "/api/v1/dictionary/destroy/{id}": {
+        "/api/v1/dictionary/{id}": {
             "delete": {
                 "tags": [
                     "Dictionary"
                 ],
                 "summary": "Delete Dictionary By ID",
                 "description": "This request is used to permanently delete a dictionary entry based on the provided `ID`. This request interacts with the MySQL database, and have a protected routes.",
-                "operationId": "dda04aa46db5cdb5b657007f3a01ab37",
+                "operationId": "674d6a714cef6a2af14e45db60dc1209",
                 "parameters": [
                     {
                         "name": "id",
@@ -517,7 +517,7 @@
                                 "properties": {
                                     "dictionary_type": {
                                         "type": "string",
-                                        "example": "trip_category"
+                                        "example": "inventory_category"
                                     },
                                     "dictionary_name": {
                                         "type": "string",

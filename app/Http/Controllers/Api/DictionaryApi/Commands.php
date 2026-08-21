@@ -21,7 +21,7 @@ class Commands extends Controller
 
     /**
      * @OA\DELETE(
-     *     path="/api/v1/dictionary/destroy/{id}",
+     *     path="/api/v1/dictionary/{id}",
      *     summary="Delete Dictionary By ID",
      *     description="This request is used to permanently delete a dictionary entry based on the provided `ID`. This request interacts with the MySQL database, and have a protected routes.",
      *     tags={"Dictionary"},
@@ -122,7 +122,7 @@ class Commands extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"dictionary_type", "dictionary_name"},
-     *             @OA\Property(property="dictionary_type", type="string", example="trip_category"),
+     *             @OA\Property(property="dictionary_type", type="string", example="inventory_category"),
      *             @OA\Property(property="dictionary_name", type="string", example="test category")
      *         )
      *     ),
@@ -181,7 +181,6 @@ class Commands extends Controller
      *     @OA\Property(property="updatedAt", type="string", format="date-time", example="2024-11-24T15:13:44.621Z")
      * )
      */
-
     public function postCreateDictionary(Request $request)
     {
         try{

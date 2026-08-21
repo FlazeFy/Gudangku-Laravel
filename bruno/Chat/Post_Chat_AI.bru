@@ -1,0 +1,57 @@
+meta {
+  name: Post Chat (AI)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/chat/ai
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "question": "can you find my vehicle with the most trip?"
+  }
+}
+
+docs {
+  # Post Chat (AI)
+
+  This AI request is used to do analyze and find data using command (prompt) to select context query. This request interacts with the MySQL database.
+
+  ## Responses
+
+  **200 — chat answered successfully**
+```json
+  {
+    "status": "success",
+    "message": "lorem ipsum"
+  }
+```
+
+  **400 — {validation_msg}**
+```json
+  {
+    "status": "failed",
+    "message": "{field validation message}"
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}
