@@ -1,0 +1,58 @@
+meta {
+  name: Get My Content's Year
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/user/my_year
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get My Content's Year
+
+  This request is used to get all available year to selected in filter based on created date inventory or report. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Responses
+
+  **200 — user year fetched**
+```json
+  {
+    "status": "success",
+    "message": "user year fetched",
+    "data": [
+      { "year": 2023 }
+    ]
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login | permission denied. only admin can use this request"
+  }
+```
+
+  **404 — user year failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "user year not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

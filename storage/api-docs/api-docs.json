@@ -5355,14 +5355,14 @@
                 ]
             }
         },
-        "/api/v1/lend/history": {
+        "/api/v1/lend/qr/history": {
             "get": {
                 "tags": [
                     "Lend"
                 ],
                 "summary": "Get History QR Code",
                 "description": "This request is used to get history of qr code. This request interacts with the MySQL database, has a pagination, and has protected routes.",
-                "operationId": "24cd51da38658b51299e49bd279fc187",
+                "operationId": "9c84a65a4827248555979b57db5ea70b",
                 "responses": {
                     "200": {
                         "description": "lend qr code fetched",
@@ -12406,6 +12406,107 @@
                                         "message": {
                                             "type": "string",
                                             "example": "user year not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/validate_request/{type}/{created_by}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get Validate Request By Created By",
+                "description": "This request is used to validate a user’s token. It is not implemented in the business logic, but serves only for end-to-end (E2E) and integration testing. It provides an alternative way to obtain a token if another request has already sent the token via email or Telegram. This request interacts with the MySQL database and is protected by route authentication.",
+                "operationId": "b58c26179071f036d81be51af4a932f3",
+                "responses": {
+                    "200": {
+                        "description": "User request fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "user request"
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": "ABC123"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include api key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the api key"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "user request failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "user request not found"
                                         }
                                     },
                                     "type": "object"

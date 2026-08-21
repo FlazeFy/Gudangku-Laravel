@@ -1,0 +1,73 @@
+meta {
+  name: Get History QR Code
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/lend/qr/history
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get History QR Code
+
+  This request is used to get history of qr code. This request interacts with the MySQL database, has a pagination, and has protected routes.
+
+  ## Responses
+
+  **200 — lend qr code fetched**
+```json
+  {
+    "status": "success",
+    "message": "lend qr code fetched",
+    "data": {
+      "data": [
+        {
+          "id": "d8b5d4cc-805d-3303-3966-dc767c062d27",
+          "lend_qr_url": "https://storage.googleapis.com/download/storage/v1/b/gudangku-94edc.appspot.com/o/lend%2F...",
+          "qr_period": 2,
+          "created_at": "2024-03-19 02:37:58",
+          "lend_desc": "lorem ipsum",
+          "lend_status": "expired",
+          "is_finished": 0,
+          "list_inventory": "Herborist Aloe Vera Gel (Skin & Body Care), Palmolive Shower Gel Absoule Relax (Food And Beverages)"
+        }
+      ],
+      "current_page": 1,
+      "last_page": 5,
+      "per_page": 10,
+      "total": 50
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — lend qr code failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "lend qr code not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

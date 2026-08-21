@@ -130,7 +130,7 @@ class Queries extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/v1/lend/history",
+     *     path="/api/v1/lend/qr/history",
      *     summary="Get History QR Code",
      *     description="This request is used to get history of qr code. This request interacts with the MySQL database, has a pagination, and has protected routes.",
      *     tags={"Lend"},

@@ -1,0 +1,68 @@
+meta {
+  name: Get All User
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/user
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get All User
+
+  This request is used to get all user. This endpoint for Admin only. This request interacts with the MySQL database, a pagination, and have a protected routes.
+
+  ## Responses
+
+  **200 — user fetched successfully.** Ordered in descending order by `created_at`
+```json
+  {
+    "status": "success",
+    "message": "user fetched",
+    "data": {
+      "data": [
+        {
+          "id": "17963858-9771-11ee-8f4a-3216422910r4",
+          "username": "flazefy",
+          "email": "flazen.edu@gmail.com",
+          "role": "user",
+          "telegram_user_id": "1317625970",
+          "telegram_is_valid": 1,
+          "created_at": "2024-09-20 22:53:47"
+        }
+      ]
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login | permission denied. only admin can use this request"
+  }
+```
+
+  **404 — user failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "user not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}

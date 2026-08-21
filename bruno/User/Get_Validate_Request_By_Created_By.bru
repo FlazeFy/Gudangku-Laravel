@@ -1,0 +1,68 @@
+meta {
+  name: Get Validate Request By Created By
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/user/validate_request/:type/:created_by
+  body: none
+  auth: bearer
+}
+
+params:path {
+  type: register
+  created_by: 2d98f524-de02-11ed-b5ea-0242ac120002
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Validate Request By Created By
+
+  This request is used to validate a user's token. It is not implemented in the business logic, but serves only for end-to-end (E2E) and integration testing. It provides an alternative way to obtain a token if another request has already sent the token via email or Telegram. This request interacts with the MySQL database and is protected by route authentication.
+
+  ## Path Parameters
+
+  | Name       | Type   | Required | Description                          |
+  |------------|--------|----------|----------------------------------------|
+  | type       | string | yes      | Request type (e.g. `register`)       |
+  | created_by | string | yes      | ID of the user who created the request |
+
+  ## Responses
+
+  **200 — User request fetched successfully**
+```json
+  {
+    "status": "success",
+    "message": "user request",
+    "data": "ABC123"
+  }
+```
+
+  **401 — protected route need to include api key**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the api key"
+  }
+```
+
+  **404 — user request failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "user request not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}
