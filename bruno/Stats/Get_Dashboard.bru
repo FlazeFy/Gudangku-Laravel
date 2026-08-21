@@ -1,0 +1,69 @@
+meta {
+  name: Get Dashboard
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{baseUrl}}/stats/dashboard
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # Get Dashboard
+
+  This request is used to get inventory dashboard. This request interacts with the MySQL database, and have a protected routes.
+
+  ## Responses
+
+  **200 — stats fetched**
+```json
+  {
+    "status": "success",
+    "message": "stats fetched",
+    "data": {
+      "total_item": 14,
+      "total_fav": 4,
+      "total_low": 0,
+      "last_added": "New Balance",
+      "most_category": {
+        "context": "Skin & Body Care",
+        "total": 8
+      },
+      "highest_price": {
+        "inventory_name": "New Balance",
+        "inventory_price": 2249000
+      }
+    }
+  }
+```
+
+  **401 — protected route need to include sign in token as authorization bearer**
+```json
+  {
+    "status": "failed",
+    "message": "you need to include the authorization token from login"
+  }
+```
+
+  **404 — stats failed to fetched**
+```json
+  {
+    "status": "failed",
+    "message": "stats not found"
+  }
+```
+
+  **500 — Internal Server Error**
+```json
+  {
+    "status": "error",
+    "message": "something wrong. please contact admin"
+  }
+```
+}
